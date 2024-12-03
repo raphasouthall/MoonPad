@@ -335,8 +335,9 @@
         NSString *keyLabel = alertController.textFields[1].text;
         if([keyLabel isEqualToString:@""]) keyLabel = [[cmdString lowercaseString] capitalizedString];
         bool noValidKeyboardString = [CommandManager.shared extractKeyStringsFrom:cmdString] == nil; // this is a invalid string.
-        bool noVliadMouseButtongString = ![CommandManager.mouseButtonMappings.allKeys containsObject:cmdString];
-        if(noValidKeyboardString && noVliadMouseButtongString) return;
+        bool noValidMouseButtonString = ![CommandManager.mouseButtonMappings.allKeys containsObject:cmdString];
+        bool noValidTouchPadString = ![CommandManager.touchPadCmds containsObject:cmdString];
+        if(noValidKeyboardString && noValidMouseButtonString && noValidTouchPadString) return;
         
         //saving & present the keyboard button:
         OnScreenButtonView* buttonView = [[OnScreenButtonView alloc] initWithKeyString:cmdString keyLabel:keyLabel];

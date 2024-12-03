@@ -57,7 +57,9 @@ import UIKit
                                                        "M_X1" : BUTTON_X1,
                                                        "M_X2" : BUTTON_X2]
 
-    static let keyMappings: [String: Int16] = [
+    @objc public static let touchPadCmds: [String] = ["LS_PAD", "RS_PAD", "M_PAD"]
+
+    static let keyboardButtonMappings: [String: Int16] = [
         // Windows Key Codes
         "CTRL": 0x11,        // VK_CONTROL
         "SHIFT": 0x10,       // VK_SHIFT
@@ -263,12 +265,12 @@ import UIKit
     }
     
     @objc public func createTestKeyMappings() -> [String: Int16] {
-        return CommandManager.keyMappings
+        return CommandManager.keyboardButtonMappings
     }
     
     // extractKeyStrings from keyboardCMDString
     @objc public func extractKeyStrings(from input: String) -> [String]? {
-        let keys = CommandManager.keyMappings.keys.joined(separator: "|")
+        let keys = CommandManager.keyboardButtonMappings.keys.joined(separator: "|")
         let pattern = "^(?:(\(keys))(?:\\+(\(keys))*)*)$"
         
         guard let regex = try? NSRegularExpression(pattern: pattern, options: []) else {
@@ -293,7 +295,7 @@ import UIKit
         var validKeyStrings: [String] = []
         
         for key in keyStrings {
-            if CommandManager.keyMappings.keys.contains(key) {
+            if CommandManager.keyboardButtonMappings.keys.contains(key) {
                 validKeyStrings.append(key)
             } else {
                 print(" '\(key)' is not defined in key mappings")
@@ -366,12 +368,12 @@ import UIKit
     @objc public func sendKeyDownEventWithDelay(keyboardCmdStrings: [String], delay: TimeInterval = 0.2, index: Int = 0) { // we need a large delay for WAN streaming
         guard index < keyboardCmdStrings.count else {
             for keyStr in keyboardCmdStrings {
-                LiSendKeyboardEvent(CommandManager.keyMappings[keyStr]!,Int8(KEY_ACTION_UP), 0)
+                LiSendKeyboardEvent(CommandManager.keyboardButtonMappings[keyStr]!,Int8(KEY_ACTION_UP), 0)
             }
             return
         } // 如果已经处理完所有键，释放所有按键
         
-        let keyCode = CommandManager.keyMappings[keyboardCmdStrings[index]]
+        let keyCode = CommandManager.keyboardButtonMappings[keyboardCmdStrings[index]]
         guard let keyCode = keyCode else {
             print("No mapping found for \(keyboardCmdStrings[index])")
             sendKeyDownEventWithDelay(keyboardCmdStrings: keyboardCmdStrings, delay: delay, index: index+1) // 跳过当前键，继续下一个

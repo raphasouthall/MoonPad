@@ -147,30 +147,31 @@ static float L3_Y;
 }
 
 - (void) sendRightStickTouchPadEventWithDeltaX:(CGFloat) deltaX deltaY: (CGFloat) deltaY{
-    CGFloat controllerX = 0x7FFE * deltaX / 50;
+    CGFloat controllerX = 0x7FFE * deltaX / 30;
     if(controllerX > 0x7FFE) controllerX = 0x7FFE;
     if(controllerX < -0x7FFE) controllerX = -0x7FFE;
-    CGFloat controllerY = 0x7FFE * deltaY / 50;
+    CGFloat controllerY = 0x7FFE * deltaY / 30;
     if(controllerY > 0x7FFE) controllerY = 0x7FFE;
     if(controllerY < -0x7FFE) controllerY = -0x7FFE;
     [_controllerSupport updateRightStick:_controller x: controllerX y: - controllerY]; // stick value populated to the controllerSupport here
     [_controllerSupport updateFinished:_controller];
 }
 
-- (void) clearRightStickTouchPadFlag{
-    [_controllerSupport updateRightStick:_controller x:0 y:0];
-    [_controllerSupport clearButtonFlag:_controller flags:RS_CLK_FLAG];
-    [_controllerSupport updateFinished:_controller];
-}
-
 - (void) sendLeftStickTouchPadEventWithDeltaX:(CGFloat) deltaX deltaY: (CGFloat) deltaY{
-    CGFloat controllerX = 0x7FFE * deltaX / 50;
+    CGFloat controllerX = 0x7FFE * deltaX / 35;
     if(controllerX > 0x7FFE) controllerX = 0x7FFE;
     if(controllerX < -0x7FFE) controllerX = -0x7FFE;
-    CGFloat controllerY = 0x7FFE * deltaY / 50;
+    CGFloat controllerY = 0x7FFE * deltaY / 35;
     if(controllerY > 0x7FFE) controllerY = 0x7FFE;
     if(controllerY < -0x7FFE) controllerY = -0x7FFE;
     [_controllerSupport updateLeftStick:_controller x: controllerX y: - controllerY]; // stick value populated to the controllerSupport here
+    [_controllerSupport updateFinished:_controller];
+}
+
+
+- (void) clearRightStickTouchPadFlag{
+    [_controllerSupport updateRightStick:_controller x:0 y:0];
+    [_controllerSupport clearButtonFlag:_controller flags:RS_CLK_FLAG];
     [_controllerSupport updateFinished:_controller];
 }
 
