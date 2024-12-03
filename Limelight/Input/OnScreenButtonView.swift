@@ -90,7 +90,13 @@ import UIKit
         defaultBorderColor = UIColor(white: 0.2, alpha: borderAlpha).cgColor
         self.layer.borderColor = defaultBorderColor
         
-        self.backgroundColor = UIColor(white: 0.2, alpha: self.backgroundAlpha - 0.18) // offset to be consistent with onScreen controller layer opacity
+        if CommandManager.touchPadCmds.contains(self.keyString){
+            self.backgroundColor = UIColor.clear // make touchPad transparent
+            self.layer.borderColor = UIColor(white: 0.2, alpha: borderAlpha - 0.2).cgColor // reduce border alpha for touchPad
+        }
+        else{ // backgroundColor works for buttons other than touch pad
+            self.backgroundColor = UIColor(white: 0.2, alpha: self.backgroundAlpha - 0.18) // offset to be consistent with onScreen controller layer opacity
+        }
     }
     
     @objc public func resizeButtonView(){
@@ -152,7 +158,15 @@ import UIKit
         self.borderLayer.borderColor = defaultBorderColor
         
         self.layer.cornerRadius = 15
-        self.backgroundColor = UIColor(white: 0.2, alpha: self.backgroundAlpha - 0.18) // offset to be consistent with OSC opacity
+        
+        if CommandManager.touchPadCmds.contains(self.keyString){
+            self.backgroundColor = UIColor.clear // make touchPad transparent
+            self.layer.borderColor = UIColor(white: 0.2, alpha: borderAlpha - 0.2).cgColor // reduce border alpha for touchPad
+            label.text = "" // make touchPad display no text
+        }
+        else{ // backgroundColor works for buttons other than touch pad
+            self.backgroundColor = UIColor(white: 0.2, alpha: self.backgroundAlpha - 0.18) // offset to be consistent with onScreen controller layer opacity
+        }
         // self.layer.shadowColor = UIColor.clear.cgColor
         // self.layer.shadowRadius = 8
         // self.layer.shadowOpacity = 0.5
@@ -237,7 +251,9 @@ import UIKit
         
         if !OnScreenButtonView.editMode {
             // self.backgroundColor = UIColor.systemBlue.withAlphaComponent(0.7)
-            self.buttonDownVisualEffect()
+            if !CommandManager.touchPadCmds.contains(self.keyString) {
+                self.buttonDownVisualEffect()
+            }
             // if the command(keystring contains "+", it's a multi-key command or a quick triggering key, rather than a physical button
             if(self.keyString.contains("+")){
                 let keyboardCmdStrings = CommandManager.shared.extractKeyStrings(from: self.keyString)!
@@ -247,13 +263,11 @@ import UIKit
                 }
             }
             // if there's no "+" in the keystring, treat it as a regular button:
-            else{
-                if(CommandManager.mouseButtonMappings.keys.contains(self.keyString)){
-                    LiSendMouseButtonEvent(CChar(BUTTON_ACTION_PRESS), Int32(CommandManager.mouseButtonMappings[self.keyString]!))
-                }
-                else{
-                    LiSendKeyboardEvent(CommandManager.keyMappings[self.keyString]!,Int8(KEY_ACTION_DOWN), 0)
-                }
+            if CommandManager.keyboardButtonMappings.keys.contains(self.keyString) {
+                LiSendKeyboardEvent(CommandManager.keyboardButtonMappings[self.keyString]!,Int8(KEY_ACTION_DOWN), 0)
+            }
+            if CommandManager.mouseButtonMappings.keys.contains(self.keyString) {
+                LiSendMouseButtonEvent(CChar(BUTTON_ACTION_PRESS), Int32(CommandManager.mouseButtonMappings[self.keyString]!))
             }
         }
         // here is in edit mode:
@@ -283,31 +297,43 @@ import UIKit
                 storedLocation = currentLocation // Update initial center for next movement
             }
         }
-        else{
-            if touches.count == 1 && false{
-                let currentLocation: CGPoint = (touches.first?.location(in: self))!
-                deltaX = currentLocation.x - self.latestMousePointerLocation.x
-                deltaY = currentLocation.y - self.latestMousePointerLocation.y
-                // NSLog("coord test deltaX: %f, deltaY: %f", deltaX, deltaY)
-                self.onScreenControls.sendLeftStickTouchPadEvent(withDeltaX: deltaX, deltaY: deltaY);
-            }
+        else if true{
+            handleTouchPadEvent(touches: touches)
         }
     }
     
+    private func handleTouchPadEvent (touches: Set<UITouch>){
+        if touches.count == 1{
+            let currentLocation: CGPoint = (touches.first?.location(in: self))!
+            deltaX = currentLocation.x - self.latestMousePointerLocation.x
+            deltaY = currentLocation.y - self.latestMousePointerLocation.y
+            if self.keyString == "LS_PAD" {
+                // NSLog("coord test deltaX: %f, deltaY: %f", deltaX, deltaY)
+                // latestMousePointerLocation = currentLocation
+                self.onScreenControls.sendLeftStickTouchPadEvent(withDeltaX: deltaX, deltaY: deltaY);
+            }
+            if self.keyString == "RS_PAD" {
+                // NSLog("coord test deltaX: %f, deltaY: %f", deltaX, deltaY)
+                // latestMousePointerLocation = currentLocation
+                self.onScreenControls.sendRightStickTouchPadEvent(withDeltaX: deltaX, deltaY: deltaY);
+            }
+        }
+    }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         // self.pressed = false // will be reset outside the class
         super.touchesEnded(touches, with: event)
         if !OnScreenButtonView.editMode && touches.count == 1 {
-            self.onScreenControls.clearLeftStickTouchPadFlag();
+            self.onScreenControls.clearLeftStickTouchPadFlag()
+            self.onScreenControls.clearRightStickTouchPadFlag()
         }
         if !OnScreenButtonView.editMode && !self.keyString.contains("+") { // if the command(keystring contains "+", it's a multi-key command rather than a single key button
             
-            if(CommandManager.mouseButtonMappings.keys.contains(self.keyString)){
+            if CommandManager.mouseButtonMappings.keys.contains(self.keyString){
                 LiSendMouseButtonEvent(CChar(BUTTON_ACTION_RELEASE), Int32(CommandManager.mouseButtonMappings[self.keyString]!))
             }
-            else{
-                LiSendKeyboardEvent(CommandManager.keyMappings[self.keyString]!,Int8(KEY_ACTION_UP), 0)
+            if CommandManager.keyboardButtonMappings.keys.contains(self.keyString) {
+                LiSendKeyboardEvent(CommandManager.keyboardButtonMappings[self.keyString]!,Int8(KEY_ACTION_UP), 0)
             }
             self.buttonUpVisualEffect()
             return;
