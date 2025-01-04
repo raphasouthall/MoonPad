@@ -106,9 +106,11 @@ static const double X1_MOUSE_SPEED_DIVISOR = 2.5;
                                              selector:@selector(keyboardWillHide:)
                                                  name:UIKeyboardWillHideNotification
                                                object:nil];
-    if(settings.touchMode.intValue == PURE_NATIVE_TOUCH) [self addGestureRecognizer:keyboardToggleRecognizer]; //keep legacy approach in pure native mode
-    else [self->streamFrameTopLayerView addGestureRecognizer:keyboardToggleRecognizer]; //add to the superview in other modes
     
+    // if(settings.touchMode.intValue == PURE_NATIVE_TOUCH) [self addGestureRecognizer:keyboardToggleRecognizer]; //keep legacy approach in pure native mode
+    // else [self->streamFrameTopLayerView addGestureRecognizer:keyboardToggleRecognizer]; //add to the superview in other modes
+    
+    [self->streamFrameTopLayerView addGestureRecognizer:keyboardToggleRecognizer]; //add to the superview in other modes
     
 #if TARGET_OS_TV
     // tvOS requires RelativeTouchHandler to manage Apple Remote input

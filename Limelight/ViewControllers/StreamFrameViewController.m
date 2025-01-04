@@ -55,7 +55,13 @@
     BOOL _userIsInteracting;
     CGSize _keyboardSize;
     UIWindow *_extWindow;
-    UIView *_renderView;
+    UIView *_streamVideoRenderView;
+    /*
+     * View architecture of this viewController:
+     * self.view (named `streamFrameTopLayerView` in StreamView.m, where slide & tap gestures, and onScreenControls & onScreenButtonView buttons are registered)
+     *   - streamView (where touchHandlers are registered)
+     *     - streamVideoRenderView (where stream view is rendered)
+     */
     UIWindow *_deviceWindow;
     dispatch_block_t _delayedRemoveExtScreen;
 #if !TARGET_OS_TV
@@ -194,7 +200,7 @@
     }
     else {
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self.view insertSubview:self->_renderView atIndex:0];
+            [self->_streamView insertSubview:self->_streamVideoRenderView atIndex:0];
         });
     }
 
@@ -269,9 +275,10 @@
     _controllerSupport = [[ControllerSupport alloc] initWithConfig:self.streamConfig delegate:self];
     _inactivityTimer = nil;
     
-    _renderView = (StreamView*)[[UIView alloc] initWithFrame:self.view.frame];
+    _streamVideoRenderView = (StreamView*)[[UIView alloc] initWithFrame:self.view.frame];
     _streamView = [[StreamView alloc] initWithFrame:self.view.frame];
-    _renderView.bounds = _streamView.bounds;
+    _streamVideoRenderView.bounds = _streamView.bounds;
+    _streamVideoRenderView.userInteractionEnabled = false; // this will prevent renderView from intrecepting touchEvents which shall be interacting with streamView
     //[_streamView setupStreamView:_controllerSupport interactionDelegate:self config:self.streamConfig];
     [self reConfigStreamViewRealtime]; // call this method again to make sure all gestures are configured & added to the superview(self.view), including the gestures added from inside the streamview.
     
@@ -313,7 +320,7 @@
     _tipLabel.center = CGPointMake(self.view.frame.size.width / 2, self.view.frame.size.height * 0.9);
     
     _streamMan = [[StreamManager alloc] initWithConfig:self.streamConfig
-                                            renderView:_renderView
+                                            renderView:_streamVideoRenderView
                                    connectionCallbacks:self];
     NSOperationQueue* opQueue = [[NSOperationQueue alloc] init];
     [opQueue addOperation:_streamMan];
@@ -533,11 +540,11 @@
         _extWindow = [[UIWindow alloc] initWithFrame:frame];
     }
     _extWindow.screen = extScreen;
-    _renderView.bounds = frame;
-    _renderView.frame = frame;
+    _streamVideoRenderView.bounds = frame;
+    _streamVideoRenderView.frame = frame;
     NSNotificationCenter* nc = [NSNotificationCenter defaultCenter];
     [nc postNotificationName:@"ScreenChanged" object:self];
-    [_extWindow addSubview:_renderView];
+    [_extWindow addSubview:_streamVideoRenderView];
     _extWindow.hidden = NO;
 }
 
@@ -545,15 +552,15 @@
     Log(LOG_I, @"Removing External Screen");
     _extWindow.hidden = YES;
     [self handleViewResize];
-    [self.view insertSubview:_renderView atIndex:0];
+    [_streamView insertSubview:_streamVideoRenderView atIndex:0];
 }
 
 - (void) handleViewResize{
     _streamView.bounds = _deviceWindow.bounds;
     _streamView.frame = _deviceWindow.frame;
     if(![self isAirPlaying]){
-        _renderView.bounds = _deviceWindow.bounds;
-        _renderView.frame = _deviceWindow.frame;
+        _streamVideoRenderView.bounds = _deviceWindow.bounds;
+        _streamVideoRenderView.frame = _deviceWindow.frame;
         NSNotificationCenter* nc = [NSNotificationCenter defaultCenter];
         [nc postNotificationName:@"ScreenChanged" object:self];
     }
