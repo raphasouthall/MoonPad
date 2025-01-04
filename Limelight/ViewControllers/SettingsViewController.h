@@ -58,7 +58,7 @@
 @property (nonatomic, strong) MainFrameViewController *mainFrameViewController;
 
 @property (strong, nonatomic) IBOutlet UISegmentedControl *externalDisplayModeSelector;
-@property (strong, nonatomic) IBOutlet UISegmentedControl *mouseModeSelector;
+@property (strong, nonatomic) IBOutlet UISegmentedControl *localMousePointerModeSelector;
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wunguarded-availability"

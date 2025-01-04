@@ -962,31 +962,31 @@
       }
     },
     "F96-Um-Q6t.segmentTitles[0]" : {
-      "comment" : "Class = \"UISegmentedControl\"; F96-Um-Q6t.segmentTitles[0] = \"Capture\"; ObjectID = \"F96-Um-Q6t\";",
+      "comment" : "Class = \"UISegmentedControl\"; F96-Um-Q6t.segmentTitles[0] = \"Restricted by Window\"; ObjectID = \"F96-Um-Q6t\";",
       "extractionState" : "extracted_with_value",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "Capture"
+            "value" : "Restricted by Window"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "捕获"
+            "state" : "needs_review",
+            "value" : "被窗口捕获"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "捕获"
+            "state" : "needs_review",
+            "value" : "被窗口捕获"
           }
         },
         "zh-HK" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "捕获"
+            "state" : "needs_review",
+            "value" : "被窗口捕获"
           }
         }
       }
@@ -1004,19 +1004,19 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "隐藏"
+            "value" : "隐藏(绝对坐标)"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "隐藏"
+            "value" : "隐藏(绝对坐标)"
           }
         },
         "zh-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "隐藏"
+            "value" : "隐藏(绝对坐标)"
           }
         }
       }
@@ -1034,19 +1034,19 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "可见"
+            "value" : "可见(绝对坐标)"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "可见"
+            "value" : "可见(绝对坐标)"
           }
         },
         "zh-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "可见"
+            "value" : "可见(绝对坐标)"
           }
         }
       }
@@ -2120,31 +2120,31 @@
       }
     },
     "VGn-Oc-mKc.text" : {
-      "comment" : "Class = \"UILabel\"; text = \"Mouse Mode\"; ObjectID = \"VGn-Oc-mKc\";",
+      "comment" : "Class = \"UILabel\"; text = \"Local Mouse Pointer\"; ObjectID = \"VGn-Oc-mKc\";",
       "extractionState" : "extracted_with_value",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "Mouse Mode"
+            "value" : "Local Mouse Pointer"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "鼠标模式"
+            "state" : "needs_review",
+            "value" : "本地鼠标指针"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "鼠标模式"
+            "state" : "needs_review",
+            "value" : "本地鼠标指针"
           }
         },
         "zh-HK" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "鼠标模式"
+            "state" : "needs_review",
+            "value" : "本地鼠标指针"
           }
         }
       }

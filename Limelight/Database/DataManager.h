@@ -45,7 +45,7 @@
                    allowPortrait:(BOOL)allowPortrait
               resolutionSelected:(NSInteger)resolutionSelected
              externalDisplayMode:(NSInteger)externalDisplayMode
-                       mouseMode:(NSInteger)mouseMode;
+                       localMousePointerMode:(NSInteger)localMousePointerMode;
 
 - (NSArray*) getHosts;
 - (void) updateHost:(TemporaryHost*)host;

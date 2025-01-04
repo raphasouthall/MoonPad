@@ -24,6 +24,9 @@
 
 static const double X1_MOUSE_SPEED_DIVISOR = 2.5;
 
+/*
+ Stream Video has been moved out of this class to _renderView in StreamFrameViewController.
+ */
 @implementation StreamView {
     UIView* streamFrameTopLayerView;
     TemporarySettings* settings;
@@ -48,7 +51,7 @@ static const double X1_MOUSE_SPEED_DIVISOR = 2.5;
     double accumulatedMouseDeltaX;
     double accumulatedMouseDeltaY;
     
-    int mouseMode;
+    int localMousePointerMode;
     
     UIResponder* touchHandler;
     
@@ -81,7 +84,7 @@ static const double X1_MOUSE_SPEED_DIVISOR = 2.5;
     
     settings = [[[DataManager alloc] init] getSettings];
     
-    mouseMode = streamConfig.mouseMode;
+    localMousePointerMode = streamConfig.localMousePointerMode;
     
     keysDown = [[NSMutableSet alloc] init];
     keyInputField = [[KeyboardInputField alloc] initWithFrame:CGRectZero];
@@ -901,7 +904,7 @@ static const double X1_MOUSE_SPEED_DIVISOR = 2.5;
                        regionForRequest:(UIPointerRegionRequest *)request
                           defaultRegion:(UIPointerRegion *)defaultRegion API_AVAILABLE(ios(13.4)) {
     if (@available(iOS 14.0, *)) {
-        if ([GCMouse current] != nil && mouseMode == 0) {
+        if ([GCMouse current] != nil && localMousePointerMode == 0) {
             // We'll handle this with GCMouse. Do nothing here.
             return nil;
         }
@@ -929,7 +932,7 @@ static const double X1_MOUSE_SPEED_DIVISOR = 2.5;
 }
 
 - (UIPointerStyle *)pointerInteraction:(UIPointerInteraction *)interaction styleForRegion:(UIPointerRegion *)region  API_AVAILABLE(ios(13.4)) {
-    if(mouseMode != 2){
+    if(localMousePointerMode != 2){
         return [UIPointerStyle hiddenPointerStyle];
     }else{
         return nil;

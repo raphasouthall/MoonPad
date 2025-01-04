@@ -560,7 +560,7 @@ BOOL isCustomResolution(CGSize res) {
     }
 
     [self.externalDisplayModeSelector setSelectedSegmentIndex:currentSettings.externalDisplayMode.integerValue];
-    [self.mouseModeSelector setSelectedSegmentIndex:currentSettings.mouseMode.integerValue];
+    [self.localMousePointerModeSelector setSelectedSegmentIndex:currentSettings.localMousePointerMode.integerValue];
 }
 
 - (void)slideToSettingsScreenEdgeChanged{
@@ -1068,7 +1068,7 @@ BOOL isCustomResolution(CGSize res) {
     BOOL allowPortrait = [self.allowPortraitSelector selectedSegmentIndex] == 1;
     NSInteger resolutionSelected = [self.resolutionSelector selectedSegmentIndex];
     NSInteger externalDisplayMode = [self.externalDisplayModeSelector selectedSegmentIndex];
-    NSInteger mouseMode = [self.mouseModeSelector selectedSegmentIndex];
+    NSInteger localMousePointerMode = [self.localMousePointerModeSelector selectedSegmentIndex];
     [dataMan saveSettingsWithBitrate:_bitrate
                            framerate:framerate
                               height:height
@@ -1101,7 +1101,7 @@ BOOL isCustomResolution(CGSize res) {
                        allowPortrait:allowPortrait
                   resolutionSelected:resolutionSelected
                  externalDisplayMode:externalDisplayMode
-                           mouseMode:mouseMode];
+                           localMousePointerMode:localMousePointerMode];
 }
 
 - (void)didReceiveMemoryWarning {

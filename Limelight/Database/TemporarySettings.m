@@ -101,7 +101,7 @@
     self.allowPortrait = settings.allowPortrait;
     self.resolutionSelected = settings.resolutionSelected;
     self.externalDisplayMode = settings.externalDisplayMode;
-    self.mouseMode = settings.mouseMode;
+    self.localMousePointerMode = settings.localMousePointerMode;
 #endif
     self.uniqueId = settings.uniqueId;
     

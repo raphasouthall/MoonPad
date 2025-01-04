@@ -1126,7 +1126,7 @@ static const double MOUSE_SPEED_DIVISOR = 1.25;
         }
     }
     
-    _captureMouse = (streamConfig.mouseMode == 0);
+    _captureMouse = (streamConfig.localMousePointerMode == 0);
     if (@available(iOS 14.0, tvOS 14.0, *)) {
         for (GCMouse* mouse in [GCMouse mice]) {
             [self registerMouseCallbacks:mouse];

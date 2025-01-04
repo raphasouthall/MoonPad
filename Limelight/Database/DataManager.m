@@ -84,7 +84,7 @@
                    allowPortrait:(BOOL)allowPortrait
               resolutionSelected:(NSInteger)resolutionSelected
              externalDisplayMode:(NSInteger)externalDisplayMode
-                       mouseMode:(NSInteger)mouseMode {
+                       localMousePointerMode:(NSInteger)localMousePointerMode {
     
     [_managedObjectContext performBlockAndWait:^{
         Settings* settingsToSave = [self retrieveSettings];
@@ -120,7 +120,7 @@
         settingsToSave.allowPortrait = allowPortrait;
         settingsToSave.resolutionSelected = [NSNumber numberWithInteger:resolutionSelected];
         settingsToSave.externalDisplayMode = [NSNumber numberWithInteger:externalDisplayMode];
-        settingsToSave.mouseMode = [NSNumber numberWithInteger:mouseMode];
+        settingsToSave.localMousePointerMode = [NSNumber numberWithInteger:localMousePointerMode];
         [self saveData];
     }];
 }

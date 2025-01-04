@@ -32,6 +32,6 @@
 @property BOOL multiController;
 @property BOOL useFramePacing;
 @property NSData* serverCert;
-@property int mouseMode;
+@property int localMousePointerMode;
 
 @end

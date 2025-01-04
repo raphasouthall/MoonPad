@@ -957,10 +957,10 @@
     DataManager* dataMan = [[DataManager alloc] init];
     Settings *currentSettings = [dataMan retrieveSettings];
     
-    if(currentSettings.mouseMode.intValue == 0){
-        currentSettings.mouseMode = @1;
+    if(currentSettings.localMousePointerMode.intValue == 0){
+        currentSettings.localMousePointerMode = @1;
     }else{
-        currentSettings.mouseMode = @0;
+        currentSettings.localMousePointerMode = @0;
     }
     
     [dataMan saveData];
@@ -971,10 +971,10 @@
     DataManager* dataMan = [[DataManager alloc] init];
     Settings *currentSettings = [dataMan retrieveSettings];
     
-    if(currentSettings.mouseMode.intValue == 2){
-        currentSettings.mouseMode = @1;
+    if(currentSettings.localMousePointerMode.intValue == 2){
+        currentSettings.localMousePointerMode = @1;
     }else{
-        currentSettings.mouseMode = @2;
+        currentSettings.localMousePointerMode = @2;
     }
     
     [dataMan saveData];
@@ -1012,7 +1012,7 @@
     // Pointer lock breaks the UIKit mouse APIs, which is a problem because
     // GCMouse is horribly broken on iOS 14.0 for certain mice. Only lock
     // the cursor if there is a GCMouse present.
-    return ([GCMouse mice].count > 0) && [_settings mouseMode].intValue == 0;
+    return ([GCMouse mice].count > 0) && [_settings localMousePointerMode].intValue == 0;
 }
 #endif
 
