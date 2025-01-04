@@ -83,7 +83,7 @@ static const float QUICK_TAP_TIME_INTERVAL = 0.2;
 }
 
 
-- (bool)containOnScreenControllerTaps:(NSSet* )touches{
+- (bool)isOnScreenControllerBeingPressed:(NSSet* )touches{
     for(UITouch* touch in touches){
         if([OnScreenControls.touchAddrsCapturedByOnScreenControls containsObject:@((uintptr_t)touch)]) return true;
     }
@@ -91,7 +91,7 @@ static const float QUICK_TAP_TIME_INTERVAL = 0.2;
 }
 
 
-- (bool)containOnScreenButtonTaps {
+- (bool)isOnScreenButtonViewBeingPressed {
     bool gotOneButtonPressed = false;
     for(UIView* view in self->streamView.superview.subviews){  // iterates all on-screen button views in StreamFrameView
         if ([view isKindOfClass:[OnScreenButtonView class]]) {
@@ -146,7 +146,7 @@ static const float QUICK_TAP_TIME_INTERVAL = 0.2;
     
     touchPointSpawnedAtUpperScreenEdge = false; // reset this flag immediately if we get a touch event passing the check above, this fixes irresponsive touch after closing the command tool menu.
     
-    if([[event allTouches] count] == 2 && ![self containOnScreenButtonTaps] && ![self containOnScreenControllerTaps:[event allTouches]]){
+    if([[event allTouches] count] == 2 && ![self isOnScreenButtonViewBeingPressed] && ![self isOnScreenControllerBeingPressed:[event allTouches]]){
         NSLog(@"get in scrolling mode");
         isInMouseWheelScrollingMode = true;
         return; // if we got 2 touches on the blank area, it's gonna be a mouse scroll touch, and must prevent UITtouch object for mouse pointer being captured & locked
@@ -190,7 +190,7 @@ static const float QUICK_TAP_TIME_INTERVAL = 0.2;
     
     //NSLog(@"%f, touchesMoved callback, is scrolling: %d, touches count: %d", CACurrentMediaTime(), isInMouseWheelScrollingMode, (uint32_t)[touches count]);
     
-    if(isInMouseWheelScrollingMode && [[event allTouches] count] == 2 && ![self containOnScreenButtonTaps] && ![self containOnScreenControllerTaps:touches]){
+    if(isInMouseWheelScrollingMode && [[event allTouches] count] == 2 && ![self isOnScreenButtonViewBeingPressed] && ![self isOnScreenControllerBeingPressed:touches]){
         NSSet* twoTouches = [event allTouches];
         CGPoint firstLocation = [[[twoTouches allObjects] objectAtIndex:0] locationInView:streamView];
         CGPoint secondLocation = [[[twoTouches allObjects] objectAtIndex:1] locationInView:streamView];

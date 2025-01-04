@@ -33,7 +33,7 @@ static CGFloat screenWidthInPoints;
     _immediateTriggering = false;
     _tapDownTimeThreshold = 0.3;
     _gestureCaptured = false;
-    _containOnScreenControllerTaps = false;
+    _isOnScreenControllerBeingPressed = false;
     return self;
 }
 
@@ -74,14 +74,14 @@ static CGFloat screenWidthInPoints;
         _gestureCaptured = false;
         self.state = UIGestureRecognizerStateFailed;
     }
-    else if(_gestureCaptured && allTouchesCount == [touches count] && !_containOnScreenControllerTaps && ![self containOnScreenButtonTaps]){  //must exclude virtual controller & onscreen button taps here to prevent stucked button, _areVirtualControllerTaps flag is set by onscreencontrols, containOnScreenButtonsTaps will be returned by iterating all button views in streamframeview
+    else if(_gestureCaptured && allTouchesCount == [touches count] && !_isOnScreenControllerBeingPressed && ![self isOnScreenButtonViewBeingPressed]){  //must exclude virtual controller & onscreen button taps here to prevent stucked button, _areVirtualControllerTaps flag is set by onscreencontrols, containOnScreenButtonsTaps will be returned by iterating all button views in streamframeview
         _gestureCaptured = false; //reset for next recognition
         if((CACurrentMediaTime() - _gestureCapturedTime) < _tapDownTimeThreshold){
             lowestTouchPointYCoord = 0.0; //reset for next recognition
             self.state = UIGestureRecognizerStateRecognized;
         }
     }
-    if (allTouchesCount == [touches count]) _containOnScreenControllerTaps = false; // need to reset this flag anyway, when all fingers are lefting
+    if (allTouchesCount == [touches count]) _isOnScreenControllerBeingPressed = false; // need to reset this flag anyway, when all fingers are lefting
 }
 
 
@@ -89,7 +89,7 @@ static CGFloat screenWidthInPoints;
 // we're unable to import this class to swift codebase by the bridging header,and have to exlucde the onscreen button taps here
 // by iterating every button view instances. but it's basically ok since the number of buttonViews are always limited.
 // and this method will only be called when the recognizer is active & and the taps passes all the checks and is about to ge triggered.
-- (bool)containOnScreenButtonTaps {
+- (bool)isOnScreenButtonViewBeingPressed {
     NSTimeInterval allFingersTapDownTime = CACurrentMediaTime() - _gestureCapturedTime; //RIGHTCLICK_TAP_DOWN_TIME_THRESHOLD_S has been passed to this recognizer as _tapDownTimeShreshold, we'll decide how to deal with pressed flag of on-screen button views based on tapDownTime
     bool gotOneButtonPressed = false;
     // the tap gestures are all added to the streamFrameTopLayerView, where all the onScreenButtonViews are added. so we can iterate them in this way:

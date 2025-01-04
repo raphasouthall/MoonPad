@@ -246,7 +246,7 @@ import UIKit
         super.touchesBegan(touches, with: event)
         //self.backgroundColor = UIColor(red: 0.0, green: 0.0, blue: 1.0, alpha: 0.7)
         
-        OnScreenControls.testMethod();
+        // OnScreenControls.testMethod();
         // RelativeTouchHandler.testMethod();
         
         if !OnScreenButtonView.editMode {
@@ -297,7 +297,7 @@ import UIKit
                 storedLocation = currentLocation // Update initial center for next movement
             }
         }
-        else if true{
+        if CommandManager.touchPadCmds.contains(self.keyString){
             handleTouchPadEvent(touches: touches)
         }
     }
@@ -323,9 +323,15 @@ import UIKit
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         // self.pressed = false // will be reset outside the class
         super.touchesEnded(touches, with: event)
-        if !OnScreenButtonView.editMode && touches.count == 1 {
-            self.onScreenControls.clearLeftStickTouchPadFlag()
-            self.onScreenControls.clearRightStickTouchPadFlag()
+        if !OnScreenButtonView.editMode && CommandManager.touchPadCmds.contains(self.keyString) && touches.count == 1 {
+            switch self.keyString {
+            case "LS_PAD":
+                self.onScreenControls.clearLeftStickTouchPadFlag()
+            case "RS_PAD":
+                self.onScreenControls.clearRightStickTouchPadFlag()
+            default:
+                break
+            }
         }
         if !OnScreenButtonView.editMode && !self.keyString.contains("+") { // if the command(keystring contains "+", it's a multi-key command rather than a single key button
             
