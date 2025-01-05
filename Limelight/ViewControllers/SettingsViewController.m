@@ -471,10 +471,10 @@ BOOL isCustomResolution(CGSize res) {
     [self updateBitrateText];
     [self updateResolutionDisplayViewText];
     
-    // Lock Display Orientation setting
+    // Unlock Display Orientation setting
     bool unlockDisplayOrientationSelectorEnabled = [self isFullScreenRequired];//need "requires fullscreen" enabled in the app bunddle to make runtime orientation limitation woring
     if(unlockDisplayOrientationSelectorEnabled) [self.unlockDisplayOrientationSelector setSelectedSegmentIndex:currentSettings.unlockDisplayOrientation ? 1 : 0];
-    else [self.unlockDisplayOrientationSelector setSelectedSegmentIndex:1]; // can't lock screen orientation in this mode = always Lock Display Orientation mode
+    else [self.unlockDisplayOrientationSelector setSelectedSegmentIndex:1]; // can't lock screen orientation in this mode = Display Orientation always unlocked
     [self.unlockDisplayOrientationSelector setEnabled:unlockDisplayOrientationSelectorEnabled];
 
     
