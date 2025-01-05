@@ -737,12 +737,13 @@ const int FrontViewPositionNone = 0xff;
     //lock the orientation accordingly after streaming is started
     DataManager* dataMan = [[DataManager alloc] init];
     Settings *currentSettings = [dataMan retrieveSettings];
-    //Handle allow portrait on & off
-    if(currentSettings.allowPortrait){
-        if (self.isStreaming || self.mainFrameIsInHostView) return [self getCurrentOrientation]; //orientation change is not allowed in streaming or mainframe host view
-        else return UIInterfaceOrientationMaskAll;
+    //Handle Lock Display Orientation on & off
+    
+    if(self.mainFrameIsInHostView) return [self getCurrentOrientation];  //always try to lock orientaion in mainFrameView in order to prevent bug.
+    if(currentSettings.unlockDisplayOrientation){
+        return UIInterfaceOrientationMaskAll; // 90 Degree rotation will be allowed in streaming
     }
-    else return UIInterfaceOrientationMaskLandscape;
+    else return [self getCurrentOrientation];
 }
 
 

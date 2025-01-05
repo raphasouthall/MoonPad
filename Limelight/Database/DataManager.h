@@ -42,7 +42,7 @@
                // absoluteTouchMode:(BOOL)absoluteTouchMode
                        touchMode:(NSInteger)touchMode
                     statsOverlay:(BOOL)statsOverlay
-                   allowPortrait:(BOOL)allowPortrait
+                   unlockDisplayOrientation:(BOOL)unlockDisplayOrientation
               resolutionSelected:(NSInteger)resolutionSelected
              externalDisplayMode:(NSInteger)externalDisplayMode
                        localMousePointerMode:(NSInteger)localMousePointerMode;

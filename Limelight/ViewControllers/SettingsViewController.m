@@ -471,11 +471,11 @@ BOOL isCustomResolution(CGSize res) {
     [self updateBitrateText];
     [self updateResolutionDisplayViewText];
     
-    // allow portrait setting
-    bool allowPortraitSelectorEnabled = [self isFullScreenRequired];//need "requires fullscreen" enabled in the app bunddle to make runtime orientation limitation woring
-    if(allowPortraitSelectorEnabled) [self.allowPortraitSelector setSelectedSegmentIndex:currentSettings.allowPortrait ? 1 : 0];
-    else [self.allowPortraitSelector setSelectedSegmentIndex:1]; // can't lock screen orientation in this mode = always allow portrait mode
-    [self.allowPortraitSelector setEnabled:allowPortraitSelectorEnabled];
+    // Lock Display Orientation setting
+    bool unlockDisplayOrientationSelectorEnabled = [self isFullScreenRequired];//need "requires fullscreen" enabled in the app bunddle to make runtime orientation limitation woring
+    if(unlockDisplayOrientationSelectorEnabled) [self.unlockDisplayOrientationSelector setSelectedSegmentIndex:currentSettings.unlockDisplayOrientation ? 1 : 0];
+    else [self.unlockDisplayOrientationSelector setSelectedSegmentIndex:1]; // can't lock screen orientation in this mode = always Lock Display Orientation mode
+    [self.unlockDisplayOrientationSelector setEnabled:unlockDisplayOrientationSelectorEnabled];
 
     
     // lift streamview setting
@@ -1065,7 +1065,7 @@ BOOL isCustomResolution(CGSize res) {
     NSInteger touchMode = [self.touchModeSelector selectedSegmentIndex];
     BOOL statsOverlay = [self.statsOverlaySelector selectedSegmentIndex] == 1;
     BOOL enableHdr = [self.hdrSelector selectedSegmentIndex] == 1;
-    BOOL allowPortrait = [self.allowPortraitSelector selectedSegmentIndex] == 1;
+    BOOL unlockDisplayOrientation = [self.unlockDisplayOrientationSelector selectedSegmentIndex] == 1;
     NSInteger resolutionSelected = [self.resolutionSelector selectedSegmentIndex];
     NSInteger externalDisplayMode = [self.externalDisplayModeSelector selectedSegmentIndex];
     NSInteger localMousePointerMode = [self.localMousePointerModeSelector selectedSegmentIndex];
@@ -1098,7 +1098,7 @@ BOOL isCustomResolution(CGSize res) {
                    // absoluteTouchMode:absoluteTouchMode
                            touchMode:touchMode
                         statsOverlay:statsOverlay
-                       allowPortrait:allowPortrait
+                       unlockDisplayOrientation:unlockDisplayOrientation
                   resolutionSelected:resolutionSelected
                  externalDisplayMode:externalDisplayMode
                            localMousePointerMode:localMousePointerMode];

@@ -81,7 +81,7 @@
                // absoluteTouchMode:(BOOL)absoluteTouchMode
                        touchMode:(NSInteger)touchMode
                     statsOverlay:(BOOL)statsOverlay 
-                   allowPortrait:(BOOL)allowPortrait
+                   unlockDisplayOrientation:(BOOL)unlockDisplayOrientation
               resolutionSelected:(NSInteger)resolutionSelected
              externalDisplayMode:(NSInteger)externalDisplayMode
                        localMousePointerMode:(NSInteger)localMousePointerMode {
@@ -117,7 +117,7 @@
         // settingsToSave.absoluteTouchMode = absoluteTouchMode;
         settingsToSave.touchMode = [NSNumber numberWithInteger:(uint16_t)touchMode];
         settingsToSave.statsOverlay = statsOverlay;
-        settingsToSave.allowPortrait = allowPortrait;
+        settingsToSave.unlockDisplayOrientation = unlockDisplayOrientation;
         settingsToSave.resolutionSelected = [NSNumber numberWithInteger:resolutionSelected];
         settingsToSave.externalDisplayMode = [NSNumber numberWithInteger:externalDisplayMode];
         settingsToSave.localMousePointerMode = [NSNumber numberWithInteger:localMousePointerMode];

@@ -98,7 +98,7 @@
     self.touchPointerVelocityFactor = settings.touchPointerVelocityFactor;
     self.mousePointerVelocityFactor = settings.mousePointerVelocityFactor;
     self.pointerVelocityModeDivider = settings.pointerVelocityModeDivider;
-    self.allowPortrait = settings.allowPortrait;
+    self.unlockDisplayOrientation = settings.unlockDisplayOrientation;
     self.resolutionSelected = settings.resolutionSelected;
     self.externalDisplayMode = settings.externalDisplayMode;
     self.localMousePointerMode = settings.localMousePointerMode;

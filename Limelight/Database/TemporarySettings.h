@@ -56,7 +56,7 @@
 @property (nonatomic) BOOL statsOverlay;
 @property (nonatomic) BOOL liftStreamViewForKeyboard;
 @property (nonatomic) BOOL showKeyboardToolbar;
-@property (nonatomic) BOOL allowPortrait;
+@property (nonatomic) BOOL unlockDisplayOrientation;
 
 - (id) initFromSettings:(Settings*)settings;
 
