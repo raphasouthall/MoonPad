@@ -1035,14 +1035,17 @@ static NSMutableSet* hostList;
         self->waterMark.text = [LocalizationHelper localizedStringForKey:@"waterMarkText"];
         CGFloat labelHeight = 60;
         NSLog(@"fullscr: %d", [self isFullScreenRequired]);
-        // the app is unable to automatically lock screen orientation in app window resiable mode(aka. not require fullscreen)
-        if(![self isFullScreenRequired]){
+        // the app is unable to automatically lock screen orientation in app window resizable mode(aka. not require fullscreen)
+        
+        // if(![self isFullScreenRequired]){
+        if(false){
             NSString* screenRotationTip = [LocalizationHelper localizedStringForKey:@"screenRotationTIp"];
             self->waterMark.text = [NSString stringWithFormat:@"%@\n%@", self->waterMark.text, screenRotationTip];
             self->waterMark.numberOfLines = 0; // Allow multiline text
             self->waterMark.font = [UIFont systemFontOfSize:19];
             labelHeight = 80;
         }
+        
         self->waterMark.textColor = UIColor.blackColor;
         self->waterMark.alpha = 0.35;
         self->waterMark.textAlignment = NSTextAlignmentCenter;
