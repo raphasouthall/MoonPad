@@ -775,7 +775,7 @@ static const double X1_MOUSE_SPEED_DIVISOR = 2.5;
             [interactionDelegate toggleStatsOverlay];
             break;
         case UIKeyboardHIDUsageKeyboardM:
-            [interactionDelegate toggleMouseCapture];
+            [interactionDelegate localMousePointerMode];
             break;
         case UIKeyboardHIDUsageKeyboardC:
             [interactionDelegate toggleMouseVisible];

@@ -17,7 +17,7 @@
 - (void) userInteractionEnded;
 - (void) streamExitRequested;
 - (void) toggleStatsOverlay;
-- (void) toggleMouseCapture;
+- (void) localMousePointerMode;
 - (void) toggleMouseVisible;
 
 @end

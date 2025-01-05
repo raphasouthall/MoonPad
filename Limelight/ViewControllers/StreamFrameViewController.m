@@ -199,8 +199,14 @@
         [self prepExtScreen:UIScreen.screens.lastObject];
     }
     else {
+        /*
+         _settings.externalDisplayMode.intValue:
+         0 - stage manager
+         1 - airplay
+         2 - disabled
+         */
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self->_streamView insertSubview:self->_streamVideoRenderView atIndex:0];
+            if(self->_settings.externalDisplayMode.intValue != 2) [self->_streamView insertSubview:self->_streamVideoRenderView atIndex:0];
         });
     }
 
@@ -275,10 +281,21 @@
     _controllerSupport = [[ControllerSupport alloc] initWithConfig:self.streamConfig delegate:self];
     _inactivityTimer = nil;
     
-    _streamVideoRenderView = (StreamView*)[[UIView alloc] initWithFrame:self.view.frame];
     _streamView = [[StreamView alloc] initWithFrame:self.view.frame];
-    _streamVideoRenderView.bounds = _streamView.bounds;
-    _streamVideoRenderView.userInteractionEnabled = false; // this will prevent renderView from intrecepting touchEvents which shall be interacting with streamView
+    
+    /*
+     _settings.externalDisplayMode.intValue:
+     0 - stage manager
+     1 - airplay
+     2 - disabled
+     */
+    if(_settings.externalDisplayMode.intValue == 2) _streamVideoRenderView = _streamView;
+    else {
+        NSLog(@"renderView separated from streamView");
+        _streamVideoRenderView = (StreamView*)[[UIView alloc] initWithFrame:self.view.frame];
+        _streamVideoRenderView.bounds = _streamView.bounds;
+        _streamVideoRenderView.userInteractionEnabled = false; // this will prevent renderView from intrecepting touchEvents which shall be interacting with streamView
+    }
     //[_streamView setupStreamView:_controllerSupport interactionDelegate:self config:self.streamConfig];
     [self reConfigStreamViewRealtime]; // call this method again to make sure all gestures are configured & added to the superview(self.view), including the gestures added from inside the streamview.
     
@@ -552,7 +569,13 @@
     Log(LOG_I, @"Removing External Screen");
     _extWindow.hidden = YES;
     [self handleViewResize];
-    [_streamView insertSubview:_streamVideoRenderView atIndex:0];
+    /*
+     _settings.externalDisplayMode.intValue:
+     0 - stage manager
+     1 - airplay
+     2 - disabled
+     */
+    if(_settings.externalDisplayMode.intValue != 2) [_streamView insertSubview:_streamVideoRenderView atIndex:0];
 }
 
 - (void) handleViewResize{
@@ -962,6 +985,7 @@
     }else{
         currentSettings.localMousePointerMode = @0;
     }
+    
     
     [dataMan saveData];
     [self reConfigStreamViewRealtime];

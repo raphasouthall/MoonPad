@@ -950,6 +950,7 @@ static NSMutableSet* hostList;
     [settingsViewController.hdrSelector setEnabled:!self.settingsExpandedInStreamView];
     [settingsViewController.framePacingSelector setEnabled:!self.settingsExpandedInStreamView];
     [settingsViewController.btMouseSelector setEnabled:!self.settingsExpandedInStreamView];
+    [settingsViewController.externalDisplayModeSelector setEnabled:!self.settingsExpandedInStreamView];
     [settingsViewController.goBackToStreamViewButton setEnabled:self.settingsExpandedInStreamView];
     [settingsViewController.allowPortraitSelector setEnabled:!self.settingsExpandedInStreamView && [self isFullScreenRequired]];//need "requires fullscreen" enabled in the app bunddle to make runtime orientation limitation woring
 

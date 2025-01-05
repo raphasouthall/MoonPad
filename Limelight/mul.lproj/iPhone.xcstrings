@@ -2221,6 +2221,36 @@
         }
       }
     },
+    "VWB-YB-Ptj.segmentTitles[2]" : {
+      "comment" : "Class = \"UISegmentedControl\"; VWB-YB-Ptj.segmentTitles[2] = \"Disabled\"; ObjectID = \"VWB-YB-Ptj\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Disabled"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "禁用"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "禁用"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "禁用"
+          }
+        }
+      }
+    },
     "WGf-9d-eAm.segmentTitles[0]" : {
       "comment" : "Class = \"UISegmentedControl\"; WGf-9d-eAm.segmentTitles[0] = \"Off\"; ObjectID = \"WGf-9d-eAm\";",
       "extractionState" : "extracted_with_value",
