@@ -1018,6 +1018,12 @@ static float L3_Y;
 }
 
 - (BOOL) handleTouchMovedEvent:touches {
+    
+    // Start a new transaction
+    [CATransaction begin];
+    // Disable implicit animations for onScreenStick movements
+    [CATransaction setDisableActions:YES];
+
     BOOL updated = false;
     BOOL buttonTouch = false;
     // we'll set fixed stick range despite stick & its background are resizable
@@ -1144,13 +1150,16 @@ static float L3_Y;
     if (updated) {
         [_controllerSupport updateFinished:_controller]; // here's the method called to send controller event to the remote side
     }
+    
+    [CATransaction commit];// commit the transaction to disable animation
+
     return updated || buttonTouch;
 }
 
 
 - (void)oscButtonTouchDownVisualEffect:(CALayer* )button{
     [CATransaction begin];
-    [CATransaction setDisableActions:YES]; // Disable implicit animations
+    [CATransaction setDisableActions:YES]; // Disable implicit animations for
     
     /*
     if(![[_originalControllerLayerOpacityDict allKeys] containsObject:button.name]){

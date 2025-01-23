@@ -22,6 +22,8 @@ import UIKit
     
     @objc static public var editMode: Bool = false
     @objc static public var timestampOfButtonBeingDragged: TimeInterval = 0
+    private let appWindow: UIView
+
     @objc public var keyLabel: String
     @objc public var keyString: String
     @objc public var timestamp: TimeInterval
@@ -33,13 +35,21 @@ import UIKit
     @objc public var deltaX: CGFloat
     @objc public var deltaY: CGFloat
     
+
     private var onScreenControls: OnScreenControls
     private let label: UILabel
     // private let originalBackgroundColor: UIColor
     private var storedLocation: CGPoint = .zero
     private let minimumBorderAlpha: CGFloat = 0.19
     private var defaultBorderColor: CGColor = UIColor(white: 0.2, alpha: 0.3).cgColor
+    private let moonlightPurple: CGColor = UIColor(red: 0.5, green: 0.5, blue: 1.0, alpha: 0.86).cgColor
+    private let crossMarkColor: CGColor = UIColor(white: 1, alpha: 0.7).cgColor
+    private let stickBallColor: CGColor = UIColor(white: 1, alpha: 0.75).cgColor
+    
     private let borderLayer = CAShapeLayer()
+    private var crossMarkLayer = CAShapeLayer()
+    @objc public var stickIndicatorXOffset: CGFloat = 120
+    private var stickBallLayer = CAShapeLayer()
     
     @objc init(keyString: String, keyLabel: String) {
         self.keyString = keyString
@@ -55,6 +65,7 @@ import UIKit
         self.deltaX = 0
         self.deltaY = 0
         self.onScreenControls = OnScreenControls()
+        self.appWindow = UIApplication.shared.windows.first!
         super.init(frame: .zero)
         setupView()
     }
@@ -68,6 +79,7 @@ import UIKit
             self.leadingAnchor.constraint(equalTo: self.superview!.leadingAnchor, constant: xOffset),
             self.topAnchor.constraint(equalTo: self.superview!.topAnchor, constant: yOffset),
         ])
+        storedLocation = CGPointMake(xOffset, yOffset)
     }
     
     @objc public func enableRelocationMode(enabled: Bool){
@@ -191,13 +203,97 @@ import UIKit
         setupBorderLayer();
     }
     
+//================================================================================================
+    //Indicator overlay for on-screen game controller left or right sticks (non-velocity mode)
+
+    // create stick indicator: the crossMark & stickBall:
+    private func createStickIndicator(with touchLocation: CGPoint){
+        // tell if the self button is located on the left or right
+        if(self.storedLocation.x + self.frame.width/2 > self.appWindow.frame.width*0.5){
+            self.stickIndicatorXOffset = -abs(self.stickIndicatorXOffset)
+        }
+        else{
+            self.stickIndicatorXOffset = abs(self.stickIndicatorXOffset)
+        }
+        
+        let stickMarkerRelativeLocation = CGPointMake(touchLocation.x + self.stickIndicatorXOffset, touchLocation.y)
+        self.crossMarkLayer = createCrossMarkOnTouchPoint(at: stickMarkerRelativeLocation)
+        self.stickBallLayer = createStickBall(center: stickMarkerRelativeLocation)
+    }
+    
+    
+    // cross mark for left & right gamePad
+    private func createCrossMarkOnTouchPoint(at point: CGPoint) -> CAShapeLayer {
+        let crossLayer = CAShapeLayer()
+        let path = UIBezierPath()
+        let crossSize = 45.0
+        
+        path.move(to: CGPoint(x: point.x - crossSize / 2, y: point.y))
+        path.addLine(to: CGPoint(x: point.x + crossSize / 2, y: point.y))
+
+        // 竖线
+        path.move(to: CGPoint(x: point.x, y: point.y - crossSize / 2))
+        path.addLine(to: CGPoint(x: point.x, y: point.y + crossSize / 2))
+
+        crossLayer.path = path.cgPath
+        crossLayer.strokeColor = crossMarkColor
+        crossLayer.lineWidth = 1
+        crossLayer.fillColor = crossMarkColor
+
+        self.layer.superlayer?.addSublayer(crossLayer)
+        crossLayer.position = CGPointMake(CGRectGetMinX(self.frame), CGRectGetMinY(self.frame))
+        // crossLayer.shadowRadius = 1
+        crossLayer.shadowColor = UIColor.black.cgColor
+        crossLayer.shadowOffset = CGSize(width: 1, height: 1)
+        crossLayer.shadowRadius = 0;
+        crossLayer.shadowOpacity = 0.8
+
+        return crossLayer
+    }
+    
+    private func createStickBall(center: CGPoint) -> CAShapeLayer {
+        // Create a circular path using UIBezierPath
+        let path = UIBezierPath(arcCenter: center, radius: 10, startAngle: 0, endAngle: 2 * .pi, clockwise: true)
+        
+        // Create a CAShapeLayer
+        let stickBallLayer = CAShapeLayer()
+        stickBallLayer.path = path.cgPath  // Assign the circular path to the shape layer
+        self.layer.superlayer?.addSublayer(stickBallLayer)
+        stickBallLayer.position = CGPointMake(CGRectGetMidX(self.crossMarkLayer.frame), CGRectGetMinY(self.crossMarkLayer.frame))
+
+        // stickBallLayer.position = CG
+        
+        // Set the stroke color and width (border of the circle)
+        stickBallLayer.strokeColor = stickBallColor
+        stickBallLayer.lineWidth = 0
+        stickBallLayer.shadowOffset = CGSize(width: 0.5, height: 0.5)
+        stickBallLayer.shadowRadius = 0;
+        stickBallLayer.shadowOpacity = 0.8
+        
+        // Set the fill color (inside of the circle)
+        stickBallLayer.fillColor = stickBallColor  // Light fill with some transparency
+        
+        return stickBallLayer
+    }
+
+    private func updateStickBallPosition(offSetX: CGFloat, offsetY: CGFloat){
+        CATransaction.begin()
+        CATransaction.setDisableActions(true)
+        self.stickBallLayer.removeAllAnimations()
+        self.stickBallLayer.position = CGPointMake(CGRectGetMidX(self.crossMarkLayer.frame) + deltaX/3, CGRectGetMinY(self.crossMarkLayer.frame) + deltaY/3)
+        CATransaction.commit()
+    }
+
+    //================================================================================================
+
+    
     private func buttonDownVisualEffect() {
         // setupBorderLayer()
         CATransaction.begin()
         CATransaction.setDisableActions(true)
         // self.layer.borderWidth = 0
         borderLayer.borderWidth = 8.6
-        borderLayer.borderColor = UIColor(red: 0.5, green: 0.5, blue: 1.0, alpha: 0.86).cgColor
+        borderLayer.borderColor = moonlightPurple
         CATransaction.commit()
     }
     
@@ -251,6 +347,23 @@ import UIKit
         
         if !OnScreenButtonView.editMode {
             // self.backgroundColor = UIColor.systemBlue.withAlphaComponent(0.7)
+            
+            
+            // touchPad temp TEST
+            let touch = touches.first
+            let touchBeganLocation = touch!.location(in: self)
+            // NSLog("x coord: %f, y coord: %f", currentLocation.x, currentLocation.y)
+            
+            // self.stickMarkerXOffset = CGRectGetWidth(self.frame)/2 + 37
+            // let stickMarkerRelativeLocation = CGPointMake(CGRectGetWidth(self.frame)/2 - self.stickMarkerXOffset, CGRectGetHeight(self.frame)/2)
+            
+            if CommandManager.touchPadCmds.contains(self.keyString){
+                if(self.keyString == "LPAD" || self.keyString == "RPAD"){
+                    self.createStickIndicator(with: touchBeganLocation)
+                }
+            }
+            
+            
             if !CommandManager.touchPadCmds.contains(self.keyString) {
                 self.buttonDownVisualEffect()
             }
@@ -307,12 +420,15 @@ import UIKit
             let currentLocation: CGPoint = (touches.first?.location(in: self))!
             deltaX = currentLocation.x - self.latestMousePointerLocation.x
             deltaY = currentLocation.y - self.latestMousePointerLocation.y
-            if self.keyString == "LS_PAD" {
+        
+            updateStickBallPosition(offSetX: deltaX, offsetY: deltaY)
+            
+            if self.keyString == "LPAD" {
                 // NSLog("coord test deltaX: %f, deltaY: %f", deltaX, deltaY)
                 // latestMousePointerLocation = currentLocation
                 self.onScreenControls.sendLeftStickTouchPadEvent(withDeltaX: deltaX, deltaY: deltaY);
             }
-            if self.keyString == "RS_PAD" {
+            if self.keyString == "RPAD" {
                 // NSLog("coord test deltaX: %f, deltaY: %f", deltaX, deltaY)
                 // latestMousePointerLocation = currentLocation
                 self.onScreenControls.sendRightStickTouchPadEvent(withDeltaX: deltaX, deltaY: deltaY);
@@ -325,13 +441,18 @@ import UIKit
         super.touchesEnded(touches, with: event)
         if !OnScreenButtonView.editMode && CommandManager.touchPadCmds.contains(self.keyString) && touches.count == 1 {
             switch self.keyString {
-            case "LS_PAD":
+            case "LPAD":
                 self.onScreenControls.clearLeftStickTouchPadFlag()
-            case "RS_PAD":
+                break
+            case "RPAD":
                 self.onScreenControls.clearRightStickTouchPadFlag()
+                break
             default:
                 break
             }
+            self.crossMarkLayer.removeFromSuperlayer()
+            self.stickBallLayer.removeFromSuperlayer()
+
         }
         if !OnScreenButtonView.editMode && !self.keyString.contains("+") { // if the command(keystring contains "+", it's a multi-key command rather than a single key button
             

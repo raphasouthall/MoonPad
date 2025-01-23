@@ -57,7 +57,7 @@ import UIKit
                                                        "M_X1" : BUTTON_X1,
                                                        "M_X2" : BUTTON_X2]
 
-    @objc public static let touchPadCmds: [String] = ["LS_PAD", "RS_PAD", "M_PAD"]
+    @objc public static let touchPadCmds: [String] = ["LVPAD", "RVPAD", "LPAD", "RPAD", "MousePAD"]
 
     static let keyboardButtonMappings: [String: Int16] = [
         // Windows Key Codes
