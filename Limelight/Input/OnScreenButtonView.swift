@@ -442,27 +442,75 @@ import UIKit
         
         if(buttonPressed & Direction.up.rawValue == Direction.up.rawValue){
             showLrudDirectionIndicator(with: upIndicator)
+            switch keyString {
+            case "WASDPAD": LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["W"]!,Int8(KEY_ACTION_DOWN), 0)
+            case "ARROWPAD": LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["UP_ARROW"]!,Int8(KEY_ACTION_DOWN), 0)
+            case "DPAD": break
+            default: break
+            }
         }
         else{
             self.upIndicator.removeFromSuperlayer()
+            switch keyString {
+            case "WASDPAD": LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["W"]!,Int8(KEY_ACTION_UP), 0)
+            case "ARROWPAD": LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["UP_ARROW"]!,Int8(KEY_ACTION_UP), 0)
+            case "DPAD": break
+            default: break
+            }
         }
         if(buttonPressed & Direction.down.rawValue == Direction.down.rawValue){
             showLrudDirectionIndicator(with: downIndicator)
+            switch keyString {
+            case "WASDPAD": LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["S"]!,Int8(KEY_ACTION_DOWN), 0)
+            case "ARROWPAD": LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["DOWN_ARROW"]!,Int8(KEY_ACTION_DOWN), 0)
+            case "DPAD": break
+            default: break
+            }
         }
         else{
             self.downIndicator.removeFromSuperlayer()
+            switch keyString {
+            case "WASDPAD": LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["S"]!,Int8(KEY_ACTION_UP), 0)
+            case "ARROWPAD": LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["DOWN_ARROW"]!,Int8(KEY_ACTION_UP), 0)
+            case "DPAD": break
+            default: break
+            }
         }
         if(buttonPressed & Direction.left.rawValue == Direction.left.rawValue){
             showLrudDirectionIndicator(with: leftIndicator)
+            switch keyString {
+            case "WASDPAD": LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["A"]!,Int8(KEY_ACTION_DOWN), 0)
+            case "ARROWPAD": LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["LEFT_ARROW"]!,Int8(KEY_ACTION_DOWN), 0)
+            case "DPAD": break
+            default: break
+            }
         }
         else{
             self.leftIndicator.removeFromSuperlayer()
+            switch keyString {
+            case "WASDPAD": LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["A"]!,Int8(KEY_ACTION_UP), 0)
+            case "ARROWPAD": LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["LEFT_ARROW"]!,Int8(KEY_ACTION_UP), 0)
+            case "DPAD": break
+            default: break
+            }
         }
         if(buttonPressed & Direction.right.rawValue == Direction.right.rawValue){
             showLrudDirectionIndicator(with: rightIndicator)
+            switch keyString {
+            case "WASDPAD": LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["D"]!,Int8(KEY_ACTION_DOWN), 0)
+            case "ARROWPAD": LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["RIGHT_ARROW"]!,Int8(KEY_ACTION_DOWN), 0)
+            case "DPAD": break
+            default: break
+            }
         }
         else{
             self.rightIndicator.removeFromSuperlayer()
+            switch keyString {
+            case "WASDPAD": LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["D"]!,Int8(KEY_ACTION_UP), 0)
+            case "ARROWPAD": LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["RIGHT_ARROW"]!,Int8(KEY_ACTION_UP), 0)
+            case "DPAD": break
+            default: break
+            }
         }
         
         CATransaction.commit()
@@ -719,17 +767,29 @@ import UIKit
             case "RSVPAD":
                 self.onScreenControls.clearRightStickTouchPadFlag()
                 break
-            case "DPAD", "WASDPAD", "ARROWPAD":
-                self.upIndicator.removeFromSuperlayer()
-                self.downIndicator.removeFromSuperlayer()
-                self.leftIndicator.removeFromSuperlayer()
-                self.rightIndicator.removeFromSuperlayer()
-                self.lrudIndicatorBall.removeFromSuperlayer()
-                break
+            case "WASDPAD":
+                LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["W"]!,Int8(KEY_ACTION_UP), 0)
+                LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["A"]!,Int8(KEY_ACTION_UP), 0)
+                LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["S"]!,Int8(KEY_ACTION_UP), 0)
+                LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["D"]!,Int8(KEY_ACTION_UP), 0)
+            case "ARROWPAD":
+                LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["LEFT_ARROW"]!,Int8(KEY_ACTION_UP), 0)
+                LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["RIGHT_ARROW"]!,Int8(KEY_ACTION_UP), 0)
+                LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["UP_ARROW"]!,Int8(KEY_ACTION_UP), 0)
+                LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["DOWN_ARROW"]!,Int8(KEY_ACTION_UP), 0)
+            case "DPAD": break
             default:
                 break
             }
         }
+        
+        self.buttonUpVisualEffect()
+        self.l3r3Indicator.removeFromSuperlayer()
+        self.upIndicator.removeFromSuperlayer()
+        self.downIndicator.removeFromSuperlayer()
+        self.leftIndicator.removeFromSuperlayer()
+        self.rightIndicator.removeFromSuperlayer()
+        self.lrudIndicatorBall.removeFromSuperlayer()
                         
         if !OnScreenButtonView.editMode && !self.keyString.contains("+") { // if the command(keystring contains "+", it's a multi-key command rather than a single key button
             
@@ -740,9 +800,6 @@ import UIKit
                 LiSendKeyboardEvent(CommandManager.keyboardButtonMappings[self.keyString]!,Int8(KEY_ACTION_UP), 0)
             }
         }
-
-        self.buttonUpVisualEffect()
-        self.l3r3Indicator.removeFromSuperlayer()
         
         if OnScreenButtonView.editMode {
             guard let superview = superview else { return }
