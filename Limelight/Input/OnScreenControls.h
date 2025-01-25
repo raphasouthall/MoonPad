@@ -105,10 +105,12 @@ typedef NS_ENUM(NSInteger, OnScreenControlsLevel) {
 
 + (NSMutableSet* )touchAddrsCapturedByOnScreenControls;
 + (void) testMethod;
-- (void) sendRightStickTouchPadEventWithDeltaX:(CGFloat) deltaX deltaY: (CGFloat) deltaY;
+- (void) sendRightStickTouchPadEvent:(CGFloat) stickX : (CGFloat) stickY;
 - (void) clearRightStickTouchPadFlag;
-- (void) sendLeftStickTouchPadEventWithDeltaX:(CGFloat) deltaX deltaY: (CGFloat) deltaY;
+- (void) sendLeftStickTouchPadEvent:(CGFloat) stickX : (CGFloat) stickY;
 - (void) clearLeftStickTouchPadFlag;
+- (void) pressDownL3;
+- (void) pressDownR3;
 
 - (id) initWithView:(UIView*)view controllerSup:(ControllerSupport*)controllerSupport streamConfig:(StreamConfiguration*)streamConfig;
 - (BOOL) handleTouchDownEvent:(NSSet*)touches;

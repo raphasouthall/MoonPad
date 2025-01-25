@@ -37,7 +37,10 @@ import UIKit
     @objc public var offSetX: CGFloat
     @objc public var offSetY: CGFloat
 
-    
+    private var quickDoubleTapDetected: Bool
+    private var touchTapTimeInterval: TimeInterval
+    private var touchTapTimeStamp: TimeInterval
+    private let QUICK_TAP_TIME_INTERVAL = 0.2
     
     private var onScreenControls: OnScreenControls
     private let label: UILabel
@@ -49,6 +52,7 @@ import UIKit
     private let moonlightPurple: CGColor = UIColor(red: 0.5, green: 0.5, blue: 1.0, alpha: 0.86).cgColor
     private let crossMarkColor: CGColor = UIColor(white: 1, alpha: 0.7).cgColor
     private let stickBallColor: CGColor = UIColor(white: 1, alpha: 0.75).cgColor
+    private var stickInputScale: CGFloat = 30
     
     private let borderLayer = CAShapeLayer()
     
@@ -57,6 +61,7 @@ import UIKit
     private var leftIndicator = CAShapeLayer()
     private var rightIndicator = CAShapeLayer()
     
+    private var l3r3Indicator = CAShapeLayer()
     private var crossMarkLayer = CAShapeLayer()
     private var stickBallLayer = CAShapeLayer()
     private var lrudIndicatorBall = CAShapeLayer()
@@ -79,6 +84,9 @@ import UIKit
         self.offSetY = 0
         self.onScreenControls = OnScreenControls()
         self.appWindow = UIApplication.shared.windows.first!
+        self.quickDoubleTapDetected = false
+        self.touchTapTimeInterval = 100
+        self.touchTapTimeStamp = 100
         super.init(frame: .zero)
         
         upIndicator = createLrudDirectionLayer()
@@ -89,6 +97,7 @@ import UIKit
         leftIndicator.anchorPoint = CGPoint(x: 1, y: 0.5)
         rightIndicator = createLrudDirectionLayer()
         rightIndicator.anchorPoint = CGPoint(x: 0, y: 0.5)
+
         
         setupView()
     }
@@ -226,7 +235,29 @@ import UIKit
         setupBorderLayer();
     }
     
-    
+    private func createAndShowl3r3Indicator() -> CAShapeLayer{
+        let indicatorFrame = CAShapeLayer();
+        let indicatorBorder = CAShapeLayer();
+        
+        indicatorFrame.frame = CGRectMake(0, 0, 80, 80)
+        indicatorFrame.cornerRadius = 9
+        indicatorBorder.borderWidth = 9
+        indicatorBorder.frame = indicatorFrame.bounds.insetBy(dx: -indicatorBorder.borderWidth, dy: -indicatorBorder.borderWidth) // Adjust the inset as needed
+        indicatorBorder.borderColor = UIColor.clear.cgColor
+        
+        indicatorBorder.cornerRadius = indicatorFrame.cornerRadius + indicatorBorder.borderWidth
+        indicatorBorder.backgroundColor = UIColor.clear.cgColor
+        indicatorBorder.fillColor = UIColor.clear.cgColor
+        let path = UIBezierPath(roundedRect: indicatorBorder.bounds, cornerRadius: indicatorBorder.cornerRadius)
+        indicatorBorder.path = path.cgPath
+        indicatorBorder.borderColor = moonlightPurple
+        
+        self.layer.superlayer?.addSublayer(indicatorBorder)
+        indicatorBorder.position = CGPointMake(CGRectGetMinX(self.frame)+touchBeganLocation.x, CGRectGetMinY(self.frame)+touchBeganLocation.y)
+        
+        return indicatorBorder
+    }
+
     
     
     
@@ -307,7 +338,7 @@ import UIKit
         CATransaction.begin()
         CATransaction.setDisableActions(true)
         self.stickBallLayer.removeAllAnimations()
-        self.stickBallLayer.position = CGPointMake(CGRectGetMidX(self.crossMarkLayer.frame) + offSetX/3, CGRectGetMinY(self.crossMarkLayer.frame) + offSetY/3)
+        self.stickBallLayer.position = CGPointMake(CGRectGetMidX(self.crossMarkLayer.frame) + touchInputToStickBallCoord(input: offSetX), CGRectGetMinY(self.crossMarkLayer.frame) + touchInputToStickBallCoord(input: offSetY))
         CATransaction.commit()
     }
     
@@ -485,6 +516,38 @@ import UIKit
     //==========================================================================================================
     
     
+    //=========================================send on screen controller stick events
+    private func touchInputToStickInput(input: CGFloat) -> CGFloat{
+        var target = 0x7FFE * input / stickInputScale
+        if target > 0x7FFE {target = 0x7FFE}
+        if target < -0x7FFE {target = -0x7FFE}
+        return target
+    }
+    
+    private func touchInputToStickBallCoord(input: CGFloat) -> CGFloat {
+        if input > stickInputScale {return 18}
+        if input < -stickInputScale {return -18}
+        return input * (18/stickInputScale)
+    }
+    
+    private func sendRightStickTouchPadEvent(inputX: CGFloat, inputY: CGFloat){
+        let targetX = self.touchInputToStickInput(input: inputX)
+        let targetY = -self.touchInputToStickInput(input: inputY)
+ // vertical input must be inverted
+        self.onScreenControls.sendRightStickTouchPadEvent(targetX, targetY)
+    }
+    
+    private func sendLeftStickTouchPadEvent(inputX: CGFloat, inputY: CGFloat){
+        let targetX = self.touchInputToStickInput(input: inputX)
+        let targetY = -self.touchInputToStickInput(input: inputY)
+        self.onScreenControls.sendLeftStickTouchPadEvent(targetX, targetY)
+    }
+    //==========================================================================================================
+
+    
+    
+    
+    
     
     
     // Touch event handling
@@ -493,6 +556,12 @@ import UIKit
         // print("touchDown: %f", CACurrentMediaTime())
         
         if touches.count == 1 {
+            
+            let currentTime = CACurrentMediaTime()
+            touchTapTimeInterval = currentTime - touchTapTimeStamp
+            touchTapTimeStamp = currentTime
+            quickDoubleTapDetected = touchTapTimeInterval < QUICK_TAP_TIME_INTERVAL
+            
             let touch = touches.first
             self.touchBeganLocation = touch!.location(in: self)
             self.latestTouchLocation = touchBeganLocation
@@ -508,12 +577,27 @@ import UIKit
         if !OnScreenButtonView.editMode {
             if CommandManager.touchPadCmds.contains(self.keyString) && touches.count == 1{
                 switch self.keyString {
-                case "LSPAD", "RSPAD":
+                case "LSPAD":
                     self.showStickIndicator()
+                    if quickDoubleTapDetected {
+                        self.l3r3Indicator = self.createAndShowl3r3Indicator()
+                        self.onScreenControls.pressDownL3()}
+                    break
+                case "RSPAD":
+                    self.showStickIndicator()
+                    if quickDoubleTapDetected {
+                        self.l3r3Indicator = self.createAndShowl3r3Indicator()
+                        self.onScreenControls.pressDownR3()}
                     break
                 case "LSVPAD":
+                    if quickDoubleTapDetected {
+                        self.l3r3Indicator = self.createAndShowl3r3Indicator()
+                        self.onScreenControls.pressDownL3()}
                     break
                 case "RSVPAD":
+                    if quickDoubleTapDetected {
+                        self.l3r3Indicator = self.createAndShowl3r3Indicator()
+                        self.onScreenControls.pressDownR3()}
                     break
                 case "DPAD", "WASDPAD", "ARROWPAD":
                     self.lrudIndicatorBall = createAndShowLrudBall(at: touchBeganLocation)
@@ -590,18 +674,18 @@ import UIKit
             
             switch self.keyString{
             case "LSPAD":
-                self.onScreenControls.sendLeftStickTouchPadEvent(withDeltaX: offSetX, deltaY: offSetY)
+                self.sendLeftStickTouchPadEvent(inputX: offSetX, inputY: offSetY)
                 updateStickBallPosition()
                 break
             case "RSPAD":
-                self.onScreenControls.sendRightStickTouchPadEvent(withDeltaX: offSetX, deltaY: offSetY);
+                self.sendRightStickTouchPadEvent(inputX: offSetX, inputY: offSetY);
                 updateStickBallPosition()
                 break
             case "LSVPAD":
-                self.onScreenControls.sendLeftStickTouchPadEvent(withDeltaX: deltaX, deltaY: deltaY)
+                self.sendLeftStickTouchPadEvent(inputX: deltaX, inputY: deltaY)
                 break
             case "RSVPAD":
-                self.onScreenControls.sendRightStickTouchPadEvent(withDeltaX: deltaX, deltaY: deltaY);
+                self.sendRightStickTouchPadEvent(inputX: deltaX, inputY: deltaY);
                 break
             case "DPAD", "WASDPAD", "ARROWPAD":
                 handleLrudTouchMove()
@@ -616,6 +700,7 @@ import UIKit
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         // self.pressed = false // will be reset outside the class
         super.touchesEnded(touches, with: event)
+        quickDoubleTapDetected = false
         if !OnScreenButtonView.editMode && CommandManager.touchPadCmds.contains(self.keyString) && touches.count == 1 {
             switch self.keyString{
             case "LSPAD":
@@ -657,6 +742,7 @@ import UIKit
         }
 
         self.buttonUpVisualEffect()
+        self.l3r3Indicator.removeFromSuperlayer()
         
         if OnScreenButtonView.editMode {
             guard let superview = superview else { return }
