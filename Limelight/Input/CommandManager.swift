@@ -74,7 +74,7 @@ import UIKit
         "OSCL2" : 0,
         "OSCR2" : 0]
     
-    @objc public static let touchPadCmds: [String] = ["LSVPAD", "RSVPAD", "LSPAD", "RSPAD", "MousePAD", "DPAD", "WASDPAD", "ARROWPAD"]
+    @objc public static let touchPadCmds: [String] = ["LSVPAD", "RSVPAD", "LSPAD", "RSPAD", "MOUSEPAD", "DPAD", "WASDPAD", "ARROWPAD"]
     
     static let keyboardButtonMappings: [String: Int16] = [
         // Windows Key Codes

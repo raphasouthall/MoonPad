@@ -22,8 +22,6 @@ import UIKit
     
     @objc static public var editMode: Bool = false
     @objc static public var timestampOfButtonBeingDragged: TimeInterval = 0
-    private let appWindow: UIView
-    
     @objc public var keyLabel: String
     @objc public var keyString: String
     @objc public var timestamp: TimeInterval
@@ -32,41 +30,65 @@ import UIKit
     @objc public var heightFactor: CGFloat
     @objc public var backgroundAlpha: CGFloat
     @objc public var latestTouchLocation: CGPoint
+    
+    private let appWindow: UIView
+    
+    
+    private var touchLockedForMoveEvent: UITouch
+
+    // for LSVPAD, RSVPAD
     @objc public var deltaX: CGFloat
     @objc public var deltaY: CGFloat
+    
+    // for LSPAD, RSPAD
     @objc public var offSetX: CGFloat
     @objc public var offSetY: CGFloat
+    
+    // for LSVPAD, RSVPAD, LSPAD, RSPAD
+    private let crossMarkColor: CGColor = UIColor(white: 1, alpha: 0.7).cgColor
+    private let stickBallColor: CGColor = UIColor(white: 1, alpha: 0.75).cgColor
+    private var stickInputScale: CGFloat = 30
+    private var l3r3Indicator = CAShapeLayer()
+    private var crossMarkLayer = CAShapeLayer()
+    private var stickBallLayer = CAShapeLayer()
+    @objc public var stickIndicatorXOffset: CGFloat = 120
 
+    // check quick double tap:
     private var quickDoubleTapDetected: Bool
     private var touchTapTimeInterval: TimeInterval
     private var touchTapTimeStamp: TimeInterval
     private let QUICK_TAP_TIME_INTERVAL = 0.2
     
-    private var onScreenControls: OnScreenControls
-    private let label: UILabel
-    // private let originalBackgroundColor: UIColor
-    private var touchBeganLocation: CGPoint = .zero
-    private var storedLocation: CGPoint = .zero
-    private let minimumBorderAlpha: CGFloat = 0.19
-    private var defaultBorderColor: CGColor = UIColor(white: 0.2, alpha: 0.3).cgColor
-    private let moonlightPurple: CGColor = UIColor(red: 0.5, green: 0.5, blue: 1.0, alpha: 0.86).cgColor
-    private let crossMarkColor: CGColor = UIColor(white: 1, alpha: 0.7).cgColor
-    private let stickBallColor: CGColor = UIColor(white: 1, alpha: 0.75).cgColor
-    private var stickInputScale: CGFloat = 30
-    
-    private let buttonDownVisualEffectLayer = CAShapeLayer()
-    private var buttonDownVisualEffectWidth: CGFloat
-    
+    // for all LRUD pads
     private var upIndicator = CAShapeLayer()
     private var downIndicator = CAShapeLayer()
     private var leftIndicator = CAShapeLayer()
     private var rightIndicator = CAShapeLayer()
     
-    private var l3r3Indicator = CAShapeLayer()
-    private var crossMarkLayer = CAShapeLayer()
-    private var stickBallLayer = CAShapeLayer()
+    // for DPAD LRUD pad
     private var lrudIndicatorBall = CAShapeLayer()
-    @objc public var stickIndicatorXOffset: CGFloat = 120
+    
+    // OnScreenControls instance
+    private var onScreenControls: OnScreenControls
+    
+    // key / button label
+    private let label: UILabel
+    
+    // first touch location within the button or pad view (self)
+    private var touchBeganLocation: CGPoint = .zero
+    
+    // for mousePad
+    private var mousePointerMoved: Bool
+    private var twoTouchesDetected: Bool
+    
+    private var storedLocation: CGPoint = .zero // location from persisted data
+    private let minimumBorderAlpha: CGFloat = 0.19
+    private var defaultBorderColor: CGColor = UIColor(white: 0.2, alpha: 0.3).cgColor
+    private let moonlightPurple: CGColor = UIColor(red: 0.5, green: 0.5, blue: 1.0, alpha: 0.86).cgColor
+
+    // whole button press down visual effect
+    private let buttonDownVisualEffectLayer = CAShapeLayer()
+    private var buttonDownVisualEffectWidth: CGFloat
     
     @objc init(keyString: String, keyLabel: String) {
         self.keyString = keyString
@@ -89,6 +111,9 @@ import UIKit
         self.touchTapTimeInterval = 100
         self.touchTapTimeStamp = 100
         self.buttonDownVisualEffectWidth = 0
+        self.mousePointerMoved = false
+        self.touchLockedForMoveEvent = UITouch()
+        self.twoTouchesDetected = false
         super.init(frame: .zero)
         
         upIndicator = createLrudDirectionLayer()
@@ -516,7 +541,44 @@ import UIKit
     //================================================================================================
     
     
+    //===== MOUSEPAD related methods=============================================================
+    private func sendLongMouseLeftButtonClickEvent() {
+        DispatchQueue.global(qos: .userInitiated).async {
+            // Logging the press event
+            NSLog("Sending left mouse button press")
+            LiSendMouseButtonEvent(CChar(BUTTON_ACTION_PRESS), BUTTON_LEFT)
+
+            // Wait 200 ms to simulate a real button press
+            usleep(UInt32(self.QUICK_TAP_TIME_INTERVAL * 1000000))
+
+            // If quick tap is not detected, release the button
+            if !self.quickDoubleTapDetected {
+                LiSendMouseButtonEvent(CChar(BUTTON_ACTION_RELEASE), BUTTON_LEFT)
+                // NSLog("double click: first long click release")
+            }
+            else{NSLog("Left mouse button release cancelled, keep pressing down, turning into dragging...")}
+            // Don't release the button if we're still dragging, this will prevent the dragging from being interrupted.
+        }
+    }
+
+    private func sendShortMouseLeftButtonClickEvent() {
+        DispatchQueue.global(qos: .userInitiated).async {
+            NSLog("double click: sending short click")
+            usleep(UInt32(50 * 1000))
+            LiSendMouseButtonEvent(CChar(BUTTON_ACTION_PRESS), BUTTON_LEFT)
+            usleep(UInt32(50 * 1000))
+            LiSendMouseButtonEvent(CChar(BUTTON_ACTION_RELEASE), BUTTON_LEFT)
+        }
+    }
     
+    private func sendMouseRightButtonClickEvent() {
+        DispatchQueue.global(qos: .userInitiated).async {
+            usleep(UInt32(50 * 1000))
+            LiSendMouseButtonEvent(CChar(BUTTON_ACTION_PRESS), BUTTON_RIGHT)
+            usleep(UInt32(50 * 1000))
+            LiSendMouseButtonEvent(CChar(BUTTON_ACTION_RELEASE), BUTTON_RIGHT)
+        }
+    }
     
     //==== wholeButtonPress visual effect=============================================
     private func buttonDownVisualEffect() {
@@ -592,18 +654,12 @@ import UIKit
     //==========================================================================================================
 
     
-    
-    
-    
-    
-    
     // Touch event handling
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        
-        // print("touchDown: %f", CACurrentMediaTime())
-        
-        if touches.count == 1 {
-            
+        super.touchesBegan(touches, with: event)
+        self.isMultipleTouchEnabled = self.keyString == "MOUSEPAD" // only enable multi-touch in mousePad mode
+
+        if touches.count == 1 { // to make sure touchBegan location captured properly, don't use event.alltouches.count here
             let currentTime = CACurrentMediaTime()
             touchTapTimeInterval = currentTime - touchTapTimeStamp
             touchTapTimeStamp = currentTime
@@ -613,17 +669,16 @@ import UIKit
             self.touchBeganLocation = touch!.location(in: self)
             self.latestTouchLocation = touchBeganLocation
         }
+                
+        let allCapturedTouchesCount = event?.allTouches?.filter({ $0.view == self }).count // this will counts all valid touches within the self buttonView, and excludes touches in other buttonViews
+        if allCapturedTouchesCount == 2 {
+            self.twoTouchesDetected = true
+        }
         
         self.pressed = true
-        super.touchesBegan(touches, with: event)
-        //self.backgroundColor = UIColor(red: 0.0, green: 0.0, blue: 1.0, alpha: 0.7)
-        
-        // OnScreenControls.testMethod();
-        // RelativeTouchHandler.testMethod();
-
 
         if !OnScreenButtonView.editMode {
-            if CommandManager.touchPadCmds.contains(self.keyString) && touches.count == 1{
+            if CommandManager.touchPadCmds.contains(self.keyString) && touches.count == 1{ // don't use event?.allTouches?.count here, it will counts all touches including the ones captured by other UIViews
                 switch self.keyString {
                 case "LSPAD":
                     self.showStickIndicator()
@@ -699,7 +754,7 @@ import UIKit
         
         if !OnScreenButtonView.editMode {
             if CommandManager.touchPadCmds.contains(self.keyString){
-                handleTouchPadMoveEvent(touches: touches)
+                handleTouchPadMoveEvent(touches, with: event)
             }
         }
         
@@ -718,10 +773,10 @@ import UIKit
         
     }
     
-    private func handleTouchPadMoveEvent (touches: Set<UITouch>){
-        if touches.count == 1{
+    private func handleTouchPadMoveEvent (_ touches: Set<UITouch>, with event: UIEvent?){
+        if touches.count == 1{ // don't use event.alltouches.count here, it will counts all touches
+            self.mousePointerMoved = true
             let currentTouchLocation: CGPoint = (touches.first?.location(in: self))!
-            
             self.deltaX = currentTouchLocation.x - self.latestTouchLocation.x
             self.deltaY = currentTouchLocation.y - self.latestTouchLocation.y
             self.offSetX = currentTouchLocation.x - self.touchBeganLocation.x
@@ -729,6 +784,9 @@ import UIKit
             self.latestTouchLocation = currentTouchLocation
             
             switch self.keyString{
+            case "MOUSEPAD":
+                LiSendMouseMoveEvent(Int16(truncatingIfNeeded: Int(deltaX)), Int16(truncatingIfNeeded: Int(deltaY)))
+                break
             case "LSPAD":
                 self.sendLeftStickTouchPadEvent(inputX: offSetX, inputY: offSetY)
                 updateStickBallPosition()
@@ -749,10 +807,31 @@ import UIKit
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        // self.pressed = false // will be reset outside the class
         super.touchesEnded(touches, with: event)
-        quickDoubleTapDetected = false
-        if !OnScreenButtonView.editMode && CommandManager.touchPadCmds.contains(self.keyString) && touches.count == 1 {
+
+        if self.keyString != "MOUSEPAD" {quickDoubleTapDetected = false} //do not reset this flag here in mousePad mode
+        
+        let allCapturedTouchesCount = event?.allTouches?.filter({ $0.view == self }).count // this will counts all valid touches within the self buttonView, and excludes touches in other buttonViews
+        
+        // deal with MOUSPAD first
+        if !OnScreenButtonView.editMode && self.keyString == "MOUSEPAD" && allCapturedTouchesCount == 1 && !twoTouchesDetected {
+            if !mousePointerMoved && !quickDoubleTapDetected {self.sendLongMouseLeftButtonClickEvent()} // deal with single tap(click)
+            if quickDoubleTapDetected { //deal with quick double tap
+                LiSendMouseButtonEvent(CChar(BUTTON_ACTION_RELEASE), BUTTON_LEFT) //must release the button anyway, because the button is likely being held down since the long click turned into a dragging event.
+                if !mousePointerMoved {self.sendShortMouseLeftButtonClickEvent()}
+                quickDoubleTapDetected = false
+            }
+            mousePointerMoved = false // reset this flag
+        }
+        
+        if !OnScreenButtonView.editMode && self.keyString == "MOUSEPAD" && twoTouchesDetected && touches.count == allCapturedTouchesCount { // need to enable multi-touch first
+            // touches.count == allCapturedTouchesCount means allfingers are lifting
+            self.sendMouseRightButtonClickEvent()
+            twoTouchesDetected = false
+        }
+        
+        // then other types of pads
+        if !OnScreenButtonView.editMode && CommandManager.touchPadCmds.contains(self.keyString) {
             switch self.keyString{
             case "LSPAD":
                 self.onScreenControls.clearLeftStickTouchPadFlag()
@@ -786,6 +865,7 @@ import UIKit
             }
         }
         
+
         self.buttonUpVisualEffect()
         self.l3r3Indicator.removeFromSuperlayer()
         self.upIndicator.removeFromSuperlayer()

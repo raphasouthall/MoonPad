@@ -277,9 +277,10 @@ static const float QUICK_TAP_TIME_INTERVAL = 0.2;
         // Wait 100 ms to simulate a real button press
         usleep(QUICK_TAP_TIME_INTERVAL * 1000000);
         if(!self->quickTapDetected){
-            NSLog(@"Left mouse button release cancelled, keep pressing down, turning into dragging...");
             LiSendMouseButtonEvent(BUTTON_ACTION_RELEASE, BUTTON_LEFT);
         }
+        else NSLog(@"Left mouse button release cancelled, keep pressing down, turning into dragging...");
+
         // do not release the button if we're still dragging, this will prevent the dragging from being interrupted.
     });
 }
