@@ -386,9 +386,9 @@
     [self.buttonAndControllerHeightSlider setValue: self->selectedButtonView.heightFactor];
     [self.buttonAndControllerAlphaSlider setValue: self->selectedButtonView.backgroundAlpha];
     
-    [buttonSizeSliderLabel setText:[LocalizationHelper localizedStringForKey:@"Button Size: %.2f", self->selectedButtonView.widthFactor]];
-    [buttonHeightSliderLabel setText:[LocalizationHelper localizedStringForKey:@"Button Height: %.2f", self->selectedButtonView.heightFactor]];
-    [buttonAlphaSliderLabel setText:[LocalizationHelper localizedStringForKey:@"Button Alpha: %.2f", self->selectedButtonView.backgroundAlpha]];
+    [buttonSizeSliderLabel setText:[LocalizationHelper localizedStringForKey:@"Widget Size: %.2f", self->selectedButtonView.widthFactor]];
+    [buttonHeightSliderLabel setText:[LocalizationHelper localizedStringForKey:@"Widget Height: %.2f", self->selectedButtonView.heightFactor]];
+    [buttonAlphaSliderLabel setText:[LocalizationHelper localizedStringForKey:@"Widget Alpha: %.2f", self->selectedButtonView.backgroundAlpha]];
 
 }
 
@@ -407,14 +407,14 @@
     CGFloat alpha = [self.layoutOSC getControllerLayerOpacity:controllerLayer];
     [self.buttonAndControllerAlphaSlider setValue:alpha];
     
-    [buttonSizeSliderLabel setText:[LocalizationHelper localizedStringForKey:@"Button Size: %.2f", sizeFactor]];
-    [buttonHeightSliderLabel setText:[LocalizationHelper localizedStringForKey:@"Button Height: %.2f", sizeFactor]];
-    [buttonAlphaSliderLabel setText:[LocalizationHelper localizedStringForKey:@"Button Alpha: %.2f", alpha]];
+    [buttonSizeSliderLabel setText:[LocalizationHelper localizedStringForKey:@"Widget Size: %.2f", sizeFactor]];
+    [buttonHeightSliderLabel setText:[LocalizationHelper localizedStringForKey:@"Widget Height: %.2f", sizeFactor]];
+    [buttonAlphaSliderLabel setText:[LocalizationHelper localizedStringForKey:@"Widget Alpha: %.2f", alpha]];
 }
 
 - (void)buttonAndControllerSizeSliderMoved{
-    [buttonSizeSliderLabel setText:[LocalizationHelper localizedStringForKey:@"Button Size: %.2f", self.buttonAndControllerSizeSlider.value]];
-    [buttonHeightSliderLabel setText:[LocalizationHelper localizedStringForKey:@"Button Height: %.2f", self.buttonAndControllerSizeSlider.value]]; // resizing the whole button
+    [buttonSizeSliderLabel setText:[LocalizationHelper localizedStringForKey:@"Widget Size: %.2f", self.buttonAndControllerSizeSlider.value]];
+    [buttonHeightSliderLabel setText:[LocalizationHelper localizedStringForKey:@"Widget Height: %.2f", self.buttonAndControllerSizeSlider.value]]; // resizing the whole button
     [self.buttonAndControllerHeightSlider setValue: self.buttonAndControllerSizeSlider.value];
     
     if(self->selectedButtonView != nil && self->buttonViewSelected){
@@ -429,7 +429,7 @@
 }
 
 - (void)buttonAndControllerHeightSliderMoved{
-    [buttonHeightSliderLabel setText:[LocalizationHelper localizedStringForKey:@"Button Height: %.2f", self.buttonAndControllerHeightSlider.value]];
+    [buttonHeightSliderLabel setText:[LocalizationHelper localizedStringForKey:@"Widget Height: %.2f", self.buttonAndControllerHeightSlider.value]];
     if(self->selectedButtonView != nil && self->buttonViewSelected){
         self->selectedButtonView.translatesAutoresizingMaskIntoConstraints = true; // this is mandatory to prevent unexpected key view location change
         self->selectedButtonView.heightFactor = self.buttonAndControllerHeightSlider.value;
@@ -438,7 +438,7 @@
 }
 
 - (void)buttonAndControllerAlphaSliderMoved{
-    [buttonAlphaSliderLabel setText:[LocalizationHelper localizedStringForKey:@"Button Alpha: %.2f", self.buttonAndControllerAlphaSlider.value]];
+    [buttonAlphaSliderLabel setText:[LocalizationHelper localizedStringForKey:@"Widget Alpha: %.2f", self.buttonAndControllerAlphaSlider.value]];
     if(self->selectedButtonView != nil && self->buttonViewSelected){
         [self->selectedButtonView adjustButtonTransparencyWithAlpha:self.buttonAndControllerAlphaSlider.value];
     }
@@ -450,17 +450,27 @@
 }
 
 - (void)setupProfileLableAndSliders{
-    CGFloat xPosition = (self.view.bounds.size.width - self.currentProfileLabel.frame.size.width) / 2;
+    // self.currentProfileLabel.frame = CGRectMake(0, 0, 180, 35);
+    // CGFloat profileLabelXPosition = self.view.bounds.size.width - self.currentProfileLabel.frame.size.width - 20;
+    CGFloat sliderXPosition = (self.view.bounds.size.width - self.buttonAndControllerSizeSlider.frame.size.width)/2 ;
+    CGFloat profileLabelXPosition = self.view.bounds.size.width/2 + (self.buttonAndControllerSizeSlider.frame.size.width)/2 + 8;
+
     // Set the label's frame with the calculated x-position
-    self.currentProfileLabel.frame = CGRectMake(xPosition, self.currentProfileLabel.frame.origin.y, self.currentProfileLabel.frame.size.width, self.currentProfileLabel.frame.size.height);
+    self.currentProfileLabel.frame = CGRectMake(profileLabelXPosition, self.currentProfileLabel.frame.origin.y, self.currentProfileLabel.frame.size.width, self.currentProfileLabel.frame.size.height);
     self.currentProfileLabel.hidden = NO; // Show Current Profile display
-    [self.currentProfileLabel setText:[LocalizationHelper localizedStringForKey:@"Current Profile: %@",[profilesManager getSelectedProfile].name]]; // display current profile name when profile is being refreshed.
+    if (@available(iOS 13.0, *)) {
+        self.currentProfileLabel.textAlignment = NSTextAlignmentNatural;
+        self.currentProfileLabel.numberOfLines = 2;
+    } else {
+        // Fallback on earlier versions
+    }
+    [self.currentProfileLabel setText:[LocalizationHelper localizedStringForKey:@"Profile: %@",[profilesManager getSelectedProfile].name]]; // display current profile name when profile is being refreshed.
     
     // button size sliders
     self.buttonAndControllerSizeSlider.hidden = NO;
-    self.buttonAndControllerSizeSlider.frame = CGRectMake(xPosition, self.buttonAndControllerSizeSlider.frame.origin.y, self.buttonAndControllerSizeSlider.frame.size.width, self.buttonAndControllerSizeSlider.frame.size.height);
+    self.buttonAndControllerSizeSlider.frame = CGRectMake(sliderXPosition, self.buttonAndControllerSizeSlider.frame.origin.y, self.buttonAndControllerSizeSlider.frame.size.width, self.buttonAndControllerSizeSlider.frame.size.height);
     [self.buttonAndControllerSizeSlider addTarget:self action:@selector(buttonAndControllerSizeSliderMoved) forControlEvents:(UIControlEventValueChanged)];
-    buttonSizeSliderLabel.text = [LocalizationHelper localizedStringForKey:@"Button Size"];
+    buttonSizeSliderLabel.text = [LocalizationHelper localizedStringForKey:@"Widget Size"];
     buttonSizeSliderLabel.font = [UIFont systemFontOfSize:23];
     buttonSizeSliderLabel.textColor = [UIColor whiteColor];
     buttonSizeSliderLabel.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.5];
@@ -478,10 +488,10 @@
 
     // button height sliders
     self.buttonAndControllerHeightSlider.hidden = NO;
-    self.buttonAndControllerHeightSlider.frame = CGRectMake(xPosition, self.buttonAndControllerHeightSlider.frame.origin.y, self.buttonAndControllerHeightSlider.frame.size.width, self.buttonAndControllerHeightSlider.frame.size.height);
+    self.buttonAndControllerHeightSlider.frame = CGRectMake(sliderXPosition, self.buttonAndControllerHeightSlider.frame.origin.y, self.buttonAndControllerHeightSlider.frame.size.width, self.buttonAndControllerHeightSlider.frame.size.height);
     [self.buttonAndControllerHeightSlider addTarget:self action:@selector(buttonAndControllerHeightSliderMoved) forControlEvents:(UIControlEventValueChanged)];
     // button height label
-    buttonHeightSliderLabel.text = [LocalizationHelper localizedStringForKey:@"Button Height"];
+    buttonHeightSliderLabel.text = [LocalizationHelper localizedStringForKey:@"Widget Height"];
     buttonHeightSliderLabel.font = [UIFont systemFontOfSize:23];
     buttonHeightSliderLabel.textColor = [UIColor whiteColor];
     buttonHeightSliderLabel.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.5];
@@ -499,12 +509,12 @@
 
     
     self.buttonAndControllerAlphaSlider.hidden = NO;
-    self.buttonAndControllerAlphaSlider.frame = CGRectMake(xPosition, self.buttonAndControllerAlphaSlider.frame.origin.y, self.buttonAndControllerAlphaSlider.frame.size.width, self.buttonAndControllerAlphaSlider.frame.size.height);
+    self.buttonAndControllerAlphaSlider.frame = CGRectMake(sliderXPosition, self.buttonAndControllerAlphaSlider.frame.origin.y, self.buttonAndControllerAlphaSlider.frame.size.width, self.buttonAndControllerAlphaSlider.frame.size.height);
     [self.buttonAndControllerAlphaSlider addTarget:self action:@selector(buttonAndControllerAlphaSliderMoved) forControlEvents:(UIControlEventValueChanged)];
      
     // button alpha label
     
-    buttonAlphaSliderLabel.text = [LocalizationHelper localizedStringForKey:@"Button Alpha"];
+    buttonAlphaSliderLabel.text = [LocalizationHelper localizedStringForKey:@"Widget Alpha"];
     buttonAlphaSliderLabel.font = [UIFont systemFontOfSize:23];
     buttonAlphaSliderLabel.textColor = [UIColor whiteColor];
     buttonAlphaSliderLabel.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.5];

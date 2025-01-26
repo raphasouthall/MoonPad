@@ -806,30 +806,30 @@
       }
     },
     "cRV-Xw-CVi.text" : {
-      "comment" : "Class = \"UILabel\"; text = \"Current Profile:\"; ObjectID = \"cRV-Xw-CVi\";",
+      "comment" : "Class = \"UILabel\"; text = \"Profile:\"; ObjectID = \"cRV-Xw-CVi\";",
       "extractionState" : "extracted_with_value",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "Current Profile:"
+            "value" : "Profile:"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "当前布局: "
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "当前布局: "
           }
         },
         "zh-HK" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "当前布局: "
           }
         }

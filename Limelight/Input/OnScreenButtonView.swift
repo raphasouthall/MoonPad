@@ -777,7 +777,6 @@ import UIKit
                 storedLocation = currentLocation // Update initial center for next movement
             }
         }
-        
     }
     
     private func handleTouchPadMoveEvent (_ touches: Set<UITouch>, with event: UIEvent?){

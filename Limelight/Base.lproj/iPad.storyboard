@@ -867,8 +867,26 @@ ICAgICAgICAgICAgICA
                                     <constraint firstItem="YLK-IE-ajS" firstAttribute="centerX" secondItem="fZU-G0-fgM" secondAttribute="centerX" id="xm7-a0-8G7"/>
                                 </constraints>
                             </view>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Current Profile:" textAlignment="center" lineBreakMode="tailTruncation" adjustsFontSizeToFit="NO" id="cRV-Xw-CVi">
-                                <rect key="frame" x="207" y="109" width="420" height="54"/>
+                            <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="1" minValue="0.59999999999999998" maxValue="3.8999999999999999" id="Efn-Si-TPp" userLabel="Button Size Slider">
+                                <rect key="frame" x="205" y="87" width="420" height="31"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" systemColor="secondaryLabelColor"/>
+                                <color key="tintColor" red="0.6716768742" green="0.61711704730000005" blue="0.99902987480000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </slider>
+                            <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="1" minValue="0.59999999999999998" maxValue="3.8999999999999999" id="ZOF-sL-e7p" userLabel="Button Height Slider">
+                                <rect key="frame" x="205" y="122" width="420" height="31"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" systemColor="secondaryLabelColor"/>
+                                <color key="tintColor" red="0.6716768742" green="0.61711704730000005" blue="0.99902987480000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </slider>
+                            <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.83299999999999996" minValue="0.23000000000000001" maxValue="0.999" id="ZLL-pE-iZh" userLabel="Button Alpha Slider">
+                                <rect key="frame" x="205" y="157" width="420" height="31"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" systemColor="secondaryLabelColor"/>
+                                <color key="tintColor" red="0.6716768742" green="0.61711704730000005" blue="0.99902987480000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </slider>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Profile:" textAlignment="center" lineBreakMode="tailTruncation" adjustsFontSizeToFit="NO" id="cRV-Xw-CVi">
+                                <rect key="frame" x="632" y="87" width="163" height="102"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" red="0.38551661729999998" green="0.28289704380000003" blue="0.61853601300000005" alpha="0.28999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
                                 <color key="tintColor" red="0.81533776120000001" green="0.85979419950000002" blue="0.91372549020000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -876,24 +894,6 @@ ICAgICAgICAgICAgICA
                                 <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="1" minValue="0.59999999999999998" maxValue="3.8999999999999999" id="Efn-Si-TPp" userLabel="Button Size Slider">
-                                <rect key="frame" x="205" y="172" width="420" height="31"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" systemColor="secondaryLabelColor"/>
-                                <color key="tintColor" red="0.6716768742" green="0.61711704730000005" blue="0.99902987480000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                            </slider>
-                            <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="1" minValue="0.59999999999999998" maxValue="3.8999999999999999" id="ZOF-sL-e7p" userLabel="Button Height Slider">
-                                <rect key="frame" x="205" y="211" width="420" height="31"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" systemColor="secondaryLabelColor"/>
-                                <color key="tintColor" red="0.6716768742" green="0.61711704730000005" blue="0.99902987480000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                            </slider>
-                            <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.83299999999999996" minValue="0.23000000000000001" maxValue="0.999" id="ZLL-pE-iZh" userLabel="Button Alpha Slider">
-                                <rect key="frame" x="205" y="249" width="420" height="31"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" systemColor="secondaryLabelColor"/>
-                                <color key="tintColor" red="0.6716768742" green="0.61711704730000005" blue="0.99902987480000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                            </slider>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
