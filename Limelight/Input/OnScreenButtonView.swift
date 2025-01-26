@@ -54,7 +54,8 @@ import UIKit
     private let stickBallColor: CGColor = UIColor(white: 1, alpha: 0.75).cgColor
     private var stickInputScale: CGFloat = 30
     
-    private let borderLayer = CAShapeLayer()
+    private let buttonDownVisualEffectLayer = CAShapeLayer()
+    private var buttonDownVisualEffectWidth: CGFloat
     
     private var upIndicator = CAShapeLayer()
     private var downIndicator = CAShapeLayer()
@@ -87,6 +88,7 @@ import UIKit
         self.quickDoubleTapDetected = false
         self.touchTapTimeInterval = 100
         self.touchTapTimeStamp = 100
+        self.buttonDownVisualEffectWidth = 0
         super.init(frame: .zero)
         
         upIndicator = createLrudDirectionLayer()
@@ -125,22 +127,7 @@ import UIKit
         else{
             self.backgroundAlpha = 0.5
         }
-        
-        // setup default border from self.backgroundAlpha
-        var borderAlpha = 1.15 * self.backgroundAlpha
-        if borderAlpha < minimumBorderAlpha {
-            borderAlpha = minimumBorderAlpha
-        }
-        defaultBorderColor = UIColor(white: 0.2, alpha: borderAlpha).cgColor
-        self.layer.borderColor = defaultBorderColor
-        
-        if CommandManager.touchPadCmds.contains(self.keyString){
-            self.backgroundColor = UIColor.clear // make touchPad transparent
-            self.layer.borderColor = UIColor(white: 0.2, alpha: borderAlpha - 0.2).cgColor // reduce border alpha for touchPad
-        }
-        else{ // backgroundColor works for buttons other than touch pad
-            self.backgroundColor = UIColor(white: 0.2, alpha: self.backgroundAlpha - 0.18) // offset to be consistent with onScreen controller layer opacity
-        }
+        self.tweakAlpha()
     }
     
     @objc public func resizeButtonView(){
@@ -159,14 +146,8 @@ import UIKit
         if self.heightFactor == 0 {self.heightFactor = 1.0}
         
         // Constraints for resizing
-        let newWidthConstraint = self.widthAnchor.constraint(equalToConstant: 70 * self.widthFactor)
-        let newHeightConstraint = self.heightAnchor.constraint(equalToConstant: 65 * self.heightFactor)
         
-        NSLayoutConstraint.activate([
-            self.widthAnchor.constraint(equalToConstant: 70 * self.widthFactor),
-            self.heightAnchor.constraint(equalToConstant: 65 * self.heightFactor),
-        ])
-        
+        self.changeAndActivateContraints()
         
         // Trigger layout update
         superview.layoutIfNeeded()
@@ -175,9 +156,43 @@ import UIKit
         setupView()
     }
     
+    private func tweakAlpha(){
+        // setup default border from self.backgroundAlpha
+        let realBackgroundAlpha = self.backgroundAlpha - 0.18 // offset to be consistent with legacy onScreen controller layer opacity
+        self.backgroundColor = UIColor(white: 0.2, alpha: realBackgroundAlpha) // offset to be consistent with legacy onScreen controller layer opacity
+        var borderAlpha = realBackgroundAlpha * 1.01
+        if borderAlpha < minimumBorderAlpha {
+            borderAlpha = minimumBorderAlpha
+        }
+        defaultBorderColor = UIColor(white: 0.2, alpha: borderAlpha).cgColor
+        self.layer.borderColor = defaultBorderColor
+
+        if CommandManager.touchPadCmds.contains(self.keyString){
+            self.backgroundColor = UIColor.clear // make touchPad transparent
+            self.layer.borderColor = UIColor(white: 0.2, alpha: borderAlpha - 0.15).cgColor // reduced border alpha for touchPad
+        }
+    }
     
+    private func changeAndActivateContraints(){
+        if CommandManager.oscButtonMappings.keys.contains(self.keyString){ // we'll make custom osc buttons round & smaller
+            NSLayoutConstraint.activate([
+                self.widthAnchor.constraint(equalToConstant: 60 * self.widthFactor),
+                self.heightAnchor.constraint(equalToConstant: 60 * self.heightFactor),
+            ])}
+        else{
+            NSLayoutConstraint.activate([
+                self.widthAnchor.constraint(equalToConstant: 70 * self.widthFactor),
+                self.heightAnchor.constraint(equalToConstant: 65 * self.heightFactor),
+            ])}
+        NSLayoutConstraint.activate([
+            label.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 10), // set up label size contrain within UIView
+            label.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -10),
+            label.centerXAnchor.constraint(equalTo: centerXAnchor),
+            label.centerYAnchor.constraint(equalTo: centerYAnchor),
+        ])
+    }
     
-    @objc public func setupView() {
+    private func setupView() {
         label.text = self.keyLabel
         label.font = UIFont.boldSystemFont(ofSize: 19)
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -192,47 +207,31 @@ import UIKit
         
         self.translatesAutoresizingMaskIntoConstraints = true // this is mandatory to prevent unexpected key view location change
         
-        // reset to default border
+        self.layer.cornerRadius = 20
         self.layer.borderWidth = 1
-        var borderAlpha = 1.15 * self.backgroundAlpha
-        if borderAlpha < minimumBorderAlpha {
-            borderAlpha = minimumBorderAlpha
-        }
-        defaultBorderColor = UIColor(white: 0.2, alpha: borderAlpha).cgColor
-        self.borderLayer.borderColor = defaultBorderColor
+
+        self.tweakAlpha()
         
-        self.layer.cornerRadius = 15
+        if CommandManager.oscButtonMappings.keys.contains(self.keyString){ //make oscButtons round and no border
+            self.layer.cornerRadius = self.frame.width/2
+            self.layer.borderWidth = 0
+            label.minimumScaleFactor = 0.15  // Adjust the scale factor for oscButtons
+            label.font = UIFont.boldSystemFont(ofSize: 22)
+        }
         
         if CommandManager.touchPadCmds.contains(self.keyString){
-            self.backgroundColor = UIColor.clear // make touchPad transparent
-            self.layer.borderColor = UIColor(white: 0.2, alpha: borderAlpha - 0.2).cgColor // reduce border alpha for touchPad
             label.text = "" // make touchPad display no text
         }
-        else{ // backgroundColor works for buttons other than touch pad
-            self.backgroundColor = UIColor(white: 0.2, alpha: self.backgroundAlpha - 0.18) // offset to be consistent with onScreen controller layer opacity
-        }
+
         // self.layer.shadowColor = UIColor.clear.cgColor
         // self.layer.shadowRadius = 8
         // self.layer.shadowOpacity = 0.5
         
         addSubview(label)
         
-        NSLayoutConstraint.activate([
-            //self.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.width * 0.088),
-            //self.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.height * 0.1),
-            self.widthAnchor.constraint(equalToConstant: 70 * self.widthFactor),
-            self.heightAnchor.constraint(equalToConstant: 65 * self.widthFactor),
-        ])
+        self.changeAndActivateContraints()
         
-        NSLayoutConstraint.activate([
-            label.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 10), // set up label size contrain within UIView
-            label.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -10),
-            label.centerXAnchor.constraint(equalTo: centerXAnchor),
-            label.centerYAnchor.constraint(equalTo: centerYAnchor),
-            //label.heightAnchor.constraint(equalToConstant: 40)
-        ])
-        
-        setupBorderLayer();
+        setupButtonDownVisualEffectLayer();
     }
     
     private func createAndShowl3r3Indicator() -> CAShapeLayer{
@@ -525,8 +524,8 @@ import UIKit
         CATransaction.begin()
         CATransaction.setDisableActions(true)
         // self.layer.borderWidth = 0
-        borderLayer.borderWidth = 8.6
-        borderLayer.borderColor = moonlightPurple
+        buttonDownVisualEffectLayer.borderWidth = self.buttonDownVisualEffectWidth // this will show the visual effect
+        buttonDownVisualEffectLayer.borderColor = moonlightPurple
         CATransaction.commit()
     }
     
@@ -534,31 +533,32 @@ import UIKit
         CATransaction.begin()
         CATransaction.setDisableActions(true)
         // self.layer.borderWidth = 1
-        borderLayer.borderWidth = 0
-        borderLayer.borderColor = defaultBorderColor
+        buttonDownVisualEffectLayer.borderWidth = 0
+        buttonDownVisualEffectLayer.borderColor = defaultBorderColor
         CATransaction.commit()
     }
     
     
-    private func setupBorderLayer() {
-        // Create a shape layer for the border
+    private func setupButtonDownVisualEffectLayer() {
+        self.buttonDownVisualEffectWidth = 8.6
+        if CommandManager.oscButtonMappings.keys.contains(self.keyString) {self.buttonDownVisualEffectWidth = 15.3} // wider visual effect for osc buttons
         
         // Set the frame to be larger than the view to expand outward
-        borderLayer.borderWidth = 0
-        borderLayer.frame = self.bounds.insetBy(dx: -8.6, dy: -8.6) // Adjust the inset as needed
-        borderLayer.cornerRadius = self.layer.cornerRadius + 8.6
-        borderLayer.backgroundColor = UIColor.clear.cgColor;
-        borderLayer.fillColor = UIColor.clear.cgColor;
+        buttonDownVisualEffectLayer.borderWidth = 0 // set this 0 to hide the visual effect first
+        buttonDownVisualEffectLayer.frame = self.bounds.insetBy(dx: -self.buttonDownVisualEffectWidth, dy: -self.buttonDownVisualEffectWidth) // Adjust the inset as needed
+        buttonDownVisualEffectLayer.cornerRadius = self.layer.cornerRadius + self.buttonDownVisualEffectWidth
+        buttonDownVisualEffectLayer.backgroundColor = UIColor.clear.cgColor;
+        buttonDownVisualEffectLayer.fillColor = UIColor.clear.cgColor;
         
         // Create a path for the border
-        let path = UIBezierPath(roundedRect: borderLayer.bounds, cornerRadius: borderLayer.cornerRadius)
-        borderLayer.path = path.cgPath
+        let path = UIBezierPath(roundedRect: buttonDownVisualEffectLayer.bounds, cornerRadius: buttonDownVisualEffectLayer.cornerRadius)
+        buttonDownVisualEffectLayer.path = path.cgPath
         
         // Add the border layer below the main view layer
-        self.layer.superlayer?.insertSublayer(borderLayer, below: self.layer)
+        self.layer.superlayer?.insertSublayer(buttonDownVisualEffectLayer, below: self.layer)
         
         // Retrieve the current frame to account for transformations, this will update the coords for new position CGPointMake
-        borderLayer.position = CGPointMake(CGRectGetMidX(self.frame), CGRectGetMidY(self.frame))
+        buttonDownVisualEffectLayer.position = CGPointMake(CGRectGetMidX(self.frame), CGRectGetMidY(self.frame))
     }
     //==========================================================================================================
     
@@ -620,7 +620,8 @@ import UIKit
         
         // OnScreenControls.testMethod();
         // RelativeTouchHandler.testMethod();
-        
+
+
         if !OnScreenButtonView.editMode {
             if CommandManager.touchPadCmds.contains(self.keyString) && touches.count == 1{
                 switch self.keyString {
@@ -657,6 +658,14 @@ import UIKit
             if !CommandManager.touchPadCmds.contains(self.keyString) {
                 self.buttonDownVisualEffect()
             }
+            
+            if CommandManager.oscButtonMappings.keys.contains(self.keyString) {
+                let buttonFlag = CommandManager.oscButtonMappings[self.keyString]
+                if buttonFlag != 0 {self.onScreenControls.pressDownControllerButton(buttonFlag!)}
+                if self.keyString == "OSCL2" {self.onScreenControls.updateLeftTrigger(0xFF)}
+                if self.keyString == "OSCR2" {self.onScreenControls.updateRightTrigger(0xFF)}
+            }
+            
             // if the command(keystring contains "+", it's a multi-key command or a quick triggering key, rather than a physical button
             if self.keyString.contains("+"){
                 let keyboardCmdStrings = CommandManager.shared.extractKeyStrings(from: self.keyString)!
@@ -784,6 +793,13 @@ import UIKit
         self.leftIndicator.removeFromSuperlayer()
         self.rightIndicator.removeFromSuperlayer()
         self.lrudIndicatorBall.removeFromSuperlayer()
+        
+        if CommandManager.oscButtonMappings.keys.contains(self.keyString) {
+            let buttonFlag = CommandManager.oscButtonMappings[self.keyString]
+            if buttonFlag != 0 {self.onScreenControls.releaseControllerButton(buttonFlag!)}
+            if self.keyString == "OSCL2" {self.onScreenControls.updateLeftTrigger(0x00)}
+            if self.keyString == "OSCR2" {self.onScreenControls.updateRightTrigger(0x00)}
+        }
                         
         if !OnScreenButtonView.editMode && !self.keyString.contains("+") { // if the command(keystring contains "+", it's a multi-key command rather than a single key button
             

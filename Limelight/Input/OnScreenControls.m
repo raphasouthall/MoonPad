@@ -179,6 +179,16 @@ static float L3_Y;
     [_controllerSupport updateFinished:_controller];
 }
 
+- (void) updateLeftTrigger:(unsigned char)input{
+    [_controllerSupport updateLeftTrigger:_controller left:input];
+    [_controllerSupport updateFinished:_controller];
+}
+
+- (void) updateRightTrigger:(unsigned char)input{
+    [_controllerSupport updateRightTrigger:_controller right:input];
+    [_controllerSupport updateFinished:_controller];
+}
+
 // sending self as an instance to OnScreenButtonView
 - (void)sendInstance{
     NSLog(@"OnScreenControls is sending its instance...");

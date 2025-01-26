@@ -56,9 +56,26 @@ import UIKit
                                                        "M_RIGHT" : BUTTON_RIGHT,
                                                        "M_X1" : BUTTON_X1,
                                                        "M_X2" : BUTTON_X2]
-
+    
+    @objc public static let oscButtonMappings: [String: Int32] = ["OSCA" : A_FLAG,
+        "OSCB" : B_FLAG,
+        "OSCX" : X_FLAG,
+        "OSCY" : Y_FLAG,
+        "OSCL1" : LB_FLAG,
+        "OSCR1" : RB_FLAG,
+        "OSCL3" : LS_CLK_FLAG,
+        "OSCR3" : RS_CLK_FLAG,
+        "OSCSTART" : PLAY_FLAG,
+        "OSCSELECT" : BACK_FLAG,
+        "OSCUP" : UP_FLAG,
+        "OSCDOWN" : DOWN_FLAG,
+        "OSCLEFT" : LEFT_FLAG,
+        "OSCRIGHT" : RIGHT_FLAG,
+        "OSCL2" : 0,
+        "OSCR2" : 0]
+    
     @objc public static let touchPadCmds: [String] = ["LSVPAD", "RSVPAD", "LSPAD", "RSPAD", "MousePAD", "DPAD", "WASDPAD", "ARROWPAD"]
-
+    
     static let keyboardButtonMappings: [String: Int16] = [
         // Windows Key Codes
         "CTRL": 0x11,        // VK_CONTROL

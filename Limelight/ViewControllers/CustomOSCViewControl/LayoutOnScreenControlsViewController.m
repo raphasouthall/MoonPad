@@ -337,7 +337,8 @@
         bool noValidKeyboardString = [CommandManager.shared extractKeyStringsFrom:cmdString] == nil; // this is a invalid string.
         bool noValidMouseButtonString = ![CommandManager.mouseButtonMappings.allKeys containsObject:cmdString];
         bool noValidTouchPadString = ![CommandManager.touchPadCmds containsObject:cmdString];
-        if(noValidKeyboardString && noValidMouseButtonString && noValidTouchPadString) return;
+        bool noValidOscButtonString = ![CommandManager.oscButtonMappings.allKeys containsObject:cmdString];
+        if(noValidKeyboardString && noValidMouseButtonString && noValidTouchPadString && noValidOscButtonString) return;
         
         //saving & present the keyboard button:
         OnScreenButtonView* buttonView = [[OnScreenButtonView alloc] initWithKeyString:cmdString keyLabel:keyLabel];
@@ -347,6 +348,7 @@
         // Add the buttonView to the view controller's view
         [self.view addSubview:buttonView];
         [buttonView setLocationWithXOffset:50 yOffset:50];
+        [buttonView resizeButtonView];
     }];
     [alertController addAction:cancelAction];
     [alertController addAction:okAction];
