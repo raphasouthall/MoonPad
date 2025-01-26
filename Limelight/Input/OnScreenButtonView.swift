@@ -202,19 +202,23 @@ import UIKit
         if CommandManager.oscButtonMappings.keys.contains(self.keyString){ // we'll make custom osc buttons round & smaller
             NSLayoutConstraint.activate([
                 self.widthAnchor.constraint(equalToConstant: 60 * self.widthFactor),
-                self.heightAnchor.constraint(equalToConstant: 60 * self.heightFactor),
-            ])}
-        else{
+                self.heightAnchor.constraint(equalToConstant: 60 * self.heightFactor),])
+            }
+        else if CommandManager.touchPadCmds.contains(self.keyString) { // make touchPads larger
+            NSLayoutConstraint.activate([
+                self.widthAnchor.constraint(equalToConstant: 170 * self.widthFactor),
+                self.heightAnchor.constraint(equalToConstant: 150 * self.heightFactor),])
+        }
+        else {
             NSLayoutConstraint.activate([
                 self.widthAnchor.constraint(equalToConstant: 70 * self.widthFactor),
-                self.heightAnchor.constraint(equalToConstant: 65 * self.heightFactor),
-            ])}
+                self.heightAnchor.constraint(equalToConstant: 65 * self.heightFactor),])
+           }
         NSLayoutConstraint.activate([
             label.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 10), // set up label size contrain within UIView
             label.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -10),
             label.centerXAnchor.constraint(equalTo: centerXAnchor),
-            label.centerYAnchor.constraint(equalTo: centerYAnchor),
-        ])
+            label.centerYAnchor.constraint(equalTo: centerYAnchor),])
     }
     
     private func setupView() {
@@ -246,6 +250,9 @@ import UIKit
         
         if CommandManager.touchPadCmds.contains(self.keyString){
             label.text = "" // make touchPad display no text
+            if OnScreenButtonView.editMode { //display label in edit mode to make the pad more visible
+                label.text = self.keyString
+            }
         }
 
         // self.layer.shadowColor = UIColor.clear.cgColor
