@@ -418,8 +418,7 @@ import UIKit
         }
         
         let nearZeroPoint = abs(offSetX)<28 && abs(offSetY)<28
-        
-        NSLog("deltaX: %f, detalY: %f", deltaX, deltaY)
+        // NSLog("deltaX: %f, detalY: %f", deltaX, deltaY)
         
         var buttonPressed = 0;
         if abs(degrees) < triggeringAngle {
@@ -445,7 +444,7 @@ import UIKit
             switch keyString {
             case "WASDPAD": LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["W"]!,Int8(KEY_ACTION_DOWN), 0)
             case "ARROWPAD": LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["UP_ARROW"]!,Int8(KEY_ACTION_DOWN), 0)
-            case "DPAD": break
+            case "DPAD": self.onScreenControls.pressDownControllerButton(UP_FLAG)
             default: break
             }
         }
@@ -454,7 +453,7 @@ import UIKit
             switch keyString {
             case "WASDPAD": LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["W"]!,Int8(KEY_ACTION_UP), 0)
             case "ARROWPAD": LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["UP_ARROW"]!,Int8(KEY_ACTION_UP), 0)
-            case "DPAD": break
+            case "DPAD": self.onScreenControls.releaseControllerButton(UP_FLAG)
             default: break
             }
         }
@@ -463,7 +462,7 @@ import UIKit
             switch keyString {
             case "WASDPAD": LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["S"]!,Int8(KEY_ACTION_DOWN), 0)
             case "ARROWPAD": LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["DOWN_ARROW"]!,Int8(KEY_ACTION_DOWN), 0)
-            case "DPAD": break
+            case "DPAD": self.onScreenControls.pressDownControllerButton(DOWN_FLAG)
             default: break
             }
         }
@@ -472,7 +471,7 @@ import UIKit
             switch keyString {
             case "WASDPAD": LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["S"]!,Int8(KEY_ACTION_UP), 0)
             case "ARROWPAD": LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["DOWN_ARROW"]!,Int8(KEY_ACTION_UP), 0)
-            case "DPAD": break
+            case "DPAD": self.onScreenControls.releaseControllerButton(DOWN_FLAG)
             default: break
             }
         }
@@ -481,7 +480,7 @@ import UIKit
             switch keyString {
             case "WASDPAD": LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["A"]!,Int8(KEY_ACTION_DOWN), 0)
             case "ARROWPAD": LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["LEFT_ARROW"]!,Int8(KEY_ACTION_DOWN), 0)
-            case "DPAD": break
+            case "DPAD": self.onScreenControls.pressDownControllerButton(LEFT_FLAG)
             default: break
             }
         }
@@ -490,7 +489,7 @@ import UIKit
             switch keyString {
             case "WASDPAD": LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["A"]!,Int8(KEY_ACTION_UP), 0)
             case "ARROWPAD": LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["LEFT_ARROW"]!,Int8(KEY_ACTION_UP), 0)
-            case "DPAD": break
+            case "DPAD": self.onScreenControls.releaseControllerButton(LEFT_FLAG)
             default: break
             }
         }
@@ -499,7 +498,7 @@ import UIKit
             switch keyString {
             case "WASDPAD": LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["D"]!,Int8(KEY_ACTION_DOWN), 0)
             case "ARROWPAD": LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["RIGHT_ARROW"]!,Int8(KEY_ACTION_DOWN), 0)
-            case "DPAD": break
+            case "DPAD": self.onScreenControls.pressDownControllerButton(RIGHT_FLAG)
             default: break
             }
         }
@@ -508,7 +507,7 @@ import UIKit
             switch keyString {
             case "WASDPAD": LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["D"]!,Int8(KEY_ACTION_UP), 0)
             case "ARROWPAD": LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["RIGHT_ARROW"]!,Int8(KEY_ACTION_UP), 0)
-            case "DPAD": break
+            case "DPAD": self.onScreenControls.releaseControllerButton(RIGHT_FLAG)
             default: break
             }
         }
@@ -629,23 +628,23 @@ import UIKit
                     self.showStickIndicator()
                     if quickDoubleTapDetected {
                         self.l3r3Indicator = self.createAndShowl3r3Indicator()
-                        self.onScreenControls.pressDownL3()}
+                        self.onScreenControls.pressDownControllerButton(LS_CLK_FLAG)}
                     break
                 case "RSPAD":
                     self.showStickIndicator()
                     if quickDoubleTapDetected {
                         self.l3r3Indicator = self.createAndShowl3r3Indicator()
-                        self.onScreenControls.pressDownR3()}
+                        self.onScreenControls.pressDownControllerButton(RS_CLK_FLAG)}
                     break
                 case "LSVPAD":
                     if quickDoubleTapDetected {
                         self.l3r3Indicator = self.createAndShowl3r3Indicator()
-                        self.onScreenControls.pressDownL3()}
+                        self.onScreenControls.pressDownControllerButton(LS_CLK_FLAG)}
                     break
                 case "RSVPAD":
                     if quickDoubleTapDetected {
                         self.l3r3Indicator = self.createAndShowl3r3Indicator()
-                        self.onScreenControls.pressDownR3()}
+                        self.onScreenControls.pressDownControllerButton(RS_CLK_FLAG)}
                     break
                 case "DPAD", "WASDPAD", "ARROWPAD":
                     self.lrudIndicatorBall = createAndShowLrudBall(at: touchBeganLocation)
@@ -724,20 +723,15 @@ import UIKit
             case "LSPAD":
                 self.sendLeftStickTouchPadEvent(inputX: offSetX, inputY: offSetY)
                 updateStickBallPosition()
-                break
             case "RSPAD":
                 self.sendRightStickTouchPadEvent(inputX: offSetX, inputY: offSetY);
                 updateStickBallPosition()
-                break
             case "LSVPAD":
                 self.sendLeftStickTouchPadEvent(inputX: deltaX, inputY: deltaY)
-                break
             case "RSVPAD":
                 self.sendRightStickTouchPadEvent(inputX: deltaX, inputY: deltaY);
-                break
             case "DPAD", "WASDPAD", "ARROWPAD":
                 handleLrudTouchMove()
-                break
             default:
                 break
             }
@@ -755,18 +749,14 @@ import UIKit
                 self.onScreenControls.clearLeftStickTouchPadFlag()
                 self.crossMarkLayer.removeFromSuperlayer()
                 self.stickBallLayer.removeFromSuperlayer()
-                break
             case "RSPAD":
                 self.onScreenControls.clearRightStickTouchPadFlag()
                 self.crossMarkLayer.removeFromSuperlayer()
                 self.stickBallLayer.removeFromSuperlayer()
-                break
             case "LSVPAD":
                 self.onScreenControls.clearLeftStickTouchPadFlag()
-                break
             case "RSVPAD":
                 self.onScreenControls.clearRightStickTouchPadFlag()
-                break
             case "WASDPAD":
                 LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["W"]!,Int8(KEY_ACTION_UP), 0)
                 LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["A"]!,Int8(KEY_ACTION_UP), 0)
@@ -777,7 +767,11 @@ import UIKit
                 LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["RIGHT_ARROW"]!,Int8(KEY_ACTION_UP), 0)
                 LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["UP_ARROW"]!,Int8(KEY_ACTION_UP), 0)
                 LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["DOWN_ARROW"]!,Int8(KEY_ACTION_UP), 0)
-            case "DPAD": break
+            case "DPAD":
+                self.onScreenControls.releaseControllerButton(LEFT_FLAG)
+                self.onScreenControls.releaseControllerButton(RIGHT_FLAG)
+                self.onScreenControls.releaseControllerButton(UP_FLAG)
+                self.onScreenControls.releaseControllerButton(DOWN_FLAG)
             default:
                 break
             }

@@ -169,16 +169,15 @@ static float L3_Y;
     [_controllerSupport updateFinished:_controller];
 }
 
-- (void) pressDownL3{
-    [_controllerSupport setButtonFlag:_controller flags:LS_CLK_FLAG];
+- (void) pressDownControllerButton: (int)flag{
+    [_controllerSupport setButtonFlag:_controller flags:flag];
     [_controllerSupport updateFinished:_controller];
 }
 
-- (void) pressDownR3{
-    [_controllerSupport setButtonFlag:_controller flags:RS_CLK_FLAG];
+- (void) releaseControllerButton: (int)flag{
+    [_controllerSupport clearButtonFlag:_controller flags:flag];
     [_controllerSupport updateFinished:_controller];
 }
-
 
 // sending self as an instance to OnScreenButtonView
 - (void)sendInstance{

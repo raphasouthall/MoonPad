@@ -109,8 +109,8 @@ typedef NS_ENUM(NSInteger, OnScreenControlsLevel) {
 - (void) clearRightStickTouchPadFlag;
 - (void) sendLeftStickTouchPadEvent:(CGFloat) stickX : (CGFloat) stickY;
 - (void) clearLeftStickTouchPadFlag;
-- (void) pressDownL3;
-- (void) pressDownR3;
+- (void) pressDownControllerButton: (int)flag;
+- (void) releaseControllerButton: (int)flag;
 
 - (id) initWithView:(UIView*)view controllerSup:(ControllerSupport*)controllerSupport streamConfig:(StreamConfiguration*)streamConfig;
 - (BOOL) handleTouchDownEvent:(NSSet*)touches;
