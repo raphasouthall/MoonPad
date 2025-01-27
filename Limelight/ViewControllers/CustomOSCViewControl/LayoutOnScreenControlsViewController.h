@@ -37,9 +37,12 @@ NS_ASSUME_NONNULL_BEGIN
 @property (strong, nonatomic) OSCProfilesTableViewController *oscProfilesTableViewController;
 @property (nonatomic, assign) NSString *currentProfileName;
 @property (strong, nonatomic) IBOutlet UILabel *currentProfileLabel;
-@property (strong, nonatomic) IBOutlet UISlider *buttonAndControllerSizeSlider;
-@property (strong, nonatomic) IBOutlet UISlider *buttonAndControllerHeightSlider;
-@property (strong, nonatomic) IBOutlet UISlider *buttonAndControllerAlphaSlider;
+@property (strong, nonatomic) IBOutlet UISlider *widgetSizeSlider;
+@property (strong, nonatomic) IBOutlet UISlider *widgetHeightSlider;
+@property (strong, nonatomic) IBOutlet UISlider *widgetAlphaSlider;
+@property (strong, nonatomic) IBOutlet UISlider *sensitivityFactorSlider;
+@property (strong, nonatomic) IBOutlet UISlider *stickIndicatorOffsetSlider;
+
 
 @end
 

@@ -907,9 +907,6 @@ ICAgICAgICAgICAgIA
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="buttonAndControllerAlphaSlider" destination="P6S-oW-Ewb" id="cTe-T8-LwU"/>
-                        <outlet property="buttonAndControllerHeightSlider" destination="VLi-Mk-ESg" id="6O9-gp-VFZ"/>
-                        <outlet property="buttonAndControllerSizeSlider" destination="DGw-22-vUn" id="iEF-jl-gJ0"/>
                         <outlet property="chevronImageView" destination="76O-3K-aa8" id="yGv-fM-Ohf"/>
                         <outlet property="chevronView" destination="Zll-IP-PFt" id="MGR-C0-h57"/>
                         <outlet property="currentProfileLabel" destination="yJC-bq-EOU" id="6Sn-El-zPG"/>
@@ -918,6 +915,9 @@ ICAgICAgICAgICAgIA
                         <outlet property="toolbarTopConstraintiPhone" destination="wNr-7F-S0i" id="iXe-d3-R7i"/>
                         <outlet property="trashCanButton" destination="dhG-Fo-0GK" id="dv6-TN-2Bj"/>
                         <outlet property="undoButton" destination="Pdg-l4-BvF" id="emD-GI-v2v"/>
+                        <outlet property="widgetAlphaSlider" destination="P6S-oW-Ewb" id="cTe-T8-LwU"/>
+                        <outlet property="widgetHeightSlider" destination="VLi-Mk-ESg" id="6O9-gp-VFZ"/>
+                        <outlet property="widgetSizeSlider" destination="DGw-22-vUn" id="iEF-jl-gJ0"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ORo-HP-JDj" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

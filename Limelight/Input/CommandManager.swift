@@ -75,7 +75,9 @@ import UIKit
         "OSCR2" : 0]
     
     @objc public static let touchPadCmds: [String] = ["LSVPAD", "RSVPAD", "LSPAD", "RSPAD", "MOUSEPAD", "DPAD", "WASDPAD", "ARROWPAD"]
-    
+    @objc public static let stickTouchPads: [String] = ["LSVPAD", "RSVPAD", "LSPAD", "RSPAD"]
+    @objc public static let nonVectorStickPads: [String] = ["LSPAD", "RSPAD"]
+
     static let keyboardButtonMappings: [String: Int16] = [
         // Windows Key Codes
         "CTRL": 0x11,        // VK_CONTROL
