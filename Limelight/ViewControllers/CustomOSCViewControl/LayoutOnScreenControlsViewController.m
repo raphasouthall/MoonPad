@@ -308,8 +308,8 @@
 
 - (IBAction) addTapped:(id)sender{
     
-    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:[LocalizationHelper localizedStringForKey:@"New Keyboard Button"]
-                                                                             message:[LocalizationHelper localizedStringForKey:@"Enter the command & key label"]
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:[LocalizationHelper localizedStringForKey:@"New On-Screen Widget"]
+                                                                             message:[LocalizationHelper localizedStringForKey:@"Enter the command & alias label"]
                                                                       preferredStyle:UIAlertControllerStyleAlert];
     
     [alertController addTextFieldWithConfigurationHandler:^(UITextField *textField) {
@@ -320,7 +320,7 @@
     }];
     
     [alertController addTextFieldWithConfigurationHandler:^(UITextField *textField) {
-        textField.placeholder = [LocalizationHelper localizedStringForKey:@"Key label (optional)"];
+        textField.placeholder = [LocalizationHelper localizedStringForKey:@"Alias label (optional)"];
         textField.keyboardType = UIKeyboardTypeASCIICapable;
         textField.autocorrectionType = UITextAutocorrectionTypeNo;
         textField.spellCheckingType = UITextSpellCheckingTypeNo;

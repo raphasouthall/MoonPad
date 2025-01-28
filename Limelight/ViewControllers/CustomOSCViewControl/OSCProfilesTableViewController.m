@@ -74,7 +74,7 @@ const double NAV_BAR_HEIGHT = 50;
 /* Loads the OSC profile that user selected, dismisses this VC, then tells the presenting view controller to lay out the on screen buttons according to the selected profile's instructions */
 - (IBAction) duplicateTapped:(id)sender {
 
-        UIAlertController * inputNameAlertController = [UIAlertController alertControllerWithTitle: [LocalizationHelper localizedStringForKey:@"Enter the name you want to save this controller profile as"] message: @"" preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertController * inputNameAlertController = [UIAlertController alertControllerWithTitle: [LocalizationHelper localizedStringForKey:@"Enter the name you want to save this profile as"] message: @"" preferredStyle:UIAlertControllerStyleAlert];
         [inputNameAlertController addTextFieldWithConfigurationHandler:^(UITextField *textField) {  // pop up notification with text field where user can enter the text they wish to name their OSC layout profile
             textField.placeholder = [LocalizationHelper localizedStringForKey:@"name"];
             textField.textColor = [UIColor lightGrayColor];

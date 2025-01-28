@@ -191,6 +191,29 @@
         }
       }
     },
+    "Alias label (optional)" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "别名标签 (可留空)"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "别名标签 (可留空)"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "别名标签 (可留空)"
+          }
+        }
+      }
+    },
     "Ball: assumed touch point.   Cross: indicator location" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -703,48 +726,48 @@
         }
       }
     },
-    "Enter the command & key label" : {
+    "Enter the command & alias label" : {
       "extractionState" : "manual",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "输入按键命令和键帽标签"
+            "value" : "输入控件命令和别名标签"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "输入按键命令和键帽标签"
+            "value" : "输入控件命令和别名标签"
           }
         },
         "zh-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "输入按键命令和键帽标签"
+            "value" : "输入控件命令和别名标签"
           }
         }
       }
     },
-    "Enter the name you want to save this controller profile as" : {
+    "Enter the name you want to save this profile as" : {
       "extractionState" : "manual",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "将当前虚拟手柄布局另存为"
+            "value" : "将当前布局另存为"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "将当前虚拟手柄布局另存为"
+            "value" : "将当前布局另存为"
           }
         },
         "zh-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "将当前虚拟手柄布局另存为"
+            "value" : "将当前布局另存为"
           }
         }
       }
@@ -1004,29 +1027,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "指示器偏离: %.2f"
-          }
-        }
-      }
-    },
-    "Key label (optional)" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "键帽标签 (可留空)"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "键帽标签 (可留空)"
-          }
-        },
-        "zh-HK" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "键帽标签 (可留空)"
           }
         }
       }
@@ -1354,25 +1354,25 @@
         }
       }
     },
-    "New Keyboard Button" : {
+    "New On-Screen Widget" : {
       "extractionState" : "manual",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "新建屏显按键"
+            "value" : "新建屏显控件"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "新建屏显按键"
+            "value" : "新建屏显控件"
           }
         },
         "zh-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "新建屏显按键"
+            "value" : "新建屏显控件"
           }
         }
       }
@@ -1515,25 +1515,25 @@
         }
       }
     },
-    "On-Screen Controls & Buttons" : {
+    "On-Screen Controls & Widgets" : {
       "extractionState" : "manual",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "屏显虚拟手柄与按键"
+            "value" : "屏显虚拟手柄与控件"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "屏显虚拟手柄与按键"
+            "value" : "屏显虚拟手柄与控件"
           }
         },
         "zh-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "屏显虚拟手柄与按键"
+            "value" : "屏显虚拟手柄与控件"
           }
         }
       }
@@ -2286,25 +2286,25 @@
         }
       }
     },
-    "Tap %d fingers to change on-screen controller layout in stream view, or change the number of fingers required to:" : {
+    "Tap %d fingers to change layout in stream view, or change the number of fingers required to:" : {
       "extractionState" : "manual",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "在串流视图中轻按%d根手指修改虚拟手柄布局, 或将手势需要的手指数量改为:"
+            "value" : "在串流视图中轻按%d根手指修改布局, 或将手势需要的手指数量改为:"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "在串流视图中轻按%d根手指修改虚拟手柄布局, 或将手势需要的手指数量改为:"
+            "value" : "在串流视图中轻按%d根手指修改布局, 或将手势需要的手指数量改为:"
           }
         },
         "zh-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "在串流视图中轻按%d根手指修改虚拟手柄布局, 或将手势需要的手指数量改为:"
+            "value" : "在串流视图中轻按%d根手指修改布局, 或将手势需要的手指数量改为:"
           }
         }
       }

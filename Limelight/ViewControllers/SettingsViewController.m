@@ -586,7 +586,7 @@ BOOL isCustomResolution(CGSize res) {
 
 - (void)showCustomOSCTip {
     UIAlertController *alertController = [UIAlertController alertControllerWithTitle:[LocalizationHelper localizedStringForKey:@"Rebase in Stream View"]
-                                                                             message:[LocalizationHelper localizedStringForKey:@"Tap %d fingers to change on-screen controller layout in stream view, or change the number of fingers required to:", self->oscLayoutFingers]
+                                                                             message:[LocalizationHelper localizedStringForKey:@"Tap %d fingers to change layout in stream view, or change the number of fingers required to:", self->oscLayoutFingers]
                                                                       preferredStyle:UIAlertControllerStyleAlert];
     
     [alertController addTextFieldWithConfigurationHandler:^(UITextField *textField) {
@@ -659,7 +659,7 @@ BOOL isCustomResolution(CGSize res) {
         //if (self.layoutOnScreenControlsVC.isBeingPresented == NO)
     }
     else{
-        [self.onscreenControllerLabel setText:[LocalizationHelper localizedStringForKey: @"On-Screen Controls & Buttons"]];
+        [self.onscreenControllerLabel setText:[LocalizationHelper localizedStringForKey: @"On-Screen Controls & Widgets"]];
     }
     justEnteredSettingsViewDoNotOpenOscLayoutTool = false;
 }
@@ -727,7 +727,7 @@ BOOL isCustomResolution(CGSize res) {
 }
 
 - (void) touchModeChanged {
-    // Disable On-Screen Controls & Buttons in non-relative touch mode
+    // Disable On-Screen Controls & Widgets in non-relative touch mode
     bool oscSelectorEnabled = [self.touchModeSelector selectedSegmentIndex] == RELATIVE_TOUCH || [self.touchModeSelector selectedSegmentIndex] == REGULAR_NATIVE_TOUCH || [self.touchModeSelector selectedSegmentIndex] == ABSOLUTE_TOUCH;
     bool customOscEnabled = [self isOnScreenControllerOrButtonEnabled] && [self.onscreenControlSelector selectedSegmentIndex] == OnScreenControlsLevelCustom;
     bool isNativeTouch = [self.touchModeSelector selectedSegmentIndex] == PURE_NATIVE_TOUCH || [self.touchModeSelector selectedSegmentIndex] == REGULAR_NATIVE_TOUCH;
@@ -751,7 +751,7 @@ BOOL isCustomResolution(CGSize res) {
         //if (self.layoutOnScreenControlsVC.isBeingPresented == NO)
     }
     else{
-        [self.onscreenControllerLabel setText:[LocalizationHelper localizedStringForKey: @"On-Screen Controls & Buttons"]];
+        [self.onscreenControllerLabel setText:[LocalizationHelper localizedStringForKey: @"On-Screen Controls & Widgets"]];
     }
     [self updateTouchModeLabel];
 }

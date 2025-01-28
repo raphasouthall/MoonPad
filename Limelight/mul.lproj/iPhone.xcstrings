@@ -302,31 +302,31 @@
       }
     },
     "5pN-Sn-SCN.title" : {
-      "comment" : "Class = \"UINavigationItem\"; title = \"Controller & Button Profiles\"; ObjectID = \"5pN-Sn-SCN\";",
+      "comment" : "Class = \"UINavigationItem\"; title = \"Controller & Widget Profiles\"; ObjectID = \"5pN-Sn-SCN\";",
       "extractionState" : "extracted_with_value",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "Controller & Button Profiles"
+            "value" : "Controller & Widget Profiles"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "屏显手柄与按键布局"
+            "state" : "needs_review",
+            "value" : "屏显手柄与控件布局"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "屏显手柄与按键布局"
+            "state" : "needs_review",
+            "value" : "屏显手柄与控件布局"
           }
         },
         "zh-HK" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "屏显手柄与按键布局"
+            "state" : "needs_review",
+            "value" : "屏显手柄与控件布局"
           }
         }
       }
@@ -1262,31 +1262,31 @@
       }
     },
     "HZT-dd-DuQ.text" : {
-      "comment" : "Class = \"UILabel\"; text = \"On-Screen Controls & Buttons                                                \"; ObjectID = \"HZT-dd-DuQ\";",
+      "comment" : "Class = \"UILabel\"; text = \"On-Screen Controls & Widgets                                                \"; ObjectID = \"HZT-dd-DuQ\";",
       "extractionState" : "extracted_with_value",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "On-Screen Controls & Buttons                                                "
+            "value" : "On-Screen Controls & Widgets                                                "
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "屏幕虚拟手柄"
+            "state" : "translated",
+            "value" : "屏幕虚拟手柄与控件"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "屏幕虚拟手柄"
+            "state" : "translated",
+            "value" : "屏幕虚拟手柄与控件"
           }
         },
         "zh-HK" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "屏幕虚拟手柄"
+            "state" : "translated",
+            "value" : "屏幕虚拟手柄与控件"
           }
         }
       }
