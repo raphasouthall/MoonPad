@@ -77,6 +77,7 @@ import UIKit
     @objc public static let touchPadCmds: [String] = ["LSVPAD", "RSVPAD", "LSPAD", "RSPAD", "MOUSEPAD", "DPAD", "WASDPAD", "ARROWPAD"]
     @objc public static let stickTouchPads: [String] = ["LSVPAD", "RSVPAD", "LSPAD", "RSPAD"]
     @objc public static let nonVectorStickPads: [String] = ["LSPAD", "RSPAD"]
+    @objc public static let specialOverlayButtonCmds: [String] = ["SETTINGS"]
 
     static let keyboardButtonMappings: [String: Int16] = [
         // Windows Key Codes

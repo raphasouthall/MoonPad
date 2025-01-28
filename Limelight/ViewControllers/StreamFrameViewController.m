@@ -233,6 +233,12 @@
                                              selector:@selector(sessionDisconnectedBySettingView) //quit session when exit button is press in setting view during streaming
                                                  name:@"SessionDisconnectedBySettingsViewNotification"
                                                object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(expandSettingsView) // //force expand settings view to update resolution table, and all setting includes current fullscreen resolution will be updated.
+                                                 name:@"SettingsOverlayButtonPressedNotification"
+                                               object:nil];
+
 #endif
 }
 

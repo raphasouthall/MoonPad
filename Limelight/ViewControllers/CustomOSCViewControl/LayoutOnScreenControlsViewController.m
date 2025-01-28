@@ -349,7 +349,9 @@
         bool noValidMouseButtonString = ![CommandManager.mouseButtonMappings.allKeys containsObject:cmdString];
         bool noValidTouchPadString = ![CommandManager.touchPadCmds containsObject:cmdString];
         bool noValidOscButtonString = ![CommandManager.oscButtonMappings.allKeys containsObject:cmdString];
-        if(noValidKeyboardString && noValidMouseButtonString && noValidTouchPadString && noValidOscButtonString) return;
+        bool noValidSpecialButtonString = ![CommandManager.specialOverlayButtonCmds containsObject:cmdString];
+
+        if(noValidKeyboardString && noValidMouseButtonString && noValidTouchPadString && noValidOscButtonString && noValidSpecialButtonString) return;
         
         //saving & present the keyboard button:
         OnScreenButtonView* buttonView = [[OnScreenButtonView alloc] initWithKeyString:cmdString keyLabel:keyLabel];
@@ -467,6 +469,7 @@
     [widgetHeightSliderLabel setText:[LocalizationHelper localizedStringForKey:@"Widget Height: %.2f", self.widgetHeightSlider.value]];
     if(self->selectedButtonView != nil && self->buttonViewSelected){
         self->selectedButtonView.translatesAutoresizingMaskIntoConstraints = true; // this is mandatory to prevent unexpected key view location change
+        if([CommandManager.oscButtonMappings.allKeys containsObject:selectedButtonView.keyString]) return; // don't change custom osc button height
         self->selectedButtonView.heightFactor = self.widgetHeightSlider.value;
         [self->selectedButtonView resizeButtonView];
     }

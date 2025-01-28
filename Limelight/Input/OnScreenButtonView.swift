@@ -120,7 +120,7 @@ import UIKit
         self.mousePointerMoved = false
         self.touchLockedForMoveEvent = UITouch()
         self.twoTouchesDetected = false
-        self.stickIndicatorXOffset = 120
+        self.stickIndicatorXOffset = 95
         self.sensitivityFactor = 1.0
         super.init(frame: .zero)
         
@@ -263,6 +263,11 @@ import UIKit
             }
         }
 
+        if CommandManager.specialOverlayButtonCmds.contains(self.keyString){
+            self.layer.borderWidth = 0
+        }
+
+        
         // self.layer.shadowColor = UIColor.clear.cgColor
         // self.layer.shadowRadius = 8
         // self.layer.shadowOpacity = 0.5
@@ -611,6 +616,7 @@ import UIKit
         CATransaction.begin()
         CATransaction.setDisableActions(true)
         // self.layer.borderWidth = 0
+        buttonDownVisualEffectLayer.position = CGPointMake(CGRectGetMidX(self.frame), CGRectGetMidY(self.frame)) // update position every time we press down the button
         buttonDownVisualEffectLayer.borderWidth = self.buttonDownVisualEffectWidth // this will show the visual effect
         buttonDownVisualEffectLayer.borderColor = moonlightPurple
         CATransaction.commit()
@@ -734,11 +740,11 @@ import UIKit
                     break
                 }
             }
-            
+                        
             if !CommandManager.touchPadCmds.contains(self.keyString) {
                 self.buttonDownVisualEffect()
             }
-            
+                        
             if CommandManager.oscButtonMappings.keys.contains(self.keyString) {
                 let buttonFlag = CommandManager.oscButtonMappings[self.keyString]
                 if buttonFlag != 0 {self.onScreenControls.pressDownControllerButton(buttonFlag!)}
@@ -773,6 +779,15 @@ import UIKit
         
     }
     
+    private func moveByTouch(touch: UITouch){
+        let currentLocation = touch.location(in: superview)
+        let offsetX = currentLocation.x - storedLocation.x
+        let offsetY = currentLocation.y - storedLocation.y
+        center = CGPoint(x: center.x + offsetX, y: center.y + offsetY)
+        //NSLog("x coord: %f, y coord: %f", self.frame.origin.x, self.frame.origin.y)
+        storedLocation = currentLocation // Update initial center for next movement
+    }
+    
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesMoved(touches, with: event)
         OnScreenButtonView.timestampOfButtonBeingDragged = self.timestamp
@@ -781,20 +796,23 @@ import UIKit
             if CommandManager.touchPadCmds.contains(self.keyString){
                 handleTouchPadMoveEvent(touches, with: event)
             }
+            
+            if CommandManager.specialOverlayButtonCmds.contains(self.keyString){
+                if let touch = touches.first {
+                    NSLog("touchTapTimeStamp %f", self.touchTapTimeStamp)
+                    if CACurrentMediaTime() - self.touchTapTimeStamp > 0.3 { // temporarily relocate special buttons
+                        self.moveByTouch(touch: touch)
+                        self.buttonUpVisualEffect()
+                    }
+                }
+            }
         }
         
         // Move the buttonView based on touch movement in relocation mode
         if OnScreenButtonView.editMode {
             if let touch = touches.first {
-                let currentLocation = touch.location(in: superview)
-                let offsetX = currentLocation.x - storedLocation.x
-                let offsetY = currentLocation.y - storedLocation.y
-                
-                center = CGPoint(x: center.x + offsetX, y: center.y + offsetY)
-                //NSLog("x coord: %f, y coord: %f", self.frame.origin.x, self.frame.origin.y)
-                storedLocation = currentLocation // Update initial center for next movement
+                self.moveByTouch(touch: touch)
                 }
-            
             if CommandManager.nonVectorStickPads.contains(self.keyString) {
                 self.stickBallLayer.removeFromSuperlayer()
                 self.crossMarkLayer.removeFromSuperlayer()
@@ -893,6 +911,18 @@ import UIKit
                 break
             }
         }
+        
+        if !OnScreenButtonView.editMode && CommandManager.specialOverlayButtonCmds.contains(self.keyString){
+            if CACurrentMediaTime() - self.touchTapTimeStamp < 0.3 {
+                switch self.keyString {
+                case "SETTINGS":
+                    NotificationCenter.default.post(name: Notification.Name("SettingsOverlayButtonPressedNotification"), object:nil) // inform layout tool controller to fetch button size factors. self will be passed as the object of the notification
+                default:
+                    break
+                }
+            }
+        }
+
         
 
         self.buttonUpVisualEffect()
