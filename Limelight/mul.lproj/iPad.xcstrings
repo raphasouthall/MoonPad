@@ -1154,19 +1154,19 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "串流中允许90°转屏"
+            "value" : "允许90°转屏(App视图、串流时生效)"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "串流中允许90°转屏"
+            "value" : "允许90°转屏(App视图、串流时生效)"
           }
         },
         "zh-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "串流中允许90°转屏"
+            "value" : "允许90°转屏(App视图、串流时生效)"
           }
         }
       }

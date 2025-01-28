@@ -720,6 +720,9 @@ const int FrontViewPositionNone = 0xff;
     [self _setFrontViewPosition:initialPosition withDuration:0.0];
 }
 
+- (bool)isIphone{
+    return ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPhone);
+}
 
 - (UIInterfaceOrientationMask)getCurrentOrientation{
     CGFloat screenHeightInPoints = CGRectGetHeight([[UIScreen mainScreen] bounds]);
@@ -732,18 +735,21 @@ const int FrontViewPositionNone = 0xff;
 
 // tested on iOS17. this method does not call back on iOS14, runtime orientation limitation not working for iOS14. Probably depends on iOS16 or higher.
 - (UIInterfaceOrientationMask)supportedInterfaceOrientations {
-    // Return the supported interface orientations based on the current state
-    // NSLog(@"supportedInterfaceOrientations called back 666");
+    // Return the supported interface orientations acoordingly
+    
+    if(self.mainFrameIsInHostView){
+        if([self isIphone]) return UIInterfaceOrientationMaskLandscape;  //always try to lock orientaion to landscape in mainFrameView in order to prevent bug.
+        else return [self getCurrentOrientation]; //always try to lock current orientaion in mainFrameView for iPad in order to prevent bug.
+    }
+    
     //lock the orientation accordingly after streaming is started
     DataManager* dataMan = [[DataManager alloc] init];
     Settings *currentSettings = [dataMan retrieveSettings];
-    //Handle Lock Display Orientation on & off
-    
-    if(self.mainFrameIsInHostView) return [self getCurrentOrientation];  //always try to lock orientaion in mainFrameView in order to prevent bug.
+
     if(currentSettings.unlockDisplayOrientation){
-        return UIInterfaceOrientationMaskAll; // 90 Degree rotation will be allowed in streaming
+        return UIInterfaceOrientationMaskAll; // 90 Degree rotation will be allowed in streaming or app view
     }
-    else return [self getCurrentOrientation];
+    else return [self getCurrentOrientation]; // 90 Degree rotation not allowed in streaming or app view
 }
 
 
