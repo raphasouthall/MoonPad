@@ -47,6 +47,10 @@
 
 - (void) viewWillDisappear:(BOOL)animated{
     OnScreenButtonView.editMode = false;
+    for (OnScreenButtonView* buttonView in self.onScreenButtonViewsDict.allValues){
+        [buttonView.stickBallLayer removeFromSuperlayer];
+        [buttonView.crossMarkLayer removeFromSuperlayer];
+    }
     [super viewWillDisappear:animated];
     [[NSNotificationCenter defaultCenter] postNotificationName:@"OscLayoutCloseNotification" object:self];
 }
@@ -74,6 +78,8 @@
             buttonView.timestamp = buttonState.timestamp; // will be set as key in in the dict.
             buttonView.widthFactor = buttonState.widthFactor;
             buttonView.heightFactor = buttonState.heightFactor;
+            buttonView.sensitivityFactor = buttonState.sensitivityFactor;
+            buttonView.stickIndicatorXOffset = buttonState.stickIndicatorXOffset;
             // buttonView.backgroundAlpha = buttonState.backgroundAlpha;
             // Add the buttonView to the view controller's view
             [self.view addSubview:buttonView];
@@ -143,7 +149,7 @@
                                                object:nil];
 
     [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(buttonViewSelected:)
+                                             selector:@selector(buttonViewTapped:)
                                                  name:@"OnScreenButtonViewSelected"
                                                object:nil];
 
@@ -380,7 +386,7 @@
     }
 }
 
-- (void)buttonViewSelected: (NSNotification *)notification{
+- (void)buttonViewTapped: (NSNotification *)notification{
     // receive the selected buttonView obj passed from the notification
     OnScreenButtonView* buttonView = (OnScreenButtonView* )notification.object;
     self->buttonViewSelected = true;
@@ -406,7 +412,9 @@
         [selectedButtonView.crossMarkLayer removeFromSuperlayer];
         selectedButtonView.touchBeganLocation = CGPointMake(CGRectGetWidth(selectedButtonView.frame)/2, CGRectGetHeight(selectedButtonView.frame)/4);
         [selectedButtonView showStickIndicator];// this will create the indicator CAShapeLayers
-        [stickIndicatorOffsetSliderLabel setText:[LocalizationHelper localizedStringForKey:@"Indicator Offset: %.2f \n", self->selectedButtonView.stickIndicatorXOffset]];
+        [self.stickIndicatorOffsetSlider setValue:self->selectedButtonView.stickIndicatorXOffset];
+        [stickIndicatorOffsetSliderLabel setText:[LocalizationHelper localizedStringForKey:@"Indicator Offset: %.2f", self->selectedButtonView.stickIndicatorXOffset]];
+        [self->selectedButtonView updateStickIndicator];
     }
     [widgetSizeSliderLabel setText:[LocalizationHelper localizedStringForKey:@"Widget Size: %.2f", self->selectedButtonView.widthFactor]];
     [widgetHeightSliderLabel setText:[LocalizationHelper localizedStringForKey:@"Widget Height: %.2f", self->selectedButtonView.heightFactor]];
@@ -417,6 +425,12 @@
     // receive the selected buttonView obj passed from the notification
     CALayer* controllerLayer = (CALayer* )notification.object;
     self->buttonViewSelected = false;
+    self->stickIndicatorOffsetExplain.hidden = true;
+    self->stickIndicatorOffsetSliderLabel.hidden = true;
+    self.stickIndicatorOffsetSlider.hidden = true;
+    self->sensitivitySliderLabel.hidden = true;
+    self.sensitivityFactorSlider.hidden = true;
+    
     self->controllerLayerSelected = true;
     self->selectedControllerLayer = controllerLayer;
     self->controllerLoadedBounds = controllerLayer.bounds;
@@ -480,7 +494,7 @@
     [stickIndicatorOffsetSliderLabel setText:[LocalizationHelper localizedStringForKey:@"Indicator Offset: %.2f", self.stickIndicatorOffsetSlider.value]];
     if(self->selectedButtonView != nil && self->buttonViewSelected){
         self->selectedButtonView.stickIndicatorXOffset = self.stickIndicatorOffsetSlider.value;
-        [self->selectedButtonView updateStickBallPosition];
+        [self->selectedButtonView updateStickIndicator];
     }
     return;
 }
@@ -569,7 +583,7 @@
     widgetAlphaSliderLabel.hidden = NO;
     
     
-    // sensivity slider
+    // sensitivity slider
     self.sensitivityFactorSlider.hidden = YES;
     self.sensitivityFactorSlider.frame = CGRectMake(sliderXPosition, self.sensitivityFactorSlider.frame.origin.y, self.sensitivityFactorSlider.frame.size.width, self.sensitivityFactorSlider.frame.size.height);
     [self.sensitivityFactorSlider addTarget:self action:@selector(sensitivitySliderMoved) forControlEvents:(UIControlEventValueChanged)];
@@ -599,7 +613,7 @@
     stickIndicatorOffsetSliderLabel.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.5];
     stickIndicatorOffsetSliderLabel.translatesAutoresizingMaskIntoConstraints = NO; // Disable autoresizing mask for Auto Layout
     // tips for stick indicator
-    stickIndicatorOffsetExplain.text = [LocalizationHelper localizedStringForKey:@"Cross: assumed touch point.   Ball: indicator location"];
+    stickIndicatorOffsetExplain.text = [LocalizationHelper localizedStringForKey:@"Ball: assumed touch point.   Cross: indicator location"];
     //stickIndicatorOffsetExplain.frame = CGRectMake(sliderXPosition, self.stickIndicatorOffsetSlider.frame.origin.y + self.stickIndicatorOffsetSlider.frame.size.height, self.stickIndicatorOffsetSlider.frame.size.width, self.stickIndicatorOffsetSlider.frame.size.height); //  label bigger show some tips
     stickIndicatorOffsetExplain.font = [UIFont systemFontOfSize:18];
     stickIndicatorOffsetExplain.textColor = [UIColor whiteColor];
@@ -750,6 +764,8 @@
     if([self touchWithinTashcanButton:touch]){
         [self.onScreenButtonViewsDict[@(OnScreenButtonView.timestampOfButtonBeingDragged)] removeFromSuperview];
         [self.onScreenButtonViewsDict removeObjectForKey:@(OnScreenButtonView.timestampOfButtonBeingDragged)];
+        [selectedButtonView.stickBallLayer removeFromSuperlayer];
+        [selectedButtonView.crossMarkLayer removeFromSuperlayer];
         OnScreenButtonView.timestampOfButtonBeingDragged = 0; //reset thie timestamp
     }
     

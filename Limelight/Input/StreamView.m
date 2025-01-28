@@ -401,6 +401,8 @@ static const double X1_MOUSE_SPEED_DIVISOR = 2.5;
                 buttonView.translatesAutoresizingMaskIntoConstraints = NO; // weird but this is mandatory, or you will find no key views added to the right place
                 buttonView.widthFactor = buttonState.widthFactor;
                 buttonView.heightFactor = buttonState.heightFactor;
+                buttonView.sensitivityFactor = buttonState.sensitivityFactor;
+                buttonView.stickIndicatorXOffset = buttonState.stickIndicatorXOffset;
                 // Add the buttonView to the view controller's view
                 [self->streamFrameTopLayerView addSubview:buttonView]; // add keyboard button to the stream frame view. must add it to the target view before setting location.
                 [buttonView setLocationWithXOffset:buttonState.position.x yOffset:buttonState.position.y];

@@ -120,6 +120,8 @@ import UIKit
         self.mousePointerMoved = false
         self.touchLockedForMoveEvent = UITouch()
         self.twoTouchesDetected = false
+        self.stickIndicatorXOffset = 120
+        self.sensitivityFactor = 1.0
         super.init(frame: .zero)
         
         upIndicator = createLrudDirectionLayer()
@@ -305,7 +307,7 @@ import UIKit
     // create stick indicator: the crossMark & stickBall:
     @objc public func showStickIndicator(){
         // tell if the self button is located on the left or right
-        self.selfViewOnTheRight = (self.storedLocation.x + self.frame.width/2 > self.appWindow.frame.width*0.5)
+        self.selfViewOnTheRight = (self.storedLocation.x > self.appWindow.frame.width*0.5)
         let offsetSign = selfViewOnTheRight ? -1 : 1
         let stickMarkerRelativeLocation:CGPoint
         if !OnScreenButtonView.editMode {
@@ -356,7 +358,7 @@ import UIKit
         let stickBallLayer = CAShapeLayer()
         stickBallLayer.path = path.cgPath  // Assign the circular path to the shape layer
         self.layer.superlayer?.addSublayer(stickBallLayer)
-        stickBallLayer.position = CGPointMake(CGRectGetMidX(self.crossMarkLayer.frame), CGRectGetMinY(self.crossMarkLayer.frame))
+        stickBallLayer.position = CGPointMake(CGRectGetMidX(self.crossMarkLayer.frame), CGRectGetMidY(self.crossMarkLayer.frame))
         
         // stickBallLayer.position = CG
         
@@ -373,18 +375,18 @@ import UIKit
         return stickBallLayer
     }
     
-    @objc public func updateStickBallPosition(){
+    @objc public func updateStickIndicator(){
         CATransaction.begin()
         CATransaction.setDisableActions(true)
         self.stickBallLayer.removeAllAnimations()
         if !OnScreenButtonView.editMode {
-            self.stickBallLayer.position = CGPointMake(CGRectGetMidX(self.crossMarkLayer.frame) + touchInputToStickBallCoord(input: offSetX), CGRectGetMinY(self.crossMarkLayer.frame) + touchInputToStickBallCoord(input: offSetY))
+            self.stickBallLayer.position = CGPointMake(CGRectGetMidX(self.crossMarkLayer.frame) + touchInputToStickBallCoord(input: offSetX*sensitivityFactor), CGRectGetMidY(self.crossMarkLayer.frame) + touchInputToStickBallCoord(input: offSetY*sensitivityFactor))
         }
         else{
             // illustrate offset distance in edit mode
             let offsetSign = self.selfViewOnTheRight ? -1 : 1
-            let illlustrationPoint = CGPointMake(CGRectGetMidX(self.frame), CGRectGetMaxY(self.frame)/4)
-            self.stickBallLayer.position = CGPointMake(CGRectGetMidX(self.crossMarkLayer.frame) + CGFloat(offsetSign) * stickIndicatorXOffset, CGRectGetMinY(self.crossMarkLayer.frame))
+            // let illlustrationPoint = CGPointMake(CGRectGetMidX(self.frame), CGRectGetMaxY(self.frame)/4)
+            self.crossMarkLayer.position = CGPointMake(CGRectGetMidX(self.stickBallLayer.frame) + CGFloat(offsetSign) * stickIndicatorXOffset, CGRectGetMidY(self.stickBallLayer.frame))
         }
         CATransaction.commit()
     }
@@ -816,10 +818,10 @@ import UIKit
                 break
             case "LSPAD":
                 self.sendLeftStickTouchPadEvent(inputX: offSetX * sensitivityFactor, inputY: offSetY*sensitivityFactor)
-                updateStickBallPosition()
+                updateStickIndicator()
             case "RSPAD":
                 self.sendRightStickTouchPadEvent(inputX: offSetX * sensitivityFactor, inputY: offSetY * sensitivityFactor);
-                updateStickBallPosition()
+                updateStickIndicator()
             case "LSVPAD":
                 self.sendLeftStickTouchPadEvent(inputX: deltaX*1.5167*sensitivityFactor, inputY: deltaY*1.5167*sensitivityFactor)
             case "RSVPAD":
@@ -942,7 +944,9 @@ import UIKit
             if CommandManager.nonVectorStickPads.contains(self.keyString) {
                 self.crossMarkLayer.removeFromSuperlayer()
                 self.stickBallLayer.removeFromSuperlayer()
-                self.showStickIndicator()}
+                self.showStickIndicator()
+                self.updateStickIndicator()
+            }
         }
     }
 }

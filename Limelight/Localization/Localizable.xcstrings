@@ -191,6 +191,29 @@
         }
       }
     },
+    "Ball: assumed touch point.   Cross: indicator location" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "小球: 假定的触点   十字: 指示器偏离位置"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "灵敏度: %.2f"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "小球: 假定的触点   十字: 指示器偏离位置"
+          }
+        }
+      }
+    },
     "Bitrate: %.1f Mbps" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -958,6 +981,29 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "输入主机端IP地址"
+          }
+        }
+      }
+    },
+    "Indicator Offset: %.2f" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "指示器偏离: %.2f"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "小球: 假定的触点   十字: 指示器偏离位置"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "指示器偏离: %.2f"
           }
         }
       }
@@ -2098,6 +2144,29 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "发送命令"
+          }
+        }
+      }
+    },
+    "Sensitivity: %.2f" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "灵敏度: %.2f"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "指示器偏离: %.2f"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "灵敏度: %.2f"
           }
         }
       }
