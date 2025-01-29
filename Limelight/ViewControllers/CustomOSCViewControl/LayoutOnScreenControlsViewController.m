@@ -733,7 +733,9 @@
 }
 
 - (void) touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
-
+    // for OnScreenWidgets:
+    
+    
     // -------- for OSC buttons
     [self.layoutOSC touchesMoved:touches withEvent:event];
     if ([self.layoutOSC isLayer:self.layoutOSC.layerBeingDragged

@@ -258,7 +258,7 @@ static float L3_Y;
     _rightStickBackground = [CALayer layer];
     _leftStick = [CALayer layer];
     _rightStick = [CALayer layer];
-        
+    
     [self.OSCButtonLayers addObject:_aButton];
     [self.OSCButtonLayers addObject:_bButton];
     [self.OSCButtonLayers addObject:_xButton];

@@ -683,7 +683,7 @@ import UIKit
         self.onScreenControls.sendLeftStickTouchPadEvent(targetX, targetY)
     }
     //==========================================================================================================
-
+    
     
     // Touch event handling
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -781,11 +781,15 @@ import UIKit
     
     private func moveByTouch(touch: UITouch){
         let currentLocation = touch.location(in: superview)
-        let offsetX = currentLocation.x - storedLocation.x
-        let offsetY = currentLocation.y - storedLocation.y
-        center = CGPoint(x: center.x + offsetX, y: center.y + offsetY)
+        // let offsetX = currentLocation.x - storedLocation.x
+        // let offsetY = currentLocation.y - storedLocation.y
+        // center = CGPoint(x: center.x + offsetX, y: center.y + offsetY)
+        center = currentLocation;
         //NSLog("x coord: %f, y coord: %f", self.frame.origin.x, self.frame.origin.y)
         storedLocation = currentLocation // Update initial center for next movement
+        if OnScreenWidgetView.editMode {
+            NotificationCenter.default.post(name: Notification.Name("OnScreenWidgetMovedByTouch"), object:self) // inform the layoutOnScreenControl to update guideLines for this widget view
+        }
     }
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {

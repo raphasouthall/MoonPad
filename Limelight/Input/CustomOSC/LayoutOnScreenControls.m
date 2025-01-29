@@ -10,7 +10,6 @@
 #import "OSCProfilesTableViewController.h"
 #import "OnScreenButtonState.h"
 #import "OSCProfilesManager.h"
-#import "Moonlight-Swift.h"
 
 @interface LayoutOnScreenControls ()
 @end
@@ -26,7 +25,16 @@
 @synthesize _view;
 @synthesize layoutChanges;
 
+
+
+
 - (id) initWithView:(UIView*)view controllerSup:(ControllerSupport*)controllerSupport streamConfig:(StreamConfiguration*)streamConfig oscLevel:(int)oscLevel {
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(updateGuidelinesForOnScreenWidget:)
+                                                 name:@"OnScreenWidgetMovedByTouch"   // This is a special notification for reloading the on screen keyboard buttons. which can't be executed by _oscProfilesTableViewController.needToUpdateOscLayoutTVC code block, and has to be triggered by a notification
+                                               object:nil];
+
+    
     _view = view;
     _view.multipleTouchEnabled = false;
   
@@ -99,6 +107,57 @@
     verticalGuideline.backgroundColor = [UIColor blueColor];
     verticalGuideline.hidden = YES;
     [self._view addSubview: verticalGuideline];
+}
+
+- (void) updateGuidelinesForOnScreenWidget: (NSNotification *)notification{
+    /* have guidelines follow wherever the user is touching on the screen */
+    OnScreenWidgetView* widget = notification.object;
+    horizontalGuideline.hidden = verticalGuideline.hidden = NO;
+    horizontalGuideline.center = verticalGuideline.center = CGPointMake(CGRectGetMidX(widget.frame), CGRectGetMidY(widget.frame));
+    /*
+     Telegraph to the user whether the horizontal and/or vertical guidelines line up with one or more of the buttons on screen by doing the following:
+     -Change horizontal guideline color to yellow if its y-position is almost equal to that of one of the buttons on screen.
+     -Change vertical guideline color to yellow if its x-position is almost equal to that of one of the buttons on screen.
+     */
+    
+    horizontalGuideline.backgroundColor = [UIColor blueColor]; // change horizontal guideline back to blue if it doesn't line up with one of the on screen buttons
+    for (CALayer *button in self.OSCButtonLayers) { // horizontal guideline position check
+        if ((layerBeingDragged != button) && !button.isHidden) {
+            if ((horizontalGuideline.center.y < button.position.y + 1) &&
+                (horizontalGuideline.center.y > button.position.y - 1)) {
+                horizontalGuideline.backgroundColor = [UIColor yellowColor];
+                break;
+            }
+        }
+    }
+    for(UIView* view in self.layoutToolVC.view.subviews){
+        if ([view isKindOfClass:[OnScreenWidgetView class]] && view != widget) {
+            if ((horizontalGuideline.center.y < view.center.y + 1) && (horizontalGuideline.center.y > view.center.y - 1)) {
+                horizontalGuideline.backgroundColor = [UIColor yellowColor];
+                break;
+            }
+        }
+    }
+
+    verticalGuideline.backgroundColor = [UIColor blueColor]; // change vertical guideline back to blue if it doesn't line up with one of the on screen buttons
+    for (CALayer *button in self.OSCButtonLayers) { // vertical guideline position check
+        if ((layerBeingDragged != button) && !button.isHidden) {
+            if ((verticalGuideline.center.x < button.position.x + 1) &&
+                (verticalGuideline.center.x > button.position.x - 1)) {
+                verticalGuideline.backgroundColor = [UIColor yellowColor];
+                break;
+            }
+        }
+    }
+    for(UIView* view in self.layoutToolVC.view.subviews){
+        if ([view isKindOfClass:[OnScreenWidgetView class]] && view != widget) {
+            if ((verticalGuideline.center.x < view.center.x + 1) && (verticalGuideline.center.x > view.center.x - 1)) {
+                verticalGuideline.backgroundColor = [UIColor yellowColor];
+                break;
+            }
+        }
+    }
+     
 }
 
 
@@ -198,6 +257,7 @@
     UITouch *touch = [touches anyObject];
     CGPoint touchLocation = [touch locationInView:_view];
     
+    
     layerBeingDragged.position = touchLocation; // move object to touch location
     
     /* have guidelines follow wherever the user is touching on the screen */
@@ -206,8 +266,8 @@
     
     /*
      Telegraph to the user whether the horizontal and/or vertical guidelines line up with one or more of the buttons on screen by doing the following:
-     -Change horizontal guideline color to white if its y-position is almost equal to that of one of the buttons on screen.
-     -Change vertical guideline color to white if its x-position is almost equal to that of one of the buttons on screen.
+     -Change horizontal guideline color to yellow if its y-position is almost equal to that of one of the buttons on screen.
+     -Change vertical guideline color to yellow if its x-position is almost equal to that of one of the buttons on screen.
      */
     horizontalGuideline.backgroundColor = [UIColor blueColor]; // change horizontal guideline back to blue if it doesn't line up with one of the on screen buttons
     for (CALayer *button in self.OSCButtonLayers) { // horizontal guideline position check
@@ -219,6 +279,7 @@
             }
         }
     }
+    // alignment with onScreenWidgets
     for(UIView* view in self.layoutToolVC.view.subviews){
         if ([view isKindOfClass:[OnScreenWidgetView class]]) {
             if ((horizontalGuideline.center.y < view.center.y + 1) && (horizontalGuideline.center.y > view.center.y - 1)) {
@@ -238,6 +299,7 @@
             }
         }
     }
+    // alignment with onScreenWidgets
     for(UIView* view in self.layoutToolVC.view.subviews){
         if ([view isKindOfClass:[OnScreenWidgetView class]]) {
             if ((verticalGuideline.center.x < view.center.x + 1) && (verticalGuideline.center.x > view.center.x - 1)) {
@@ -246,7 +308,6 @@
             }
         }
     }
-
 }
 
 - (void) touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event {
