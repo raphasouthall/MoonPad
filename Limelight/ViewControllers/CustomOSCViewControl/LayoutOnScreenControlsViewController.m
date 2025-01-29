@@ -407,7 +407,10 @@
     bool showStickIndicatorOffsetSlider = [nonVectorStickPads containsObject:self->selectedButtonView.keyString];
     self.sensitivityFactorSlider.hidden = self->sensitivitySliderLabel.hidden = !showSensitivityFactorSlider;
     self.stickIndicatorOffsetSlider.hidden = self->stickIndicatorOffsetExplain.hidden = self->stickIndicatorOffsetSliderLabel.hidden = !showStickIndicatorOffsetSlider;
-    if(showSensitivityFactorSlider) [sensitivitySliderLabel setText:[LocalizationHelper localizedStringForKey:@"Sensitivity: %.2f", self->selectedButtonView.sensitivityFactor]];
+    if(showSensitivityFactorSlider){
+        [self.sensitivityFactorSlider setValue:self->selectedButtonView.sensitivityFactor];
+        [sensitivitySliderLabel setText:[LocalizationHelper localizedStringForKey:@"Sensitivity: %.2f", self->selectedButtonView.sensitivityFactor]];
+    }
     if(showStickIndicatorOffsetSlider){
         // illustrating the indicator offset,
         [selectedButtonView.stickBallLayer removeFromSuperlayer];
