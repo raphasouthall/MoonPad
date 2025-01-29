@@ -8,7 +8,7 @@
 
 import UIKit
 
-@objc class OnScreenButtonView: UIView, InstanceProviderDelegate {
+@objc class OnScreenWidgetView: UIView, InstanceProviderDelegate {
     // receiving the OnScreenControls instance from delegate
     @objc func getOnScreenControlsInstance(_ sender: Any) {
         if let controls = sender as? OnScreenControls {
@@ -150,7 +150,7 @@ import UIKit
     }
     
     @objc public func enableRelocationMode(enabled: Bool){
-        OnScreenButtonView.editMode = enabled
+        OnScreenWidgetView.editMode = enabled
     }
     
     @objc public func adjustButtonTransparency(alpha: CGFloat){
@@ -163,7 +163,7 @@ import UIKit
         self.tweakAlpha()
     }
     
-    @objc public func resizeButtonView(){
+    @objc public func resizeWidgetView(){
         guard let superview = superview else { return }
         
         
@@ -185,7 +185,7 @@ import UIKit
         // Trigger layout update
         superview.layoutIfNeeded()
         
-        // Re-setup buttonView style
+        // Re-setup widgetView style
         setupView()
     }
     
@@ -258,7 +258,7 @@ import UIKit
         
         if CommandManager.touchPadCmds.contains(self.keyString){
             label.text = "" // make touchPad display no text
-            if OnScreenButtonView.editMode { //display label in edit mode to make the pad more visible
+            if OnScreenWidgetView.editMode { //display label in edit mode to make the pad more visible
                 label.text = self.keyString
             }
         }
@@ -315,7 +315,7 @@ import UIKit
         self.selfViewOnTheRight = (self.storedLocation.x > self.appWindow.frame.width*0.5)
         let offsetSign = selfViewOnTheRight ? -1 : 1
         let stickMarkerRelativeLocation:CGPoint
-        if !OnScreenButtonView.editMode {
+        if !OnScreenWidgetView.editMode {
             stickMarkerRelativeLocation = CGPointMake(touchBeganLocation.x + CGFloat(offsetSign) * self.stickIndicatorXOffset, touchBeganLocation.y)
         }
         else{
@@ -384,7 +384,7 @@ import UIKit
         CATransaction.begin()
         CATransaction.setDisableActions(true)
         self.stickBallLayer.removeAllAnimations()
-        if !OnScreenButtonView.editMode {
+        if !OnScreenWidgetView.editMode {
             self.stickBallLayer.position = CGPointMake(CGRectGetMidX(self.crossMarkLayer.frame) + touchInputToStickBallCoord(input: offSetX*sensitivityFactor), CGRectGetMidY(self.crossMarkLayer.frame) + touchInputToStickBallCoord(input: offSetY*sensitivityFactor))
         }
         else{
@@ -701,14 +701,14 @@ import UIKit
             self.latestTouchLocation = touchBeganLocation
         }
                 
-        let allCapturedTouchesCount = event?.allTouches?.filter({ $0.view == self }).count // this will counts all valid touches within the self buttonView, and excludes touches in other buttonViews
+        let allCapturedTouchesCount = event?.allTouches?.filter({ $0.view == self }).count // this will counts all valid touches within the self widgetView, and excludes touches in other widgetViews
         if allCapturedTouchesCount == 2 {
             self.twoTouchesDetected = true
         }
         
         self.pressed = true
 
-        if !OnScreenButtonView.editMode {
+        if !OnScreenWidgetView.editMode {
             if CommandManager.touchPadCmds.contains(self.keyString) && touches.count == 1{ // don't use event?.allTouches?.count here, it will counts all touches including the ones captured by other UIViews
                 switch self.keyString {
                 case "LSPAD":
@@ -770,7 +770,7 @@ import UIKit
         }
         // here is in edit mode:
         else{
-            NotificationCenter.default.post(name: Notification.Name("OnScreenButtonViewSelected"),object: self) // inform layout tool controller to fetch button size factors. self will be passed as the object of the notification
+            NotificationCenter.default.post(name: Notification.Name("OnScreenWidgetViewSelected"),object: self) // inform layout tool controller to fetch button size factors. self will be passed as the object of the notification
             if let touch = touches.first {
                 let touchLocation = touch.location(in: superview)
                 storedLocation = touchLocation
@@ -790,9 +790,9 @@ import UIKit
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesMoved(touches, with: event)
-        OnScreenButtonView.timestampOfButtonBeingDragged = self.timestamp
+        OnScreenWidgetView.timestampOfButtonBeingDragged = self.timestamp
         
-        if !OnScreenButtonView.editMode {
+        if !OnScreenWidgetView.editMode {
             if CommandManager.touchPadCmds.contains(self.keyString){
                 handleTouchPadMoveEvent(touches, with: event)
             }
@@ -808,8 +808,8 @@ import UIKit
             }
         }
         
-        // Move the buttonView based on touch movement in relocation mode
-        if OnScreenButtonView.editMode {
+        // Move the widgetView based on touch movement in relocation mode
+        if OnScreenWidgetView.editMode {
             if let touch = touches.first {
                 self.moveByTouch(touch: touch)
                 }
@@ -858,10 +858,10 @@ import UIKit
 
         if self.keyString != "MOUSEPAD" {quickDoubleTapDetected = false} //do not reset this flag here in mousePad mode
         
-        let allCapturedTouchesCount = event?.allTouches?.filter({ $0.view == self }).count // this will counts all valid touches within the self buttonView, and excludes touches in other buttonViews
+        let allCapturedTouchesCount = event?.allTouches?.filter({ $0.view == self }).count // this will counts all valid touches within the self widgetView, and excludes touches in other widgetViews
         
         // deal with MOUSPAD first
-        if !OnScreenButtonView.editMode && self.keyString == "MOUSEPAD" && allCapturedTouchesCount == 1 && !twoTouchesDetected {
+        if !OnScreenWidgetView.editMode && self.keyString == "MOUSEPAD" && allCapturedTouchesCount == 1 && !twoTouchesDetected {
             if !mousePointerMoved && !quickDoubleTapDetected {self.sendLongMouseLeftButtonClickEvent()} // deal with single tap(click)
             if quickDoubleTapDetected { //deal with quick double tap
                 LiSendMouseButtonEvent(CChar(BUTTON_ACTION_RELEASE), BUTTON_LEFT) //must release the button anyway, because the button is likely being held down since the long click turned into a dragging event.
@@ -871,14 +871,14 @@ import UIKit
             mousePointerMoved = false // reset this flag
         }
         
-        if !OnScreenButtonView.editMode && self.keyString == "MOUSEPAD" && twoTouchesDetected && touches.count == allCapturedTouchesCount { // need to enable multi-touch first
+        if !OnScreenWidgetView.editMode && self.keyString == "MOUSEPAD" && twoTouchesDetected && touches.count == allCapturedTouchesCount { // need to enable multi-touch first
             // touches.count == allCapturedTouchesCount means allfingers are lifting
             self.sendMouseRightButtonClickEvent()
             twoTouchesDetected = false
         }
         
         // then other types of pads
-        if !OnScreenButtonView.editMode && CommandManager.touchPadCmds.contains(self.keyString) {
+        if !OnScreenWidgetView.editMode && CommandManager.touchPadCmds.contains(self.keyString) {
             switch self.keyString{
             case "LSPAD":
                 self.onScreenControls.clearLeftStickTouchPadFlag()
@@ -912,7 +912,7 @@ import UIKit
             }
         }
         
-        if !OnScreenButtonView.editMode && CommandManager.specialOverlayButtonCmds.contains(self.keyString){
+        if !OnScreenWidgetView.editMode && CommandManager.specialOverlayButtonCmds.contains(self.keyString){
             if CACurrentMediaTime() - self.touchTapTimeStamp < 0.3 {
                 switch self.keyString {
                 case "SETTINGS":
@@ -940,7 +940,7 @@ import UIKit
             if self.keyString == "OSCR2" {self.onScreenControls.updateRightTrigger(0x00)}
         }
                         
-        if !OnScreenButtonView.editMode && !self.keyString.contains("+") { // if the command(keystring contains "+", it's a multi-key command rather than a single key button
+        if !OnScreenWidgetView.editMode && !self.keyString.contains("+") { // if the command(keystring contains "+", it's a multi-key command rather than a single key button
             
             if CommandManager.mouseButtonMappings.keys.contains(self.keyString){
                 LiSendMouseButtonEvent(CChar(BUTTON_ACTION_RELEASE), Int32(CommandManager.mouseButtonMappings[self.keyString]!))
@@ -950,7 +950,7 @@ import UIKit
             }
         }
         
-        if OnScreenButtonView.editMode {
+        if OnScreenWidgetView.editMode {
             guard let superview = superview else { return }
             
             // Deactivate existing constraints if necessary
@@ -969,7 +969,7 @@ import UIKit
             // Trigger layout update
             superview.layoutIfNeeded()
             
-            setupView(); //re-setup buttonView style
+            setupView(); //re-setup widgetView style
             
             if CommandManager.nonVectorStickPads.contains(self.keyString) {
                 self.crossMarkLayer.removeFromSuperlayer()

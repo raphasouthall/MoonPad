@@ -25,10 +25,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) BOOL isHidden;
 @property (nonatomic, assign) uint8_t buttonType;
 @property (nonatomic, assign) NSTimeInterval timestamp;
-@property (nonatomic, assign) CGFloat widthFactor; // for OnScreenButtonView
-@property (nonatomic, assign) CGFloat heightFactor; // for OnScreenButtonView
-@property (nonatomic, assign) CGFloat sensitivityFactor; // for OnScreenButtonView
-@property (nonatomic, assign) CGFloat stickIndicatorXOffset; // for OnScreenButtonView
+@property (nonatomic, assign) CGFloat widthFactor; // for OnScreenWidgetView
+@property (nonatomic, assign) CGFloat heightFactor; // for OnScreenWidgetView
+@property (nonatomic, assign) CGFloat sensitivityFactor; // for OnScreenWidgetView
+@property (nonatomic, assign) CGFloat stickIndicatorXOffset; // for OnScreenWidgetView
 
 @property (nonatomic, assign) CGFloat oscLayerSizeFactor; // for OnScreenController CALayer
 @property (nonatomic, assign) CGFloat backgroundAlpha; // for OnScreenController CALayer

@@ -368,18 +368,18 @@ static const double X1_MOUSE_SPEED_DIVISOR = 2.5;
 - (void) clearOnScreenKeyboardButtons{
     for (UIView *subview in self->streamFrameTopLayerView.subviews) {
         // 检查子视图是否是特定类型的实例
-        if ([subview isKindOfClass:[OnScreenButtonView class]]) {
+        if ([subview isKindOfClass:[OnScreenWidgetView class]]) {
             // 如果是，就添加到将要被移除的数组中
             [subview removeFromSuperview];
         }
     }
 }
 
-- (void) reloadOnScreenButtonViews{
+- (void) reloadOnScreenWidgetViews{
     
     NSLog(@"reload on screen keyboard buttons here");
 
-    // remove all keyboard button views first
+    // remove all keyboard widget views first
     [self clearOnScreenKeyboardButtons];
     
     // bool customOscEnabled = [self isOscEnabled] && settings.onscreenControls.intValue == OnScreenControlsLevelCustom;
@@ -389,25 +389,25 @@ static const double X1_MOUSE_SPEED_DIVISOR = 2.5;
     OSCProfilesManager* profilesManager = [OSCProfilesManager sharedManager];
     OSCProfile *oscProfile = [profilesManager getSelectedProfile]; //returns the currently selected OSCProfile
 
-    if(!OnScreenButtonView.editMode){ // in edit mode, keyboard button view will be updated within layoutool view controller.
+    if(!OnScreenWidgetView.editMode){ // in edit mode, keyboard widget view will be updated within layoutool view controller.
         for (NSData *buttonStateEncoded in oscProfile.buttonStates) {
             OnScreenButtonState* buttonState = [NSKeyedUnarchiver unarchivedObjectOfClass:[OnScreenButtonState class] fromData:buttonStateEncoded error:nil];
             if(buttonState.buttonType == KeyboardOrMouseButton){
-                OnScreenButtonView* buttonView = [[OnScreenButtonView alloc] initWithKeyString:buttonState.name keyLabel:buttonState.alias]; //reconstruct buttonView
+                OnScreenWidgetView* widgetView = [[OnScreenWidgetView alloc] initWithKeyString:buttonState.name keyLabel:buttonState.alias]; //reconstruct widgetView
                 //--------------------------------------------------
-                onScreenControls.delegate = buttonView; // connecting onScreenControls to OnScreenButtonView, sending the active instance for touchPad stick control
+                onScreenControls.delegate = widgetView; // connecting onScreenControls to OnScreenWidgetView, sending the active instance for touchPad stick control
                 [onScreenControls sendInstance];
                 //--------------------------------------------------
-                buttonView.translatesAutoresizingMaskIntoConstraints = NO; // weird but this is mandatory, or you will find no key views added to the right place
-                buttonView.widthFactor = buttonState.widthFactor;
-                buttonView.heightFactor = buttonState.heightFactor;
-                buttonView.sensitivityFactor = buttonState.sensitivityFactor;
-                buttonView.stickIndicatorXOffset = buttonState.stickIndicatorXOffset;
-                // Add the buttonView to the view controller's view
-                [self->streamFrameTopLayerView addSubview:buttonView]; // add keyboard button to the stream frame view. must add it to the target view before setting location.
-                [buttonView setLocationWithXOffset:buttonState.position.x yOffset:buttonState.position.y];
-                [buttonView resizeButtonView]; // resize must be called after relocation
-                [buttonView adjustButtonTransparencyWithAlpha:buttonState.backgroundAlpha];
+                widgetView.translatesAutoresizingMaskIntoConstraints = NO; // weird but this is mandatory, or you will find no key views added to the right place
+                widgetView.widthFactor = buttonState.widthFactor;
+                widgetView.heightFactor = buttonState.heightFactor;
+                widgetView.sensitivityFactor = buttonState.sensitivityFactor;
+                widgetView.stickIndicatorXOffset = buttonState.stickIndicatorXOffset;
+                // Add the widgetView to the view controller's view
+                [self->streamFrameTopLayerView addSubview:widgetView]; // add keyboard button to the stream frame view. must add it to the target view before setting location.
+                [widgetView setLocationWithXOffset:buttonState.position.x yOffset:buttonState.position.y];
+                [widgetView resizeWidgetView]; // resize must be called after relocation
+                [widgetView adjustButtonTransparencyWithAlpha:buttonState.backgroundAlpha];
             }
         }
     }

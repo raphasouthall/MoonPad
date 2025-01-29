@@ -189,7 +189,7 @@ static float L3_Y;
     [_controllerSupport updateFinished:_controller];
 }
 
-// sending self as an instance to OnScreenButtonView
+// sending self as an instance to OnScreenWidgetView
 - (void)sendInstance{
     NSLog(@"OnScreenControls is sending its instance...");
     if ([self.delegate respondsToSelector:@selector(getOnScreenControlsInstance:)]) {

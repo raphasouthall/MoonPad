@@ -58,7 +58,7 @@
     UIView *_streamVideoRenderView;
     /*
      * View architecture of this viewController:
-     * self.view (named `streamFrameTopLayerView` in StreamView.m, where slide & tap gestures, and onScreenControls & onScreenButtonView buttons are registered)
+     * self.view (named `streamFrameTopLayerView` in StreamView.m, where slide & tap gestures, and onScreenControls & OnScreenWidgetView buttons are registered)
      *   - streamView (where touchHandlers are registered)
      *     - streamVideoRenderView (where stream view is rendered)
      */
@@ -171,7 +171,7 @@
         // we got self.view passed to streamView class as the topLayerView, will be useful in many cases
     [self->_streamView reloadOnScreenControlsRealtimeWith:(ControllerSupport*)_controllerSupport
                                         andConfig:(StreamConfiguration*)_streamConfig]; //reload OSC here.
-    [self->_streamView reloadOnScreenButtonViews]; //reload keyboard buttons here. the keyboard button view will be added to the streamframe view instead streamview, the highest layer, which saves a lot of reengineering
+    [self->_streamView reloadOnScreenWidgetViews]; //reload keyboard buttons here. the keyboard widget view will be added to the streamframe view instead streamview, the highest layer, which saves a lot of reengineering
     [self reloadAirPlayConfig];
     [self mousePresenceChanged];
     
@@ -400,7 +400,7 @@
     [self->_streamView reloadOnScreenControlsWith:(ControllerSupport*)_controllerSupport
                                         andConfig:(StreamConfiguration*)_streamConfig];
     [self->_streamView showOnScreenControls];
-    [self->_streamView reloadOnScreenButtonViews]; //update keyboard buttons here
+    [self->_streamView reloadOnScreenWidgetViews]; //update keyboard buttons here
 }
 
 
