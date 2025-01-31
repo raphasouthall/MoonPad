@@ -625,6 +625,7 @@ const int FrontViewPositionNone = 0xff;
 
 - (void)_initDefaultProperties
 {
+    _mainFrameIsInHostView = true;
     _frontViewPosition = FrontViewPositionLeft;
     _rearViewPosition = FrontViewPositionLeft;
     _rightViewPosition = FrontViewPositionLeft;
@@ -736,7 +737,6 @@ const int FrontViewPositionNone = 0xff;
 // tested on iOS17. this method does not call back on iOS14, runtime orientation limitation not working for iOS14. Probably depends on iOS16 or higher.
 - (UIInterfaceOrientationMask)supportedInterfaceOrientations {
     // Return the supported interface orientations acoordingly
-    
     if(self.mainFrameIsInHostView){
         if([self isIphone]) return UIInterfaceOrientationMaskLandscape;  //always try to lock orientaion to landscape in mainFrameView in order to prevent bug.
         else return [self getCurrentOrientation]; //always try to lock current orientaion in mainFrameView for iPad in order to prevent bug.
