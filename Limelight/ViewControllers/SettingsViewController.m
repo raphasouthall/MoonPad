@@ -452,7 +452,7 @@ BOOL isCustomResolution(CGSize res) {
         [self.hdrSelector setSelectedSegmentIndex:currentSettings.enableHdr ? 1 : 0];
     }
     
-    [self.statsOverlaySelector setSelectedSegmentIndex:currentSettings.statsOverlay ? 1 : 0];
+    [self.statsOverlaySelector setSelectedSegmentIndex:currentSettings.statsOverlayLevel.intValue];
     [self.btMouseSelector setSelectedSegmentIndex:currentSettings.btMouseSupport ? 1 : 0];
     [self.optimizeSettingsSelector setSelectedSegmentIndex:currentSettings.optimizeGames ? 1 : 0];
     [self.framePacingSelector setSelectedSegmentIndex:currentSettings.useFramePacing ? 1 : 0];
@@ -1063,7 +1063,8 @@ BOOL isCustomResolution(CGSize res) {
     BOOL useFramePacing = [self.framePacingSelector selectedSegmentIndex] == 1;
     // BOOL absoluteTouchMode = [self.touchModeSelector selectedSegmentIndex] == 1;
     NSInteger touchMode = [self.touchModeSelector selectedSegmentIndex];
-    BOOL statsOverlay = [self.statsOverlaySelector selectedSegmentIndex] == 1;
+    NSInteger statsOverlayLevel = [self.statsOverlaySelector selectedSegmentIndex];
+    BOOL statsOverlayEnabled = statsOverlayLevel != 0;
     BOOL enableHdr = [self.hdrSelector selectedSegmentIndex] == 1;
     BOOL unlockDisplayOrientation = [self.unlockDisplayOrientationSelector selectedSegmentIndex] == 1;
     NSInteger resolutionSelected = [self.resolutionSelector selectedSegmentIndex];
@@ -1097,7 +1098,8 @@ BOOL isCustomResolution(CGSize res) {
                       btMouseSupport:btMouseSupport
                    // absoluteTouchMode:absoluteTouchMode
                            touchMode:touchMode
-                        statsOverlay:statsOverlay
+                   statsOverlayLevel:statsOverlayLevel
+                        statsOverlayEnabled:statsOverlayEnabled
                        unlockDisplayOrientation:unlockDisplayOrientation
                   resolutionSelected:resolutionSelected
                  externalDisplayMode:externalDisplayMode

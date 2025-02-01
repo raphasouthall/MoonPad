@@ -53,7 +53,8 @@
 @property (nonatomic) BOOL btMouseSupport;
 // @property (nonatomic) BOOL absoluteTouchMode;
 @property (nonatomic, retain) NSNumber * touchMode;
-@property (nonatomic) BOOL statsOverlay;
+@property (nonatomic, retain) NSNumber * statsOverlayLevel;
+@property (nonatomic) BOOL statsOverlayEnabled;
 @property (nonatomic) BOOL liftStreamViewForKeyboard;
 @property (nonatomic) BOOL showKeyboardToolbar;
 @property (nonatomic) BOOL unlockDisplayOrientation;

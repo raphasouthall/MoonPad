@@ -870,6 +870,29 @@
         }
       }
     },
+    "FPS: %5.2f     Network dropped frames: %.2f%%     Network latency: %@" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "帧率: %5.2f     网络丢帧: %.2f%%     网络延迟: %@"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "帧率: %5.2f     网络丢帧: %.2f%%     网络延迟: %@"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "帧率: %5.2f     网络丢帧: %.2f%%     网络延迟: %@"
+          }
+        }
+      }
+    },
     "Got it!" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2660,31 +2683,25 @@
         }
       }
     },
-    "Video stream: %dx%d %.2f FPS (Codec: %@)\nFrames dropped by your network connection: %.2f%%\nAverage network latency: %@%@" : {
+    "Video stream: %dx%d %.2f FPS (Codec: %@)\nNetwork dropped frames: %.2f%%\nAverage network latency: %@%@" : {
       "extractionState" : "manual",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Video stream: %dx%d %.2f FPS (Codec: %@)\nFrames dropped by your network connection: %.2f%%\nAverage network latency: %@%@"
-          }
-        },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "视频流: %dx%d %.2f FPS (编码格式: %@)\n网络造成的丢帧: %.2f%%\n平均网络延迟: %@%@"
+            "value" : "视频流: %dx%d %.2f FPS (编解码: %@)\n网络丢帧: %.2f%%\n平均网络延迟: %@%@"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "视频流: %dx%d %.2f FPS (编码格式: %@)\n网络造成的丢帧: %.2f%%\n平均网络延迟: %@%@"
+            "value" : "视频流: %dx%d %.2f FPS (编解码: %@)\n网络丢帧: %.2f%%\n平均网络延迟: %@%@"
           }
         },
         "zh-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "视频流: %dx%d %.2f FPS (编码格式: %@)\n网络造成的丢帧: %.2f%%\n平均网络延迟: %@%@"
+            "value" : "视频流: %dx%d %.2f FPS (编解码: %@)\n网络丢帧: %.2f%%\n平均网络延迟: %@%@"
           }
         }
       }

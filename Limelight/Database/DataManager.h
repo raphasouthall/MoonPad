@@ -41,7 +41,8 @@
                   btMouseSupport:(BOOL)btMouseSupport
                // absoluteTouchMode:(BOOL)absoluteTouchMode
                        touchMode:(NSInteger)touchMode
-                    statsOverlay:(BOOL)statsOverlay
+               statsOverlayLevel:(NSInteger)statsOverlayLevel
+                    statsOverlayEnabled:(BOOL)statsOverlayEnabled
                    unlockDisplayOrientation:(BOOL)unlockDisplayOrientation
               resolutionSelected:(NSInteger)resolutionSelected
              externalDisplayMode:(NSInteger)externalDisplayMode
