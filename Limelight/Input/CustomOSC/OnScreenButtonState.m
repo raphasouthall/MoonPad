@@ -39,6 +39,7 @@
     [encoder encodeFloat:self.stickIndicatorXOffset forKey:@"stickIndicatorOffset"];
     [encoder encodeFloat:self.oscLayerSizeFactor forKey:@"oscLayerSizeFactor"];
     [encoder encodeFloat:self.backgroundAlpha forKey:@"backgroundAlpha"];
+    [encoder encodeFloat:self.borderWidth forKey:@"borderWidth"];
 }
 
 - (id) initWithCoder:(NSCoder*)decoder {
@@ -55,6 +56,7 @@
         self.stickIndicatorXOffset = [decoder decodeFloatForKey:@"stickIndicatorOffset"];
         self.oscLayerSizeFactor = [decoder decodeFloatForKey:@"oscLayerSizeFactor"];
         self.backgroundAlpha = [decoder decodeFloatForKey:@"backgroundAlpha"];
+        self.borderWidth = [decoder decodeFloatForKey:@"borderWidth"];
     }
     return self;
 }

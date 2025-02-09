@@ -27,6 +27,7 @@ import UIKit
     @objc public var pressed: Bool
     @objc public var widthFactor: CGFloat = 1.0
     @objc public var heightFactor: CGFloat = 1.0
+    @objc public var borderWidth: CGFloat = 0.0
     @objc public var backgroundAlpha: CGFloat = 0.5
     @objc public var latestTouchLocation: CGPoint
     @objc public var selfViewOnTheRight: Bool = false
@@ -153,14 +154,22 @@ import UIKit
         OnScreenWidgetView.editMode = enabled
     }
     
-    @objc public func adjustButtonTransparency(alpha: CGFloat){
+    @objc public func adjustTransparency(alpha: CGFloat){
         if alpha != 0 {
             self.backgroundAlpha = alpha
         }
         else{
-            self.backgroundAlpha = 0.5
+            // self.backgroundAlpha = 0.5
+            self.backgroundAlpha = alpha
         }
         self.tweakAlpha()
+    }
+    
+    @objc public func adjustBorder(width: CGFloat){
+        self.borderWidth = width
+        // self.layer.borderWidth = borderWidth
+        // if CommandManager.touchPadCmds.contains(self.keyString) && width == 0 {self.layer.borderWidth = 1}
+        setupView()
     }
     
     @objc public func resizeWidgetView(){
@@ -172,7 +181,6 @@ import UIKit
         
         // To resize the button, we must set this to false temporarily
         translatesAutoresizingMaskIntoConstraints = false
-        
         
         // replace invalid factor values
         if self.widthFactor == 0 {self.widthFactor = 1.0}
@@ -207,7 +215,7 @@ import UIKit
     }
     
     private func changeAndActivateContraints(){
-        if CommandManager.oscButtonMappings.keys.contains(self.keyString){ // we'll make custom osc buttons round & smaller
+        if CommandManager.oscButtonMappings.keys.contains(self.keyString) && !CommandManager.oscRectangleButtonCmds.contains(self.keyString){ // we'll make custom osc buttons round & smaller
             NSLayoutConstraint.activate([
                 self.widthAnchor.constraint(equalToConstant: 60 * self.widthFactor),
                 self.heightAnchor.constraint(equalToConstant: 60 * self.heightFactor),])
@@ -244,19 +252,21 @@ import UIKit
         
         self.translatesAutoresizingMaskIntoConstraints = true // this is mandatory to prevent unexpected key view location change
         
-        self.layer.cornerRadius = 20
-        self.layer.borderWidth = 1
+        self.layer.cornerRadius = 16
+        self.layer.borderWidth = self.borderWidth
 
         self.tweakAlpha()
         
-        if CommandManager.oscButtonMappings.keys.contains(self.keyString){ //make oscButtons round and no border
+        if CommandManager.oscButtonMappings.keys.contains(self.keyString) && !CommandManager.oscRectangleButtonCmds.contains(self.keyString){ //make oscButtons round and no border
             self.layer.cornerRadius = self.frame.width/2
-            self.layer.borderWidth = 0
+            // self.layer.borderWidth = self.borderWidth
             label.minimumScaleFactor = 0.15  // Adjust the scale factor for oscButtons
             label.font = UIFont.boldSystemFont(ofSize: 22)
         }
         
         if CommandManager.touchPadCmds.contains(self.keyString){
+            if(self.borderWidth < 1) {self.layer.borderWidth = 1}
+            else {self.layer.borderWidth = self.borderWidth}
             label.text = "" // make touchPad display no text
             if OnScreenWidgetView.editMode { //display label in edit mode to make the pad more visible
                 label.text = self.keyString
@@ -634,7 +644,7 @@ import UIKit
     
     private func setupButtonDownVisualEffectLayer() {
         self.buttonDownVisualEffectWidth = 8.6
-        if CommandManager.oscButtonMappings.keys.contains(self.keyString) {self.buttonDownVisualEffectWidth = 15.3} // wider visual effect for osc buttons
+        if CommandManager.oscButtonMappings.keys.contains(self.keyString) && !CommandManager.oscRectangleButtonCmds.contains(self.keyString) {self.buttonDownVisualEffectWidth = 15.3} // wider visual effect for osc buttons
         
         // Set the frame to be larger than the view to expand outward
         buttonDownVisualEffectLayer.borderWidth = 0 // set this 0 to hide the visual effect first

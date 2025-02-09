@@ -1894,9 +1894,9 @@ static float L3_Y;
     // CALayer* superLayer = layer.superlayer;
     // if(layerBeingDragged.name == @"")
     CGFloat targetAlpha;
-    
+    targetAlpha = alpha;
+    if(alpha < 0.23) targetAlpha = 0.23;
     if(alpha == 0.0 || alpha == 1.0) targetAlpha = 5.0f/6.0f; // invalid alpha value
-    else targetAlpha = alpha;
     
     NSLog(@"alphas: %f",targetAlpha);
 

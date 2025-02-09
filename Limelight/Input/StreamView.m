@@ -401,13 +401,15 @@ static const double X1_MOUSE_SPEED_DIVISOR = 2.5;
                 widgetView.translatesAutoresizingMaskIntoConstraints = NO; // weird but this is mandatory, or you will find no key views added to the right place
                 widgetView.widthFactor = buttonState.widthFactor;
                 widgetView.heightFactor = buttonState.heightFactor;
+                widgetView.borderWidth = buttonState.borderWidth;
                 widgetView.sensitivityFactor = buttonState.sensitivityFactor;
                 widgetView.stickIndicatorXOffset = buttonState.stickIndicatorXOffset;
                 // Add the widgetView to the view controller's view
                 [self->streamFrameTopLayerView addSubview:widgetView]; // add keyboard button to the stream frame view. must add it to the target view before setting location.
                 [widgetView setLocationWithXOffset:buttonState.position.x yOffset:buttonState.position.y];
                 [widgetView resizeWidgetView]; // resize must be called after relocation
-                [widgetView adjustButtonTransparencyWithAlpha:buttonState.backgroundAlpha];
+                [widgetView adjustTransparencyWithAlpha:buttonState.backgroundAlpha];
+                [widgetView adjustBorderWithWidth:buttonState.borderWidth];
             }
         }
     }

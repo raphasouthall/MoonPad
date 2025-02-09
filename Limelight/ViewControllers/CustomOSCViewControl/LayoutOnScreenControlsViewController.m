@@ -32,6 +32,7 @@
     UILabel *widgetSizeSliderLabel;
     UILabel *widgetHeightSliderLabel;
     UILabel *widgetAlphaSliderLabel;
+    UILabel *widgetBorderWidthSliderLabel;
     UILabel *sensitivitySliderLabel;
     UILabel *stickIndicatorOffsetSliderLabel;
     UILabel *stickIndicatorOffsetExplain;
@@ -78,6 +79,7 @@
             widgetView.timestamp = buttonState.timestamp; // will be set as key in in the dict.
             widgetView.widthFactor = buttonState.widthFactor;
             widgetView.heightFactor = buttonState.heightFactor;
+            widgetView.borderWidth = buttonState.borderWidth;
             widgetView.sensitivityFactor = buttonState.sensitivityFactor;
             widgetView.stickIndicatorXOffset = buttonState.stickIndicatorXOffset;
             // widgetView.backgroundAlpha = buttonState.backgroundAlpha;
@@ -85,7 +87,8 @@
             [self.view addSubview:widgetView];
             [widgetView setLocationWithXOffset:buttonState.position.x yOffset:buttonState.position.y];
             [widgetView resizeWidgetView]; // resize must be called after relocation
-            [widgetView adjustButtonTransparencyWithAlpha:buttonState.backgroundAlpha];
+            [widgetView adjustTransparencyWithAlpha:buttonState.backgroundAlpha];
+            [widgetView adjustBorderWithWidth:buttonState.borderWidth];
             [self.OnScreenWidgetViewsDict setObject:widgetView forKey:@(widgetView.timestamp)];
         }
     }
@@ -103,6 +106,7 @@
     widgetSizeSliderLabel = [[UILabel alloc] init];
     widgetHeightSliderLabel = [[UILabel alloc] init];
     widgetAlphaSliderLabel = [[UILabel alloc] init];
+    widgetBorderWidthSliderLabel = [[UILabel alloc] init];
     sensitivitySliderLabel = [[UILabel alloc] init];
     stickIndicatorOffsetSliderLabel = [[UILabel alloc] init];
     stickIndicatorOffsetExplain = [[UILabel alloc] init];
@@ -399,6 +403,7 @@
     [self.widgetSizeSlider setValue: self->selectedWidgetView.widthFactor];
     [self.widgetHeightSlider setValue: self->selectedWidgetView.heightFactor];
     [self.widgetAlphaSlider setValue: self->selectedWidgetView.backgroundAlpha];
+    [self.widgetBorderWidthSlider setValue:self->selectedWidgetView.borderWidth];
     
     NSSet *stickAndMouseTouchpads = [NSSet setWithObjects:@"LSPAD", @"RSPAD", @"LSVPAD", @"RSVPAD", @"MOUSEPAD", nil];
     NSSet *nonVectorStickPads = [NSSet setWithObjects:@"LSPAD", @"RSPAD", nil];
@@ -425,6 +430,7 @@
     [widgetSizeSliderLabel setText:[LocalizationHelper localizedStringForKey:@"Widget Size: %.2f", self->selectedWidgetView.widthFactor]];
     [widgetHeightSliderLabel setText:[LocalizationHelper localizedStringForKey:@"Widget Height: %.2f", self->selectedWidgetView.heightFactor]];
     [widgetAlphaSliderLabel setText:[LocalizationHelper localizedStringForKey:@"Widget Alpha: %.2f", self->selectedWidgetView.backgroundAlpha]];
+    [widgetBorderWidthSliderLabel setText:[LocalizationHelper localizedStringForKey:@"Border Width: %.2f", self->selectedWidgetView.borderWidth]];
 }
 
 - (void)setControllerCALayerSliderValues: (NSNotification *)notification{
@@ -473,7 +479,7 @@
     [widgetHeightSliderLabel setText:[LocalizationHelper localizedStringForKey:@"Widget Height: %.2f", self.widgetHeightSlider.value]];
     if(self->selectedWidgetView != nil && self->widgetViewSelected){
         self->selectedWidgetView.translatesAutoresizingMaskIntoConstraints = true; // this is mandatory to prevent unexpected key view location change
-        if([CommandManager.oscButtonMappings.allKeys containsObject:selectedWidgetView.keyString]) return; // don't change custom osc button height
+        if([CommandManager.oscButtonMappings.allKeys containsObject:selectedWidgetView.keyString] && ![CommandManager.oscRectangleButtonCmds containsObject:selectedWidgetView.keyString]) return; // don't change custom osc button height, except for dPad buttons which are in rectangle shape
         self->selectedWidgetView.heightFactor = self.widgetHeightSlider.value;
         [self->selectedWidgetView resizeWidgetView];
     }
@@ -482,11 +488,19 @@
 - (void)widgetAlphaSliderMoved{
     [widgetAlphaSliderLabel setText:[LocalizationHelper localizedStringForKey:@"Widget Alpha: %.2f", self.widgetAlphaSlider.value]];
     if(self->selectedWidgetView != nil && self->widgetViewSelected){
-        [self->selectedWidgetView adjustButtonTransparencyWithAlpha:self.widgetAlphaSlider.value];
+        [self->selectedWidgetView adjustTransparencyWithAlpha:self.widgetAlphaSlider.value];
     }
 
     if(self->selectedControllerLayer != nil && self->controllerLayerSelected){
         [self.layoutOSC adjustControllerLayerOpacityWith:self->selectedControllerLayer and:self.widgetAlphaSlider.value];
+    }
+    return;
+}
+
+- (void)widgetBorderWidthSliderMoved{
+    [widgetBorderWidthSliderLabel setText:[LocalizationHelper localizedStringForKey:@"Border Width: %.2f", self.widgetBorderWidthSlider.value]];
+    if(self->selectedWidgetView != nil && self->widgetViewSelected){
+        [self->selectedWidgetView adjustBorderWithWidth:self.widgetBorderWidthSlider.value];
     }
     return;
 }
@@ -590,6 +604,27 @@
     widgetAlphaSliderLabel.hidden = NO;
     
     
+    // border Width slider
+    self.widgetBorderWidthSlider.hidden = NO;
+    self.widgetBorderWidthSlider.frame = CGRectMake(CGRectGetMaxX(self.currentProfileLabel.frame)-self.widgetBorderWidthSlider.frame.size.width, self.widgetBorderWidthSlider.frame.origin.y, self.widgetBorderWidthSlider.frame.size.width, self.widgetBorderWidthSlider.frame.size.height);
+
+    [self.widgetBorderWidthSlider addTarget:self action:@selector(widgetBorderWidthSliderMoved) forControlEvents:(UIControlEventValueChanged)];
+    widgetBorderWidthSliderLabel.text = [LocalizationHelper localizedStringForKey:@"Border Width"];
+    widgetBorderWidthSliderLabel.font = [UIFont systemFontOfSize:18];
+    widgetBorderWidthSliderLabel.textColor = [UIColor whiteColor];
+    widgetBorderWidthSliderLabel.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.5];
+    widgetBorderWidthSliderLabel.translatesAutoresizingMaskIntoConstraints = NO; // Disable autoresizing mask for Auto Layout
+    [self.view addSubview:widgetBorderWidthSliderLabel];
+    [NSLayoutConstraint activateConstraints:@[
+        // Position the label to the left of the slider
+        [widgetBorderWidthSliderLabel.trailingAnchor constraintEqualToAnchor:self.widgetBorderWidthSlider.leadingAnchor constant:-10],
+        // Align vertically with the slider
+        [widgetBorderWidthSliderLabel.centerYAnchor constraintEqualToAnchor:self.widgetBorderWidthSlider.centerYAnchor]
+    ]];
+    widgetBorderWidthSliderLabel.hidden = NO;
+
+    
+    
     // sensitivity slider
     self.sensitivityFactorSlider.hidden = YES;
     self.sensitivityFactorSlider.frame = CGRectMake(sliderXPosition, self.sensitivityFactorSlider.frame.origin.y, self.sensitivityFactorSlider.frame.size.width, self.sensitivityFactorSlider.frame.size.height);
@@ -609,6 +644,7 @@
         [sensitivitySliderLabel.centerYAnchor constraintEqualToAnchor:self.sensitivityFactorSlider.centerYAnchor]
     ]];
     sensitivitySliderLabel.hidden = self.sensitivityFactorSlider.hidden;
+    
     
     // stick indicator offset slider
     self.stickIndicatorOffsetSlider.hidden = YES;

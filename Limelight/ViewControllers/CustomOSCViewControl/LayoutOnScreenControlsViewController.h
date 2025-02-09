@@ -42,6 +42,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (strong, nonatomic) IBOutlet UISlider *widgetAlphaSlider;
 @property (strong, nonatomic) IBOutlet UISlider *sensitivityFactorSlider;
 @property (strong, nonatomic) IBOutlet UISlider *stickIndicatorOffsetSlider;
+@property (strong, nonatomic) IBOutlet UISlider *widgetBorderWidthSlider;
 
 
 @end

@@ -290,6 +290,7 @@ static NSMutableDictionary *OnScreenWidgetViewsDict;
         buttonState.widthFactor = widgetView.widthFactor;
         buttonState.heightFactor = widgetView.heightFactor;
         buttonState.backgroundAlpha = widgetView.backgroundAlpha;
+        buttonState.borderWidth = widgetView.borderWidth;
         buttonState.sensitivityFactor = widgetView.sensitivityFactor;
         buttonState.stickIndicatorXOffset = widgetView.stickIndicatorXOffset;
         

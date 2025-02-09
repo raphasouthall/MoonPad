@@ -27,6 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) NSTimeInterval timestamp;
 @property (nonatomic, assign) CGFloat widthFactor; // for OnScreenWidgetView
 @property (nonatomic, assign) CGFloat heightFactor; // for OnScreenWidgetView
+@property (nonatomic, assign) CGFloat borderWidth; // for OnScreenWidgetView
 @property (nonatomic, assign) CGFloat sensitivityFactor; // for OnScreenWidgetView
 @property (nonatomic, assign) CGFloat stickIndicatorXOffset; // for OnScreenWidgetView
 
