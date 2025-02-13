@@ -37,8 +37,8 @@ NS_ASSUME_NONNULL_BEGIN
 // @property (nonatomic, assign) BOOL hasValidPosition;
 
 typedef NS_ENUM(NSInteger, OnScreenButtonType) {
-    GameControllerButton,
-    KeyboardOrMouseButton
+    LegacyOscButton,
+    CustomOnScreenWidget
 };
 
 - (id) initWithButtonName:(NSString*)name buttonType:(uint8_t)buttonType andPosition:(CGPoint)position;

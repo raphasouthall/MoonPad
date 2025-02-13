@@ -267,7 +267,7 @@ static NSMutableDictionary *OnScreenWidgetViewsDict;
     // save on-screen game controller buttons & sticks as buttonstate:
     for (CALayer *oscButtonLayer in oscButtonLayers) {
         
-        OnScreenButtonState *buttonState = [[OnScreenButtonState alloc] initWithButtonName:oscButtonLayer.name buttonType:GameControllerButton andPosition:oscButtonLayer.position];
+        OnScreenButtonState *buttonState = [[OnScreenButtonState alloc] initWithButtonName:oscButtonLayer.name buttonType:LegacyOscButton andPosition:oscButtonLayer.position];
         // add hidden attr here
         buttonState.isHidden = oscButtonLayer.isHidden;
         buttonState.oscLayerSizeFactor = [OnScreenControls getControllerLayerSizeFactor:oscButtonLayer];
@@ -284,7 +284,7 @@ static NSMutableDictionary *OnScreenWidgetViewsDict;
     // save on-screen widget views (keyboard & mouse command) as buttonstate:
     [OnScreenWidgetViewsDict enumerateKeysAndObjectsUsingBlock:^(id key, id value, BOOL *stop) { // this dict is passed from the layout tool VC, as a static obj in this class.
         OnScreenWidgetView *widgetView = value;
-        OnScreenButtonState *buttonState = [[OnScreenButtonState alloc] initWithButtonName:widgetView.keyString buttonType:KeyboardOrMouseButton andPosition:widgetView.frame.origin];
+        OnScreenButtonState *buttonState = [[OnScreenButtonState alloc] initWithButtonName:widgetView.keyString buttonType:CustomOnScreenWidget andPosition:widgetView.center];
         buttonState.alias = widgetView.keyLabel;
         buttonState.timestamp = widgetView.timestamp;
         buttonState.widthFactor = widgetView.widthFactor;

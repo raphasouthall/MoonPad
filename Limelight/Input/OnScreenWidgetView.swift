@@ -86,7 +86,7 @@ import UIKit
     private var mousePointerMoved: Bool
     private var twoTouchesDetected: Bool
     
-    private var storedLocation: CGPoint = .zero // location from persisted data
+    private var storedCenter: CGPoint = .zero // location from persisted data
     private let minimumBorderAlpha: CGFloat = 0.19
     private var defaultBorderColor: CGColor = UIColor(white: 0.2, alpha: 0.3).cgColor
     private let moonlightPurple: CGColor = UIColor(red: 0.5, green: 0.5, blue: 1.0, alpha: 0.86).cgColor
@@ -143,11 +143,14 @@ import UIKit
     }
     
     @objc public func setLocation(xOffset:CGFloat, yOffset:CGFloat) {
+        /*
         NSLayoutConstraint.activate([
-            self.leadingAnchor.constraint(equalTo: self.superview!.leadingAnchor, constant: xOffset),
-            self.topAnchor.constraint(equalTo: self.superview!.topAnchor, constant: yOffset),
+            self.centerXAnchor.constraint(equalTo: self.superview!.leadingAnchor, constant: xOffset),
+            self.centerYAnchor.constraint(equalTo: self.superview!.topAnchor, constant: yOffset),
         ])
-        storedLocation = CGPointMake(xOffset, yOffset)
+         */
+        storedCenter = CGPointMake(xOffset, yOffset)
+        center = storedCenter
     }
     
     @objc public func enableRelocationMode(enabled: Bool){
@@ -181,13 +184,20 @@ import UIKit
         
         // To resize the button, we must set this to false temporarily
         translatesAutoresizingMaskIntoConstraints = false
-        
+                
         // replace invalid factor values
         if self.widthFactor == 0 {self.widthFactor = 1.0}
         if self.heightFactor == 0 {self.heightFactor = 1.0}
         
-        // Constraints for resizing
+
+        /*
+        NSLayoutConstraint.activate([
+            self.centerXAnchor.constraint(equalTo: self.superview!.leadingAnchor, constant: storedLocation.x),
+            self.centerYAnchor.constraint(equalTo: self.superview!.topAnchor, constant: storedLocation.y)])
+         */
         
+
+        // Constraints for resizing
         self.changeAndActivateContraints()
         
         // Trigger layout update
@@ -215,10 +225,13 @@ import UIKit
     }
     
     private func changeAndActivateContraints(){
-        if CommandManager.oscButtonMappings.keys.contains(self.keyString) && !CommandManager.oscRectangleButtonCmds.contains(self.keyString){ // we'll make custom osc buttons round & smaller
+        if CommandManager.oscButtonMappings.keys.contains(self.keyString) && !CommandManager.oscRectangleButtonCmds.contains(self.keyString){ // we'll make custom osc buttons round & smaller  
+           
             NSLayoutConstraint.activate([
                 self.widthAnchor.constraint(equalToConstant: 60 * self.widthFactor),
                 self.heightAnchor.constraint(equalToConstant: 60 * self.heightFactor),])
+            
+            // self.frame = CGRectMake(0, 0, 60*self.widthFactor, 60*self.heightFactor)
             }
         else if CommandManager.touchPadCmds.contains(self.keyString) { // make touchPads larger
             NSLayoutConstraint.activate([
@@ -230,6 +243,7 @@ import UIKit
                 self.widthAnchor.constraint(equalToConstant: 70 * self.widthFactor),
                 self.heightAnchor.constraint(equalToConstant: 65 * self.heightFactor),])
            }
+
         NSLayoutConstraint.activate([
             label.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 10), // set up label size contrain within UIView
             label.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -10),
@@ -286,6 +300,8 @@ import UIKit
         
         self.changeAndActivateContraints()
         
+        center = storedCenter //anchor the center while resizing self
+        
         setupButtonDownVisualEffectLayer();
     }
     
@@ -322,7 +338,7 @@ import UIKit
     // create stick indicator: the crossMark & stickBall:
     @objc public func showStickIndicator(){
         // tell if the self button is located on the left or right
-        self.selfViewOnTheRight = (self.storedLocation.x > self.appWindow.frame.width*0.5)
+        self.selfViewOnTheRight = (self.storedCenter.x > self.appWindow.frame.width*0.5)
         let offsetSign = selfViewOnTheRight ? -1 : 1
         let stickMarkerRelativeLocation:CGPoint
         if !OnScreenWidgetView.editMode {
@@ -644,7 +660,10 @@ import UIKit
     
     private func setupButtonDownVisualEffectLayer() {
         self.buttonDownVisualEffectWidth = 8.6
-        if CommandManager.oscButtonMappings.keys.contains(self.keyString) && !CommandManager.oscRectangleButtonCmds.contains(self.keyString) {self.buttonDownVisualEffectWidth = 15.3} // wider visual effect for osc buttons
+        if CommandManager.oscButtonMappings.keys.contains(self.keyString) && !CommandManager.oscRectangleButtonCmds.contains(self.keyString){
+            if widthFactor < 1.3 {self.buttonDownVisualEffectWidth = 15.3} // wider visual effect for osc buttons
+            else {self.buttonDownVisualEffectWidth = 9}
+        }
         
         // Set the frame to be larger than the view to expand outward
         buttonDownVisualEffectLayer.borderWidth = 0 // set this 0 to hide the visual effect first
@@ -707,7 +726,8 @@ import UIKit
             quickDoubleTapDetected = touchTapTimeInterval < QUICK_TAP_TIME_INTERVAL
             
             let touch = touches.first
-            self.touchBeganLocation = touch!.location(in: self)
+            if OnScreenWidgetView.editMode {self.touchBeganLocation = touch!.location(in: superview)}
+            else {self.touchBeganLocation = touch!.location(in: self)}
             self.latestTouchLocation = touchBeganLocation
         }
                 
@@ -783,20 +803,24 @@ import UIKit
             NotificationCenter.default.post(name: Notification.Name("OnScreenWidgetViewSelected"),object: self) // inform layout tool controller to fetch button size factors. self will be passed as the object of the notification
             if let touch = touches.first {
                 let touchLocation = touch.location(in: superview)
-                storedLocation = touchLocation
+                storedCenter = touchLocation
             }
         }
         
     }
     
     private func moveByTouch(touch: UITouch){
-        let currentLocation = touch.location(in: superview)
-        // let offsetX = currentLocation.x - storedLocation.x
-        // let offsetY = currentLocation.y - storedLocation.y
-        // center = CGPoint(x: center.x + offsetX, y: center.y + offsetY)
-        center = currentLocation;
+        let currentLocation: CGPoint
+        if OnScreenWidgetView.editMode {currentLocation = touch.location(in: superview)}
+        else {currentLocation = touch.location(in: self)}
+        
+        let offsetX = currentLocation.x - latestTouchLocation.x
+        let offsetY = currentLocation.y - latestTouchLocation.y
+        center = CGPoint(x: center.x + offsetX, y: center.y + offsetY)
+        latestTouchLocation = currentLocation
+        // center = currentLocation;
         //NSLog("x coord: %f, y coord: %f", self.frame.origin.x, self.frame.origin.y)
-        storedLocation = currentLocation // Update initial center for next movement
+        storedCenter = center // Update initial center for next movement
         if OnScreenWidgetView.editMode {
             NotificationCenter.default.post(name: Notification.Name("OnScreenWidgetMovedByTouch"), object:self) // inform the layoutOnScreenControl to update guideLines for this widget view
         }

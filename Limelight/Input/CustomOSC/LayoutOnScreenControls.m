@@ -238,7 +238,7 @@
         [[NSNotificationCenter defaultCenter] postNotificationName:@"ControllerCALayerSelected" object:layerBeingDragged]; // inform that a CALayer of onScreen controller has being selected
         
         /* save the name, position, and visibility of button being touched in array in case user wants to undo the change later */
-        OnScreenButtonState *onScreenButtonState = [[OnScreenButtonState alloc] initWithButtonName:layerBeingDragged.name buttonType:GameControllerButton andPosition:layerBeingDragged.position];
+        OnScreenButtonState *onScreenButtonState = [[OnScreenButtonState alloc] initWithButtonName:layerBeingDragged.name buttonType:LegacyOscButton andPosition:layerBeingDragged.position];
         // add hidden attr here
         onScreenButtonState.isHidden = layerBeingDragged.isHidden;
         
