@@ -610,10 +610,10 @@ ICAgICAgICAgICAgIA
                                 <color key="tintColor" red="0.6716768742" green="0.61711704730000005" blue="0.99902987480000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <color key="selectedSegmentTintColor" red="0.6716768742" green="0.61711704730000005" blue="0.99902987480000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </segmentedControl>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Enable YUV 4:4:4 (Beta)" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Pew-kf-bSM">
-                                <rect key="frame" x="15" y="1488" width="186" height="21"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Enable YUV 4:4:4 (Beta)" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1UZ-3M-k6c">
+                                <rect key="frame" x="17" y="1490" width="199" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                 <color key="textColor" red="0.93902439019999995" green="0.9625305918" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
@@ -664,7 +664,7 @@ ICAgICAgICAgICAgIA
                         <outlet property="touchPointerVelocityFactorSlider" destination="cSy-mj-8pD" id="4Jf-Sj-c4O"/>
                         <outlet property="touchPointerVelocityFactorUILabel" destination="c6f-bJ-Vji" id="uVM-o6-JPk"/>
                         <outlet property="unlockDisplayOrientationSelector" destination="R9O-Tw-UD4" id="0ak-pc-eva"/>
-                        <outlet property="yuv444Selector" destination="vwT-tg-RfT" id="yi2-ZK-l1D"/>
+                        <outlet property="yuv444Selector" destination="vwT-tg-RfT" id="69G-bN-kJF"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="RWc-Km-KG5" userLabel="First Responder" sceneMemberID="firstResponder"/>
