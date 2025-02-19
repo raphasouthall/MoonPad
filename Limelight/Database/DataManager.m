@@ -75,6 +75,7 @@
                  swapABXYButtons:(BOOL)swapABXYButtons
                        audioOnPC:(BOOL)audioOnPC
                   preferredCodec:(uint32_t)preferredCodec
+                       enableYUV444:(BOOL)enableYUV444
                   useFramePacing:(BOOL)useFramePacing
                        enableHdr:(BOOL)enableHdr
                   btMouseSupport:(BOOL)btMouseSupport
@@ -112,6 +113,7 @@
         settingsToSave.swapABXYButtons = swapABXYButtons;
         settingsToSave.playAudioOnPC = audioOnPC;
         settingsToSave.preferredCodec = preferredCodec;
+        settingsToSave.enableYUV444 = enableYUV444;
         settingsToSave.useFramePacing = useFramePacing;
         settingsToSave.enableHdr = enableHdr;
         settingsToSave.btMouseSupport = btMouseSupport;
