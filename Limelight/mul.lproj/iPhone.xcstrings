@@ -1819,6 +1819,36 @@
         }
       }
     },
+    "Pew-kf-bSM.text" : {
+      "comment" : "Class = \"UILabel\"; text = \"Enable YUV 4:4:4 (Beta)\"; ObjectID = \"Pew-kf-bSM\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Enable YUV 4:4:4 (Beta)"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "YUV 4:4:4 (测试功能)"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "YUV 4:4:4 (测试功能)"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "YUV 4:4:4 (测试功能)"
+          }
+        }
+      }
+    },
     "pQE-vU-Nr7.segmentTitles[0]" : {
       "comment" : "Class = \"UISegmentedControl\"; pQE-vU-Nr7.segmentTitles[0] = \"No\"; ObjectID = \"pQE-vU-Nr7\";",
       "extractionState" : "extracted_with_value",
@@ -2277,6 +2307,30 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "禁用"
+          }
+        }
+      }
+    },
+    "vwT-tg-RfT.segmentTitles[0]" : {
+      "comment" : "Class = \"UISegmentedControl\"; vwT-tg-RfT.segmentTitles[0] = \"No\"; ObjectID = \"vwT-tg-RfT\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "No"
+          }
+        }
+      }
+    },
+    "vwT-tg-RfT.segmentTitles[1]" : {
+      "comment" : "Class = \"UISegmentedControl\"; vwT-tg-RfT.segmentTitles[1] = \"Yes\"; ObjectID = \"vwT-tg-RfT\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Yes"
           }
         }
       }
