@@ -660,7 +660,6 @@ static NSMutableSet* hostList;
     }
 #endif
     
-    _streamConfig.enableYUV444 = streamSettings.enableYUV444;
     _streamConfig.bitRate = [streamSettings.bitrate intValue];
     _streamConfig.optimizeGameSettings = streamSettings.optimizeGames;
     _streamConfig.playAudioOnPC = streamSettings.playAudioOnPC;
