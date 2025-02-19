@@ -86,8 +86,12 @@ void DrStop(void)
     {
         case VIDEO_FORMAT_H264:
             return @"H.264";
+        case VIDEO_FORMAT_H264_HIGH8_444:
+            return @"H.264 YUV444";
         case VIDEO_FORMAT_H265:
             return @"HEVC";
+        case VIDEO_FORMAT_H265_REXT8_444:
+            return @"HEVC YUV444";
         case VIDEO_FORMAT_H265_MAIN10:
             if (LiGetCurrentHostDisplayHdrMode()) {
                 return @"HEVC Main 10 HDR";
@@ -95,14 +99,30 @@ void DrStop(void)
             else {
                 return @"HEVC Main 10 SDR";
             }
+        case VIDEO_FORMAT_H265_REXT10_444:
+            if (LiGetCurrentHostDisplayHdrMode()) {
+                return @"HEVC Main 10 YUV444 HDR";
+            }
+            else {
+                return @"HEVC Main 10 YUV444 SDR";
+            }
         case VIDEO_FORMAT_AV1_MAIN8:
             return @"AV1";
+        case VIDEO_FORMAT_AV1_HIGH8_444:
+            return @"AV1 YUV444";
         case VIDEO_FORMAT_AV1_MAIN10:
             if (LiGetCurrentHostDisplayHdrMode()) {
                 return @"AV1 10-bit HDR";
             }
             else {
                 return @"AV1 10-bit SDR";
+            }
+        case VIDEO_FORMAT_AV1_HIGH10_444:
+            if (LiGetCurrentHostDisplayHdrMode()) {
+                return @"AV1 10-bit YUV444 HDR";
+            }
+            else {
+                return @"AV1 10-bit YUV444 SDR";
             }
         default:
             return @"UNKNOWN";
