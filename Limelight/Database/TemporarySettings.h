@@ -42,6 +42,7 @@
     CODEC_PREF_HEVC,
     CODEC_PREF_AV1,
 } preferredCodec;
+@property (nonatomic) BOOL enableYUV444;
 @property (nonatomic) BOOL reverseMouseWheelDirection;
 @property (nonatomic) BOOL largerStickLR1;
 @property (nonatomic) BOOL useFramePacing;

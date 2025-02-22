@@ -577,6 +577,66 @@
         }
       }
     },
+    "bw9-4S-s2V.segmentTitles[0]" : {
+      "comment" : "Class = \"UISegmentedControl\"; bw9-4S-s2V.segmentTitles[0] = \"No\"; ObjectID = \"bw9-4S-s2V\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "No"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "关闭"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "关闭"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "关闭"
+          }
+        }
+      }
+    },
+    "bw9-4S-s2V.segmentTitles[1]" : {
+      "comment" : "Class = \"UISegmentedControl\"; bw9-4S-s2V.segmentTitles[1] = \"Yes\"; ObjectID = \"bw9-4S-s2V\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Yes"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "启用"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "启用"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "启用"
+          }
+        }
+      }
+    },
     "byH-Qz-Nbw.segmentTitles[0]" : {
       "comment" : "Class = \"UISegmentedControl\"; byH-Qz-Nbw.segmentTitles[0] = \"No\"; ObjectID = \"byH-Qz-Nbw\";",
       "extractionState" : "extracted_with_value",
@@ -1863,6 +1923,36 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "启用"
+          }
+        }
+      }
+    },
+    "OHY-2z-Tm7.text" : {
+      "comment" : "Class = \"UILabel\"; text = \"Enable YUV 4:4:4 (Beta)\"; ObjectID = \"OHY-2z-Tm7\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Enable YUV 4:4:4 (Beta)"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "YUV 4:4:4 (测试功能)"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "YUV 4:4:4 (测试功能)"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "YUV 4:4:4 (测试功能)"
           }
         }
       }

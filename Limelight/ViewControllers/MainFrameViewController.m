@@ -693,7 +693,12 @@ static NSMutableSet* hostList;
         case CODEC_PREF_AV1:
 #if defined(__IPHONE_16_0) || defined(__TVOS_16_0)
             if (VTIsHardwareDecodeSupported(kCMVideoCodecType_AV1)) {
-                _streamConfig.supportedVideoFormats |= VIDEO_FORMAT_AV1_MAIN8;
+                if (streamSettings.enableYUV444) {
+                    _streamConfig.supportedVideoFormats |= VIDEO_FORMAT_AV1_HIGH8_444;
+                }
+                else {
+                    _streamConfig.supportedVideoFormats |= VIDEO_FORMAT_AV1_MAIN8;
+                }
             }
 #endif
             // Fall-through
@@ -701,12 +706,21 @@ static NSMutableSet* hostList;
         case CODEC_PREF_AUTO:
         case CODEC_PREF_HEVC:
             if (VTIsHardwareDecodeSupported(kCMVideoCodecType_HEVC)) {
-                _streamConfig.supportedVideoFormats |= VIDEO_FORMAT_H265;
+                if (streamSettings.enableYUV444) {
+                    _streamConfig.supportedVideoFormats |= VIDEO_FORMAT_H265_REXT8_444;
+                }
+                else {
+                    _streamConfig.supportedVideoFormats |= VIDEO_FORMAT_H265;
+                }
             }
             // Fall-through
             
         case CODEC_PREF_H264:
-            _streamConfig.supportedVideoFormats |= VIDEO_FORMAT_H264;
+            if (streamSettings.enableYUV444) {
+                _streamConfig.supportedVideoFormats |= VIDEO_FORMAT_H264_HIGH8_444;
+            } else {
+                _streamConfig.supportedVideoFormats |= VIDEO_FORMAT_H264;
+            }
             break;
     }
     
@@ -716,7 +730,12 @@ static NSMutableSet* hostList;
         
         // HEVC Main10 is supported if the user wants it and the display supports it
         if (streamSettings.enableHdr && (AVPlayer.availableHDRModes & AVPlayerHDRModeHDR10) != 0) {
-            _streamConfig.supportedVideoFormats |= VIDEO_FORMAT_H265_MAIN10;
+            if (streamSettings.enableYUV444) {
+                _streamConfig.supportedVideoFormats |= VIDEO_FORMAT_H265_REXT10_444;
+            }
+            else {
+                _streamConfig.supportedVideoFormats |= VIDEO_FORMAT_H265_MAIN10;
+            }
         }
     }
     
@@ -724,7 +743,11 @@ static NSMutableSet* hostList;
     // Add the AV1 Main10 format if AV1 and HDR are both enabled and supported
     if ((_streamConfig.supportedVideoFormats & VIDEO_FORMAT_MASK_AV1) && streamSettings.enableHdr &&
         VTIsHardwareDecodeSupported(kCMVideoCodecType_AV1) && (AVPlayer.availableHDRModes & AVPlayerHDRModeHDR10) != 0) {
-        _streamConfig.supportedVideoFormats |= VIDEO_FORMAT_AV1_MAIN10;
+        if (streamSettings.enableYUV444) {
+            _streamConfig.supportedVideoFormats |= VIDEO_FORMAT_AV1_HIGH10_444;
+        } else {
+            _streamConfig.supportedVideoFormats |= VIDEO_FORMAT_AV1_MAIN10;
+        }
     }
 #endif
 }
@@ -947,6 +970,7 @@ static NSMutableSet* hostList;
     [settingsViewController.optimizeSettingsSelector setEnabled:!self.settingsExpandedInStreamView];
     [settingsViewController.audioOnPCSelector setEnabled:!self.settingsExpandedInStreamView];
     [settingsViewController.codecSelector setEnabled:!self.settingsExpandedInStreamView];
+    [settingsViewController.yuv444Selector setEnabled:!self.settingsExpandedInStreamView];
     [settingsViewController.hdrSelector setEnabled:!self.settingsExpandedInStreamView];
     [settingsViewController.framePacingSelector setEnabled:!self.settingsExpandedInStreamView];
     [settingsViewController.btMouseSelector setEnabled:!self.settingsExpandedInStreamView];
