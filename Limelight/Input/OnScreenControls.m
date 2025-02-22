@@ -189,7 +189,7 @@ static float L3_Y;
     [_controllerSupport updateFinished:_controller];
 }
 
-// sending self as an instance to OnScreenButtonView
+// sending self as an instance to OnScreenWidgetView
 - (void)sendInstance{
     NSLog(@"OnScreenControls is sending its instance...");
     if ([self.delegate respondsToSelector:@selector(getOnScreenControlsInstance:)]) {
@@ -258,7 +258,7 @@ static float L3_Y;
     _rightStickBackground = [CALayer layer];
     _leftStick = [CALayer layer];
     _rightStick = [CALayer layer];
-        
+    
     [self.OSCButtonLayers addObject:_aButton];
     [self.OSCButtonLayers addObject:_bButton];
     [self.OSCButtonLayers addObject:_xButton];
@@ -362,7 +362,7 @@ static float L3_Y;
         for (NSData *buttonStateEncoded in oscProfile.buttonStates) {
             OnScreenButtonState *buttonState = [NSKeyedUnarchiver unarchivedObjectOfClass:[OnScreenButtonState class] fromData:buttonStateEncoded error:nil];
             
-            if(!buttonState.isHidden && [validPositionButtonNames containsObject:buttonState.name] && (buttonState.buttonType == GameControllerButton || [profilesManager getIndexOfSelectedProfile] == 0 ) ){
+            if(!buttonState.isHidden && [validPositionButtonNames containsObject:buttonState.name] && (buttonState.buttonType == LegacyOscButton || [profilesManager getIndexOfSelectedProfile] == 0 ) ){
                 [_activeCustomOscButtonPositionDict setObject:[NSValue valueWithCGPoint:buttonState.position] forKey:buttonState.name]; // we got a buttonname -> position dict here
                 NSLog(@"_activeCustomOscButtonPositionDict update, button name:%@,  position: %f, %f", buttonState.name, buttonState.position.x, buttonState.position.y);
             }
@@ -1894,9 +1894,9 @@ static float L3_Y;
     // CALayer* superLayer = layer.superlayer;
     // if(layerBeingDragged.name == @"")
     CGFloat targetAlpha;
-    
+    targetAlpha = alpha;
+    if(alpha < 0.23) targetAlpha = 0.23;
     if(alpha == 0.0 || alpha == 1.0) targetAlpha = 5.0f/6.0f; // invalid alpha value
-    else targetAlpha = alpha;
     
     NSLog(@"alphas: %f",targetAlpha);
 

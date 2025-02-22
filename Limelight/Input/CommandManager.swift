@@ -74,6 +74,14 @@ import UIKit
         "OSCL2" : 0,
         "OSCR2" : 0]
     
+    @objc public static let oscRectangleButtonCmds: [String] = [
+        "OSCUP",
+        "OSCDOWN",
+        "OSCLEFT",
+        "OSCRIGHT",
+        "OSCSTART",
+        "OSCSELECT"]
+    
     @objc public static let touchPadCmds: [String] = ["LSVPAD", "RSVPAD", "LSPAD", "RSPAD", "MOUSEPAD", "DPAD", "WASDPAD", "ARROWPAD"]
     @objc public static let stickTouchPads: [String] = ["LSVPAD", "RSVPAD", "LSPAD", "RSPAD"]
     @objc public static let nonVectorStickPads: [String] = ["LSPAD", "RSPAD"]

@@ -80,7 +80,8 @@
                   btMouseSupport:(BOOL)btMouseSupport
                // absoluteTouchMode:(BOOL)absoluteTouchMode
                        touchMode:(NSInteger)touchMode
-                    statsOverlay:(BOOL)statsOverlay 
+               statsOverlayLevel:(NSInteger)statsOverlayLevel
+                    statsOverlayEnabled:(BOOL)statsOverlayEnabled
                    unlockDisplayOrientation:(BOOL)unlockDisplayOrientation
               resolutionSelected:(NSInteger)resolutionSelected
              externalDisplayMode:(NSInteger)externalDisplayMode
@@ -116,7 +117,8 @@
         settingsToSave.btMouseSupport = btMouseSupport;
         // settingsToSave.absoluteTouchMode = absoluteTouchMode;
         settingsToSave.touchMode = [NSNumber numberWithInteger:(uint16_t)touchMode];
-        settingsToSave.statsOverlay = statsOverlay;
+        settingsToSave.statsOverlayEnabled = statsOverlayEnabled;
+        settingsToSave.statsOverlayLevel = [NSNumber numberWithInteger:(uint16_t)statsOverlayLevel];
         settingsToSave.unlockDisplayOrientation = unlockDisplayOrientation;
         settingsToSave.resolutionSelected = [NSNumber numberWithInteger:resolutionSelected];
         settingsToSave.externalDisplayMode = [NSNumber numberWithInteger:externalDisplayMode];

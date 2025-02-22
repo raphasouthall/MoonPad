@@ -15,7 +15,7 @@
 @class ControllerSupport;
 @class StreamConfiguration;
 
-// sending self as an instance to OnScreenButtonView or other related classes
+// sending self as an instance to OnScreenWidgetView or other related classes
 @protocol InstanceProviderDelegate <NSObject>
 - (void)getOnScreenControlsInstance:(id)sender; // Renamed delegate method
 @end

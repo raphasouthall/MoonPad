@@ -20,10 +20,10 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface LayoutOnScreenControlsViewController : UIViewController 
 - (void)profileRefresh;
-- (void)reloadOnScreenButtonViews;
+- (void)reloadOnScreenWidgetViews;
 
 @property LayoutOnScreenControls *layoutOSC;    // object that contains a view which contains the on screen controller buttons that allows the user to drag and positions each button on the screen using touch
-@property (nonatomic) NSMutableDictionary* onScreenButtonViewsDict;
+@property (nonatomic) NSMutableDictionary* OnScreenWidgetViewsDict;
 
 @property int OSCSegmentSelected;
 
@@ -42,6 +42,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (strong, nonatomic) IBOutlet UISlider *widgetAlphaSlider;
 @property (strong, nonatomic) IBOutlet UISlider *sensitivityFactorSlider;
 @property (strong, nonatomic) IBOutlet UISlider *stickIndicatorOffsetSlider;
+@property (strong, nonatomic) IBOutlet UISlider *widgetBorderWidthSlider;
 
 
 @end

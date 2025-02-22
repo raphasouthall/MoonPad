@@ -47,6 +47,7 @@
     UITapGestureRecognizer *_menuDoubleTapGestureRecognizer;
     UITapGestureRecognizer *_playPauseTapGestureRecognizer;
     UITextView *_overlayView;
+    uint16_t overlayLevel;
     UILabel *_stageLabel;
     UILabel *_tipLabel;
     UIActivityIndicatorView *_spinner;
@@ -58,7 +59,7 @@
     UIView *_streamVideoRenderView;
     /*
      * View architecture of this viewController:
-     * self.view (named `streamFrameTopLayerView` in StreamView.m, where slide & tap gestures, and onScreenControls & onScreenButtonView buttons are registered)
+     * self.view (named `streamFrameTopLayerView` in StreamView.m, where slide & tap gestures, and onScreenControls & OnScreenWidgetView buttons are registered)
      *   - streamView (where touchHandlers are registered)
      *     - streamVideoRenderView (where stream view is rendered)
      */
@@ -160,6 +161,7 @@
     }
     
     _settings = [[[DataManager alloc] init] getSettings];  //StreamFrameViewController retrieve the settings here.
+    overlayLevel = _settings.statsOverlayLevel.intValue;
     [self configOscLayoutTool];
     [self configSwipeGestures];
     [self configZoomGestureAndAddStreamView];
@@ -171,7 +173,7 @@
         // we got self.view passed to streamView class as the topLayerView, will be useful in many cases
     [self->_streamView reloadOnScreenControlsRealtimeWith:(ControllerSupport*)_controllerSupport
                                         andConfig:(StreamConfiguration*)_streamConfig]; //reload OSC here.
-    [self->_streamView reloadOnScreenButtonViews]; //reload keyboard buttons here. the keyboard button view will be added to the streamframe view instead streamview, the highest layer, which saves a lot of reengineering
+    [self->_streamView reloadOnScreenWidgetViews]; //reload keyboard buttons here. the keyboard widget view will be added to the streamframe view instead streamview, the highest layer, which saves a lot of reengineering
     [self reloadAirPlayConfig];
     [self mousePresenceChanged];
     
@@ -180,7 +182,7 @@
                                                                target:self
                                                              selector:@selector(updateStatsOverlay)
                                                              userInfo:nil
-                                                              repeats:_settings.statsOverlay];
+                                                              repeats:_settings.statsOverlayEnabled];
     
     NSLog(@"frameview gestures: %d", (uint32_t)[self.view.gestureRecognizers count]);
     NSLog(@"streamview gestures: %d", (uint32_t)[_streamView.gestureRecognizers count]);
@@ -400,7 +402,7 @@
     [self->_streamView reloadOnScreenControlsWith:(ControllerSupport*)_controllerSupport
                                         andConfig:(StreamConfiguration*)_streamConfig];
     [self->_streamView showOnScreenControls];
-    [self->_streamView reloadOnScreenButtonViews]; //update keyboard buttons here
+    [self->_streamView reloadOnScreenWidgetViews]; //update keyboard buttons here
 }
 
 
@@ -447,13 +449,13 @@
 #endif
 
 - (void)updateStatsOverlay {
-    if(!_settings.statsOverlay){
+    if(!_settings.statsOverlayEnabled){
         [_overlayView removeFromSuperview];
         return; // add this for realtime streamview reconfig
     }
     else [self.view addSubview:_overlayView]; // don't know why but this is necessary for reactivating overlay.
 
-    NSString* overlayText = [self->_streamMan getStatsOverlayText];
+    NSString* overlayText = [self->_streamMan getStatsOverlayText:overlayLevel];
     dispatch_async(dispatch_get_main_queue(), ^{
         [self updateOverlayText:overlayText];
     });
@@ -479,7 +481,13 @@
 #if TARGET_OS_TV
         [_overlayView setFont:[UIFont systemFontOfSize:24]];
 #else
-        [_overlayView setFont:[UIFont systemFontOfSize:12]];
+        if (@available(iOS 13.0, *)) {
+            [_overlayView setFont:[UIFont monospacedSystemFontOfSize:12 weight:UIFontWeightRegular]];
+        } else {
+            [_overlayView setFont:[UIFont systemFontOfSize:12]];// Fallback on earlier versions
+        }
+        //[_overlayView setFont:[UIFont fontWithName:@"Menlo" size:12]];
+
 #endif
         [_overlayView setAlpha:0.5];
         [self.view addSubview:_overlayView];
@@ -675,7 +683,7 @@
         
         [self->_controllerSupport connectionEstablished];
         
-        if (self->_settings.statsOverlay) {
+        if (self->_settings.statsOverlayEnabled) {
             self->_statsUpdateTimer = [NSTimer scheduledTimerWithTimeInterval:1.0f
                                                                        target:self
                                                                      selector:@selector(updateStatsOverlay)
@@ -976,7 +984,7 @@
     DataManager* dataMan = [[DataManager alloc] init];
     Settings *currentSettings = [dataMan retrieveSettings];
     
-    currentSettings.statsOverlay = !currentSettings.statsOverlay;
+    currentSettings.statsOverlayEnabled = !currentSettings.statsOverlayEnabled;
     
     [dataMan saveData];
     [self reConfigStreamViewRealtime];

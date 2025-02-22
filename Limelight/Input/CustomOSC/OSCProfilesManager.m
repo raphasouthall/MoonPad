@@ -14,7 +14,7 @@
 
 @implementation OSCProfilesManager
 
-static NSMutableDictionary *onScreenButtonViewsDict;
+static NSMutableDictionary *OnScreenWidgetViewsDict;
 
 #pragma mark - Initializer
 
@@ -32,8 +32,8 @@ static NSMutableDictionary *onScreenButtonViewsDict;
 #pragma mark - Class Helper Methods
 
 
-+ (void) setOnScreenButtonViewsDict:(NSMutableDictionary* )dict{
-    onScreenButtonViewsDict = dict;
++ (void) setOnScreenWidgetViewsDict:(NSMutableDictionary* )dict{
+    OnScreenWidgetViewsDict = dict;
 }
 
 /**
@@ -267,7 +267,7 @@ static NSMutableDictionary *onScreenButtonViewsDict;
     // save on-screen game controller buttons & sticks as buttonstate:
     for (CALayer *oscButtonLayer in oscButtonLayers) {
         
-        OnScreenButtonState *buttonState = [[OnScreenButtonState alloc] initWithButtonName:oscButtonLayer.name buttonType:GameControllerButton andPosition:oscButtonLayer.position];
+        OnScreenButtonState *buttonState = [[OnScreenButtonState alloc] initWithButtonName:oscButtonLayer.name buttonType:LegacyOscButton andPosition:oscButtonLayer.position];
         // add hidden attr here
         buttonState.isHidden = oscButtonLayer.isHidden;
         buttonState.oscLayerSizeFactor = [OnScreenControls getControllerLayerSizeFactor:oscButtonLayer];
@@ -281,17 +281,18 @@ static NSMutableDictionary *onScreenButtonViewsDict;
         [buttonStatesEncoded addObject: buttonStateEncoded];
     }
     
-    // save on-screen button views (keyboard & mouse command) as buttonstate:
-    [onScreenButtonViewsDict enumerateKeysAndObjectsUsingBlock:^(id key, id value, BOOL *stop) { // this dict is passed from the layout tool VC, as a static obj in this class.
-        OnScreenButtonView *buttonView = value;
-        OnScreenButtonState *buttonState = [[OnScreenButtonState alloc] initWithButtonName:buttonView.keyString buttonType:KeyboardOrMouseButton andPosition:buttonView.frame.origin];
-        buttonState.alias = buttonView.keyLabel;
-        buttonState.timestamp = buttonView.timestamp;
-        buttonState.widthFactor = buttonView.widthFactor;
-        buttonState.heightFactor = buttonView.heightFactor;
-        buttonState.backgroundAlpha = buttonView.backgroundAlpha;
-        buttonState.sensitivityFactor = buttonView.sensitivityFactor;
-        buttonState.stickIndicatorXOffset = buttonView.stickIndicatorXOffset;
+    // save on-screen widget views (keyboard & mouse command) as buttonstate:
+    [OnScreenWidgetViewsDict enumerateKeysAndObjectsUsingBlock:^(id key, id value, BOOL *stop) { // this dict is passed from the layout tool VC, as a static obj in this class.
+        OnScreenWidgetView *widgetView = value;
+        OnScreenButtonState *buttonState = [[OnScreenButtonState alloc] initWithButtonName:widgetView.keyString buttonType:CustomOnScreenWidget andPosition:widgetView.center];
+        buttonState.alias = widgetView.keyLabel;
+        buttonState.timestamp = widgetView.timestamp;
+        buttonState.widthFactor = widgetView.widthFactor;
+        buttonState.heightFactor = widgetView.heightFactor;
+        buttonState.backgroundAlpha = widgetView.backgroundAlpha;
+        buttonState.borderWidth = widgetView.borderWidth;
+        buttonState.sensitivityFactor = widgetView.sensitivityFactor;
+        buttonState.stickIndicatorXOffset = widgetView.stickIndicatorXOffset;
         
         NSData *buttonStateEncoded = [NSKeyedArchiver archivedDataWithRootObject:buttonState requiringSecureCoding:YES error:nil];
         [buttonStatesEncoded addObject: buttonStateEncoded];

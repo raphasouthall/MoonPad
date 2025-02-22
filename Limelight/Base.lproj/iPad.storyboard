@@ -445,11 +445,12 @@ ICAgICAgICAgICAgICA
                                 <nil key="highlightedColor"/>
                             </label>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="NLH-qN-qCo" userLabel="Statistics Overlay Selector">
-                                <rect key="frame" x="15" y="1843" width="459" height="28"/>
+                                <rect key="frame" x="15" y="1841" width="459" height="32"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <segments>
-                                    <segment title="No"/>
-                                    <segment title="Yes"/>
+                                    <segment title="Off"/>
+                                    <segment title="Simplified"/>
+                                    <segment title="Detailed"/>
                                 </segments>
                                 <color key="tintColor" red="0.6716768742" green="0.61711704730000005" blue="0.99902987480000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <color key="selectedSegmentTintColor" red="0.6716768742" green="0.61711704730000005" blue="0.99902987480000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -867,32 +868,32 @@ ICAgICAgICAgICAgICA
                                     <constraint firstItem="YLK-IE-ajS" firstAttribute="centerX" secondItem="fZU-G0-fgM" secondAttribute="centerX" id="xm7-a0-8G7"/>
                                 </constraints>
                             </view>
-                            <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="1" minValue="0.59999999999999998" maxValue="3.8999999999999999" id="Efn-Si-TPp" userLabel="Widget Size Slider">
+                            <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="1" minValue="0.59999999999999998" maxValue="6" id="Efn-Si-TPp" userLabel="Widget Size Slider">
                                 <rect key="frame" x="205" y="87" width="420" height="31"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" systemColor="secondaryLabelColor"/>
                                 <color key="tintColor" red="0.6716768742" green="0.61711704730000005" blue="0.99902987480000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </slider>
-                            <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="1" minValue="0.59999999999999998" maxValue="3.8999999999999999" id="ZOF-sL-e7p" userLabel="Widget Height Slider">
+                            <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="1" minValue="0.59999999999999998" maxValue="6" id="ZOF-sL-e7p" userLabel="Widget Height Slider">
                                 <rect key="frame" x="205" y="122" width="420" height="31"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" systemColor="secondaryLabelColor"/>
                                 <color key="tintColor" red="0.6716768742" green="0.61711704730000005" blue="0.99902987480000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </slider>
-                            <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.83299999999999996" minValue="0.23000000000000001" maxValue="0.999" id="ZLL-pE-iZh" userLabel="Widget Alpha Slider">
-                                <rect key="frame" x="205" y="157" width="420" height="31"/>
+                            <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.83299999999999996" minValue="0.001" maxValue="0.999" id="ZLL-pE-iZh" userLabel="Widget Alpha Slider">
+                                <rect key="frame" x="205" y="157" width="217" height="31"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" systemColor="secondaryLabelColor"/>
                                 <color key="tintColor" red="0.6716768742" green="0.61711704730000005" blue="0.99902987480000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </slider>
-                            <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="1" minValue="0.0" maxValue="3.5" id="FRZ-xP-x2r">
-                                <rect key="frame" x="205" y="192" width="420" height="31"/>
+                            <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="1" minValue="0.0" maxValue="8" id="FRZ-xP-x2r">
+                                <rect key="frame" x="205" y="192" width="591" height="31"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" systemColor="secondaryLabelColor"/>
                                 <color key="tintColor" red="0.6716768742" green="0.61711704730000005" blue="0.99902987480000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </slider>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Profile:" textAlignment="center" lineBreakMode="tailTruncation" adjustsFontSizeToFit="NO" id="cRV-Xw-CVi">
-                                <rect key="frame" x="632" y="87" width="163" height="102"/>
+                                <rect key="frame" x="631" y="87" width="163" height="67"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" red="0.38551661729999998" green="0.28289704380000003" blue="0.61853601300000005" alpha="0.28999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
                                 <color key="tintColor" red="0.81533776120000001" green="0.85979419950000002" blue="0.91372549020000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -901,7 +902,13 @@ ICAgICAgICAgICAgICA
                                 <nil key="highlightedColor"/>
                             </label>
                             <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="120" minValue="0.0" maxValue="350" id="oc7-kh-RVH">
-                                <rect key="frame" x="205" y="227" width="420" height="31"/>
+                                <rect key="frame" x="205" y="227" width="591" height="31"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" systemColor="secondaryLabelColor"/>
+                                <color key="tintColor" red="0.6716768742" green="0.61711704730000005" blue="0.99902987480000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </slider>
+                            <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" minValue="0.0" maxValue="8" id="CCy-fw-7og" userLabel="Widget Border Width Slider">
+                                <rect key="frame" x="590" y="157" width="206" height="31"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" systemColor="secondaryLabelColor"/>
                                 <color key="tintColor" red="0.6716768742" green="0.61711704730000005" blue="0.99902987480000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -928,6 +935,7 @@ ICAgICAgICAgICAgICA
                         <outlet property="trashCanButton" destination="qJs-n8-eV7" id="ubK-qm-Cox"/>
                         <outlet property="undoButton" destination="F7X-l4-cl3" id="vAI-XQ-hZw"/>
                         <outlet property="widgetAlphaSlider" destination="ZLL-pE-iZh" id="5OX-P6-YKt"/>
+                        <outlet property="widgetBorderWidthSlider" destination="CCy-fw-7og" id="wio-Ly-MMR"/>
                         <outlet property="widgetHeightSlider" destination="ZOF-sL-e7p" id="OHK-5i-3RY"/>
                         <outlet property="widgetSizeSlider" destination="Efn-Si-TPp" id="CgK-cC-Yo0"/>
                     </connections>

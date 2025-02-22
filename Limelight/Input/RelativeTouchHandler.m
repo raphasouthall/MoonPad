@@ -91,12 +91,12 @@ static const float QUICK_TAP_TIME_INTERVAL = 0.2;
 }
 
 
-- (bool)isOnScreenButtonViewBeingPressed {
+- (bool)isOnScreenWidgetViewBeingPressed {
     bool gotOneButtonPressed = false;
-    for(UIView* view in self->streamView.superview.subviews){  // iterates all on-screen button views in StreamFrameView
-        if ([view isKindOfClass:[OnScreenButtonView class]]) {
-            OnScreenButtonView* buttonView = (OnScreenButtonView*) view;
-            if(buttonView.pressed){
+    for(UIView* view in self->streamView.superview.subviews){  // iterates all on-screen widget views in StreamFrameView
+        if ([view isKindOfClass:[OnScreenWidgetView class]]) {
+            OnScreenWidgetView* widgetView = (OnScreenWidgetView*) view;
+            if(widgetView.pressed){
                 gotOneButtonPressed = true; //got one button pressed
             }
         }
@@ -104,11 +104,11 @@ static const float QUICK_TAP_TIME_INTERVAL = 0.2;
     return gotOneButtonPressed;
 }
 
-- (void)resetAllPressedFlagsForOnscreenButtonViews {
-    for(UIView* view in self->streamView.superview.subviews){  // iterates all on-screen button views in StreamFrameView
-        if ([view isKindOfClass:[OnScreenButtonView class]]) {
-            OnScreenButtonView* buttonView = (OnScreenButtonView*) view;
-            buttonView.pressed = false;
+- (void)resetAllPressedFlagsForOnScreenWidgetViews {
+    for(UIView* view in self->streamView.superview.subviews){  // iterates all on-screen widget views in StreamFrameView
+        if ([view isKindOfClass:[OnScreenWidgetView class]]) {
+            OnScreenWidgetView* widgetView = (OnScreenWidgetView*) view;
+            widgetView.pressed = false;
         }
     }
 }
@@ -146,7 +146,7 @@ static const float QUICK_TAP_TIME_INTERVAL = 0.2;
     
     touchPointSpawnedAtUpperScreenEdge = false; // reset this flag immediately if we get a touch event passing the check above, this fixes irresponsive touch after closing the command tool menu.
     
-    if([[event allTouches] count] == 2 && ![self isOnScreenButtonViewBeingPressed] && ![self isOnScreenControllerBeingPressed:[event allTouches]]){
+    if([[event allTouches] count] == 2 && ![self isOnScreenWidgetViewBeingPressed] && ![self isOnScreenControllerBeingPressed:[event allTouches]]){
         NSLog(@"get in scrolling mode");
         isInMouseWheelScrollingMode = true;
         return; // if we got 2 touches on the blank area, it's gonna be a mouse scroll touch, and must prevent UITtouch object for mouse pointer being captured & locked
@@ -190,7 +190,7 @@ static const float QUICK_TAP_TIME_INTERVAL = 0.2;
     
     //NSLog(@"%f, touchesMoved callback, is scrolling: %d, touches count: %d", CACurrentMediaTime(), isInMouseWheelScrollingMode, (uint32_t)[touches count]);
     
-    if(isInMouseWheelScrollingMode && [[event allTouches] count] == 2 && ![self isOnScreenButtonViewBeingPressed] && ![self isOnScreenControllerBeingPressed:touches]){
+    if(isInMouseWheelScrollingMode && [[event allTouches] count] == 2 && ![self isOnScreenWidgetViewBeingPressed] && ![self isOnScreenControllerBeingPressed:touches]){
         NSSet* twoTouches = [event allTouches];
         CGPoint firstLocation = [[[twoTouches allObjects] objectAtIndex:0] locationInView:streamView];
         CGPoint secondLocation = [[[twoTouches allObjects] objectAtIndex:1] locationInView:streamView];
@@ -237,7 +237,7 @@ static const float QUICK_TAP_TIME_INTERVAL = 0.2;
         isInMouseWheelScrollingMode = false;
         touchLockedForMouseMove = nil;
         mousePointerMoved = false; // need to reset this anyway
-        [self resetAllPressedFlagsForOnscreenButtonViews]; // reset all pressed flag for on-screen button views after all fingers lifted from screen.
+        [self resetAllPressedFlagsForOnScreenWidgetViews]; // reset all pressed flag for on-screen widget views after all fingers lifted from screen.
         touchPointSpawnedAtUpperScreenEdge = false;
     }
 }

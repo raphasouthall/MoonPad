@@ -22,16 +22,17 @@
 @implementation LayoutOnScreenControlsViewController {
     BOOL isToolbarHidden;
     OSCProfilesManager* profilesManager;
-    OnScreenButtonView* selectedButtonView;
+    OnScreenWidgetView* selectedWidgetView;
     CALayer* selectedControllerLayer;
     CGRect controllerLoadedBounds;
-    bool buttonViewSelected;
+    bool widgetViewSelected;
     bool controllerLayerSelected;
     __weak IBOutlet NSLayoutConstraint *toolbarTopConstraintiPhone;
     __weak IBOutlet NSLayoutConstraint *toolbarTopConstraintiPad;
     UILabel *widgetSizeSliderLabel;
     UILabel *widgetHeightSliderLabel;
     UILabel *widgetAlphaSliderLabel;
+    UILabel *widgetBorderWidthSliderLabel;
     UILabel *sensitivitySliderLabel;
     UILabel *stickIndicatorOffsetSliderLabel;
     UILabel *stickIndicatorOffsetExplain;
@@ -46,25 +47,25 @@
 
 
 - (void) viewWillDisappear:(BOOL)animated{
-    OnScreenButtonView.editMode = false;
-    for (OnScreenButtonView* buttonView in self.onScreenButtonViewsDict.allValues){
-        [buttonView.stickBallLayer removeFromSuperlayer];
-        [buttonView.crossMarkLayer removeFromSuperlayer];
+    OnScreenWidgetView.editMode = false;
+    for (OnScreenWidgetView* widgetView in self.OnScreenWidgetViewsDict.allValues){
+        [widgetView.stickBallLayer removeFromSuperlayer];
+        [widgetView.crossMarkLayer removeFromSuperlayer];
     }
     [super viewWillDisappear:animated];
     [[NSNotificationCenter defaultCenter] postNotificationName:@"OscLayoutCloseNotification" object:self];
 }
 
-- (void) reloadOnScreenButtonViews {
+- (void) reloadOnScreenWidgetViews {
     for (UIView *subview in self.view.subviews) {
         // 检查子视图是否是特定类型的实例
-        if ([subview isKindOfClass:[OnScreenButtonView class]]) {
+        if ([subview isKindOfClass:[OnScreenWidgetView class]]) {
             // 如果是，就添加到将要被移除的数组中
             [subview removeFromSuperview];
         }
     }
     
-    [self.onScreenButtonViewsDict removeAllObjects];
+    [self.OnScreenWidgetViewsDict removeAllObjects];
     
     NSLog(@"reload os Key here");
     
@@ -72,21 +73,23 @@
     OSCProfile *oscProfile = [profilesManager getSelectedProfile]; //returns the currently selected OSCProfile
     for (NSData *buttonStateEncoded in oscProfile.buttonStates) {
         OnScreenButtonState* buttonState = [NSKeyedUnarchiver unarchivedObjectOfClass:[OnScreenButtonState class] fromData:buttonStateEncoded error:nil];
-        if(buttonState.buttonType == KeyboardOrMouseButton){
-            OnScreenButtonView* buttonView = [[OnScreenButtonView alloc] initWithKeyString:buttonState.name keyLabel:buttonState.alias]; //reconstruct buttonView
-            buttonView.translatesAutoresizingMaskIntoConstraints = NO; // weird but this is mandatory, or you will find no key views added to the right place
-            buttonView.timestamp = buttonState.timestamp; // will be set as key in in the dict.
-            buttonView.widthFactor = buttonState.widthFactor;
-            buttonView.heightFactor = buttonState.heightFactor;
-            buttonView.sensitivityFactor = buttonState.sensitivityFactor;
-            buttonView.stickIndicatorXOffset = buttonState.stickIndicatorXOffset;
-            // buttonView.backgroundAlpha = buttonState.backgroundAlpha;
-            // Add the buttonView to the view controller's view
-            [self.view addSubview:buttonView];
-            [buttonView setLocationWithXOffset:buttonState.position.x yOffset:buttonState.position.y];
-            [buttonView resizeButtonView]; // resize must be called after relocation
-            [buttonView adjustButtonTransparencyWithAlpha:buttonState.backgroundAlpha];
-            [self.onScreenButtonViewsDict setObject:buttonView forKey:@(buttonView.timestamp)];
+        if(buttonState.buttonType == CustomOnScreenWidget){
+            OnScreenWidgetView* widgetView = [[OnScreenWidgetView alloc] initWithKeyString:buttonState.name keyLabel:buttonState.alias]; //reconstruct widgetView
+            widgetView.translatesAutoresizingMaskIntoConstraints = NO; // weird but this is mandatory, or you will find no key views added to the right place
+            widgetView.timestamp = buttonState.timestamp; // will be set as key in in the dict.
+            widgetView.widthFactor = buttonState.widthFactor;
+            widgetView.heightFactor = buttonState.heightFactor;
+            widgetView.borderWidth = buttonState.borderWidth;
+            widgetView.sensitivityFactor = buttonState.sensitivityFactor;
+            widgetView.stickIndicatorXOffset = buttonState.stickIndicatorXOffset;
+            // widgetView.backgroundAlpha = buttonState.backgroundAlpha;
+            // Add the widgetView to the view controller's view
+            [self.view addSubview:widgetView];
+            [widgetView setLocationWithXOffset:buttonState.position.x yOffset:buttonState.position.y];
+            [widgetView resizeWidgetView]; // resize must be called after relocation
+            [widgetView adjustTransparencyWithAlpha:buttonState.backgroundAlpha];
+            [widgetView adjustBorderWithWidth:buttonState.borderWidth];
+            [self.OnScreenWidgetViewsDict setObject:widgetView forKey:@(widgetView.timestamp)];
         }
     }
 }
@@ -95,14 +98,15 @@
 - (void) viewDidLoad {
     [super viewDidLoad];
     profilesManager = [OSCProfilesManager sharedManager];
-    self.onScreenButtonViewsDict = [[NSMutableDictionary alloc] init]; // will be revised to read persisted data , somewhere else
-    [OSCProfilesManager setOnScreenButtonViewsDict:self.onScreenButtonViewsDict];   // pass the keyboard button dict to profiles manager
+    self.OnScreenWidgetViewsDict = [[NSMutableDictionary alloc] init]; // will be revised to read persisted data , somewhere else
+    [OSCProfilesManager setOnScreenWidgetViewsDict:self.OnScreenWidgetViewsDict];   // pass the keyboard button dict to profiles manager
 
     isToolbarHidden = NO;   // keeps track if the toolbar is hidden up above the screen so that we know whether to hide or show it when the user taps the toolbar's hide/show button
             
     widgetSizeSliderLabel = [[UILabel alloc] init];
     widgetHeightSliderLabel = [[UILabel alloc] init];
     widgetAlphaSliderLabel = [[UILabel alloc] init];
+    widgetBorderWidthSliderLabel = [[UILabel alloc] init];
     sensitivitySliderLabel = [[UILabel alloc] init];
     stickIndicatorOffsetSliderLabel = [[UILabel alloc] init];
     stickIndicatorOffsetExplain = [[UILabel alloc] init];
@@ -127,6 +131,7 @@
 
     self.layoutOSC = [[LayoutOnScreenControls alloc] initWithView:self.view controllerSup:nil streamConfig:nil oscLevel:OSCSegmentSelected];
     self.layoutOSC._level = OnScreenControlsLevelCustom;
+    self.layoutOSC.layoutToolVC = self;
     [self.layoutOSC show];  // draw on screen controls
     
     [self addInnerAnalogSticksToOuterAnalogLayers]; // allows inner and analog sticks to be dragged together around the screen together as one unit which is the expected behavior
@@ -144,13 +149,13 @@
     
     
     [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(reloadOnScreenButtonViews)
+                                             selector:@selector(reloadOnScreenWidgetViews)
                                                  name:@"OscLayoutProfileSelctedInTableView"   // This is a special notification for reloading the on screen keyboard buttons. which can't be executed by _oscProfilesTableViewController.needToUpdateOscLayoutTVC code block, and has to be triggered by a notification
                                                object:nil];
 
     [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(buttonViewTapped:)
-                                                 name:@"OnScreenButtonViewSelected"
+                                             selector:@selector(widgetViewTapped:)
+                                                 name:@"OnScreenWidgetViewSelected"
                                                object:nil];
 
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -190,7 +195,7 @@
 
 
 - (void) viewDidAppear:(BOOL)animated {
-    OnScreenButtonView.editMode = true;
+    OnScreenWidgetView.editMode = true;
     [super viewWillAppear:animated];
     [self profileRefresh];
 }
@@ -354,14 +359,14 @@
         if(noValidKeyboardString && noValidMouseButtonString && noValidTouchPadString && noValidOscButtonString && noValidSpecialButtonString) return;
         
         //saving & present the keyboard button:
-        OnScreenButtonView* buttonView = [[OnScreenButtonView alloc] initWithKeyString:cmdString keyLabel:keyLabel];
-        buttonView.translatesAutoresizingMaskIntoConstraints = NO; // weird but this is mandatory, or you will find no key views added to the right place
-        buttonView.timestamp = CACurrentMediaTime(); // will be set as key in in the dict.
-        [self.onScreenButtonViewsDict setObject:buttonView forKey:@(buttonView.timestamp)];
-        // Add the buttonView to the view controller's view
-        [self.view addSubview:buttonView];
-        [buttonView setLocationWithXOffset:50 yOffset:50];
-        [buttonView resizeButtonView];
+        OnScreenWidgetView* widgetView = [[OnScreenWidgetView alloc] initWithKeyString:cmdString keyLabel:keyLabel];
+        widgetView.translatesAutoresizingMaskIntoConstraints = NO; // weird but this is mandatory, or you will find no key views added to the right place
+        widgetView.timestamp = CACurrentMediaTime(); // will be set as key in in the dict.
+        [self.OnScreenWidgetViewsDict setObject:widgetView forKey:@(widgetView.timestamp)];
+        // Add the widgetView to the view controller's view
+        [self.view addSubview:widgetView];
+        [widgetView setLocationWithXOffset:50 yOffset:50];
+        [widgetView resizeWidgetView];
     }];
     [alertController addAction:cancelAction];
     [alertController addAction:okAction];
@@ -388,48 +393,50 @@
     }
 }
 
-- (void)buttonViewTapped: (NSNotification *)notification{
-    // receive the selected buttonView obj passed from the notification
-    OnScreenButtonView* buttonView = (OnScreenButtonView* )notification.object;
-    self->buttonViewSelected = true;
+- (void)widgetViewTapped: (NSNotification *)notification{
+    // receive the selected widgetView obj passed from the notification
+    OnScreenWidgetView* widgetView = (OnScreenWidgetView* )notification.object;
+    self->widgetViewSelected = true;
     self->controllerLayerSelected = false;
-    self->selectedButtonView = buttonView;
+    self->selectedWidgetView = widgetView;
     // setup slider values
-    [self.widgetSizeSlider setValue: self->selectedButtonView.widthFactor];
-    [self.widgetHeightSlider setValue: self->selectedButtonView.heightFactor];
-    [self.widgetAlphaSlider setValue: self->selectedButtonView.backgroundAlpha];
+    [self.widgetSizeSlider setValue: self->selectedWidgetView.widthFactor];
+    [self.widgetHeightSlider setValue: self->selectedWidgetView.heightFactor];
+    [self.widgetAlphaSlider setValue: self->selectedWidgetView.backgroundAlpha];
+    [self.widgetBorderWidthSlider setValue:self->selectedWidgetView.borderWidth];
     
     NSSet *stickAndMouseTouchpads = [NSSet setWithObjects:@"LSPAD", @"RSPAD", @"LSVPAD", @"RSVPAD", @"MOUSEPAD", nil];
     NSSet *nonVectorStickPads = [NSSet setWithObjects:@"LSPAD", @"RSPAD", nil];
 
     
-    bool showSensitivityFactorSlider = [stickAndMouseTouchpads containsObject:self->selectedButtonView.keyString];
-    bool showStickIndicatorOffsetSlider = [nonVectorStickPads containsObject:self->selectedButtonView.keyString];
+    bool showSensitivityFactorSlider = [stickAndMouseTouchpads containsObject:self->selectedWidgetView.keyString];
+    bool showStickIndicatorOffsetSlider = [nonVectorStickPads containsObject:self->selectedWidgetView.keyString];
     self.sensitivityFactorSlider.hidden = self->sensitivitySliderLabel.hidden = !showSensitivityFactorSlider;
     self.stickIndicatorOffsetSlider.hidden = self->stickIndicatorOffsetExplain.hidden = self->stickIndicatorOffsetSliderLabel.hidden = !showStickIndicatorOffsetSlider;
     if(showSensitivityFactorSlider){
-        [self.sensitivityFactorSlider setValue:self->selectedButtonView.sensitivityFactor];
-        [sensitivitySliderLabel setText:[LocalizationHelper localizedStringForKey:@"Sensitivity: %.2f", self->selectedButtonView.sensitivityFactor]];
+        [self.sensitivityFactorSlider setValue:self->selectedWidgetView.sensitivityFactor];
+        [sensitivitySliderLabel setText:[LocalizationHelper localizedStringForKey:@"Sensitivity: %.2f", self->selectedWidgetView.sensitivityFactor]];
     }
     if(showStickIndicatorOffsetSlider){
         // illustrating the indicator offset,
-        [selectedButtonView.stickBallLayer removeFromSuperlayer];
-        [selectedButtonView.crossMarkLayer removeFromSuperlayer];
-        selectedButtonView.touchBeganLocation = CGPointMake(CGRectGetWidth(selectedButtonView.frame)/2, CGRectGetHeight(selectedButtonView.frame)/4);
-        [selectedButtonView showStickIndicator];// this will create the indicator CAShapeLayers
-        [self.stickIndicatorOffsetSlider setValue:self->selectedButtonView.stickIndicatorXOffset];
-        [stickIndicatorOffsetSliderLabel setText:[LocalizationHelper localizedStringForKey:@"Indicator Offset: %.2f", self->selectedButtonView.stickIndicatorXOffset]];
-        [self->selectedButtonView updateStickIndicator];
+        [selectedWidgetView.stickBallLayer removeFromSuperlayer];
+        [selectedWidgetView.crossMarkLayer removeFromSuperlayer];
+        selectedWidgetView.touchBeganLocation = CGPointMake(CGRectGetWidth(selectedWidgetView.frame)/2, CGRectGetHeight(selectedWidgetView.frame)/4);
+        [selectedWidgetView showStickIndicator];// this will create the indicator CAShapeLayers
+        [self.stickIndicatorOffsetSlider setValue:self->selectedWidgetView.stickIndicatorXOffset];
+        [stickIndicatorOffsetSliderLabel setText:[LocalizationHelper localizedStringForKey:@"Indicator Offset: %.2f", self->selectedWidgetView.stickIndicatorXOffset]];
+        [self->selectedWidgetView updateStickIndicator];
     }
-    [widgetSizeSliderLabel setText:[LocalizationHelper localizedStringForKey:@"Widget Size: %.2f", self->selectedButtonView.widthFactor]];
-    [widgetHeightSliderLabel setText:[LocalizationHelper localizedStringForKey:@"Widget Height: %.2f", self->selectedButtonView.heightFactor]];
-    [widgetAlphaSliderLabel setText:[LocalizationHelper localizedStringForKey:@"Widget Alpha: %.2f", self->selectedButtonView.backgroundAlpha]];
+    [widgetSizeSliderLabel setText:[LocalizationHelper localizedStringForKey:@"Widget Size: %.2f", self->selectedWidgetView.widthFactor]];
+    [widgetHeightSliderLabel setText:[LocalizationHelper localizedStringForKey:@"Widget Height: %.2f", self->selectedWidgetView.heightFactor]];
+    [widgetAlphaSliderLabel setText:[LocalizationHelper localizedStringForKey:@"Widget Alpha: %.2f", self->selectedWidgetView.backgroundAlpha]];
+    [widgetBorderWidthSliderLabel setText:[LocalizationHelper localizedStringForKey:@"Border Width: %.2f", self->selectedWidgetView.borderWidth]];
 }
 
 - (void)setControllerCALayerSliderValues: (NSNotification *)notification{
-    // receive the selected buttonView obj passed from the notification
+    // receive the selected widgetView obj passed from the notification
     CALayer* controllerLayer = (CALayer* )notification.object;
-    self->buttonViewSelected = false;
+    self->widgetViewSelected = false;
     self->stickIndicatorOffsetExplain.hidden = true;
     self->stickIndicatorOffsetSliderLabel.hidden = true;
     self.stickIndicatorOffsetSlider.hidden = true;
@@ -457,11 +464,11 @@
     [widgetHeightSliderLabel setText:[LocalizationHelper localizedStringForKey:@"Widget Height: %.2f", self.widgetSizeSlider.value]]; // resizing the whole button
     [self.widgetHeightSlider setValue: self.widgetSizeSlider.value];
     
-    if(self->selectedButtonView != nil && self->buttonViewSelected){
-        self->selectedButtonView.translatesAutoresizingMaskIntoConstraints = true; // this is mandatory to prevent unexpected key view location change
-        // when adjusting width, the buttonView height will be syncronized
-        self->selectedButtonView.widthFactor = self->selectedButtonView.heightFactor = self.widgetSizeSlider.value;
-        [self->selectedButtonView resizeButtonView];
+    if(self->selectedWidgetView != nil && self->widgetViewSelected){
+        self->selectedWidgetView.translatesAutoresizingMaskIntoConstraints = true; // this is mandatory to prevent unexpected key view location change
+        // when adjusting width, the widgetView height will be syncronized
+        self->selectedWidgetView.widthFactor = self->selectedWidgetView.heightFactor = self.widgetSizeSlider.value;
+        [self->selectedWidgetView resizeWidgetView];
     }
     if(self->selectedControllerLayer != nil && self->controllerLayerSelected){
         [self.layoutOSC resizeControllerLayerWith:self->selectedControllerLayer and:self.widgetSizeSlider.value];
@@ -470,18 +477,18 @@
 
 - (void)widgetHeightSliderMoved{
     [widgetHeightSliderLabel setText:[LocalizationHelper localizedStringForKey:@"Widget Height: %.2f", self.widgetHeightSlider.value]];
-    if(self->selectedButtonView != nil && self->buttonViewSelected){
-        self->selectedButtonView.translatesAutoresizingMaskIntoConstraints = true; // this is mandatory to prevent unexpected key view location change
-        if([CommandManager.oscButtonMappings.allKeys containsObject:selectedButtonView.keyString]) return; // don't change custom osc button height
-        self->selectedButtonView.heightFactor = self.widgetHeightSlider.value;
-        [self->selectedButtonView resizeButtonView];
+    if(self->selectedWidgetView != nil && self->widgetViewSelected){
+        self->selectedWidgetView.translatesAutoresizingMaskIntoConstraints = true; // this is mandatory to prevent unexpected key view location change
+        if([CommandManager.oscButtonMappings.allKeys containsObject:selectedWidgetView.keyString] && ![CommandManager.oscRectangleButtonCmds containsObject:selectedWidgetView.keyString]) return; // don't change custom osc button height, except for dPad buttons which are in rectangle shape
+        self->selectedWidgetView.heightFactor = self.widgetHeightSlider.value;
+        [self->selectedWidgetView resizeWidgetView];
     }
 }
 
 - (void)widgetAlphaSliderMoved{
     [widgetAlphaSliderLabel setText:[LocalizationHelper localizedStringForKey:@"Widget Alpha: %.2f", self.widgetAlphaSlider.value]];
-    if(self->selectedButtonView != nil && self->buttonViewSelected){
-        [self->selectedButtonView adjustButtonTransparencyWithAlpha:self.widgetAlphaSlider.value];
+    if(self->selectedWidgetView != nil && self->widgetViewSelected){
+        [self->selectedWidgetView adjustTransparencyWithAlpha:self.widgetAlphaSlider.value];
     }
 
     if(self->selectedControllerLayer != nil && self->controllerLayerSelected){
@@ -490,24 +497,32 @@
     return;
 }
 
+- (void)widgetBorderWidthSliderMoved{
+    [widgetBorderWidthSliderLabel setText:[LocalizationHelper localizedStringForKey:@"Border Width: %.2f", self.widgetBorderWidthSlider.value]];
+    if(self->selectedWidgetView != nil && self->widgetViewSelected){
+        [self->selectedWidgetView adjustBorderWithWidth:self.widgetBorderWidthSlider.value];
+    }
+    return;
+}
+
 - (void)sensitivitySliderMoved{
     [sensitivitySliderLabel setText:[LocalizationHelper localizedStringForKey:@"Sensitivity: %.2f", self.sensitivityFactorSlider.value]];
-    if(self->selectedButtonView != nil && self->buttonViewSelected) self->selectedButtonView.sensitivityFactor = self.sensitivityFactorSlider.value;
+    if(self->selectedWidgetView != nil && self->widgetViewSelected) self->selectedWidgetView.sensitivityFactor = self.sensitivityFactorSlider.value;
     return;
 }
 
 - (void)stickIndicatorOffsetSliderMoved{
     [stickIndicatorOffsetSliderLabel setText:[LocalizationHelper localizedStringForKey:@"Indicator Offset: %.2f", self.stickIndicatorOffsetSlider.value]];
-    if(self->selectedButtonView != nil && self->buttonViewSelected){
-        self->selectedButtonView.stickIndicatorXOffset = self.stickIndicatorOffsetSlider.value;
-        [self->selectedButtonView updateStickIndicator];
+    if(self->selectedWidgetView != nil && self->widgetViewSelected){
+        self->selectedWidgetView.stickIndicatorXOffset = self.stickIndicatorOffsetSlider.value;
+        [self->selectedWidgetView updateStickIndicator];
     }
     return;
 }
 
 - (void)showIndicatorOffset{
-    selectedButtonView.touchBeganLocation = CGPointMake(CGRectGetWidth(selectedButtonView.frame)/2, CGRectGetHeight(selectedButtonView.frame)/4);
-    [selectedButtonView showStickIndicator];
+    selectedWidgetView.touchBeganLocation = CGPointMake(CGRectGetWidth(selectedWidgetView.frame)/2, CGRectGetHeight(selectedWidgetView.frame)/4);
+    [selectedWidgetView showStickIndicator];
 }
 
 - (void)setupProfileLableAndSliders{
@@ -589,6 +604,27 @@
     widgetAlphaSliderLabel.hidden = NO;
     
     
+    // border Width slider
+    self.widgetBorderWidthSlider.hidden = NO;
+    self.widgetBorderWidthSlider.frame = CGRectMake(CGRectGetMaxX(self.currentProfileLabel.frame)-self.widgetBorderWidthSlider.frame.size.width, self.widgetBorderWidthSlider.frame.origin.y, self.widgetBorderWidthSlider.frame.size.width, self.widgetBorderWidthSlider.frame.size.height);
+
+    [self.widgetBorderWidthSlider addTarget:self action:@selector(widgetBorderWidthSliderMoved) forControlEvents:(UIControlEventValueChanged)];
+    widgetBorderWidthSliderLabel.text = [LocalizationHelper localizedStringForKey:@"Border Width"];
+    widgetBorderWidthSliderLabel.font = [UIFont systemFontOfSize:18];
+    widgetBorderWidthSliderLabel.textColor = [UIColor whiteColor];
+    widgetBorderWidthSliderLabel.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.5];
+    widgetBorderWidthSliderLabel.translatesAutoresizingMaskIntoConstraints = NO; // Disable autoresizing mask for Auto Layout
+    [self.view addSubview:widgetBorderWidthSliderLabel];
+    [NSLayoutConstraint activateConstraints:@[
+        // Position the label to the left of the slider
+        [widgetBorderWidthSliderLabel.trailingAnchor constraintEqualToAnchor:self.widgetBorderWidthSlider.leadingAnchor constant:-10],
+        // Align vertically with the slider
+        [widgetBorderWidthSliderLabel.centerYAnchor constraintEqualToAnchor:self.widgetBorderWidthSlider.centerYAnchor]
+    ]];
+    widgetBorderWidthSliderLabel.hidden = NO;
+
+    
+    
     // sensitivity slider
     self.sensitivityFactorSlider.hidden = YES;
     self.sensitivityFactorSlider.frame = CGRectMake(sliderXPosition, self.sensitivityFactorSlider.frame.origin.y, self.sensitivityFactorSlider.frame.size.width, self.sensitivityFactorSlider.frame.size.height);
@@ -608,6 +644,7 @@
         [sensitivitySliderLabel.centerYAnchor constraintEqualToAnchor:self.sensitivityFactorSlider.centerYAnchor]
     ]];
     sensitivitySliderLabel.hidden = self.sensitivityFactorSlider.hidden;
+    
     
     // stick indicator offset slider
     self.stickIndicatorOffsetSlider.hidden = YES;
@@ -671,7 +708,7 @@
     };
     
     [self.oscProfilesTableViewController profileViewRefresh]; // execute this will make sure OSCLayout is updated from persisted profile, not any cache.
-    [self reloadOnScreenButtonViews];
+    [self reloadOnScreenWidgetViews];
 
     // [self presentViewController:vc animated:YES completion:nil];
 }
@@ -732,7 +769,9 @@
 }
 
 - (void) touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
-
+    // for OnScreenWidgets:
+    
+    
     // -------- for OSC buttons
     [self.layoutOSC touchesMoved:touches withEvent:event];
     if ([self.layoutOSC isLayer:self.layoutOSC.layerBeingDragged
@@ -768,11 +807,11 @@
     // removing keyboard buttons objs
     UITouch *touch = [touches anyObject]; // Get the first touch in the set
     if([self touchWithinTashcanButton:touch]){
-        [self.onScreenButtonViewsDict[@(OnScreenButtonView.timestampOfButtonBeingDragged)] removeFromSuperview];
-        [self.onScreenButtonViewsDict removeObjectForKey:@(OnScreenButtonView.timestampOfButtonBeingDragged)];
-        [selectedButtonView.stickBallLayer removeFromSuperlayer];
-        [selectedButtonView.crossMarkLayer removeFromSuperlayer];
-        OnScreenButtonView.timestampOfButtonBeingDragged = 0; //reset thie timestamp
+        [self.OnScreenWidgetViewsDict[@(OnScreenWidgetView.timestampOfButtonBeingDragged)] removeFromSuperview];
+        [self.OnScreenWidgetViewsDict removeObjectForKey:@(OnScreenWidgetView.timestampOfButtonBeingDragged)];
+        [selectedWidgetView.stickBallLayer removeFromSuperlayer];
+        [selectedWidgetView.crossMarkLayer removeFromSuperlayer];
+        OnScreenWidgetView.timestampOfButtonBeingDragged = 0; //reset thie timestamp
     }
     
     

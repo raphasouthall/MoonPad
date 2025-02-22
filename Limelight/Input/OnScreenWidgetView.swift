@@ -8,7 +8,7 @@
 
 import UIKit
 
-@objc class OnScreenButtonView: UIView, InstanceProviderDelegate {
+@objc class OnScreenWidgetView: UIView, InstanceProviderDelegate {
     // receiving the OnScreenControls instance from delegate
     @objc func getOnScreenControlsInstance(_ sender: Any) {
         if let controls = sender as? OnScreenControls {
@@ -27,6 +27,7 @@ import UIKit
     @objc public var pressed: Bool
     @objc public var widthFactor: CGFloat = 1.0
     @objc public var heightFactor: CGFloat = 1.0
+    @objc public var borderWidth: CGFloat = 0.0
     @objc public var backgroundAlpha: CGFloat = 0.5
     @objc public var latestTouchLocation: CGPoint
     @objc public var selfViewOnTheRight: Bool = false
@@ -85,7 +86,7 @@ import UIKit
     private var mousePointerMoved: Bool
     private var twoTouchesDetected: Bool
     
-    private var storedLocation: CGPoint = .zero // location from persisted data
+    private var storedCenter: CGPoint = .zero // location from persisted data
     private let minimumBorderAlpha: CGFloat = 0.19
     private var defaultBorderColor: CGColor = UIColor(white: 0.2, alpha: 0.3).cgColor
     private let moonlightPurple: CGColor = UIColor(red: 0.5, green: 0.5, blue: 1.0, alpha: 0.86).cgColor
@@ -142,28 +143,39 @@ import UIKit
     }
     
     @objc public func setLocation(xOffset:CGFloat, yOffset:CGFloat) {
+        /*
         NSLayoutConstraint.activate([
-            self.leadingAnchor.constraint(equalTo: self.superview!.leadingAnchor, constant: xOffset),
-            self.topAnchor.constraint(equalTo: self.superview!.topAnchor, constant: yOffset),
+            self.centerXAnchor.constraint(equalTo: self.superview!.leadingAnchor, constant: xOffset),
+            self.centerYAnchor.constraint(equalTo: self.superview!.topAnchor, constant: yOffset),
         ])
-        storedLocation = CGPointMake(xOffset, yOffset)
+         */
+        storedCenter = CGPointMake(xOffset, yOffset)
+        center = storedCenter
     }
     
     @objc public func enableRelocationMode(enabled: Bool){
-        OnScreenButtonView.editMode = enabled
+        OnScreenWidgetView.editMode = enabled
     }
     
-    @objc public func adjustButtonTransparency(alpha: CGFloat){
+    @objc public func adjustTransparency(alpha: CGFloat){
         if alpha != 0 {
             self.backgroundAlpha = alpha
         }
         else{
-            self.backgroundAlpha = 0.5
+            // self.backgroundAlpha = 0.5
+            self.backgroundAlpha = alpha
         }
         self.tweakAlpha()
     }
     
-    @objc public func resizeButtonView(){
+    @objc public func adjustBorder(width: CGFloat){
+        self.borderWidth = width
+        // self.layer.borderWidth = borderWidth
+        // if CommandManager.touchPadCmds.contains(self.keyString) && width == 0 {self.layer.borderWidth = 1}
+        setupView()
+    }
+    
+    @objc public func resizeWidgetView(){
         guard let superview = superview else { return }
         
         
@@ -172,20 +184,26 @@ import UIKit
         
         // To resize the button, we must set this to false temporarily
         translatesAutoresizingMaskIntoConstraints = false
-        
-        
+                
         // replace invalid factor values
         if self.widthFactor == 0 {self.widthFactor = 1.0}
         if self.heightFactor == 0 {self.heightFactor = 1.0}
         
-        // Constraints for resizing
+
+        /*
+        NSLayoutConstraint.activate([
+            self.centerXAnchor.constraint(equalTo: self.superview!.leadingAnchor, constant: storedLocation.x),
+            self.centerYAnchor.constraint(equalTo: self.superview!.topAnchor, constant: storedLocation.y)])
+         */
         
+
+        // Constraints for resizing
         self.changeAndActivateContraints()
         
         // Trigger layout update
         superview.layoutIfNeeded()
         
-        // Re-setup buttonView style
+        // Re-setup widgetView style
         setupView()
     }
     
@@ -207,10 +225,13 @@ import UIKit
     }
     
     private func changeAndActivateContraints(){
-        if CommandManager.oscButtonMappings.keys.contains(self.keyString){ // we'll make custom osc buttons round & smaller
+        if CommandManager.oscButtonMappings.keys.contains(self.keyString) && !CommandManager.oscRectangleButtonCmds.contains(self.keyString){ // we'll make custom osc buttons round & smaller  
+           
             NSLayoutConstraint.activate([
                 self.widthAnchor.constraint(equalToConstant: 60 * self.widthFactor),
                 self.heightAnchor.constraint(equalToConstant: 60 * self.heightFactor),])
+            
+            // self.frame = CGRectMake(0, 0, 60*self.widthFactor, 60*self.heightFactor)
             }
         else if CommandManager.touchPadCmds.contains(self.keyString) { // make touchPads larger
             NSLayoutConstraint.activate([
@@ -222,6 +243,7 @@ import UIKit
                 self.widthAnchor.constraint(equalToConstant: 70 * self.widthFactor),
                 self.heightAnchor.constraint(equalToConstant: 65 * self.heightFactor),])
            }
+
         NSLayoutConstraint.activate([
             label.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 10), // set up label size contrain within UIView
             label.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -10),
@@ -244,21 +266,23 @@ import UIKit
         
         self.translatesAutoresizingMaskIntoConstraints = true // this is mandatory to prevent unexpected key view location change
         
-        self.layer.cornerRadius = 20
-        self.layer.borderWidth = 1
+        self.layer.cornerRadius = 16
+        self.layer.borderWidth = self.borderWidth
 
         self.tweakAlpha()
         
-        if CommandManager.oscButtonMappings.keys.contains(self.keyString){ //make oscButtons round and no border
+        if CommandManager.oscButtonMappings.keys.contains(self.keyString) && !CommandManager.oscRectangleButtonCmds.contains(self.keyString){ //make oscButtons round and no border
             self.layer.cornerRadius = self.frame.width/2
-            self.layer.borderWidth = 0
+            // self.layer.borderWidth = self.borderWidth
             label.minimumScaleFactor = 0.15  // Adjust the scale factor for oscButtons
             label.font = UIFont.boldSystemFont(ofSize: 22)
         }
         
         if CommandManager.touchPadCmds.contains(self.keyString){
+            if(self.borderWidth < 1) {self.layer.borderWidth = 1}
+            else {self.layer.borderWidth = self.borderWidth}
             label.text = "" // make touchPad display no text
-            if OnScreenButtonView.editMode { //display label in edit mode to make the pad more visible
+            if OnScreenWidgetView.editMode { //display label in edit mode to make the pad more visible
                 label.text = self.keyString
             }
         }
@@ -275,6 +299,8 @@ import UIKit
         addSubview(label)
         
         self.changeAndActivateContraints()
+        
+        center = storedCenter //anchor the center while resizing self
         
         setupButtonDownVisualEffectLayer();
     }
@@ -312,10 +338,10 @@ import UIKit
     // create stick indicator: the crossMark & stickBall:
     @objc public func showStickIndicator(){
         // tell if the self button is located on the left or right
-        self.selfViewOnTheRight = (self.storedLocation.x > self.appWindow.frame.width*0.5)
+        self.selfViewOnTheRight = (self.storedCenter.x > self.appWindow.frame.width*0.5)
         let offsetSign = selfViewOnTheRight ? -1 : 1
         let stickMarkerRelativeLocation:CGPoint
-        if !OnScreenButtonView.editMode {
+        if !OnScreenWidgetView.editMode {
             stickMarkerRelativeLocation = CGPointMake(touchBeganLocation.x + CGFloat(offsetSign) * self.stickIndicatorXOffset, touchBeganLocation.y)
         }
         else{
@@ -384,7 +410,7 @@ import UIKit
         CATransaction.begin()
         CATransaction.setDisableActions(true)
         self.stickBallLayer.removeAllAnimations()
-        if !OnScreenButtonView.editMode {
+        if !OnScreenWidgetView.editMode {
             self.stickBallLayer.position = CGPointMake(CGRectGetMidX(self.crossMarkLayer.frame) + touchInputToStickBallCoord(input: offSetX*sensitivityFactor), CGRectGetMidY(self.crossMarkLayer.frame) + touchInputToStickBallCoord(input: offSetY*sensitivityFactor))
         }
         else{
@@ -634,7 +660,10 @@ import UIKit
     
     private func setupButtonDownVisualEffectLayer() {
         self.buttonDownVisualEffectWidth = 8.6
-        if CommandManager.oscButtonMappings.keys.contains(self.keyString) {self.buttonDownVisualEffectWidth = 15.3} // wider visual effect for osc buttons
+        if CommandManager.oscButtonMappings.keys.contains(self.keyString) && !CommandManager.oscRectangleButtonCmds.contains(self.keyString){
+            if widthFactor < 1.3 {self.buttonDownVisualEffectWidth = 15.3} // wider visual effect for osc buttons
+            else {self.buttonDownVisualEffectWidth = 9}
+        }
         
         // Set the frame to be larger than the view to expand outward
         buttonDownVisualEffectLayer.borderWidth = 0 // set this 0 to hide the visual effect first
@@ -683,7 +712,7 @@ import UIKit
         self.onScreenControls.sendLeftStickTouchPadEvent(targetX, targetY)
     }
     //==========================================================================================================
-
+    
     
     // Touch event handling
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -697,18 +726,19 @@ import UIKit
             quickDoubleTapDetected = touchTapTimeInterval < QUICK_TAP_TIME_INTERVAL
             
             let touch = touches.first
-            self.touchBeganLocation = touch!.location(in: self)
+            if OnScreenWidgetView.editMode {self.touchBeganLocation = touch!.location(in: superview)}
+            else {self.touchBeganLocation = touch!.location(in: self)}
             self.latestTouchLocation = touchBeganLocation
         }
                 
-        let allCapturedTouchesCount = event?.allTouches?.filter({ $0.view == self }).count // this will counts all valid touches within the self buttonView, and excludes touches in other buttonViews
+        let allCapturedTouchesCount = event?.allTouches?.filter({ $0.view == self }).count // this will counts all valid touches within the self widgetView, and excludes touches in other widgetViews
         if allCapturedTouchesCount == 2 {
             self.twoTouchesDetected = true
         }
         
         self.pressed = true
 
-        if !OnScreenButtonView.editMode {
+        if !OnScreenWidgetView.editMode {
             if CommandManager.touchPadCmds.contains(self.keyString) && touches.count == 1{ // don't use event?.allTouches?.count here, it will counts all touches including the ones captured by other UIViews
                 switch self.keyString {
                 case "LSPAD":
@@ -770,29 +800,37 @@ import UIKit
         }
         // here is in edit mode:
         else{
-            NotificationCenter.default.post(name: Notification.Name("OnScreenButtonViewSelected"),object: self) // inform layout tool controller to fetch button size factors. self will be passed as the object of the notification
+            NotificationCenter.default.post(name: Notification.Name("OnScreenWidgetViewSelected"),object: self) // inform layout tool controller to fetch button size factors. self will be passed as the object of the notification
             if let touch = touches.first {
                 let touchLocation = touch.location(in: superview)
-                storedLocation = touchLocation
+                storedCenter = touchLocation
             }
         }
         
     }
     
     private func moveByTouch(touch: UITouch){
-        let currentLocation = touch.location(in: superview)
-        let offsetX = currentLocation.x - storedLocation.x
-        let offsetY = currentLocation.y - storedLocation.y
+        let currentLocation: CGPoint
+        if OnScreenWidgetView.editMode {currentLocation = touch.location(in: superview)}
+        else {currentLocation = touch.location(in: self)}
+        
+        let offsetX = currentLocation.x - latestTouchLocation.x
+        let offsetY = currentLocation.y - latestTouchLocation.y
         center = CGPoint(x: center.x + offsetX, y: center.y + offsetY)
+        latestTouchLocation = currentLocation
+        // center = currentLocation;
         //NSLog("x coord: %f, y coord: %f", self.frame.origin.x, self.frame.origin.y)
-        storedLocation = currentLocation // Update initial center for next movement
+        storedCenter = center // Update initial center for next movement
+        if OnScreenWidgetView.editMode {
+            NotificationCenter.default.post(name: Notification.Name("OnScreenWidgetMovedByTouch"), object:self) // inform the layoutOnScreenControl to update guideLines for this widget view
+        }
     }
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesMoved(touches, with: event)
-        OnScreenButtonView.timestampOfButtonBeingDragged = self.timestamp
+        OnScreenWidgetView.timestampOfButtonBeingDragged = self.timestamp
         
-        if !OnScreenButtonView.editMode {
+        if !OnScreenWidgetView.editMode {
             if CommandManager.touchPadCmds.contains(self.keyString){
                 handleTouchPadMoveEvent(touches, with: event)
             }
@@ -808,8 +846,8 @@ import UIKit
             }
         }
         
-        // Move the buttonView based on touch movement in relocation mode
-        if OnScreenButtonView.editMode {
+        // Move the widgetView based on touch movement in relocation mode
+        if OnScreenWidgetView.editMode {
             if let touch = touches.first {
                 self.moveByTouch(touch: touch)
                 }
@@ -858,10 +896,10 @@ import UIKit
 
         if self.keyString != "MOUSEPAD" {quickDoubleTapDetected = false} //do not reset this flag here in mousePad mode
         
-        let allCapturedTouchesCount = event?.allTouches?.filter({ $0.view == self }).count // this will counts all valid touches within the self buttonView, and excludes touches in other buttonViews
+        let allCapturedTouchesCount = event?.allTouches?.filter({ $0.view == self }).count // this will counts all valid touches within the self widgetView, and excludes touches in other widgetViews
         
         // deal with MOUSPAD first
-        if !OnScreenButtonView.editMode && self.keyString == "MOUSEPAD" && allCapturedTouchesCount == 1 && !twoTouchesDetected {
+        if !OnScreenWidgetView.editMode && self.keyString == "MOUSEPAD" && allCapturedTouchesCount == 1 && !twoTouchesDetected {
             if !mousePointerMoved && !quickDoubleTapDetected {self.sendLongMouseLeftButtonClickEvent()} // deal with single tap(click)
             if quickDoubleTapDetected { //deal with quick double tap
                 LiSendMouseButtonEvent(CChar(BUTTON_ACTION_RELEASE), BUTTON_LEFT) //must release the button anyway, because the button is likely being held down since the long click turned into a dragging event.
@@ -871,14 +909,14 @@ import UIKit
             mousePointerMoved = false // reset this flag
         }
         
-        if !OnScreenButtonView.editMode && self.keyString == "MOUSEPAD" && twoTouchesDetected && touches.count == allCapturedTouchesCount { // need to enable multi-touch first
+        if !OnScreenWidgetView.editMode && self.keyString == "MOUSEPAD" && twoTouchesDetected && touches.count == allCapturedTouchesCount { // need to enable multi-touch first
             // touches.count == allCapturedTouchesCount means allfingers are lifting
             self.sendMouseRightButtonClickEvent()
             twoTouchesDetected = false
         }
         
         // then other types of pads
-        if !OnScreenButtonView.editMode && CommandManager.touchPadCmds.contains(self.keyString) {
+        if !OnScreenWidgetView.editMode && CommandManager.touchPadCmds.contains(self.keyString) {
             switch self.keyString{
             case "LSPAD":
                 self.onScreenControls.clearLeftStickTouchPadFlag()
@@ -912,7 +950,7 @@ import UIKit
             }
         }
         
-        if !OnScreenButtonView.editMode && CommandManager.specialOverlayButtonCmds.contains(self.keyString){
+        if !OnScreenWidgetView.editMode && CommandManager.specialOverlayButtonCmds.contains(self.keyString){
             if CACurrentMediaTime() - self.touchTapTimeStamp < 0.3 {
                 switch self.keyString {
                 case "SETTINGS":
@@ -940,7 +978,7 @@ import UIKit
             if self.keyString == "OSCR2" {self.onScreenControls.updateRightTrigger(0x00)}
         }
                         
-        if !OnScreenButtonView.editMode && !self.keyString.contains("+") { // if the command(keystring contains "+", it's a multi-key command rather than a single key button
+        if !OnScreenWidgetView.editMode && !self.keyString.contains("+") { // if the command(keystring contains "+", it's a multi-key command rather than a single key button
             
             if CommandManager.mouseButtonMappings.keys.contains(self.keyString){
                 LiSendMouseButtonEvent(CChar(BUTTON_ACTION_RELEASE), Int32(CommandManager.mouseButtonMappings[self.keyString]!))
@@ -950,7 +988,7 @@ import UIKit
             }
         }
         
-        if OnScreenButtonView.editMode {
+        if OnScreenWidgetView.editMode {
             guard let superview = superview else { return }
             
             // Deactivate existing constraints if necessary
@@ -969,7 +1007,7 @@ import UIKit
             // Trigger layout update
             superview.layoutIfNeeded()
             
-            setupView(); //re-setup buttonView style
+            setupView(); //re-setup widgetView style
             
             if CommandManager.nonVectorStickPads.contains(self.keyString) {
                 self.crossMarkLayer.removeFromSuperlayer()

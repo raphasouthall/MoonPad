@@ -148,8 +148,10 @@
     return TRUE;
 }
 
-- (NSString*) getStatsOverlayText {
+- (NSString*) getStatsOverlayText: (uint16_t) overlayLevel {
     video_stats_t stats;
+    
+    // NSLog(@"overlayLevel: %d", overlayLevel);
     
     if (!_connection) {
         return nil;
@@ -169,6 +171,7 @@
     }
     
     NSString* hostProcessingString;
+    // overlayLevel 2: detailed
     if (stats.framesWithHostProcessingLatency != 0) {
         hostProcessingString = [LocalizationHelper localizedStringForKey:@"\nHost processing latency min/max/avg: %.1f/%.1f/%.1f ms",
                                 stats.minHostProcessingLatency / 10.f,
@@ -180,7 +183,7 @@
     }
     
     float interval = stats.endTime - stats.startTime;
-    return [LocalizationHelper localizedStringForKey:@"Video stream: %dx%d %.2f FPS (Codec: %@)\nFrames dropped by your network connection: %.2f%%\nAverage network latency: %@%@",
+    if(overlayLevel == 2) return [LocalizationHelper localizedStringForKey:@"Video stream: %dx%d %.2f FPS (Codec: %@)\nNetwork dropped frames: %.2f%%\nAverage network latency: %@%@",
             _config.width,
             _config.height,
             stats.totalFrames / interval,
@@ -188,6 +191,10 @@
             stats.networkDroppedFrames / interval,
             latencyString,
             hostProcessingString];
+    else return [LocalizationHelper localizedStringForKey:@"FPS: %5.2f     Network dropped frames: %.2f%%     Network latency: %@",
+                 stats.totalFrames / interval,
+                 stats.networkDroppedFrames / interval,
+                 latencyString];
 }
 
 @end

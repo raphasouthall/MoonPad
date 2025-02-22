@@ -452,7 +452,7 @@ BOOL isCustomResolution(CGSize res) {
         [self.hdrSelector setSelectedSegmentIndex:currentSettings.enableHdr ? 1 : 0];
     }
     
-    [self.statsOverlaySelector setSelectedSegmentIndex:currentSettings.statsOverlay ? 1 : 0];
+    [self.statsOverlaySelector setSelectedSegmentIndex:currentSettings.statsOverlayLevel.intValue];
     [self.btMouseSelector setSelectedSegmentIndex:currentSettings.btMouseSupport ? 1 : 0];
     [self.optimizeSettingsSelector setSelectedSegmentIndex:currentSettings.optimizeGames ? 1 : 0];
     [self.framePacingSelector setSelectedSegmentIndex:currentSettings.useFramePacing ? 1 : 0];
@@ -503,17 +503,17 @@ BOOL isCustomResolution(CGSize res) {
     //TouchMode & OSC Related Settings:
     
     // pointer veloc setting, will be enable/disabled by touchMode
-    [self.pointerVelocityModeDividerSlider setValue:[self map_SliderValue_fromVelocFactor:currentSettings.pointerVelocityModeDivider.floatValue] animated:YES]; // Load old setting.
+    [self.pointerVelocityModeDividerSlider setValue: (uint8_t)(currentSettings.pointerVelocityModeDivider.floatValue * 100) animated:YES]; // Load old setting.
     [self.pointerVelocityModeDividerSlider addTarget:self action:@selector(pointerVelocityModeDividerSliderMoved) forControlEvents:(UIControlEventValueChanged)]; // Update label display when slider is being moved.
     [self pointerVelocityModeDividerSliderMoved];
 
     // init pointer veloc setting,  will be enable/disabled by touchMode
-    [self.touchPointerVelocityFactorSlider setValue:currentSettings.touchPointerVelocityFactor.floatValue * 100 animated:YES]; // Load old setting.
+    [self.touchPointerVelocityFactorSlider setValue: [self map_SliderValue_fromVelocFactor: currentSettings.touchPointerVelocityFactor.floatValue] animated:YES]; // Load old setting.
     [self.touchPointerVelocityFactorSlider addTarget:self action:@selector(touchPointerVelocityFactorSliderMoved) forControlEvents:(UIControlEventValueChanged)]; // Update label display when slider is being moved.
     [self touchPointerVelocityFactorSliderMoved];
     
     // init relative touch mouse pointer veloc setting,  will be enable/disabled by touchMode
-    [self.mousePointerVelocityFactorSlider setValue:currentSettings.mousePointerVelocityFactor.floatValue * 100 animated:YES]; // Load old setting.
+    [self.mousePointerVelocityFactorSlider setValue:[self map_SliderValue_fromVelocFactor: currentSettings.mousePointerVelocityFactor.floatValue] animated:YES]; // Load old setting.
     [self.mousePointerVelocityFactorSlider addTarget:self action:@selector(mousePointerVelocityFactorSliderMoved) forControlEvents:(UIControlEventValueChanged)]; // Update label display when slider is being moved.
     [self mousePointerVelocityFactorSliderMoved];
     
@@ -687,6 +687,7 @@ BOOL isCustomResolution(CGSize res) {
 }
 
 // veloc factor upto 700%
+
 - (CGFloat) map_SliderValue_fromVelocFactor:(CGFloat)velocFactor{
     CGFloat sliderValue = 0.0f;
     if(velocFactor < 2.0f) sliderValue = velocFactor * 100;
@@ -695,7 +696,7 @@ BOOL isCustomResolution(CGSize res) {
 }
 
 - (void) mousePointerVelocityFactorSliderMoved {
-    [self.mousePointerVelocityFactorUILabel setText:[LocalizationHelper localizedStringForKey: @"Mouse Pointer Velocity: %d%%",  (uint16_t)self.mousePointerVelocityFactorSlider.value]]; // Update label display
+    [self.mousePointerVelocityFactorUILabel setText:[LocalizationHelper localizedStringForKey: @"Mouse Pointer Velocity: %d%%",  [self map_velocFactorDisplay_fromSliderValue: self.mousePointerVelocityFactorSlider.value]]]; // Update label display
 }
 
 - (uint32_t) getScreenEdgeFromSelector {
@@ -1046,8 +1047,10 @@ BOOL isCustomResolution(CGSize res) {
     CGFloat slideToSettingsDistance = self.slideToMenuDistanceSlider.value;
     uint32_t slideToSettingsScreenEdge = [self getScreenEdgeFromSelector];
     CGFloat pointerVelocityModeDivider = (CGFloat)(uint8_t)self.pointerVelocityModeDividerSlider.value/100;
-    CGFloat touchPointerVelocityFactor =(CGFloat)(uint16_t)[self map_velocFactorDisplay_fromSliderValue:self.touchPointerVelocityFactorSlider.value]/100;
-    CGFloat mousePointerVelocityFactor =(CGFloat)(uint16_t)self.mousePointerVelocityFactorSlider.value/100;
+    CGFloat touchPointerVelocityFactor = (CGFloat)(uint16_t)[self map_velocFactorDisplay_fromSliderValue:self.touchPointerVelocityFactorSlider.value]/100;
+    CGFloat mousePointerVelocityFactor = (CGFloat)(uint16_t)[self map_velocFactorDisplay_fromSliderValue:self.mousePointerVelocityFactorSlider.value]/100;
+
+    // CGFloat mousePointerVelocityFactor =(CGFloat)(uint16_t)self.mousePointerVelocityFactorSlider.value/100;
     CGFloat oscTapExlusionAreaSize =(CGFloat)(uint16_t)self.oscTapExlusionAreaSizeSlider.value/100;
 
     BOOL reverseMouseWheelDirection = [self.reverseMouseWheelDirectionSelector selectedSegmentIndex] == 1;
@@ -1063,7 +1066,8 @@ BOOL isCustomResolution(CGSize res) {
     BOOL useFramePacing = [self.framePacingSelector selectedSegmentIndex] == 1;
     // BOOL absoluteTouchMode = [self.touchModeSelector selectedSegmentIndex] == 1;
     NSInteger touchMode = [self.touchModeSelector selectedSegmentIndex];
-    BOOL statsOverlay = [self.statsOverlaySelector selectedSegmentIndex] == 1;
+    NSInteger statsOverlayLevel = [self.statsOverlaySelector selectedSegmentIndex];
+    BOOL statsOverlayEnabled = statsOverlayLevel != 0;
     BOOL enableHdr = [self.hdrSelector selectedSegmentIndex] == 1;
     BOOL unlockDisplayOrientation = [self.unlockDisplayOrientationSelector selectedSegmentIndex] == 1;
     NSInteger resolutionSelected = [self.resolutionSelector selectedSegmentIndex];
@@ -1097,7 +1101,8 @@ BOOL isCustomResolution(CGSize res) {
                       btMouseSupport:btMouseSupport
                    // absoluteTouchMode:absoluteTouchMode
                            touchMode:touchMode
-                        statsOverlay:statsOverlay
+                   statsOverlayLevel:statsOverlayLevel
+                        statsOverlayEnabled:statsOverlayEnabled
                        unlockDisplayOrientation:unlockDisplayOrientation
                   resolutionSelected:resolutionSelected
                  externalDisplayMode:externalDisplayMode

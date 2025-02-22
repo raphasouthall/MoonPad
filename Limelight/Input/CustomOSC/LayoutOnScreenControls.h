@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "OnScreenControls.h"
+#import "Moonlight-Swift.h"
 NS_ASSUME_NONNULL_BEGIN
 
 /**
@@ -19,6 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property UIView* _view;
 @property NSMutableArray *layoutChanges;
 @property CALayer *layerBeingDragged;
+@property UIViewController *layoutToolVC;
 
 - (id) initWithView:(UIView*)view controllerSup:(ControllerSupport*)controllerSupport
        streamConfig:(StreamConfiguration*)streamConfig oscLevel:(int)oscLevel;
@@ -29,7 +31,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event;
 - (void) touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event;
 - (void) touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event;
-
+// - (void) updateGuidelinesForOnScreenWidget:(OnScreenWidgetView* )widget;
 @end
 
 NS_ASSUME_NONNULL_END
