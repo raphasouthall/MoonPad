@@ -1,6 +1,18 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "1UZ-3M-k6c.text" : {
+      "comment" : "Class = \"UILabel\"; text = \"Enable YUV 4:4:4 (Beta)\"; ObjectID = \"1UZ-3M-k6c\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Enable YUV 4:4:4 (Beta)"
+          }
+        }
+      }
+    },
     "2lg-HW-tku.segmentTitles[0]" : {
       "comment" : "Class = \"UISegmentedControl\"; 2lg-HW-tku.segmentTitles[0] = \"Touchpad\"; ObjectID = \"2lg-HW-tku\";",
       "extractionState" : "extracted_with_value",
@@ -1821,7 +1833,7 @@
     },
     "Pew-kf-bSM.text" : {
       "comment" : "Class = \"UILabel\"; text = \"Enable YUV 4:4:4 (Beta)\"; ObjectID = \"Pew-kf-bSM\";",
-      "extractionState" : "extracted_with_value",
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
