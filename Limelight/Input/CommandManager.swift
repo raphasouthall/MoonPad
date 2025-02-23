@@ -454,7 +454,7 @@ import UIKit
             }
             return
         }
-        
+         
         // 获取当前按键的映射值
         if let keyCode = CommandManager.keyboardButtonMappings[keyboardCmdStrings[index]] {
             // 发送当前按键的按下事件
