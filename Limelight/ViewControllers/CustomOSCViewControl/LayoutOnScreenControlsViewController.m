@@ -45,6 +45,18 @@
 @synthesize chevronView;
 @synthesize chevronImageView;
 
+- (UIInterfaceOrientationMask)getCurrentOrientation{
+    CGFloat screenHeightInPoints = CGRectGetHeight([[UIScreen mainScreen] bounds]);
+    CGFloat screenWidthInPoints = CGRectGetWidth([[UIScreen mainScreen] bounds]);
+    //lock the orientation accordingly after streaming is started
+    if(screenWidthInPoints > screenHeightInPoints) return UIInterfaceOrientationMaskLandscape;
+    else return UIInterfaceOrientationMaskPortrait|UIInterfaceOrientationMaskPortraitUpsideDown;
+}
+
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
+    // Return the supported interface orientations acoordingly
+    return [self getCurrentOrientation]; // 90 Degree rotation not allowed in streaming or app view
+}
 
 - (void) viewWillDisappear:(BOOL)animated{
     OnScreenWidgetView.editMode = false;

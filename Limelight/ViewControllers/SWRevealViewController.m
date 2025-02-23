@@ -733,8 +733,7 @@ const int FrontViewPositionNone = 0xff;
     else return UIInterfaceOrientationMaskPortrait|UIInterfaceOrientationMaskPortraitUpsideDown;
 }
 
-
-// tested on iOS17. this method does not call back on iOS14, runtime orientation limitation not working for iOS14. Probably depends on iOS16 or higher.
+// tested on iOS17.
 - (UIInterfaceOrientationMask)supportedInterfaceOrientations {
     // Return the supported interface orientations acoordingly
     if(self.mainFrameIsInHostView){
