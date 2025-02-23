@@ -303,8 +303,8 @@ import UIKit
     
     private func sendKeyboardCommand(_ cmd: RemoteCommand) {
         print("Sending key-value")
-        let keyboardCmdStrings = CommandManager.shared.extractKeyStrings(from: cmd.keyboardCmdString)
-        CommandManager.shared.sendKeyDownEventWithDelay(keyboardCmdStrings: keyboardCmdStrings!)
+        let keyboardCmdStrings = CommandManager.shared.extractKeyStringsFromComboCommand(from: cmd.keyboardCmdString)
+        CommandManager.shared.sendKeyComboCommand(keyboardCmdStrings: keyboardCmdStrings!)
     }
 }
   

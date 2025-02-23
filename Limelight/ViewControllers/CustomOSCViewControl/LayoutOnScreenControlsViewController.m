@@ -362,13 +362,14 @@
         NSString *cmdString = [alertController.textFields[0].text uppercaseString]; // convert to uppercase
         NSString *keyLabel = alertController.textFields[1].text;
         if([keyLabel isEqualToString:@""]) keyLabel = [[cmdString lowercaseString] capitalizedString];
-        bool noValidKeyboardString = [CommandManager.shared extractKeyStringsFrom:cmdString] == nil; // this is a invalid string.
+        bool noValidKeyboardString = [CommandManager.shared extractKeyStringsFromComboCommandFrom:cmdString] == nil; // this is a invalid string.
+        bool noValidSuperComboButtonString = [CommandManager.shared extractKeyStringsFromComboKeysFrom:cmdString] == nil; // this is a invalid string.
         bool noValidMouseButtonString = ![CommandManager.mouseButtonMappings.allKeys containsObject:cmdString];
         bool noValidTouchPadString = ![CommandManager.touchPadCmds containsObject:cmdString];
         bool noValidOscButtonString = ![CommandManager.oscButtonMappings.allKeys containsObject:cmdString];
         bool noValidSpecialButtonString = ![CommandManager.specialOverlayButtonCmds containsObject:cmdString];
 
-        if(noValidKeyboardString && noValidMouseButtonString && noValidTouchPadString && noValidOscButtonString && noValidSpecialButtonString) return;
+        if(noValidKeyboardString && noValidMouseButtonString && noValidTouchPadString && noValidOscButtonString && noValidSpecialButtonString && noValidSuperComboButtonString) return;
         
         //saving & present the keyboard button:
         OnScreenWidgetView* widgetView = [[OnScreenWidgetView alloc] initWithKeyString:cmdString keyLabel:keyLabel];

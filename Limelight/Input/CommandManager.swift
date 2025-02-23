@@ -297,7 +297,7 @@ import UIKit
     }
     
     // extractKeyStrings from keyboardCMDString
-    @objc public func extractKeyStrings(from input: String) -> [String]? {
+    @objc public func extractKeyStringsFromComboCommand(from input: String) -> [String]? {
         let keys = CommandManager.keyboardButtonMappings.keys.joined(separator: "|")
         let pattern = "^(?:(\(keys))(?:\\+(\(keys))*)*)$"
         
@@ -344,10 +344,60 @@ import UIKit
         
     }
     
+    //super combo key button strings
+    @objc public func extractKeyStringsFromComboKeys(from input: String) -> [String]? {
+        let combinedStrings =  [CommandManager.keyboardButtonMappings.keys.map { $0 as String },
+                                CommandManager.oscButtonMappings.keys.map { $0 as String },
+                                CommandManager.mouseButtonMappings.keys.map { $0 as String }]
+                                .lazy            // 零内存开销
+                                .flatMap { $0 }  // 三维展开
+                                .map(String.init(describing:)) // 安全类型转换
+        
+        let keys = combinedStrings.joined(separator: "|")
+        // print(keys)
+        let pattern = "^(?:(\(keys))(?:\\-(\(keys))*)*)$"
+        
+        guard let regex = try? NSRegularExpression(pattern: pattern, options: []) else {
+            print("Failed to create regex")
+            return nil
+        }
+        let range = NSRange(location: 0, length: input.utf16.count)
+        guard let match = regex.firstMatch(in: input, options: [], range: range) else {
+            print("No match found for input: \(input)")
+            return nil
+        }
+        print("Regex matched for input: \(input)")
+        
+        let matchedString = (input as NSString).substring(with: match.range(at: 0))
+        let keyStrings = matchedString.split(separator: "-").map { String($0) }
+        
+        guard !keyStrings.isEmpty else {
+            print("No key strings found in the matched string")
+            return nil
+        }
+        
+        var validKeyStrings: [String] = []
+        
+        for key in keyStrings {
+            validKeyStrings.append(key)
+        }
+       
+        if validKeyStrings.isEmpty {
+            print("No valid key strings found in the matched string")
+            return nil
+        }
+        
+        for (index, key) in validKeyStrings.enumerated() {
+            print("Valid Key \(index): \(key)")
+        }
+        
+        return validKeyStrings
+    }
+
     @objc public func addCommand(_ command: RemoteCommand) -> Bool {
         command.keyboardCmdString = command.keyboardCmdString.uppercased() // convert all letters to upper case
         if(command.alias.trimmingCharacters(in: .whitespacesAndNewlines).count == 0) {command.alias = command.keyboardCmdString} // copy cmd string as alias when alias is empty
-        let keyStrings = extractKeyStrings(from: command.keyboardCmdString)
+        let keyStrings = extractKeyStringsFromComboCommand(from: command.keyboardCmdString)
         if (keyStrings == nil) {return false}  // in case of non-keyboard command strings, return false
         commands.append(command)
         saveCommands()
@@ -393,25 +443,50 @@ import UIKit
         }
     }
     
-    @objc public func sendKeyDownEventWithDelay(keyboardCmdStrings: [String], delay: TimeInterval = 0.2, index: Int = 0) { // we need a large delay for WAN streaming
+    @objc public func sendKeyComboCommand(keyboardCmdStrings: [String], delay: TimeInterval = 0.2, index: Int = 0) { // we need a large delay for WAN streaming
+        // 如果已处理完所有按键，则开始释放按键
         guard index < keyboardCmdStrings.count else {
-            for keyStr in keyboardCmdStrings {
-                LiSendKeyboardEvent(CommandManager.keyboardButtonMappings[keyStr]!,Int8(KEY_ACTION_UP), 0)
+            // 释放按键
+            for keyStr in keyboardCmdStrings.reversed() { // 从后往前释放按键
+                if let keyCode = CommandManager.keyboardButtonMappings[keyStr] {
+                    LiSendKeyboardEvent(keyCode, Int8(KEY_ACTION_UP), 0)  // 释放按键
+                }
             }
             return
-        } // 如果已经处理完所有键，释放所有按键
-        
-        let keyCode = CommandManager.keyboardButtonMappings[keyboardCmdStrings[index]]
-        guard let keyCode = keyCode else {
-            print("No mapping found for \(keyboardCmdStrings[index])")
-            sendKeyDownEventWithDelay(keyboardCmdStrings: keyboardCmdStrings, delay: delay, index: index+1) // 跳过当前键，继续下一个
-            return
         }
-        // 发送当前键的键盘按下事件
-        LiSendKeyboardEvent(keyCode,Int8(KEY_ACTION_DOWN), 0)
-        // 使用 asyncAfter 在指定异步延迟后发送下一个键的键盘按下事件
-        DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
-            self.sendKeyDownEventWithDelay(keyboardCmdStrings: keyboardCmdStrings, delay: delay, index: index+1) // 跳过当前键，继续下一个
+        
+        // 获取当前按键的映射值
+        if let keyCode = CommandManager.keyboardButtonMappings[keyboardCmdStrings[index]] {
+            // 发送当前按键的按下事件
+            LiSendKeyboardEvent(keyCode, Int8(KEY_ACTION_DOWN), 0)
+
+            // 延迟后递归处理下一个按键
+            DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
+                self.sendKeyComboCommand(keyboardCmdStrings: keyboardCmdStrings, delay: delay, index: index + 1)
+            }
+        } else {
+            print("No mapping found for \(keyboardCmdStrings[index])")
+            // 如果当前按键没有映射，跳过当前按键并继续下一个
+            self.sendKeyComboCommand(keyboardCmdStrings: keyboardCmdStrings, delay: delay, index: index + 1)
         }
     }
+    
+    @objc public func sendKeyComboDown(keyboardCmdStrings: [String]) { // we need a large delay for WAN streaming
+        for keyStr in keyboardCmdStrings {
+            if let keyCode = CommandManager.keyboardButtonMappings[keyStr] {
+                LiSendKeyboardEvent(keyCode, Int8(KEY_ACTION_DOWN), 0)  // 释放按键
+            }
+        }
+    }
+    
+    @objc public func sendKeyComboUp(keyboardCmdStrings: [String]) { // we need a large delay for WAN streaming
+        for keyStr in keyboardCmdStrings {
+            if let keyCode = CommandManager.keyboardButtonMappings[keyStr] {
+                LiSendKeyboardEvent(keyCode, Int8(KEY_ACTION_UP), 0)  // 释放按键
+            }
+        }
+        return
+    }
+    
+    
 }

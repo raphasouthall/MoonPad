@@ -659,7 +659,7 @@ import UIKit
     
     
     private func setupButtonDownVisualEffectLayer() {
-        self.buttonDownVisualEffectWidth = 8.6
+        self.buttonDownVisualEffectWidth = 8
         if CommandManager.oscButtonMappings.keys.contains(self.keyString) && !CommandManager.oscRectangleButtonCmds.contains(self.keyString){
             if widthFactor < 1.3 {self.buttonDownVisualEffectWidth = 15.3} // wider visual effect for osc buttons
             else {self.buttonDownVisualEffectWidth = 9}
@@ -713,6 +713,60 @@ import UIKit
     }
     //==========================================================================================================
     
+    private func sendOscButtonDownEvent(keyString: String){
+        let buttonFlag = CommandManager.oscButtonMappings[keyString]
+        if buttonFlag != 0 {self.onScreenControls.pressDownControllerButton(buttonFlag!)}
+        if keyString == "OSCL2" {
+            self.onScreenControls.updateLeftTrigger(0xFF)
+        }
+        if keyString == "OSCR2" {self.onScreenControls.updateRightTrigger(0xFF)}
+    }
+
+    private func sendOscButtonUpEvent(keyString: String){
+        let buttonFlag = CommandManager.oscButtonMappings[keyString]
+        if buttonFlag != 0 {self.onScreenControls.releaseControllerButton(buttonFlag!)}
+        if keyString == "OSCL2" {self.onScreenControls.updateLeftTrigger(0x00)}
+        if keyString == "OSCR2" {self.onScreenControls.updateRightTrigger(0x00)}
+    }
+    
+//==============================================================================
+    private func sendComboButtonsDownEvent(comboStrings: [String]) {
+        DispatchQueue.global(qos: .userInitiated).async {
+            for comboString in comboStrings {
+                if CommandManager.oscButtonMappings.keys.contains(comboString) {
+                    self.sendOscButtonDownEvent(keyString: comboString)
+                }
+                if CommandManager.keyboardButtonMappings.keys.contains(comboString) {
+                    LiSendKeyboardEvent(CommandManager.keyboardButtonMappings[comboString]!,Int8(KEY_ACTION_DOWN), 0)
+                }
+                if CommandManager.mouseButtonMappings.keys.contains(comboString) {
+                    LiSendMouseButtonEvent(CChar(BUTTON_ACTION_PRESS), Int32(CommandManager.mouseButtonMappings[comboString]!))
+                }
+                usleep(10000) // delay 10ms
+            }
+        }
+    }
+
+    private func sendComboButtonsUpEvent(comboStrings: [String]) {
+        DispatchQueue.global(qos: .userInitiated).async {
+            for comboString in comboStrings {
+                if CommandManager.oscButtonMappings.keys.contains(comboString) {
+                    self.sendOscButtonUpEvent(keyString: comboString)
+                }
+                if CommandManager.keyboardButtonMappings.keys.contains(comboString) {
+                    LiSendKeyboardEvent(CommandManager.keyboardButtonMappings[comboString]!,Int8(KEY_ACTION_UP), 0)
+                }
+                if CommandManager.mouseButtonMappings.keys.contains(comboString) {
+                    LiSendMouseButtonEvent(CChar(BUTTON_ACTION_RELEASE), Int32(CommandManager.mouseButtonMappings[comboString]!))
+                }
+                usleep(10000) //delay 10ms
+            }
+        }
+    }
+    
+//==============================================================================
+
+    
     
     // Touch event handling
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -739,6 +793,7 @@ import UIKit
         self.pressed = true
 
         if !OnScreenWidgetView.editMode {
+
             if CommandManager.touchPadCmds.contains(self.keyString) && touches.count == 1{ // don't use event?.allTouches?.count here, it will counts all touches including the ones captured by other UIViews
                 switch self.keyString {
                 case "LSPAD":
@@ -770,32 +825,37 @@ import UIKit
                     break
                 }
             }
-                        
-            if !CommandManager.touchPadCmds.contains(self.keyString) {
-                self.buttonDownVisualEffect()
+            
+            if !self.keyString.contains("+") && !self.keyString.contains("-") {
+                // if there's no "+" in the keystring, treat it as a regular button:
+                if CommandManager.oscButtonMappings.keys.contains(self.keyString) {
+                    self.sendOscButtonDownEvent(keyString: self.keyString)
+                }
+                if CommandManager.keyboardButtonMappings.keys.contains(self.keyString) {
+                    LiSendKeyboardEvent(CommandManager.keyboardButtonMappings[self.keyString]!,Int8(KEY_ACTION_DOWN), 0)
+                }
+                if CommandManager.mouseButtonMappings.keys.contains(self.keyString) {
+                    LiSendMouseButtonEvent(CChar(BUTTON_ACTION_PRESS), Int32(CommandManager.mouseButtonMappings[self.keyString]!))
+                }
             }
-                        
-            if CommandManager.oscButtonMappings.keys.contains(self.keyString) {
-                let buttonFlag = CommandManager.oscButtonMappings[self.keyString]
-                if buttonFlag != 0 {self.onScreenControls.pressDownControllerButton(buttonFlag!)}
-                if self.keyString == "OSCL2" {self.onScreenControls.updateLeftTrigger(0xFF)}
-                if self.keyString == "OSCR2" {self.onScreenControls.updateRightTrigger(0xFF)}
+            
+            // if the command(keystring contains "-", it's a multi-type super combo button
+            if self.keyString.contains("-"){
+                let comboStrings = CommandManager.shared.extractKeyStringsFromComboKeys(from: self.keyString)!
+                self.sendComboButtonsDownEvent(comboStrings: comboStrings)
             }
             
             // if the command(keystring contains "+", it's a multi-key command or a quick triggering key, rather than a physical button
-            if self.keyString.contains("+"){
-                let keyboardCmdStrings = CommandManager.shared.extractKeyStrings(from: self.keyString)!
-                CommandManager.shared.sendKeyDownEventWithDelay(keyboardCmdStrings: keyboardCmdStrings) // send multi-key command
+            if self.keyString.contains("+") && !self.keyString.contains("-"){
+                let keyboardCmdStrings = CommandManager.shared.extractKeyStringsFromComboCommand(from: self.keyString)!
+                CommandManager.shared.sendKeyComboCommand(keyboardCmdStrings: keyboardCmdStrings) // send multi-key command
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.03) { // reset shadow color immediately 50ms later
                     self.buttonUpVisualEffect()
                 }
             }
-            // if there's no "+" in the keystring, treat it as a regular button:
-            if CommandManager.keyboardButtonMappings.keys.contains(self.keyString) {
-                LiSendKeyboardEvent(CommandManager.keyboardButtonMappings[self.keyString]!,Int8(KEY_ACTION_DOWN), 0)
-            }
-            if CommandManager.mouseButtonMappings.keys.contains(self.keyString) {
-                LiSendMouseButtonEvent(CChar(BUTTON_ACTION_PRESS), Int32(CommandManager.mouseButtonMappings[self.keyString]!))
+            
+            if !CommandManager.touchPadCmds.contains(self.keyString) {
+                self.buttonDownVisualEffect()
             }
         }
         // here is in edit mode:
@@ -949,6 +1009,30 @@ import UIKit
                 break
             }
         }
+        self.l3r3Indicator.removeFromSuperlayer()
+        self.upIndicator.removeFromSuperlayer()
+        self.downIndicator.removeFromSuperlayer()
+        self.leftIndicator.removeFromSuperlayer()
+        self.rightIndicator.removeFromSuperlayer()
+        self.lrudIndicatorBall.removeFromSuperlayer()
+                                
+        if !OnScreenWidgetView.editMode && !self.keyString.contains("+") && !self.keyString.contains("-") { // if the command(keystring contains "+", it's a multi-key command rather than a single key button
+            if CommandManager.oscButtonMappings.keys.contains(self.keyString) {
+                sendOscButtonUpEvent(keyString: self.keyString)
+            }
+            if CommandManager.keyboardButtonMappings.keys.contains(self.keyString) {
+                LiSendKeyboardEvent(CommandManager.keyboardButtonMappings[self.keyString]!,Int8(KEY_ACTION_UP), 0)
+            }
+            if CommandManager.mouseButtonMappings.keys.contains(self.keyString){
+                LiSendMouseButtonEvent(CChar(BUTTON_ACTION_RELEASE), Int32(CommandManager.mouseButtonMappings[self.keyString]!))
+            }
+        }
+        
+        // if the command(keystring contains "-", it's a multi-type super combo button
+        if !OnScreenWidgetView.editMode && self.keyString.contains("-"){
+            let comboStrings = CommandManager.shared.extractKeyStringsFromComboKeys(from: self.keyString)!
+            self.sendComboButtonsUpEvent(comboStrings: comboStrings)
+        }
         
         if !OnScreenWidgetView.editMode && CommandManager.specialOverlayButtonCmds.contains(self.keyString){
             if CACurrentMediaTime() - self.touchTapTimeStamp < 0.3 {
@@ -960,33 +1044,9 @@ import UIKit
                 }
             }
         }
-
         
-
         self.buttonUpVisualEffect()
-        self.l3r3Indicator.removeFromSuperlayer()
-        self.upIndicator.removeFromSuperlayer()
-        self.downIndicator.removeFromSuperlayer()
-        self.leftIndicator.removeFromSuperlayer()
-        self.rightIndicator.removeFromSuperlayer()
-        self.lrudIndicatorBall.removeFromSuperlayer()
         
-        if CommandManager.oscButtonMappings.keys.contains(self.keyString) {
-            let buttonFlag = CommandManager.oscButtonMappings[self.keyString]
-            if buttonFlag != 0 {self.onScreenControls.releaseControllerButton(buttonFlag!)}
-            if self.keyString == "OSCL2" {self.onScreenControls.updateLeftTrigger(0x00)}
-            if self.keyString == "OSCR2" {self.onScreenControls.updateRightTrigger(0x00)}
-        }
-                        
-        if !OnScreenWidgetView.editMode && !self.keyString.contains("+") { // if the command(keystring contains "+", it's a multi-key command rather than a single key button
-            
-            if CommandManager.mouseButtonMappings.keys.contains(self.keyString){
-                LiSendMouseButtonEvent(CChar(BUTTON_ACTION_RELEASE), Int32(CommandManager.mouseButtonMappings[self.keyString]!))
-            }
-            if CommandManager.keyboardButtonMappings.keys.contains(self.keyString) {
-                LiSendKeyboardEvent(CommandManager.keyboardButtonMappings[self.keyString]!,Int8(KEY_ACTION_UP), 0)
-            }
-        }
         
         if OnScreenWidgetView.editMode {
             guard let superview = superview else { return }
