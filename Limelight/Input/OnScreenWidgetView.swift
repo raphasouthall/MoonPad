@@ -861,10 +861,6 @@ import UIKit
         // here is in edit mode:
         else{
             NotificationCenter.default.post(name: Notification.Name("OnScreenWidgetViewSelected"),object: self) // inform layout tool controller to fetch button size factors. self will be passed as the object of the notification
-            if let touch = touches.first {
-                let touchLocation = touch.location(in: superview)
-                storedCenter = touchLocation
-            }
         }
         
     }
