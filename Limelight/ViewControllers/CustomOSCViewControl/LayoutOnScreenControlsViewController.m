@@ -93,7 +93,7 @@
             widgetView.heightFactor = buttonState.heightFactor;
             widgetView.borderWidth = buttonState.borderWidth;
             widgetView.sensitivityFactor = buttonState.sensitivityFactor;
-            widgetView.stickIndicatorXOffset = buttonState.stickIndicatorXOffset;
+            widgetView.stickIndicatorOffset = buttonState.stickIndicatorOffset;
             // widgetView.backgroundAlpha = buttonState.backgroundAlpha;
             // Add the widgetView to the view controller's view
             [self.view addSubview:widgetView];
@@ -436,8 +436,8 @@
         [selectedWidgetView.crossMarkLayer removeFromSuperlayer];
         selectedWidgetView.touchBeganLocation = CGPointMake(CGRectGetWidth(selectedWidgetView.frame)/2, CGRectGetHeight(selectedWidgetView.frame)/4);
         [selectedWidgetView showStickIndicator];// this will create the indicator CAShapeLayers
-        [self.stickIndicatorOffsetSlider setValue:self->selectedWidgetView.stickIndicatorXOffset];
-        [stickIndicatorOffsetSliderLabel setText:[LocalizationHelper localizedStringForKey:@"Indicator Offset: %.2f", self->selectedWidgetView.stickIndicatorXOffset]];
+        [self.stickIndicatorOffsetSlider setValue:self->selectedWidgetView.stickIndicatorOffset];
+        [stickIndicatorOffsetSliderLabel setText:[LocalizationHelper localizedStringForKey:@"Indicator Offset: %.2f", self->selectedWidgetView.stickIndicatorOffset]];
         [self->selectedWidgetView updateStickIndicator];
     }
     [widgetSizeSliderLabel setText:[LocalizationHelper localizedStringForKey:@"Widget Size: %.2f", self->selectedWidgetView.widthFactor]];
@@ -527,7 +527,7 @@
 - (void)stickIndicatorOffsetSliderMoved{
     [stickIndicatorOffsetSliderLabel setText:[LocalizationHelper localizedStringForKey:@"Indicator Offset: %.2f", self.stickIndicatorOffsetSlider.value]];
     if(self->selectedWidgetView != nil && self->widgetViewSelected){
-        self->selectedWidgetView.stickIndicatorXOffset = self.stickIndicatorOffsetSlider.value;
+        self->selectedWidgetView.stickIndicatorOffset = self.stickIndicatorOffsetSlider.value;
         [self->selectedWidgetView updateStickIndicator];
     }
     return;

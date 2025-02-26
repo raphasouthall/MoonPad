@@ -36,6 +36,8 @@ import UIKit
     
     
     private var touchLockedForMoveEvent: UITouch
+    private var touchBegan: Bool = false
+    private let stickBallMaxOffset = 18.0
     
     // for LSVPAD, RSVPAD
     @objc public var deltaX: CGFloat
@@ -50,7 +52,7 @@ import UIKit
 
     
     // for LSVPAD, RSVPAD, LSPAD, RSPAD
-    private let crossMarkColor: CGColor = UIColor(white: 1, alpha: 0.7).cgColor
+    private let crossMarkColor: CGColor = UIColor(white: 1, alpha: 0.70).cgColor
     private let stickBallColor: CGColor = UIColor(white: 1, alpha: 0.75).cgColor
     private var stickInputScale: CGFloat = 35
     private var l3r3Indicator = CAShapeLayer()
@@ -62,7 +64,7 @@ import UIKit
     private var touchTapTimeInterval: TimeInterval
     private var touchTapTimeStamp: TimeInterval
     private let QUICK_TAP_TIME_INTERVAL = 0.2
-    @objc public var stickIndicatorXOffset: CGFloat = 120
+    @objc public var stickIndicatorOffset: CGFloat = 120
     
     // for all LRUD pads
     private var upIndicator = CAShapeLayer()
@@ -87,7 +89,7 @@ import UIKit
     private var twoTouchesDetected: Bool
     
     private var storedCenter: CGPoint = .zero // location from persisted data
-    private let minimumBorderAlpha: CGFloat = 0.19
+    private var minimumBorderAlpha: CGFloat = 0.19
     private var defaultBorderColor: CGColor = UIColor(white: 0.2, alpha: 0.3).cgColor
     private let moonlightPurple: CGColor = UIColor(red: 0.5, green: 0.5, blue: 1.0, alpha: 0.86).cgColor
 
@@ -121,7 +123,7 @@ import UIKit
         self.mousePointerMoved = false
         self.touchLockedForMoveEvent = UITouch()
         self.twoTouchesDetected = false
-        self.stickIndicatorXOffset = 95
+        self.stickIndicatorOffset = 95
         self.sensitivityFactor = 1.0
         super.init(frame: .zero)
         
@@ -212,6 +214,9 @@ import UIKit
         let realBackgroundAlpha = self.backgroundAlpha - 0.18 // offset to be consistent with legacy onScreen controller layer opacity
         self.backgroundColor = UIColor(white: 0.2, alpha: realBackgroundAlpha) // offset to be consistent with legacy onScreen controller layer opacity
         var borderAlpha = realBackgroundAlpha * 1.01
+        if CommandManager.touchPadCmds.contains(self.keyString) {
+           minimumBorderAlpha = 0.0
+        }
         if borderAlpha < minimumBorderAlpha {
             borderAlpha = minimumBorderAlpha
         }
@@ -335,14 +340,28 @@ import UIKit
     //================================================================================================
     //Indicator overlay for on-screen game controller left or right sticks (non-vector mode)
     
+    private func handleStickBallReachingBorder(){
+        stickBallLayer.lineWidth = 3.3
+        // stickBallLayer.shadowOffset = CGSize(width: 0.0, height: 0.0)
+        stickBallLayer.shadowOffset = CGSize(width: 0.0, height: 0.0)
+        // stickBallLayer.shadowColor = stickBallLayer.strokeColor
+    }
+
+    private func handleStickBallLeavingBorder(){
+        stickBallLayer.lineWidth = 0
+        stickBallLayer.shadowOffset = CGSize(width: 0.5, height: 0.5)
+        stickBallLayer.shadowOpacity = 0.8
+        stickBallLayer.shadowColor = UIColor.black.cgColor
+    }
+    
     // create stick indicator: the crossMark & stickBall:
     @objc public func showStickIndicator(){
         // tell if the self button is located on the left or right
-        self.selfViewOnTheRight = (self.storedCenter.x > self.appWindow.frame.width*0.5)
-        let offsetSign = selfViewOnTheRight ? -1 : 1
+        // self.selfViewOnTheRight = (self.storedCenter.x > self.appWindow.frame.width*0.5), deprecated
+        // let offsetSign = selfViewOnTheRight ? -1 : 1
         let stickMarkerRelativeLocation:CGPoint
         if !OnScreenWidgetView.editMode {
-            stickMarkerRelativeLocation = CGPointMake(touchBeganLocation.x + CGFloat(offsetSign) * self.stickIndicatorXOffset, touchBeganLocation.y)
+            stickMarkerRelativeLocation = CGPointMake(touchBeganLocation.x, touchBeganLocation.y - self.stickIndicatorOffset)
         }
         else{
             stickMarkerRelativeLocation = CGPointMake(touchBeganLocation.x, touchBeganLocation.y)
@@ -356,7 +375,7 @@ import UIKit
     private func createAndShowCrossMarkOnTouchPoint(at point: CGPoint) -> CAShapeLayer {
         let crossLayer = CAShapeLayer()
         let path = UIBezierPath()
-        let crossSize = 45.0
+        let crossSize = 26.0
         
         path.move(to: CGPoint(x: point.x - crossSize / 2, y: point.y))
         path.addLine(to: CGPoint(x: point.x + crossSize / 2, y: point.y))
@@ -367,7 +386,7 @@ import UIKit
         
         crossLayer.path = path.cgPath
         crossLayer.strokeColor = crossMarkColor
-        crossLayer.lineWidth = 1
+        crossLayer.lineWidth = 1.2
         crossLayer.fillColor = crossMarkColor
         
         self.layer.superlayer?.addSublayer(crossLayer)
@@ -394,7 +413,8 @@ import UIKit
         // stickBallLayer.position = CG
         
         // Set the stroke color and width (border of the circle)
-        stickBallLayer.strokeColor = stickBallColor
+        stickBallLayer.strokeColor = UIColor(red: 0.5, green: 0.5, blue: 1.0, alpha: 1.0).cgColor
+        //stickBallLayer.
         stickBallLayer.lineWidth = 0
         stickBallLayer.shadowOffset = CGSize(width: 0.5, height: 0.5)
         stickBallLayer.shadowRadius = 0;
@@ -402,7 +422,7 @@ import UIKit
         
         // Set the fill color (inside of the circle)
         stickBallLayer.fillColor = stickBallColor  // Light fill with some transparency
-        
+                
         return stickBallLayer
     }
     
@@ -411,22 +431,48 @@ import UIKit
         CATransaction.setDisableActions(true)
         self.stickBallLayer.removeAllAnimations()
         if !OnScreenWidgetView.editMode {
-            self.stickBallLayer.position = CGPointMake(CGRectGetMidX(self.crossMarkLayer.frame) + touchInputToStickBallCoord(input: offSetX*sensitivityFactor), CGRectGetMidY(self.crossMarkLayer.frame) + touchInputToStickBallCoord(input: offSetY*sensitivityFactor))
+            let realOffsetX = touchInputToStickBallCoord(input: offSetX*sensitivityFactor)
+            let realOffsetY = touchInputToStickBallCoord(input: offSetY*sensitivityFactor)
+            self.stickBallLayer.position = CGPointMake(CGRectGetMidX(self.crossMarkLayer.frame) + realOffsetX, CGRectGetMidY(self.crossMarkLayer.frame) + realOffsetY)
+            if fabs(realOffsetX) == stickBallMaxOffset || fabs(realOffsetY) == stickBallMaxOffset {
+                handleStickBallReachingBorder()
+            }
+            else{
+                handleStickBallLeavingBorder()
+            }
         }
         else{
             // illustrate offset distance in edit mode
-            let offsetSign = self.selfViewOnTheRight ? -1 : 1
+            // let offsetSign = self.selfViewOnTheRight ? -1 : 1 // dprecated
             // let illlustrationPoint = CGPointMake(CGRectGetMidX(self.frame), CGRectGetMaxY(self.frame)/4)
-            self.crossMarkLayer.position = CGPointMake(CGRectGetMidX(self.stickBallLayer.frame) + CGFloat(offsetSign) * stickIndicatorXOffset, CGRectGetMidY(self.stickBallLayer.frame))
+            self.crossMarkLayer.position = CGPointMake(CGRectGetMidX(self.stickBallLayer.frame), CGRectGetMidY(self.stickBallLayer.frame)-stickIndicatorOffset)
+        }
+        CATransaction.commit()
+    }
+    
+    private func resetStickBallPositionAndRemoveIndicator(){
+        handleStickBallLeavingBorder()
+        CATransaction.begin()
+        // CATransaction.setDisableActions(true)
+        CATransaction.setAnimationDuration(0.15)
+        self.stickBallLayer.position = CGPointMake(CGRectGetMidX(self.crossMarkLayer.frame), CGRectGetMidY(self.crossMarkLayer.frame))
+        CATransaction.setCompletionBlock {
+            DispatchQueue.global().async {
+                // 后台执行耗时操作
+                usleep(200000)
+                DispatchQueue.main.async {
+                    if !self.touchBegan {
+                        self.crossMarkLayer.removeFromSuperlayer()
+                        self.stickBallLayer.removeFromSuperlayer()
+                    }
+                }
+            }
+            // 动画结束后执行的代码
         }
         CATransaction.commit()
     }
     
     //================================================================================================
-    
-    
-    
-    
     
     
     
@@ -694,8 +740,12 @@ import UIKit
     }
     
     private func touchInputToStickBallCoord(input: CGFloat) -> CGFloat {
-        if input > stickInputScale {return 18}
-        if input < -stickInputScale {return -18}
+        if input > stickInputScale {
+            return stickBallMaxOffset
+        }
+        if input < -stickInputScale {
+            return -stickBallMaxOffset
+        }
         return input * (18/stickInputScale)
     }
     
@@ -767,9 +817,9 @@ import UIKit
 //==============================================================================
 
     
-    
     // Touch event handling
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        self.touchBegan = true
         super.touchesBegan(touches, with: event)
         self.isMultipleTouchEnabled = self.keyString == "MOUSEPAD" // only enable multi-touch in mousePad mode
 
@@ -797,12 +847,18 @@ import UIKit
             if CommandManager.touchPadCmds.contains(self.keyString) && touches.count == 1{ // don't use event?.allTouches?.count here, it will counts all touches including the ones captured by other UIViews
                 switch self.keyString {
                 case "LSPAD":
+                    self.crossMarkLayer.removeFromSuperlayer()
+                    self.stickBallLayer.removeFromSuperlayer()
+                    self.l3r3Indicator.removeFromSuperlayer()
                     self.showStickIndicator()
                     if quickDoubleTapDetected {
                         self.l3r3Indicator = self.createAndShowl3r3Indicator()
                         self.onScreenControls.pressDownControllerButton(LS_CLK_FLAG)}
                     break
                 case "RSPAD":
+                    self.crossMarkLayer.removeFromSuperlayer()
+                    self.stickBallLayer.removeFromSuperlayer()
+                    self.l3r3Indicator.removeFromSuperlayer()
                     self.showStickIndicator()
                     if quickDoubleTapDetected {
                         self.l3r3Indicator = self.createAndShowl3r3Indicator()
@@ -948,6 +1004,7 @@ import UIKit
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        self.touchBegan = false
         super.touchesEnded(touches, with: event)
 
         if self.keyString != "MOUSEPAD" {quickDoubleTapDetected = false} //do not reset this flag here in mousePad mode
@@ -976,12 +1033,10 @@ import UIKit
             switch self.keyString{
             case "LSPAD":
                 self.onScreenControls.clearLeftStickTouchPadFlag()
-                self.crossMarkLayer.removeFromSuperlayer()
-                self.stickBallLayer.removeFromSuperlayer()
+                self.resetStickBallPositionAndRemoveIndicator()
             case "RSPAD":
                 self.onScreenControls.clearRightStickTouchPadFlag()
-                self.crossMarkLayer.removeFromSuperlayer()
-                self.stickBallLayer.removeFromSuperlayer()
+                self.resetStickBallPositionAndRemoveIndicator()
             case "LSVPAD":
                 self.onScreenControls.clearLeftStickTouchPadFlag()
             case "RSVPAD":

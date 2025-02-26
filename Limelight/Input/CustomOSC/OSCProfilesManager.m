@@ -292,7 +292,7 @@ static NSMutableDictionary *OnScreenWidgetViewsDict;
         buttonState.backgroundAlpha = widgetView.backgroundAlpha;
         buttonState.borderWidth = widgetView.borderWidth;
         buttonState.sensitivityFactor = widgetView.sensitivityFactor;
-        buttonState.stickIndicatorXOffset = widgetView.stickIndicatorXOffset;
+        buttonState.stickIndicatorOffset = widgetView.stickIndicatorOffset;
         
         NSData *buttonStateEncoded = [NSKeyedArchiver archivedDataWithRootObject:buttonState requiringSecureCoding:YES error:nil];
         [buttonStatesEncoded addObject: buttonStateEncoded];
