@@ -21,6 +21,7 @@
     NSInteger _lastSelectedResolutionIndex;
     bool justEnteredSettingsViewDoNotOpenOscLayoutTool;
     uint16_t oscLayoutFingers;
+    CustomEdgeSlideGestureRecognizer *slideToCloseSettingsViewRecognizer;
 }
 
 @dynamic overrideUserInterfaceStyle;
@@ -308,7 +309,6 @@ BOOL isCustomResolution(CGSize res) {
     }
 }
 
-
 - (IBAction)exitButtonTapped:(id)sender {
     [self->_mainFrameViewController simulateSettingsButtonPress];
     [[NSNotificationCenter defaultCenter] postNotificationName:@"SessionDisconnectedBySettingsViewNotification" object:self];
@@ -333,10 +333,22 @@ BOOL isCustomResolution(CGSize res) {
     exitButton.frame = CGRectMake(0, 20, 200, 50); // Adjust Y and height as needed
 }*/
 
+- (void)edgeSwiped {
+    [self simulateSettingsButtonPress];
+}
 
 - (void)viewDidLoad {
     //[self pushDownExistingWidgets];
     //[self addExitButtonOnTop];
+    
+    self->slideToCloseSettingsViewRecognizer = [[CustomEdgeSlideGestureRecognizer alloc] initWithTarget:self action:@selector(edgeSwiped)];
+    slideToCloseSettingsViewRecognizer.edges = UIRectEdgeLeft;
+    slideToCloseSettingsViewRecognizer.normalizedThresholdDistance = 0.0;
+    slideToCloseSettingsViewRecognizer.EDGE_TOLERANCE = 10;
+    slideToCloseSettingsViewRecognizer.immediateTriggering = true;
+    slideToCloseSettingsViewRecognizer.delaysTouchesBegan = NO;
+    slideToCloseSettingsViewRecognizer.delaysTouchesEnded = NO;
+    [self.view addGestureRecognizer:slideToCloseSettingsViewRecognizer];
     
     justEnteredSettingsViewDoNotOpenOscLayoutTool = true;
     [[NSNotificationCenter defaultCenter] addObserver:self
