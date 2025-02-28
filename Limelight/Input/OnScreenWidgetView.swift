@@ -334,14 +334,11 @@ import UIKit
     }
 
     
-    
-    
-    
     //================================================================================================
     //Indicator overlay for on-screen game controller left or right sticks (non-vector mode)
     
     private func handleStickBallReachingBorder(){
-        stickBallLayer.lineWidth = 3.3
+        stickBallLayer.lineWidth = 0.6
         // stickBallLayer.shadowOffset = CGSize(width: 0.0, height: 0.0)
         stickBallLayer.shadowOffset = CGSize(width: 0.0, height: 0.0)
         // stickBallLayer.shadowColor = stickBallLayer.strokeColor
@@ -402,7 +399,7 @@ import UIKit
     
     private func createAndShowStickBall(at center: CGPoint) -> CAShapeLayer {
         // Create a circular path using UIBezierPath
-        let path = UIBezierPath(arcCenter: center, radius: 10, startAngle: 0, endAngle: 2 * .pi, clockwise: true)
+        let path = UIBezierPath(arcCenter: center, radius: 8, startAngle: 0, endAngle: 2 * .pi, clockwise: true)
         
         // Create a CAShapeLayer
         let stickBallLayer = CAShapeLayer()
