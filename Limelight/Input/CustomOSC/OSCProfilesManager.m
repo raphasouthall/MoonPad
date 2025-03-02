@@ -14,7 +14,7 @@
 
 @implementation OSCProfilesManager
 
-static NSMutableDictionary *OnScreenWidgetViewsDict;
+static NSMutableSet *OnScreenWidgetViews;
 
 #pragma mark - Initializer
 
@@ -32,8 +32,8 @@ static NSMutableDictionary *OnScreenWidgetViewsDict;
 #pragma mark - Class Helper Methods
 
 
-+ (void) setOnScreenWidgetViewsDict:(NSMutableDictionary* )dict{
-    OnScreenWidgetViewsDict = dict;
++ (void) setOnScreenWidgetViewsSet:(NSMutableSet* )set{
+    OnScreenWidgetViews = set;
 }
 
 /**
@@ -240,6 +240,14 @@ static NSMutableDictionary *OnScreenWidgetViewsDict;
         NSData *data = [NSKeyedArchiver archivedDataWithRootObject:profilesEncoded requiringSecureCoding:YES error:nil];
         [[NSUserDefaults standardUserDefaults] setObject:data forKey:@"OSCProfiles"];
         [[NSUserDefaults standardUserDefaults] synchronize];
+        
+        // saving test:
+        /*
+        NSString *documentsPath = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES).firstObject;
+        NSString *path = [documentsPath stringByAppendingPathComponent:@"newDefault.bin"];
+        [newProfileEncoded writeToFile:path atomically:YES];
+        NSLog(@"默认 Profile 数据已保存到: %@", path);
+         */
     }
 }
 
@@ -282,8 +290,7 @@ static NSMutableDictionary *OnScreenWidgetViewsDict;
     }
     
     // save on-screen widget views (keyboard & mouse command) as buttonstate:
-    [OnScreenWidgetViewsDict enumerateKeysAndObjectsUsingBlock:^(id key, id value, BOOL *stop) { // this dict is passed from the layout tool VC, as a static obj in this class.
-        OnScreenWidgetView *widgetView = value;
+    for(OnScreenWidgetView* widgetView in OnScreenWidgetViews){
         OnScreenButtonState *buttonState = [[OnScreenButtonState alloc] initWithButtonName:widgetView.keyString buttonType:CustomOnScreenWidget andPosition:widgetView.center];
         buttonState.alias = widgetView.keyLabel;
         buttonState.timestamp = widgetView.timestamp;
@@ -296,7 +303,8 @@ static NSMutableDictionary *OnScreenWidgetViewsDict;
         
         NSData *buttonStateEncoded = [NSKeyedArchiver archivedDataWithRootObject:buttonState requiringSecureCoding:YES error:nil];
         [buttonStatesEncoded addObject: buttonStateEncoded];
-    }];
+
+    }
     return buttonStatesEncoded;
 }
 

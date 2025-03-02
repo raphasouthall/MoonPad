@@ -20,7 +20,6 @@ import UIKit
     }
     
     @objc static public var editMode: Bool = false
-    @objc static public var timestampOfButtonBeingDragged: TimeInterval = 0
     @objc public var keyLabel: String
     @objc public var keyString: String
     @objc public var timestamp: TimeInterval
@@ -937,7 +936,6 @@ import UIKit
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesMoved(touches, with: event)
-        OnScreenWidgetView.timestampOfButtonBeingDragged = self.timestamp
         
         if !OnScreenWidgetView.editMode {
             if CommandManager.touchPadCmds.contains(self.keyString){

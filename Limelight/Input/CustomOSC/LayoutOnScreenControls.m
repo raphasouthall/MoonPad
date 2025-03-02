@@ -190,6 +190,8 @@
 
 - (void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
     /* Reset variables related to on screen controller button drag and drop routine. These variables should be reset in 'touchesCancelled' or 'touchesEnded' but these may not be called in unaccounted-for edge cases such as when the user opens various OS-level control center related views by dragging down from the top of the screen, or dragging up from the bottom of the screen. Since Apple likes to add new control centers and new ways of opening them (i.e. Dynamic Island on iPhone 14 Pro) it's best to reset these variables here when the user is beginning a new on screen controller button drag routine  */
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"LegacyOscCALayerSelectedNotification" object:self];
     layerBeingDragged = nil;
     horizontalGuideline.backgroundColor = [UIColor blueColor];
     verticalGuideline.backgroundColor = [UIColor blueColor];

@@ -60,7 +60,7 @@
 
 - (void) viewWillDisappear:(BOOL)animated{
     OnScreenWidgetView.editMode = false;
-    for (OnScreenWidgetView* widgetView in self.OnScreenWidgetViewsDict.allValues){
+    for (OnScreenWidgetView* widgetView in self.OnScreenWidgetViews){
         [widgetView.stickBallLayer removeFromSuperlayer];
         [widgetView.crossMarkLayer removeFromSuperlayer];
     }
@@ -77,7 +77,7 @@
         }
     }
     
-    [self.OnScreenWidgetViewsDict removeAllObjects];
+    [self.OnScreenWidgetViews removeAllObjects];
     
     NSLog(@"reload os Key here");
     
@@ -101,7 +101,7 @@
             [widgetView resizeWidgetView]; // resize must be called after relocation
             [widgetView adjustTransparencyWithAlpha:buttonState.backgroundAlpha];
             [widgetView adjustBorderWithWidth:buttonState.borderWidth];
-            [self.OnScreenWidgetViewsDict setObject:widgetView forKey:@(widgetView.timestamp)];
+            [self.OnScreenWidgetViews addObject:widgetView];
         }
     }
 }
@@ -110,8 +110,8 @@
 - (void) viewDidLoad {
     [super viewDidLoad];
     profilesManager = [OSCProfilesManager sharedManager];
-    self.OnScreenWidgetViewsDict = [[NSMutableDictionary alloc] init]; // will be revised to read persisted data , somewhere else
-    [OSCProfilesManager setOnScreenWidgetViewsDict:self.OnScreenWidgetViewsDict];   // pass the keyboard button dict to profiles manager
+    self.OnScreenWidgetViews = [[NSMutableSet alloc] init]; // will be revised to read persisted data , somewhere else
+    [OSCProfilesManager setOnScreenWidgetViewsSet:self.OnScreenWidgetViews];   // pass the keyboard button dict to profiles manager
 
     isToolbarHidden = NO;   // keeps track if the toolbar is hidden up above the screen so that we know whether to hide or show it when the user taps the toolbar's hide/show button
             
@@ -153,6 +153,11 @@
     if ([[profilesManager getAllProfiles] count] == 0) { // if no saved OSC profiles exist yet then create one called 'Default' and associate it with Moonlight's legacy 'Full' OSC layout that's already been laid out on the screen at this point
         [profilesManager saveProfileWithName:@"Default" andButtonLayers:self.layoutOSC.OSCButtonLayers];
     }
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(clearSelectedWidgetView)
+                                                 name:@"LegacyOscCALayerSelectedNotification"
+                                               object:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(profileRefresh)
@@ -375,7 +380,7 @@
         OnScreenWidgetView* widgetView = [[OnScreenWidgetView alloc] initWithKeyString:cmdString keyLabel:keyLabel];
         widgetView.translatesAutoresizingMaskIntoConstraints = NO; // weird but this is mandatory, or you will find no key views added to the right place
         widgetView.timestamp = CACurrentMediaTime(); // will be set as key in in the dict.
-        [self.OnScreenWidgetViewsDict setObject:widgetView forKey:@(widgetView.timestamp)];
+        [self.OnScreenWidgetViews addObject:widgetView];
         // Add the widgetView to the view controller's view
         [self.view addSubview:widgetView];
         [widgetView setLocationWithXOffset:50 yOffset:50];
@@ -404,6 +409,10 @@
         }]];
         [self presentViewController:savedAlertController animated:YES completion:nil];
     }
+}
+
+- (void)clearSelectedWidgetView{
+    selectedWidgetView = nil;
 }
 
 - (void)widgetViewTapped: (NSNotification *)notification{
@@ -820,11 +829,12 @@
     // removing keyboard buttons objs
     UITouch *touch = [touches anyObject]; // Get the first touch in the set
     if([self touchWithinTashcanButton:touch]){
-        [self.OnScreenWidgetViewsDict[@(OnScreenWidgetView.timestampOfButtonBeingDragged)] removeFromSuperview];
-        [self.OnScreenWidgetViewsDict removeObjectForKey:@(OnScreenWidgetView.timestampOfButtonBeingDragged)];
-        [selectedWidgetView.stickBallLayer removeFromSuperlayer];
-        [selectedWidgetView.crossMarkLayer removeFromSuperlayer];
-        OnScreenWidgetView.timestampOfButtonBeingDragged = 0; //reset thie timestamp
+        if(self->selectedWidgetView != nil){
+            [self->selectedWidgetView removeFromSuperview];
+            [self.OnScreenWidgetViews removeObject:self->selectedWidgetView];
+            [selectedWidgetView.stickBallLayer removeFromSuperlayer];
+            [selectedWidgetView.crossMarkLayer removeFromSuperlayer];
+        }
     }
     
     
