@@ -226,7 +226,7 @@
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "灵敏度: %.2f"
+            "value" : "小球: 假定的触点   十字: 指示器偏离位置"
           }
         },
         "zh-HK" : {
@@ -1089,7 +1089,7 @@
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "小球: 假定的触点   十字: 指示器偏离位置"
+            "value" : "指示器偏离: %.2f"
           }
         },
         "zh-HK" : {
@@ -2229,7 +2229,7 @@
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "指示器偏离: %.2f"
+            "value" : "灵敏度: %.2f"
           }
         },
         "zh-HK" : {

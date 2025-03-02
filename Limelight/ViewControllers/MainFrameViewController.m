@@ -975,7 +975,7 @@ static NSMutableSet* hostList;
     [settingsViewController.framePacingSelector setEnabled:!self.settingsExpandedInStreamView];
     [settingsViewController.btMouseSelector setEnabled:!self.settingsExpandedInStreamView];
     [settingsViewController.externalDisplayModeSelector setEnabled:!self.settingsExpandedInStreamView];
-    [settingsViewController.goBackToStreamViewButton setEnabled:self.settingsExpandedInStreamView];
+    [settingsViewController.backToStreamingButton setEnabled:self.settingsExpandedInStreamView];
     // [settingsViewController.unlockDisplayOrientationSelector setEnabled:!self.settingsExpandedInStreamView && [self isFullScreenRequired]];//need "requires fullscreen" enabled in the app bunddle to make runtime orientation limitation woring
 
     if (position == FrontViewPositionLeft) {

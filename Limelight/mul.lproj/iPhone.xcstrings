@@ -10,6 +10,24 @@
             "state" : "new",
             "value" : "Enable YUV 4:4:4 (Beta)"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "YUV 4:4:4 (测试功能)"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "YUV 4:4:4 (测试功能)"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "YUV 4:4:4 (测试功能)"
+          }
         }
       }
     },
@@ -1064,13 +1082,13 @@
       }
     },
     "FqF-bM-afQ.configuration.title" : {
-      "comment" : "Class = \"UIButton\"; configuration.title = \"Go Back to Stream View\"; ObjectID = \"FqF-bM-afQ\";",
+      "comment" : "Class = \"UIButton\"; configuration.title = \"Back to Streaming\"; ObjectID = \"FqF-bM-afQ\";",
       "extractionState" : "extracted_with_value",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "Go Back to Stream View"
+            "value" : "Back to Streaming"
           }
         },
         "zh-Hans" : {

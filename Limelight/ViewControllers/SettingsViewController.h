@@ -54,7 +54,7 @@
 @property (strong, nonatomic) IBOutlet UISlider *mousePointerVelocityFactorSlider;
 @property (strong, nonatomic) IBOutlet UILabel *mousePointerVelocityFactorUILabel;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *unlockDisplayOrientationSelector;
-@property (strong, nonatomic) IBOutlet UIButton *goBackToStreamViewButton;
+@property (strong, nonatomic) IBOutlet UIButton *backToStreamingButton;
 @property (strong, nonatomic) LayoutOnScreenControlsViewController *layoutOnScreenControlsVC;
 @property (nonatomic, strong) MainFrameViewController *mainFrameViewController;
 

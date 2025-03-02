@@ -314,7 +314,7 @@ BOOL isCustomResolution(CGSize res) {
     [[NSNotificationCenter defaultCenter] postNotificationName:@"SessionDisconnectedBySettingsViewNotification" object:self];
 }
 
-- (IBAction)goBackToStreamViewButtonTapped:(id)sender {
+- (IBAction)backToStreamingButtonTapped:(id)sender {
     [self simulateSettingsButtonPress];
 }
 
