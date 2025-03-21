@@ -778,17 +778,19 @@ import UIKit
     private func sendOscButtonDownEvent(keyString: String){
         let buttonFlag = CommandManager.oscButtonMappings[keyString]
         if buttonFlag != 0 {self.onScreenControls.pressDownControllerButton(buttonFlag!)}
-        if keyString == "OSCL2" {
+        if keyString == "OSCL2" || keyString == "YSLT" {
             self.onScreenControls.updateLeftTrigger(0xFF)
         }
-        if keyString == "OSCR2" || keyString == "YSRT1" {self.onScreenControls.updateRightTrigger(0xFF)}
+        if keyString == "OSCR2" || keyString == "YSRT" {self.onScreenControls.updateRightTrigger(0xFF)}
     }
 
     private func sendOscButtonUpEvent(keyString: String){
         let buttonFlag = CommandManager.oscButtonMappings[keyString]
         if buttonFlag != 0 {self.onScreenControls.releaseControllerButton(buttonFlag!)}
-        if keyString == "OSCL2" {self.onScreenControls.updateLeftTrigger(0x00)}
-        if keyString == "OSCR2" || keyString == "YSRT1" {self.onScreenControls.updateRightTrigger(0x00)}
+        if keyString == "OSCL2" || keyString == "YSLT" {
+            self.onScreenControls.updateLeftTrigger(0x00)
+        }
+        if keyString == "OSCR2" || keyString == "YSRT" {self.onScreenControls.updateRightTrigger(0x00)}
     }
     
 //==============================================================================
@@ -1003,7 +1005,7 @@ import UIKit
             case "MOUSEPAD","YSEM","YSML","YSMR":
                 LiSendMouseMoveEvent(Int16(truncatingIfNeeded: Int(deltaX * 1.7 * sensitivityFactor)), Int16(truncatingIfNeeded: Int(deltaY * 1.7 * sensitivityFactor)))
                 break
-            case "LSPAD":
+            case "LSPAD", "YSLT":
                 self.sendLeftStickTouchPadEvent(inputX: offSetX * sensitivityFactor, inputY: offSetY*sensitivityFactor)
                 updateStickIndicator()
             case "RSPAD":
@@ -1011,7 +1013,7 @@ import UIKit
                 updateStickIndicator()
             case "LSVPAD":
                 self.sendLeftStickTouchPadEvent(inputX: deltaX*1.5167*sensitivityFactor, inputY: deltaY*1.5167*sensitivityFactor)
-            case "RSVPAD", "YSB1", "YSRT1", "YSRB1":
+            case "RSVPAD", "YSB", "YSRT", "YSRB":
                 self.sendRightStickTouchPadEvent(inputX: deltaX*1.5167*sensitivityFactor, inputY: deltaY*1.5167*sensitivityFactor);
             case "DPAD", "WASDPAD", "ARROWPAD", "YSWASD":
                 handleLrudTouchMove()
@@ -1048,17 +1050,19 @@ import UIKit
         }
         
         // then other types of pads
-        if !OnScreenWidgetView.editMode && (CommandManager.touchPadCmds.contains(self.keyString) || CommandManager.yuanshenRsvButtonCmds.contains(self.keyString)) {
+        if !OnScreenWidgetView.editMode && (CommandManager.touchPadCmds.contains(self.keyString) || CommandManager.yuanshenStickPadButtonCmds.contains(self.keyString)) {
             switch self.keyString{
             case "LSPAD":
                 self.onScreenControls.clearLeftStickTouchPadFlag()
                 self.resetStickBallPositionAndRemoveIndicator()
+            case "YSLT":
+                self.onScreenControls.clearLeftStickTouchPadFlag()
             case "RSPAD":
                 self.onScreenControls.clearRightStickTouchPadFlag()
                 self.resetStickBallPositionAndRemoveIndicator()
             case "LSVPAD":
                 self.onScreenControls.clearLeftStickTouchPadFlag()
-            case "RSVPAD", "YSB1", "YSRT1", "YSRB1":
+            case "RSVPAD", "YSB", "YSRT", "YSRB":
                 self.onScreenControls.clearRightStickTouchPadFlag()
             case "WASDPAD","YSWASD":
                 LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["W"]!,Int8(KEY_ACTION_UP), 0)

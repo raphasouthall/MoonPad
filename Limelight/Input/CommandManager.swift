@@ -63,9 +63,10 @@ import UIKit
     
     
     @objc public static let oscButtonMappings: [String: Int32] = [
-        "YSRT1" : 0,  // RT button & RsvPad in GenshinImpact
-        "YSRB1" : RB_FLAG,  // RB button & RsvPad in GenshinImpact
-        "YSB1"  : B_FLAG, // B button & RsvPad in GenshinImpact
+        "YSLT" : 0,
+        "YSRT" : 0,  // RT button & RsvPad in GenshinImpact
+        "YSRB" : RB_FLAG,  // RB button & RsvPad in GenshinImpact
+        "YSB"  : B_FLAG, // B button & RsvPad in GenshinImpact
         "OSCA" : A_FLAG,
         "OSCB" : B_FLAG,
         "OSCX" : X_FLAG,
@@ -96,8 +97,8 @@ import UIKit
     @objc public static let nonVectorStickPads: [String] = ["LSPAD", "RSPAD"]
     @objc public static let specialOverlayButtonCmds: [String] = ["SETTINGS"]
 
-    @objc public static let specialGameWidgets: [String] = ["YSRT1", "YSRB1", "YSB1", "YSRT2", "YSRB2", "YSB2", "YSEM", "YSML", "YSMR", "YSWASD"]
-    @objc public static let yuanshenRsvButtonCmds: [String] = ["YSRT1", "YSRB1", "YSB1"]
+    @objc public static let specialGameWidgets: [String] = ["YSLT", "YSRT", "YSRB", "YSB", "YSRT2", "YSRB2", "YSB2", "YSEM", "YSML", "YSMR", "YSWASD"]
+    @objc public static let yuanshenStickPadButtonCmds: [String] = ["YSLT", "YSRT", "YSRB", "YSB"]
     @objc public static let yuanshenMouseMoveButtonCmds: [String] = ["YSEM", "YSML", "YSMR"]
     
     static let keyboardButtonMappings: [String: Int16] = [
