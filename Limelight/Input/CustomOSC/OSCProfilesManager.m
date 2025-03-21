@@ -293,13 +293,13 @@ static NSMutableSet *OnScreenWidgetViews;
     for(OnScreenWidgetView* widgetView in OnScreenWidgetViews){
         OnScreenButtonState *buttonState = [[OnScreenButtonState alloc] initWithButtonName:widgetView.keyString buttonType:CustomOnScreenWidget andPosition:widgetView.center];
         buttonState.alias = widgetView.keyLabel;
-        buttonState.timestamp = widgetView.timestamp;
         buttonState.widthFactor = widgetView.widthFactor;
         buttonState.heightFactor = widgetView.heightFactor;
         buttonState.backgroundAlpha = widgetView.backgroundAlpha;
         buttonState.borderWidth = widgetView.borderWidth;
         buttonState.sensitivityFactor = widgetView.sensitivityFactor;
         buttonState.stickIndicatorOffset = widgetView.stickIndicatorOffset;
+        buttonState.widgetShape = widgetView.shape;
         
         NSData *buttonStateEncoded = [NSKeyedArchiver archivedDataWithRootObject:buttonState requiringSecureCoding:YES error:nil];
         [buttonStatesEncoded addObject: buttonStateEncoded];

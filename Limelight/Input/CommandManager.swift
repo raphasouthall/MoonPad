@@ -57,7 +57,11 @@ import UIKit
                                                        "M_X1" : BUTTON_X1,
                                                        "M_X2" : BUTTON_X2]
     
-    @objc public static let oscButtonMappings: [String: Int32] = ["OSCA" : A_FLAG,
+    
+    @objc public static let oscButtonMappings: [String: Int32] = [
+        "YSRT1" : 0,  // RT button & RsvPad in GenshinImpact
+        "YSB1"  : B_FLAG, // B button & RsvPad in GenshinImpact
+        "OSCA" : A_FLAG,
         "OSCB" : B_FLAG,
         "OSCX" : X_FLAG,
         "OSCY" : Y_FLAG,
@@ -73,7 +77,7 @@ import UIKit
         "OSCRIGHT" : RIGHT_FLAG,
         "OSCL2" : 0,
         "OSCR2" : 0]
-    
+
     @objc public static let oscRectangleButtonCmds: [String] = [
         "OSCUP",
         "OSCDOWN",
@@ -87,8 +91,14 @@ import UIKit
     @objc public static let nonVectorStickPads: [String] = ["LSPAD", "RSPAD"]
     @objc public static let specialOverlayButtonCmds: [String] = ["SETTINGS"]
 
+    @objc public static let specialGameWidgets: [String] = ["YSRT1", "YSB1","YSRT2", "YSB2", "YSEM", "YSYM"]
+    @objc public static let yuanshenRsvButtonCmds: [String] = ["YSRT1", "YSB1"]
+    @objc public static let yuanshenMouseButtonCmds: [String] = ["YSEM", "YSYM"]
+    
     static let keyboardButtonMappings: [String: Int16] = [
         // Windows Key Codes
+        "YSEM": 0x45,           // 'E' & mousePad button in GenshinImpact
+        "YSYM": 0x59,           // 'Y' & mousePad button in GenshinImpact
         "CTRL": 0x11,        // VK_CONTROL
         "SHIFT": 0x10,       // VK_SHIFT
         "ALT": 0x12,         // VK_MENU

@@ -29,7 +29,6 @@
 - (void) encodeWithCoder:(NSCoder*)encoder {
     [encoder encodeObject:self.name forKey:@"name"];
     [encoder encodeObject:self.alias forKey:@"alias"];
-    [encoder encodeDouble:self.timestamp forKey:@"timestamp"];
     [encoder encodeInt:self.buttonType forKey:@"buttonType"];
     [encoder encodeCGPoint:self.position forKey:@"position"];
     [encoder encodeBool:self.isHidden forKey:@"isHidden"];
@@ -40,13 +39,13 @@
     [encoder encodeFloat:self.oscLayerSizeFactor forKey:@"oscLayerSizeFactor"];
     [encoder encodeFloat:self.backgroundAlpha forKey:@"backgroundAlpha"];
     [encoder encodeFloat:self.borderWidth forKey:@"borderWidth"];
+    [encoder encodeObject:self.widgetShape forKey:@"widgetShape"];
 }
 
 - (id) initWithCoder:(NSCoder*)decoder {
     if (self = [super init]) {
         self.name = [decoder decodeObjectForKey:@"name"];
         self.alias = [decoder decodeObjectForKey:@"alias"];
-        self.timestamp = [decoder decodeDoubleForKey:@"timestamp"];
         self.buttonType = [decoder decodeIntForKey:@"buttonType"];
         self.position = [decoder decodeCGPointForKey:@"position"];
         self.isHidden = [decoder decodeBoolForKey:@"isHidden"];
@@ -57,6 +56,7 @@
         self.oscLayerSizeFactor = [decoder decodeFloatForKey:@"oscLayerSizeFactor"];
         self.backgroundAlpha = [decoder decodeFloatForKey:@"backgroundAlpha"];
         self.borderWidth = [decoder decodeFloatForKey:@"borderWidth"];
+        self.widgetShape = [decoder decodeObjectForKey:@"widgetShape"];
     }
     return self;
 }

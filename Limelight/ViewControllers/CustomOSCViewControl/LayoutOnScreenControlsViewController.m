@@ -86,9 +86,8 @@
     for (NSData *buttonStateEncoded in oscProfile.buttonStates) {
         OnScreenButtonState* buttonState = [NSKeyedUnarchiver unarchivedObjectOfClass:[OnScreenButtonState class] fromData:buttonStateEncoded error:nil];
         if(buttonState.buttonType == CustomOnScreenWidget){
-            OnScreenWidgetView* widgetView = [[OnScreenWidgetView alloc] initWithKeyString:buttonState.name keyLabel:buttonState.alias]; //reconstruct widgetView
+            OnScreenWidgetView* widgetView = [[OnScreenWidgetView alloc] initWithKeyString:buttonState.name keyLabel:buttonState.alias shape:buttonState.widgetShape]; //reconstruct widgetView
             widgetView.translatesAutoresizingMaskIntoConstraints = NO; // weird but this is mandatory, or you will find no key views added to the right place
-            widgetView.timestamp = buttonState.timestamp; // will be set as key in in the dict.
             widgetView.widthFactor = buttonState.widthFactor;
             widgetView.heightFactor = buttonState.heightFactor;
             widgetView.borderWidth = buttonState.borderWidth;
@@ -348,6 +347,12 @@
         textField.spellCheckingType = UITextSpellCheckingTypeNo;
     }];
 
+    [alertController addTextFieldWithConfigurationHandler:^(UITextField *textField) {
+        textField.placeholder = [LocalizationHelper localizedStringForKey:@"Shape (r - round, s - square)"];
+        textField.keyboardType = UIKeyboardTypeASCIICapable;
+        textField.autocorrectionType = UITextAutocorrectionTypeNo;
+        textField.spellCheckingType = UITextSpellCheckingTypeNo;
+    }];
     
     UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:[LocalizationHelper localizedStringForKey:@"Cancel"]
                                                            style:UIAlertActionStyleCancel
@@ -366,6 +371,8 @@
         
         NSString *cmdString = [alertController.textFields[0].text uppercaseString]; // convert to uppercase
         NSString *keyLabel = alertController.textFields[1].text;
+        NSString *widgetShape = [alertController.textFields[2].text lowercaseString];
+        
         if([keyLabel isEqualToString:@""]) keyLabel = [[cmdString lowercaseString] capitalizedString];
         bool noValidKeyboardString = [CommandManager.shared extractKeyStringsFromComboCommandFrom:cmdString] == nil; // this is a invalid string.
         bool noValidSuperComboButtonString = [CommandManager.shared extractKeyStringsFromComboKeysFrom:cmdString] == nil; // this is a invalid string.
@@ -373,13 +380,17 @@
         bool noValidTouchPadString = ![CommandManager.touchPadCmds containsObject:cmdString];
         bool noValidOscButtonString = ![CommandManager.oscButtonMappings.allKeys containsObject:cmdString];
         bool noValidSpecialButtonString = ![CommandManager.specialOverlayButtonCmds containsObject:cmdString];
+        bool noValidSpecialGameWidgetString = ![CommandManager.specialGameWidgets containsObject:cmdString];
 
-        if(noValidKeyboardString && noValidMouseButtonString && noValidTouchPadString && noValidOscButtonString && noValidSpecialButtonString && noValidSuperComboButtonString) return;
+        if(noValidKeyboardString && noValidMouseButtonString && noValidTouchPadString && noValidOscButtonString && noValidSpecialButtonString && noValidSuperComboButtonString && noValidSpecialGameWidgetString) return;
         
+        if([widgetShape isEqualToString:@"r"]) widgetShape = @"round";
+        if([widgetShape isEqualToString:@"s"]) widgetShape = @"square";
+        if([widgetShape isEqualToString:@""]) widgetShape = @"default";
         //saving & present the keyboard button:
-        OnScreenWidgetView* widgetView = [[OnScreenWidgetView alloc] initWithKeyString:cmdString keyLabel:keyLabel];
+        OnScreenWidgetView* widgetView = [[OnScreenWidgetView alloc] initWithKeyString:cmdString keyLabel:keyLabel shape:widgetShape];
         widgetView.translatesAutoresizingMaskIntoConstraints = NO; // weird but this is mandatory, or you will find no key views added to the right place
-        widgetView.timestamp = CACurrentMediaTime(); // will be set as key in in the dict.
+        
         [self.OnScreenWidgetViews addObject:widgetView];
         // Add the widgetView to the view controller's view
         [self.view addSubview:widgetView];
@@ -427,8 +438,8 @@
     [self.widgetAlphaSlider setValue: self->selectedWidgetView.backgroundAlpha];
     [self.widgetBorderWidthSlider setValue:self->selectedWidgetView.borderWidth];
     
-    NSSet *stickAndMouseTouchpads = [NSSet setWithObjects:@"LSPAD", @"RSPAD", @"LSVPAD", @"RSVPAD", @"MOUSEPAD", nil];
-    NSSet *nonVectorStickPads = [NSSet setWithObjects:@"LSPAD", @"RSPAD", nil];
+    NSSet *stickAndMouseTouchpads = [NSSet setWithObjects:@"YSB1", @"YSRT1", @"LSPAD", @"RSPAD", @"LSVPAD", @"RSVPAD", @"MOUSEPAD", nil];
+    NSSet *nonVectorStickPads = [NSSet setWithObjects: @"LSPAD", @"RSPAD", nil];
 
     
     bool showSensitivityFactorSlider = [stickAndMouseTouchpads containsObject:self->selectedWidgetView.keyString];

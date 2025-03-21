@@ -22,7 +22,6 @@ import UIKit
     @objc static public var editMode: Bool = false
     @objc public var keyLabel: String
     @objc public var keyString: String
-    @objc public var timestamp: TimeInterval
     @objc public var pressed: Bool
     @objc public var widthFactor: CGFloat = 1.0
     @objc public var heightFactor: CGFloat = 1.0
@@ -30,9 +29,12 @@ import UIKit
     @objc public var backgroundAlpha: CGFloat = 0.5
     @objc public var latestTouchLocation: CGPoint
     @objc public var selfViewOnTheRight: Bool = false
+    @objc public var shape: String = "default"
+
     
+    public let stickMaxOffset: CGFloat = 0x7FFE
     private let appWindow: UIView
-    
+
     
     private var touchLockedForMoveEvent: UITouch
     private var touchBegan: Bool = false
@@ -96,12 +98,12 @@ import UIKit
     private let buttonDownVisualEffectLayer = CAShapeLayer()
     private var buttonDownVisualEffectWidth: CGFloat
     
-    @objc init(keyString: String, keyLabel: String) {
+    @objc init(keyString: String, keyLabel: String, shape:String) {
         self.keyString = keyString
         self.keyLabel = keyLabel
+        self.shape = shape
         self.label = UILabel()
         // self.originalBackgroundColor = UIColor(white: 0.2, alpha: 0.7)
-        self.timestamp = 0
         self.pressed = false
         // self.widthFactor = 1.0
         // self.heightFactor = 1.0
@@ -213,7 +215,7 @@ import UIKit
         let realBackgroundAlpha = self.backgroundAlpha - 0.18 // offset to be consistent with legacy onScreen controller layer opacity
         self.backgroundColor = UIColor(white: 0.2, alpha: realBackgroundAlpha) // offset to be consistent with legacy onScreen controller layer opacity
         var borderAlpha = realBackgroundAlpha * 1.01
-        if CommandManager.touchPadCmds.contains(self.keyString) {
+        if CommandManager.touchPadCmds.contains(self.keyString){
            minimumBorderAlpha = 0.0
         }
         if borderAlpha < minimumBorderAlpha {
@@ -229,24 +231,21 @@ import UIKit
     }
     
     private func changeAndActivateContraints(){
-        if CommandManager.oscButtonMappings.keys.contains(self.keyString) && !CommandManager.oscRectangleButtonCmds.contains(self.keyString){ // we'll make custom osc buttons round & smaller  
-           
+        if self.shape == "round"{ // we'll make custom osc buttons round & smaller
             NSLayoutConstraint.activate([
                 self.widthAnchor.constraint(equalToConstant: 60 * self.widthFactor),
                 self.heightAnchor.constraint(equalToConstant: 60 * self.heightFactor),])
-            
-            // self.frame = CGRectMake(0, 0, 60*self.widthFactor, 60*self.heightFactor)
-            }
-        else if CommandManager.touchPadCmds.contains(self.keyString) { // make touchPads larger
+        }
+        if self.shape == "square" {
+            NSLayoutConstraint.activate([
+                self.widthAnchor.constraint(equalToConstant: 70 * self.widthFactor),
+                self.heightAnchor.constraint(equalToConstant: 65 * self.heightFactor),])
+        }
+        if self.shape == "largeSquare" { // override all shape strings
             NSLayoutConstraint.activate([
                 self.widthAnchor.constraint(equalToConstant: 170 * self.widthFactor),
                 self.heightAnchor.constraint(equalToConstant: 150 * self.heightFactor),])
         }
-        else {
-            NSLayoutConstraint.activate([
-                self.widthAnchor.constraint(equalToConstant: 70 * self.widthFactor),
-                self.heightAnchor.constraint(equalToConstant: 65 * self.heightFactor),])
-           }
 
         NSLayoutConstraint.activate([
             label.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 10), // set up label size contrain within UIView
@@ -275,14 +274,18 @@ import UIKit
 
         self.tweakAlpha()
         
-        if CommandManager.oscButtonMappings.keys.contains(self.keyString) && !CommandManager.oscRectangleButtonCmds.contains(self.keyString){ //make oscButtons round and no border
-            self.layer.cornerRadius = self.frame.width/2
-            // self.layer.borderWidth = self.borderWidth
-            label.minimumScaleFactor = 0.15  // Adjust the scale factor for oscButtons
-            label.font = UIFont.boldSystemFont(ofSize: 22)
+        if self.shape == "default" || self.shape.isEmpty {
+            if CommandManager.oscButtonMappings.keys.contains(self.keyString) && !CommandManager.oscRectangleButtonCmds.contains(self.keyString){ //make oscButtons round
+                self.shape = "round"
+            }
+            else {
+                self.shape = "square"
+            }
         }
         
+        
         if CommandManager.touchPadCmds.contains(self.keyString){
+            self.shape = "largeSquare" // override shape from user input
             if(self.borderWidth < 1) {self.layer.borderWidth = 1}
             else {self.layer.borderWidth = self.borderWidth}
             label.text = "" // make touchPad display no text
@@ -293,6 +296,17 @@ import UIKit
 
         if CommandManager.specialOverlayButtonCmds.contains(self.keyString){
             self.layer.borderWidth = 0
+        }
+
+        if self.shape == "round" {
+            //setup round buttons
+            self.layer.cornerRadius = self.frame.width/2
+            // self.layer.borderWidth = self.borderWidth
+            label.minimumScaleFactor = 0.15  // Adjust the scale factor for oscButtons
+            label.font = UIFont.boldSystemFont(ofSize: 22)
+        }
+        if self.shape == "square" || self.shape == "largeSquare" {
+            //just do nothing here
         }
 
         
@@ -702,7 +716,7 @@ import UIKit
     
     private func setupButtonDownVisualEffectLayer() {
         self.buttonDownVisualEffectWidth = 8
-        if CommandManager.oscButtonMappings.keys.contains(self.keyString) && !CommandManager.oscRectangleButtonCmds.contains(self.keyString){
+        if self.shape == "round" {
             if widthFactor < 1.3 {self.buttonDownVisualEffectWidth = 15.3} // wider visual effect for osc buttons
             else {self.buttonDownVisualEffectWidth = 9}
         }
@@ -729,9 +743,9 @@ import UIKit
     
     //=========================================send on screen controller stick events
     private func touchInputToStickInput(input: CGFloat) -> CGFloat{
-        var target = 0x7FFE * input / stickInputScale
-        if target > 0x7FFE {target = 0x7FFE}
-        if target < -0x7FFE {target = -0x7FFE}
+        var target = stickMaxOffset * input / stickInputScale
+        if target > stickMaxOffset {target = stickMaxOffset}
+        if target < -stickMaxOffset {target = -stickMaxOffset}
         return target
     }
     
@@ -746,9 +760,11 @@ import UIKit
     }
     
     private func sendRightStickTouchPadEvent(inputX: CGFloat, inputY: CGFloat){
-        let targetX = self.touchInputToStickInput(input: inputX)
-        let targetY = -self.touchInputToStickInput(input: inputY)
+        var targetX = self.touchInputToStickInput(input: inputX)
+        var targetY = -self.touchInputToStickInput(input: inputY)
  // vertical input must be inverted
+        //targetX = (targetX >= 0 ? 1.0 : -1.0) * 8000.0 + (stickMaxOffset - 8000.0) * (targetX/stickMaxOffset)
+        //targetX = (targetX >= 0 ? 1.0 : -1.0) * 8000.0 + targetX - 8000.0*targetX/stickMaxOffset
         self.onScreenControls.sendRightStickTouchPadEvent(targetX, targetY)
     }
     
@@ -765,14 +781,14 @@ import UIKit
         if keyString == "OSCL2" {
             self.onScreenControls.updateLeftTrigger(0xFF)
         }
-        if keyString == "OSCR2" {self.onScreenControls.updateRightTrigger(0xFF)}
+        if keyString == "OSCR2" || keyString == "YSRT1" {self.onScreenControls.updateRightTrigger(0xFF)}
     }
 
     private func sendOscButtonUpEvent(keyString: String){
         let buttonFlag = CommandManager.oscButtonMappings[keyString]
         if buttonFlag != 0 {self.onScreenControls.releaseControllerButton(buttonFlag!)}
         if keyString == "OSCL2" {self.onScreenControls.updateLeftTrigger(0x00)}
-        if keyString == "OSCR2" {self.onScreenControls.updateRightTrigger(0x00)}
+        if keyString == "OSCR2" || keyString == "YSRT1" {self.onScreenControls.updateRightTrigger(0x00)}
     }
     
 //==============================================================================
@@ -938,9 +954,7 @@ import UIKit
         super.touchesMoved(touches, with: event)
         
         if !OnScreenWidgetView.editMode {
-            if CommandManager.touchPadCmds.contains(self.keyString){
-                handleTouchPadMoveEvent(touches, with: event)
-            }
+            handleTouchPadMoveEvent(touches, with: event)
             
             if CommandManager.specialOverlayButtonCmds.contains(self.keyString){
                 if let touch = touches.first {
@@ -989,6 +1003,10 @@ import UIKit
                 self.sendLeftStickTouchPadEvent(inputX: deltaX*1.5167*sensitivityFactor, inputY: deltaY*1.5167*sensitivityFactor)
             case "RSVPAD":
                 self.sendRightStickTouchPadEvent(inputX: deltaX*1.5167*sensitivityFactor, inputY: deltaY*1.5167*sensitivityFactor);
+            case "YSRT1":
+                self.sendRightStickTouchPadEvent(inputX: deltaX*1.5167*sensitivityFactor, inputY: deltaY*1.5167*sensitivityFactor);
+            case "YSB1":
+                self.sendRightStickTouchPadEvent(inputX: deltaX*1.5167*sensitivityFactor, inputY: deltaY*1.5167*sensitivityFactor);
             case "DPAD", "WASDPAD", "ARROWPAD":
                 handleLrudTouchMove()
             default:
@@ -1024,7 +1042,7 @@ import UIKit
         }
         
         // then other types of pads
-        if !OnScreenWidgetView.editMode && CommandManager.touchPadCmds.contains(self.keyString) {
+        if !OnScreenWidgetView.editMode && (CommandManager.touchPadCmds.contains(self.keyString) || CommandManager.yuanshenRsvButtonCmds.contains(self.keyString)) {
             switch self.keyString{
             case "LSPAD":
                 self.onScreenControls.clearLeftStickTouchPadFlag()
@@ -1035,6 +1053,10 @@ import UIKit
             case "LSVPAD":
                 self.onScreenControls.clearLeftStickTouchPadFlag()
             case "RSVPAD":
+                self.onScreenControls.clearRightStickTouchPadFlag()
+            case "YSRT1":
+                self.onScreenControls.clearRightStickTouchPadFlag()
+            case "YSB1":
                 self.onScreenControls.clearRightStickTouchPadFlag()
             case "WASDPAD":
                 LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["W"]!,Int8(KEY_ACTION_UP), 0)

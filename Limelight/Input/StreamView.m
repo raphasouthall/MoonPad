@@ -393,7 +393,7 @@ static const double X1_MOUSE_SPEED_DIVISOR = 2.5;
         for (NSData *buttonStateEncoded in oscProfile.buttonStates) {
             OnScreenButtonState* buttonState = [NSKeyedUnarchiver unarchivedObjectOfClass:[OnScreenButtonState class] fromData:buttonStateEncoded error:nil];
             if(buttonState.buttonType == CustomOnScreenWidget){
-                OnScreenWidgetView* widgetView = [[OnScreenWidgetView alloc] initWithKeyString:buttonState.name keyLabel:buttonState.alias]; //reconstruct widgetView
+                OnScreenWidgetView* widgetView = [[OnScreenWidgetView alloc] initWithKeyString:buttonState.name keyLabel:buttonState.alias shape:buttonState.widgetShape]; //reconstruct widgetView
                 //--------------------------------------------------
                 onScreenControls.delegate = widgetView; // connecting onScreenControls to OnScreenWidgetView, sending the active instance for touchPad stick control
                 [onScreenControls sendInstance];

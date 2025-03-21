@@ -1079,8 +1079,8 @@ static float L3_Y;
             if (fabsf(yStickVal) < STICK_DEAD_ZONE) yStickVal = 0;
             
             [_controllerSupport updateRightStick:_controller x:0x7FFE * xStickVal y:0x7FFE * -yStickVal]; // stick value populated to the controllerSupport here
-            NSLog(@"rStickValue, x: %f, y: %f", 0x7FFE * xStickVal, 0x7FFE * yStickVal);
-            NSLog(@"real controlled instance: %@", self);
+            // NSLog(@"rStickValue, x: %f, y: %f", 0x7FFE * xStickVal, 0x7FFE * yStickVal);
+            // NSLog(@"real controlled instance: %@", self);
 
             updated = true;
         } else if (touch == _dpadTouch) {
