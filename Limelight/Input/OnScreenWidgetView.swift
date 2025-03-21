@@ -95,7 +95,7 @@ import UIKit
     private let moonlightPurple: CGColor = UIColor(red: 0.5, green: 0.5, blue: 1.0, alpha: 0.86).cgColor
 
     // whole button press down visual effect
-    private let buttonDownVisualEffectLayer = CAShapeLayer()
+    @objc public let buttonDownVisualEffectLayer = CAShapeLayer()
     private var buttonDownVisualEffectWidth: CGFloat
     
     @objc init(keyString: String, keyLabel: String, shape:String) {
@@ -470,7 +470,7 @@ import UIKit
             DispatchQueue.global().async {
                 // 后台执行耗时操作
                 usleep(200000)
-                DispatchQueue.main.async {
+                DispatchQueue.main.async { // switch to main thread to update UI
                     if !self.touchBegan {
                         self.crossMarkLayer.removeFromSuperlayer()
                         self.stickBallLayer.removeFromSuperlayer()
@@ -578,7 +578,7 @@ import UIKit
         if(buttonPressed & Direction.up.rawValue == Direction.up.rawValue){
             showLrudDirectionIndicator(with: upIndicator)
             switch keyString {
-            case "WASDPAD": LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["W"]!,Int8(KEY_ACTION_DOWN), 0)
+            case "WASDPAD","YSWASD": LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["W"]!,Int8(KEY_ACTION_DOWN), 0)
             case "ARROWPAD": LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["UP_ARROW"]!,Int8(KEY_ACTION_DOWN), 0)
             case "DPAD": self.onScreenControls.pressDownControllerButton(UP_FLAG)
             default: break
@@ -587,7 +587,7 @@ import UIKit
         else{
             self.upIndicator.removeFromSuperlayer()
             switch keyString {
-            case "WASDPAD": LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["W"]!,Int8(KEY_ACTION_UP), 0)
+            case "WASDPAD","YSWASD": LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["W"]!,Int8(KEY_ACTION_UP), 0)
             case "ARROWPAD": LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["UP_ARROW"]!,Int8(KEY_ACTION_UP), 0)
             case "DPAD": self.onScreenControls.releaseControllerButton(UP_FLAG)
             default: break
@@ -596,7 +596,7 @@ import UIKit
         if(buttonPressed & Direction.down.rawValue == Direction.down.rawValue){
             showLrudDirectionIndicator(with: downIndicator)
             switch keyString {
-            case "WASDPAD": LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["S"]!,Int8(KEY_ACTION_DOWN), 0)
+            case "WASDPAD","YSWASD": LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["S"]!,Int8(KEY_ACTION_DOWN), 0)
             case "ARROWPAD": LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["DOWN_ARROW"]!,Int8(KEY_ACTION_DOWN), 0)
             case "DPAD": self.onScreenControls.pressDownControllerButton(DOWN_FLAG)
             default: break
@@ -605,7 +605,7 @@ import UIKit
         else{
             self.downIndicator.removeFromSuperlayer()
             switch keyString {
-            case "WASDPAD": LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["S"]!,Int8(KEY_ACTION_UP), 0)
+            case "WASDPAD","YSWASD": LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["S"]!,Int8(KEY_ACTION_UP), 0)
             case "ARROWPAD": LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["DOWN_ARROW"]!,Int8(KEY_ACTION_UP), 0)
             case "DPAD": self.onScreenControls.releaseControllerButton(DOWN_FLAG)
             default: break
@@ -614,7 +614,7 @@ import UIKit
         if(buttonPressed & Direction.left.rawValue == Direction.left.rawValue){
             showLrudDirectionIndicator(with: leftIndicator)
             switch keyString {
-            case "WASDPAD": LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["A"]!,Int8(KEY_ACTION_DOWN), 0)
+            case "WASDPAD","YSWASD": LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["A"]!,Int8(KEY_ACTION_DOWN), 0)
             case "ARROWPAD": LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["LEFT_ARROW"]!,Int8(KEY_ACTION_DOWN), 0)
             case "DPAD": self.onScreenControls.pressDownControllerButton(LEFT_FLAG)
             default: break
@@ -623,7 +623,7 @@ import UIKit
         else{
             self.leftIndicator.removeFromSuperlayer()
             switch keyString {
-            case "WASDPAD": LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["A"]!,Int8(KEY_ACTION_UP), 0)
+            case "WASDPAD","YSWASD": LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["A"]!,Int8(KEY_ACTION_UP), 0)
             case "ARROWPAD": LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["LEFT_ARROW"]!,Int8(KEY_ACTION_UP), 0)
             case "DPAD": self.onScreenControls.releaseControllerButton(LEFT_FLAG)
             default: break
@@ -632,7 +632,7 @@ import UIKit
         if(buttonPressed & Direction.right.rawValue == Direction.right.rawValue){
             showLrudDirectionIndicator(with: rightIndicator)
             switch keyString {
-            case "WASDPAD": LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["D"]!,Int8(KEY_ACTION_DOWN), 0)
+            case "WASDPAD","YSWASD": LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["D"]!,Int8(KEY_ACTION_DOWN), 0)
             case "ARROWPAD": LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["RIGHT_ARROW"]!,Int8(KEY_ACTION_DOWN), 0)
             case "DPAD": self.onScreenControls.pressDownControllerButton(RIGHT_FLAG)
             default: break
@@ -641,7 +641,7 @@ import UIKit
         else{
             self.rightIndicator.removeFromSuperlayer()
             switch keyString {
-            case "WASDPAD": LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["D"]!,Int8(KEY_ACTION_UP), 0)
+            case "WASDPAD","YSWASD": LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["D"]!,Int8(KEY_ACTION_UP), 0)
             case "ARROWPAD": LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["RIGHT_ARROW"]!,Int8(KEY_ACTION_UP), 0)
             case "DPAD": self.onScreenControls.releaseControllerButton(RIGHT_FLAG)
             default: break
@@ -888,6 +888,15 @@ import UIKit
                     break
                 case "DPAD", "WASDPAD", "ARROWPAD":
                     self.lrudIndicatorBall = createAndShowLrudBall(at: touchBeganLocation)
+                case "YSWASD":
+                    self.lrudIndicatorBall = createAndShowLrudBall(at: touchBeganLocation)
+                    if quickDoubleTapDetected {
+                        LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["CTRL"]!,Int8(KEY_ACTION_DOWN), 0)
+                        DispatchQueue.global(qos: .userInitiated).async {
+                            usleep(100000)
+                            LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["CTRL"]!,Int8(KEY_ACTION_UP), 0)
+                        }
+                    }
                     break
                 default:
                     break
@@ -928,6 +937,7 @@ import UIKit
         }
         // here is in edit mode:
         else{
+            self.buttonDownVisualEffect()
             NotificationCenter.default.post(name: Notification.Name("OnScreenWidgetViewSelected"),object: self) // inform layout tool controller to fetch button size factors. self will be passed as the object of the notification
         }
         
@@ -990,7 +1000,7 @@ import UIKit
             self.latestTouchLocation = currentTouchLocation
             
             switch self.keyString{
-            case "MOUSEPAD":
+            case "MOUSEPAD","YSEM","YSML","YSMR":
                 LiSendMouseMoveEvent(Int16(truncatingIfNeeded: Int(deltaX * 1.7 * sensitivityFactor)), Int16(truncatingIfNeeded: Int(deltaY * 1.7 * sensitivityFactor)))
                 break
             case "LSPAD":
@@ -1001,13 +1011,9 @@ import UIKit
                 updateStickIndicator()
             case "LSVPAD":
                 self.sendLeftStickTouchPadEvent(inputX: deltaX*1.5167*sensitivityFactor, inputY: deltaY*1.5167*sensitivityFactor)
-            case "RSVPAD":
+            case "RSVPAD", "YSRT1", "YSB1":
                 self.sendRightStickTouchPadEvent(inputX: deltaX*1.5167*sensitivityFactor, inputY: deltaY*1.5167*sensitivityFactor);
-            case "YSRT1":
-                self.sendRightStickTouchPadEvent(inputX: deltaX*1.5167*sensitivityFactor, inputY: deltaY*1.5167*sensitivityFactor);
-            case "YSB1":
-                self.sendRightStickTouchPadEvent(inputX: deltaX*1.5167*sensitivityFactor, inputY: deltaY*1.5167*sensitivityFactor);
-            case "DPAD", "WASDPAD", "ARROWPAD":
+            case "DPAD", "WASDPAD", "ARROWPAD", "YSWASD":
                 handleLrudTouchMove()
             default:
                 break
@@ -1052,13 +1058,9 @@ import UIKit
                 self.resetStickBallPositionAndRemoveIndicator()
             case "LSVPAD":
                 self.onScreenControls.clearLeftStickTouchPadFlag()
-            case "RSVPAD":
+            case "RSVPAD","YSRT1","YSB1":
                 self.onScreenControls.clearRightStickTouchPadFlag()
-            case "YSRT1":
-                self.onScreenControls.clearRightStickTouchPadFlag()
-            case "YSB1":
-                self.onScreenControls.clearRightStickTouchPadFlag()
-            case "WASDPAD":
+            case "WASDPAD","YSWASD":
                 LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["W"]!,Int8(KEY_ACTION_UP), 0)
                 LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["A"]!,Int8(KEY_ACTION_UP), 0)
                 LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["S"]!,Int8(KEY_ACTION_UP), 0)
@@ -1113,9 +1115,6 @@ import UIKit
             }
         }
         
-        self.buttonUpVisualEffect()
-        
-        
         if OnScreenWidgetView.editMode {
             guard let superview = superview else { return }
             
@@ -1144,6 +1143,8 @@ import UIKit
                 self.updateStickIndicator()
             }
         }
+        
+        self.buttonUpVisualEffect()
     }
 }
 

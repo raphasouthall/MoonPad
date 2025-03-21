@@ -51,11 +51,15 @@ import UIKit
 @objc public class CommandManager: NSObject {
     @objc public static let shared = CommandManager()
     
-    @objc public static let mouseButtonMappings: [String: Int32] = ["M_LEFT" : BUTTON_LEFT,
-                                                       "M_MIDDLE" : BUTTON_MIDDLE,
-                                                       "M_RIGHT" : BUTTON_RIGHT,
-                                                       "M_X1" : BUTTON_X1,
-                                                       "M_X2" : BUTTON_X2]
+    @objc public static let mouseButtonMappings: [String: Int32] = [
+        "YSML" : BUTTON_LEFT,
+        "YSMR" : BUTTON_RIGHT,
+        "M_LEFT" : BUTTON_LEFT,
+        "M_MIDDLE" : BUTTON_MIDDLE,
+        "M_RIGHT" : BUTTON_RIGHT,
+        "M_X1" : BUTTON_X1,
+        "M_X2" : BUTTON_X2
+    ]
     
     
     @objc public static let oscButtonMappings: [String: Int32] = [
@@ -86,19 +90,18 @@ import UIKit
         "OSCSTART",
         "OSCSELECT"]
     
-    @objc public static let touchPadCmds: [String] = ["LSVPAD", "RSVPAD", "LSPAD", "RSPAD", "MOUSEPAD", "DPAD", "WASDPAD", "ARROWPAD"]
+    @objc public static let touchPadCmds: [String] = ["LSVPAD", "RSVPAD", "LSPAD", "RSPAD", "MOUSEPAD", "DPAD", "WASDPAD", "ARROWPAD", "YSWASD"]
     @objc public static let stickTouchPads: [String] = ["LSVPAD", "RSVPAD", "LSPAD", "RSPAD"]
     @objc public static let nonVectorStickPads: [String] = ["LSPAD", "RSPAD"]
     @objc public static let specialOverlayButtonCmds: [String] = ["SETTINGS"]
 
-    @objc public static let specialGameWidgets: [String] = ["YSRT1", "YSB1","YSRT2", "YSB2", "YSEM", "YSYM"]
+    @objc public static let specialGameWidgets: [String] = ["YSRT1", "YSB1", "YSRT2", "YSB2", "YSEM", "YSML", "YSMR", "YSWASD"]
     @objc public static let yuanshenRsvButtonCmds: [String] = ["YSRT1", "YSB1"]
-    @objc public static let yuanshenMouseButtonCmds: [String] = ["YSEM", "YSYM"]
+    @objc public static let yuanshenMouseMoveButtonCmds: [String] = ["YSEM", "YSML", "YSMR"]
     
     static let keyboardButtonMappings: [String: Int16] = [
         // Windows Key Codes
         "YSEM": 0x45,           // 'E' & mousePad button in GenshinImpact
-        "YSYM": 0x59,           // 'Y' & mousePad button in GenshinImpact
         "CTRL": 0x11,        // VK_CONTROL
         "SHIFT": 0x10,       // VK_SHIFT
         "ALT": 0x12,         // VK_MENU

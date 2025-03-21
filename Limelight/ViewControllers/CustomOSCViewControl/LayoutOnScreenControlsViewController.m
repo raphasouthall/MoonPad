@@ -438,7 +438,7 @@
     [self.widgetAlphaSlider setValue: self->selectedWidgetView.backgroundAlpha];
     [self.widgetBorderWidthSlider setValue:self->selectedWidgetView.borderWidth];
     
-    NSSet *stickAndMouseTouchpads = [NSSet setWithObjects:@"YSB1", @"YSRT1", @"LSPAD", @"RSPAD", @"LSVPAD", @"RSVPAD", @"MOUSEPAD", nil];
+    NSSet *stickAndMouseTouchpads = [NSSet setWithObjects:@"YSB1", @"YSRT1",@"YSB2", @"YSRT2", @"YSEM", @"YSML", @"LSPAD", @"RSPAD", @"LSVPAD", @"RSVPAD", @"MOUSEPAD", nil];
     NSSet *nonVectorStickPads = [NSSet setWithObjects: @"LSPAD", @"RSPAD", nil];
 
     
@@ -512,7 +512,7 @@
     [widgetHeightSliderLabel setText:[LocalizationHelper localizedStringForKey:@"Widget Height: %.2f", self.widgetHeightSlider.value]];
     if(self->selectedWidgetView != nil && self->widgetViewSelected){
         self->selectedWidgetView.translatesAutoresizingMaskIntoConstraints = true; // this is mandatory to prevent unexpected key view location change
-        if([CommandManager.oscButtonMappings.allKeys containsObject:selectedWidgetView.keyString] && ![CommandManager.oscRectangleButtonCmds containsObject:selectedWidgetView.keyString]) return; // don't change custom osc button height, except for dPad buttons which are in rectangle shape
+        if([self->selectedWidgetView.shape isEqualToString:@"round"]) return; // don't change height for round buttons, except for dPad buttons which are in rectangle shape
         self->selectedWidgetView.heightFactor = self.widgetHeightSlider.value;
         [self->selectedWidgetView resizeWidgetView];
     }
@@ -845,6 +845,7 @@
             [self.OnScreenWidgetViews removeObject:self->selectedWidgetView];
             [selectedWidgetView.stickBallLayer removeFromSuperlayer];
             [selectedWidgetView.crossMarkLayer removeFromSuperlayer];
+            [selectedWidgetView.buttonDownVisualEffectLayer removeFromSuperlayer];
         }
     }
     
