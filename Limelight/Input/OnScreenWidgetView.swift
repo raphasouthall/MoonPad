@@ -1011,7 +1011,7 @@ import UIKit
                 updateStickIndicator()
             case "LSVPAD":
                 self.sendLeftStickTouchPadEvent(inputX: deltaX*1.5167*sensitivityFactor, inputY: deltaY*1.5167*sensitivityFactor)
-            case "RSVPAD", "YSRT1", "YSB1":
+            case "RSVPAD", "YSB1", "YSRT1", "YSRB1":
                 self.sendRightStickTouchPadEvent(inputX: deltaX*1.5167*sensitivityFactor, inputY: deltaY*1.5167*sensitivityFactor);
             case "DPAD", "WASDPAD", "ARROWPAD", "YSWASD":
                 handleLrudTouchMove()
@@ -1058,7 +1058,7 @@ import UIKit
                 self.resetStickBallPositionAndRemoveIndicator()
             case "LSVPAD":
                 self.onScreenControls.clearLeftStickTouchPadFlag()
-            case "RSVPAD","YSRT1","YSB1":
+            case "RSVPAD", "YSB1", "YSRT1", "YSRB1":
                 self.onScreenControls.clearRightStickTouchPadFlag()
             case "WASDPAD","YSWASD":
                 LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["W"]!,Int8(KEY_ACTION_UP), 0)
