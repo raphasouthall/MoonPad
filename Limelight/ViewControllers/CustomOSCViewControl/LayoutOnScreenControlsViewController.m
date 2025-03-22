@@ -385,8 +385,9 @@
         if(noValidKeyboardString && noValidMouseButtonString && noValidTouchPadString && noValidOscButtonString && noValidSpecialButtonString && noValidSuperComboButtonString && noValidSpecialGameWidgetString) return;
         
         if([widgetShape isEqualToString:@"r"]) widgetShape = @"round";
-        if([widgetShape isEqualToString:@"s"]) widgetShape = @"square";
-        if([widgetShape isEqualToString:@""]) widgetShape = @"default";
+        else if([widgetShape isEqualToString:@"s"]) widgetShape = @"square";
+        else if([widgetShape isEqualToString:@""]) widgetShape = @"default";
+        else return;
         //saving & present the keyboard button:
         OnScreenWidgetView* widgetView = [[OnScreenWidgetView alloc] initWithKeyString:cmdString keyLabel:keyLabel shape:widgetShape];
         widgetView.translatesAutoresizingMaskIntoConstraints = NO; // weird but this is mandatory, or you will find no key views added to the right place
