@@ -327,6 +327,27 @@
     }
 }
 
+- (void) presentInvalidWidgetCommandAlert{
+    UIAlertController *savedAlertController = [UIAlertController alertControllerWithTitle: [LocalizationHelper localizedStringForKey:@"Invalid Input"] message: [LocalizationHelper localizedStringForKey:@"Check the command and parameter."] preferredStyle:UIAlertControllerStyleAlert];
+
+    UIAlertAction *readInstruction = [UIAlertAction actionWithTitle:[LocalizationHelper localizedStringForKey:@"Read Widget Instruction"]
+                                                           style:UIAlertActionStyleDefault
+                                                         handler:^(UIAlertAction *action){
+        NSURL *url = [NSURL URLWithString:@"https://b23.tv/J8qEXOr"];
+        if ([[UIApplication sharedApplication] canOpenURL:url]) {
+            [[UIApplication sharedApplication] openURL:url options:@{} completionHandler:nil];
+        }
+    }];
+    
+    UIAlertAction *okAction = [UIAlertAction actionWithTitle:[LocalizationHelper localizedStringForKey:@"OK"]
+                                                           style:UIAlertActionStyleDefault
+                                                     handler:nil];
+    [savedAlertController addAction:readInstruction];
+    [savedAlertController addAction:okAction];
+    
+    [self presentViewController:savedAlertController animated:YES completion:nil];
+}
+
 - (IBAction) addTapped:(id)sender{
     
     UIAlertController *alertController = [UIAlertController alertControllerWithTitle:[LocalizationHelper localizedStringForKey:@"New On-Screen Widget"]
@@ -382,12 +403,18 @@
         bool noValidSpecialButtonString = ![CommandManager.specialOverlayButtonCmds containsObject:cmdString];
         bool noValidSpecialGameWidgetString = ![CommandManager.specialGameWidgets containsObject:cmdString];
 
-        if(noValidKeyboardString && noValidMouseButtonString && noValidTouchPadString && noValidOscButtonString && noValidSpecialButtonString && noValidSuperComboButtonString && noValidSpecialGameWidgetString) return;
+        bool invalidInput = noValidKeyboardString && noValidMouseButtonString && noValidTouchPadString && noValidOscButtonString && noValidSpecialButtonString && noValidSuperComboButtonString && noValidSpecialGameWidgetString;
         
         if([widgetShape isEqualToString:@"r"]) widgetShape = @"round";
         else if([widgetShape isEqualToString:@"s"]) widgetShape = @"square";
         else if([widgetShape isEqualToString:@""]) widgetShape = @"default";
-        else return;
+        else invalidInput = true;
+
+        if(invalidInput) {
+            [self presentInvalidWidgetCommandAlert];
+            return;
+        }
+        
         //saving & present the keyboard button:
         OnScreenWidgetView* widgetView = [[OnScreenWidgetView alloc] initWithKeyString:cmdString keyLabel:keyLabel shape:widgetShape];
         widgetView.translatesAutoresizingMaskIntoConstraints = NO; // weird but this is mandatory, or you will find no key views added to the right place

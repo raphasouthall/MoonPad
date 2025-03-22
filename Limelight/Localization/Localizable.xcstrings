@@ -352,6 +352,29 @@
         }
       }
     },
+    "Check the command and parameter." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "请检查输入的命令和参数"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "请检查输入的命令和参数"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "请检查输入的命令和参数"
+          }
+        }
+      }
+    },
     "Command" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1096,6 +1119,29 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "指示器偏离: %.2f"
+          }
+        }
+      }
+    },
+    "Invalid Input" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无效输入"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无效输入"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无效输入"
           }
         }
       }
@@ -1948,6 +1994,29 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "正在退出应用: %@"
+          }
+        }
+      }
+    },
+    "Read Widget Instruction" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "阅读控件添加说明"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "阅读控件添加说明"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "阅读控件添加说明"
           }
         }
       }
