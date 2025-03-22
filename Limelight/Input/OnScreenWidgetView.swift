@@ -30,38 +30,33 @@ import UIKit
     @objc public var latestTouchLocation: CGPoint
     @objc public var selfViewOnTheRight: Bool = false
     @objc public var shape: String = "default"
+    private var storedCenter: CGPoint = .zero // location from persisted data
 
-    
-    public let stickMaxOffset: CGFloat = 0x7FFE
     private let appWindow: UIView
 
     
-    private var touchLockedForMoveEvent: UITouch
-    private var touchBegan: Bool = false
-    private let stickBallMaxOffset = 18.0
-    private var comboKeyStrings: [String] = []
-    private var comboKeyTimeIntervalMs: UInt32 = 10
     
+        
+    public let stickMaxOffset: CGFloat = 0x7FFE
+
     // for LSVPAD, RSVPAD
     @objc public var deltaX: CGFloat
     @objc public var deltaY: CGFloat
-    
+
     // for LSPAD, RSPAD
     @objc public var offSetX: CGFloat
     @objc public var offSetY: CGFloat
-
-    // this is for all stick pads and mouse Pad
-    @objc public var sensitivityFactor: CGFloat = 1.0
-
-    
-    // for LSVPAD, RSVPAD, LSPAD, RSPAD
     private let crossMarkColor: CGColor = UIColor(white: 1, alpha: 0.70).cgColor
     private let stickBallColor: CGColor = UIColor(white: 1, alpha: 0.75).cgColor
     private var stickInputScale: CGFloat = 35
     private var l3r3Indicator = CAShapeLayer()
+    private let stickBallMaxOffset = 18.0
     @objc public var crossMarkLayer = CAShapeLayer()
     @objc public var stickBallLayer = CAShapeLayer()
 
+    // this is for all stick pads and mouse Pad
+    @objc public var sensitivityFactor: CGFloat = 1.0
+    
     // check quick double tap:
     private var quickDoubleTapDetected: Bool
     private var touchTapTimeInterval: TimeInterval
@@ -88,14 +83,21 @@ import UIKit
     @objc public var touchBeganLocation: CGPoint = .zero
     
     // for mousePad
+    private var touchLockedForMoveEvent: UITouch
+    private var touchBegan: Bool = false
     private var mousePointerMoved: Bool
     private var twoTouchesDetected: Bool
     
-    private var storedCenter: CGPoint = .zero // location from persisted data
+    
+    // border & visual effect
     private var minimumBorderAlpha: CGFloat = 0.19
     private var defaultBorderColor: CGColor = UIColor(white: 0.2, alpha: 0.3).cgColor
     private let moonlightPurple: CGColor = UIColor(red: 0.5, green: 0.5, blue: 1.0, alpha: 0.86).cgColor
 
+    // super combo key string set
+    private var comboKeyStrings: [String] = []
+    private var comboKeyTimeIntervalMs: UInt32 = 10
+    
     // whole button press down visual effect
     @objc public let buttonDownVisualEffectLayer = CAShapeLayer()
     private var buttonDownVisualEffectWidth: CGFloat
@@ -161,14 +163,18 @@ import UIKit
         leftIndicator.anchorPoint = CGPoint(x: 1, y: 0.5)
         rightIndicator = createLrudDirectionLayer()
         rightIndicator.anchorPoint = CGPoint(x: 0, y: 0.5)
-
-        
+    
         setupView()
+        
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+
+    
+    // ======================================================================================================
     
     @objc public func setLocation(xOffset:CGFloat, yOffset:CGFloat) {
         /*
@@ -788,8 +794,13 @@ import UIKit
         var targetX = self.touchInputToStickInput(input: inputX)
         var targetY = -self.touchInputToStickInput(input: inputY)
  // vertical input must be inverted
-        //targetX = (targetX >= 0 ? 1.0 : -1.0) * 8000.0 + (stickMaxOffset - 8000.0) * (targetX/stickMaxOffset)
-        //targetX = (targetX >= 0 ? 1.0 : -1.0) * 8000.0 + targetX - 8000.0*targetX/stickMaxOffset
+        switch self.keyString {
+            //tweaking yuanshen RsvPad related widgets
+        case "YSB", "YSRT", "YSRB", "YSRSV":
+            targetX = (targetX >= 0 ? 1.0 : -1.0) * 3000.0 + (stickMaxOffset - 3000.0) * (targetX/stickMaxOffset)
+            targetY = (targetY >= 0 ? 1.0 : -1.0) * 3000.0 + (stickMaxOffset - 3000.0) * (targetY/stickMaxOffset)
+        default: break
+        }
         self.onScreenControls.sendRightStickTouchPadEvent(targetX, targetY)
     }
     
@@ -860,6 +871,8 @@ import UIKit
 //==============================================================================
     // Touch event handling
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        
+        
         self.touchBegan = true
         super.touchesBegan(touches, with: event)
         self.isMultipleTouchEnabled = self.keyString == "MOUSEPAD" // only enable multi-touch in mousePad mode
@@ -910,7 +923,7 @@ import UIKit
                         self.l3r3Indicator = self.createAndShowl3r3Indicator()
                         self.onScreenControls.pressDownControllerButton(LS_CLK_FLAG)}
                     break
-                case "RSVPAD":
+                case "RSVPAD", "YSRSV":
                     if quickDoubleTapDetected {
                         self.l3r3Indicator = self.createAndShowl3r3Indicator()
                         self.onScreenControls.pressDownControllerButton(RS_CLK_FLAG)}
@@ -990,8 +1003,8 @@ import UIKit
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesMoved(touches, with: event)
-        
         if !OnScreenWidgetView.editMode {
+            
             handleTouchPadMoveEvent(touches, with: event)
             
             if CommandManager.specialOverlayButtonCmds.contains(self.keyString){
@@ -1010,6 +1023,7 @@ import UIKit
             if let touch = touches.first {
                 self.moveByTouch(touch: touch)
                 }
+
             if CommandManager.nonVectorStickPads.contains(self.keyString) {
                 self.stickBallLayer.removeFromSuperlayer()
                 self.crossMarkLayer.removeFromSuperlayer()
@@ -1039,7 +1053,7 @@ import UIKit
                 updateStickIndicator()
             case "LSVPAD":
                 self.sendLeftStickTouchPadEvent(inputX: deltaX*1.5167*sensitivityFactor, inputY: deltaY*1.5167*sensitivityFactor)
-            case "RSVPAD", "YSB", "YSRT", "YSRB":
+            case "RSVPAD", "YSB", "YSRT", "YSRB", "YSRSV":
                 self.sendRightStickTouchPadEvent(inputX: deltaX*1.5167*sensitivityFactor, inputY: deltaY*1.5167*sensitivityFactor);
             case "DPAD", "WASDPAD", "ARROWPAD", "YSWASD":
                 handleLrudTouchMove()
@@ -1053,10 +1067,13 @@ import UIKit
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         self.touchBegan = false
         super.touchesEnded(touches, with: event)
+        
+        // for checking stationary touch points
 
         if self.keyString != "MOUSEPAD" {quickDoubleTapDetected = false} //do not reset this flag here in mousePad mode
         
         let allCapturedTouchesCount = event?.allTouches?.filter({ $0.view == self }).count // this will counts all valid touches within the self widgetView, and excludes touches in other widgetViews
+        
         
         // deal with MOUSPAD first
         if !OnScreenWidgetView.editMode && self.keyString == "MOUSEPAD" && allCapturedTouchesCount == 1 && !twoTouchesDetected {
@@ -1088,7 +1105,7 @@ import UIKit
                 self.resetStickBallPositionAndRemoveIndicator()
             case "LSVPAD":
                 self.onScreenControls.clearLeftStickTouchPadFlag()
-            case "RSVPAD", "YSB", "YSRT", "YSRB":
+            case "RSVPAD", "YSB", "YSRT", "YSRB", "YSRSV":
                 self.onScreenControls.clearRightStickTouchPadFlag()
             case "WASDPAD","YSWASD":
                 LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["W"]!,Int8(KEY_ACTION_UP), 0)

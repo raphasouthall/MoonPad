@@ -97,12 +97,12 @@ import UIKit
         "OSCSTART",
         "OSCSELECT"]
     
-    @objc public static let touchPadCmds: [String] = ["LSVPAD", "RSVPAD", "LSPAD", "RSPAD", "MOUSEPAD", "DPAD", "WASDPAD", "ARROWPAD", "YSWASD"]
-    @objc public static let stickTouchPads: [String] = ["LSVPAD", "RSVPAD", "LSPAD", "RSPAD"]
+    @objc public static let touchPadCmds: [String] = ["YSRSV", "LSVPAD", "RSVPAD", "LSPAD", "RSPAD", "MOUSEPAD", "DPAD", "WASDPAD", "ARROWPAD", "YSWASD"]
+    @objc public static let stickTouchPads: [String] = ["YSRSV", "LSVPAD", "RSVPAD", "LSPAD", "RSPAD"]
     @objc public static let nonVectorStickPads: [String] = ["LSPAD", "RSPAD"]
     @objc public static let specialOverlayButtonCmds: [String] = ["SETTINGS"]
 
-    @objc public static let specialGameWidgets: [String] = ["YSLT", "YSRT", "YSRB", "YSB", "YSRT2", "YSRB2", "YSB2", "YSEM", "YSML", "YSMR", "YSWASD"]
+    @objc public static let specialGameWidgets: [String] = ["YSRSV", "YSLT", "YSRT", "YSRB", "YSB", "YSRT2", "YSRB2", "YSB2", "YSEM", "YSML", "YSMR", "YSWASD"]
     @objc public static let yuanshenStickPadButtonCmds: [String] = ["YSLT", "YSRT", "YSRB", "YSB"]
     @objc public static let yuanshenMouseMoveButtonCmds: [String] = ["YSEM", "YSML", "YSMR"]
     

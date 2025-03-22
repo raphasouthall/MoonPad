@@ -466,7 +466,7 @@
     [self.widgetAlphaSlider setValue: self->selectedWidgetView.backgroundAlpha];
     [self.widgetBorderWidthSlider setValue:self->selectedWidgetView.borderWidth];
     
-    NSSet *stickAndMouseTouchpads = [NSSet setWithObjects:@"YSB", @"YSLT", @"YSRT", @"YSRB",@"YSB2", @"YSRT2", @"YSRB2", @"YSEM", @"YSML", @"YSMR", @"LSPAD", @"RSPAD", @"LSVPAD", @"RSVPAD", @"MOUSEPAD", nil];
+    NSSet *stickAndMouseTouchpads = [NSSet setWithObjects:@"YSRSV", @"YSB", @"YSLT", @"YSRT", @"YSRB",@"YSB2", @"YSRT2", @"YSRB2", @"YSEM", @"YSML", @"YSMR", @"LSPAD", @"RSPAD", @"LSVPAD", @"RSVPAD", @"MOUSEPAD", nil];
     NSSet *nonVectorStickPads = [NSSet setWithObjects: @"LSPAD", @"RSPAD", nil];
 
     
