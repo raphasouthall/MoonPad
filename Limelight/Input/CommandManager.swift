@@ -55,10 +55,15 @@ import UIKit
         "YSML" : BUTTON_LEFT,
         "YSMR" : BUTTON_RIGHT,
         "M_LEFT" : BUTTON_LEFT,
+        "MLEFT" : BUTTON_LEFT,
         "M_MIDDLE" : BUTTON_MIDDLE,
+        "MMIDDLE" : BUTTON_MIDDLE,
         "M_RIGHT" : BUTTON_RIGHT,
+        "MRIGHT" : BUTTON_RIGHT,
         "M_X1" : BUTTON_X1,
-        "M_X2" : BUTTON_X2
+        "MX1" : BUTTON_X1,
+        "M_X2" : BUTTON_X2,
+        "MX2" : BUTTON_X2
     ]
     
     
@@ -165,16 +170,27 @@ import UIKit
         "HOME": 0x24,        // VK_HOME
         "END": 0x23,         // VK_END
         "PG_UP": 0x21,     // VK_PRIOR
+        "PGUP": 0x21,     // VK_PRIOR
         "PG_DOWN": 0x22,   // VK_NEXT
+        "PGDOWN": 0x22,   // VK_NEXT
+        "PGDN": 0x22,   // VK_NEXT
         "UP_ARROW": 0x26,    // VK_UP
+        "UPARR": 0x26,    // VK_UP
         "DOWN_ARROW": 0x28,  // VK_DOWN
+        "DOWNARR": 0x28,  // VK_DOWN
         "LEFT_ARROW": 0x25,  // VK_LEFT
+        "LEFTARR": 0x25,  // VK_LEFT
         "RIGHT_ARROW": 0x27, // VK_RIGHT
+        "RIGHTARR": 0x27, // VK_RIGHT
         "NUM_LCK": 0x90,    // VK_NUMLOCK
+        "NUMLCK": 0x90,    // VK_NUMLOCK
         "SCR_LCK": 0x91, // VK_SCROLL
+        "SCRLCK": 0x91, // VK_SCROLL
         "CAPS_LOCK": 0x14,   // VK_CAPITAL
+        "CAPSLOCK": 0x14,   // VK_CAPITAL
         "PAUSE": 0x13,       // VK_PAUSE
         "PR_SCR": 0x2C, // VK_SNAPSHOT
+        "PRSCR": 0x2C, // VK_SNAPSHOT
         "NUMPAD0": 0x60,     // VK_NUMPAD0
         "NUMPAD1": 0x61,     // VK_NUMPAD1
         "NUMPAD2": 0x62,     // VK_NUMPAD2
@@ -191,38 +207,104 @@ import UIKit
         "DECIMAL": 0x6E,     // VK_DECIMAL
         "DIVIDE": 0x6F,      // VK_DIVIDE
         "SEMI_COLON": 0xBA,  // VK_OEM_1
+        "SEMICOLON": 0xBA,  // VK_OEM_1
         "EQUALS": 0xBB,      // VK_OEM_PLUS
         "COMMA": 0xBC,       // VK_OEM_COMMA
         "MINUS": 0xBD,       // VK_OEM_MINUS
         "PERIOD": 0xBE,      // VK_OEM_PERIOD
         "FORWARD_SLASH": 0xBF, // VK_OEM_2
+        "FORWARDSLASH": 0xBF, // VK_OEM_2
         "GRAVE_ACCENT": 0xC0, // VK_OEM_3
+        "GRAVEACCENT": 0xC0, // VK_OEM_3
         "OPEN_BRACKET": 0xDB, // VK_OEM_4
+        "OPENBRACKET": 0xDB, // VK_OEM_4
         "BACKSLASH": 0xDC,   // VK_OEM_5
         "CLOSE_BRACKET": 0xDD, // VK_OEM_6
+        "CLOSEBRACKET": 0xDD, // VK_OEM_6
         "SINGLE_QUOTE": 0xDE, // VK_OEM_7
+        "SINGLEQUOTE": 0xDE, // VK_OEM_7
         "VOLUME_MUTE": 0xAD, // VK_VOLUME_MUTE
+        "VOLMUTE": 0xAD, // VK_VOLUME_MUTE
         "VOLUME_DOWN": 0xAE, // VK_VOLUME_DOWN
+        "VOLDOWN": 0xAE, // VK_VOLUME_DOWN
         "VOLUME_UP": 0xAF,   // VK_VOLUME_UP
+        "VOLUP": 0xAF,   // VK_VOLUME_UP
         "MEDIA_NEXT": 0xB0,  // VK_MEDIA_NEXT_TRACK
+        "MEDIANEXT": 0xB0,  // VK_MEDIA_NEXT_TRACK
         "MEDIA_PREV": 0xB1,  // VK_MEDIA_PREV_TRACK
+        "MEDIAPREV": 0xB1,  // VK_MEDIA_PREV_TRACK
         "MEDIA_STOP": 0xB2,  // VK_MEDIA_STOP
+        "MEDIASTOP": 0xB2,  // VK_MEDIA_STOP
         "MEDIA_PLAY_PAUSE": 0xB3, // VK_MEDIA_PLAY_PAUSE
+        "PLAYPAUSE": 0xB3, // VK_MEDIA_PLAY_PAUSE
         "LAUNCH_MAIL": 0xB4, // VK_LAUNCH_MAIL
+        "LAUNCHMAIL": 0xB4, // VK_LAUNCH_MAIL
         "LAUNCH_MEDIA_SELECT": 0xB5, // VK_LAUNCH_MEDIA_SELECT
+        "MEDIA_SELECT": 0xB5, // VK_LAUNCH_MEDIA_SELECT
         "LAUNCH_APP1": 0xB6, // VK_LAUNCH_APP1
+        "LAUNCHAPP1": 0xB6, // VK_LAUNCH_APP1
         "LAUNCH_APP2": 0xB7, // VK_LAUNCH_APP2
+        "LAUNCHAPP2": 0xB7, // VK_LAUNCH_APP2
         "WIN":  0x5B,
         "LEFT_WIN": 0x5B, // VK_LWIN
         "RIGHT_WIN": 0x5C, // VK_RWIN
+        "RIGHTWIN": 0x5C, // VK_RWIN
         "APPS": 0x5D,        // VK_APPS
         
         // macOS Key Codes
         "CMD": 0x37,     // ⌘ Command
         "OPT": 0x3A,      // ⌥ Option
         "CONTROL": 0x3B,     // ⌃ Control
-        "SHIFT_MAC": 0x38,   // ⇧ Shift
         "FUNCTION": 0x3F,    // fn
+        "SHIFTMAC": 0x38,   // ⇧ Shift
+        "DELETEMAC": 0x75,  // Forward Delete
+        "RETURNMAC": 0x24,  // Return
+        "ENTERMAC": 0x4C,   // Enter
+        "ESCAPEMAC": 0x35,  // Escape
+        "TABMAC": 0x30,     // Tab
+        "SPACEMAC": 0x31,   // Space
+        "UPARRMAC": 0x7E,  // Up Arrow
+        "DOWNARRMAC": 0x7D, // Down Arrow
+        "LEFTARRMAC": 0x7B, // Left Arrow
+        "RIGHTARRMAC": 0x7C, // Right Arrow
+        "F1MAC": 0x7A,      // F1
+        "F2MAC": 0x78,      // F2
+        "F3MAC": 0x63,      // F3
+        "F4MAC": 0x76,      // F4
+        "F5MAC": 0x60,      // F5
+        "F6MAC": 0x61,      // F6
+        "F7MAC": 0x62,      // F7
+        "F8MAC": 0x64,      // F8
+        "F9MAC": 0x65,      // F9
+        "F10MAC": 0x6D,     // F10
+        "F11MAC": 0x67,     // F11
+        "F12MAC": 0x6F,     // F12
+        "0MAC": 0x52,       // 0
+        "1MAC": 0x53,       // 1
+        "2MAC": 0x54,       // 2
+        "3MAC": 0x55,       // 3
+        "4MAC": 0x56,       // 4
+        "5MAC": 0x57,       // 5
+        "6MAC": 0x58,       // 6
+        "7MAC": 0x59,       // 7
+        "8MAC": 0x5A,       // 8
+        "9MAC": 0x5B,       // 9
+        "NUMPAD0MAC": 0x4F, // Numpad 0
+        "NUMPAD1MAC": 0x50, // Numpad 1
+        "NUMPAD2MAC": 0x51, // Numpad 2
+        "NUMPAD3MAC": 0x52, // Numpad 3
+        "NUMPAD4MAC": 0x53, // Numpad 4
+        "NUMPAD5MAC": 0x54, // Numpad 5
+        "NUMPAD6MAC": 0x55, // Numpad 6
+        "NUMPAD7MAC": 0x56, // Numpad 7
+        "NUMPAD8MAC": 0x57, // Numpad 8
+        "NUMPAD9MAC": 0x58, // Numpad 9
+        "NUMPADADDMAC": 0x45,  // Numpad Add
+        "NUMPADSUBTRACTMAC": 0x4A, // Numpad Subtract
+        "NUMPADMULTIPLYMAC": 0x43, // Numpad Multiply
+        "NUMPADDIVIDEMAC": 0x4B, // Numpad Divide
+        "NUMPADDECIMALMAC": 0x41, // Numpad Decimal
+        "SHIFT_MAC": 0x38,   // ⇧ Shift
         "DELETE_MAC": 0x75,  // Forward Delete
         "RETURN_MAC": 0x24,  // Return
         "ENTER_MAC": 0x4C,   // Enter
@@ -360,7 +442,7 @@ import UIKit
     }
     
     //super combo key button strings
-    @objc public func extractKeyStringsFromComboKeys(from input: String) -> [String]? {
+    @objc public func extractSinglCmdStringsFromComboKeys(from input: String) -> [String]? {
         let combinedStrings =  [CommandManager.keyboardButtonMappings.keys.map { $0 as String },
                                 CommandManager.oscButtonMappings.keys.map { $0 as String },
                                 CommandManager.mouseButtonMappings.keys.map { $0 as String }]
@@ -369,8 +451,8 @@ import UIKit
                                 .map(String.init(describing:)) // 安全类型转换
         
         let keys = combinedStrings.joined(separator: "|")
-        // print(keys)
-        let pattern = "^(?:(\(keys))(?:\\-(\(keys))*)*)$"
+        let pattern = "^(?:\(keys))(?:-(?:\(keys)))*(?:-\\d+MS)?$"
+
         
         guard let regex = try? NSRegularExpression(pattern: pattern, options: []) else {
             print("Failed to create regex")
@@ -384,29 +466,29 @@ import UIKit
         print("Regex matched for input: \(input)")
         
         let matchedString = (input as NSString).substring(with: match.range(at: 0))
-        let keyStrings = matchedString.split(separator: "-").map { String($0) }
+        let cmdStrings = matchedString.split(separator: "-").map { String($0) }
         
-        guard !keyStrings.isEmpty else {
+        guard !cmdStrings.isEmpty else {
             print("No key strings found in the matched string")
             return nil
         }
         
-        var validKeyStrings: [String] = []
+        var validCmdStrings: [String] = []
         
-        for key in keyStrings {
-            validKeyStrings.append(key)
+        for key in cmdStrings {
+            validCmdStrings.append(key)
         }
        
-        if validKeyStrings.isEmpty {
+        if validCmdStrings.isEmpty {
             print("No valid key strings found in the matched string")
             return nil
         }
         
-        for (index, key) in validKeyStrings.enumerated() {
+        for (index, key) in validCmdStrings.enumerated() {
             print("Valid Key \(index): \(key)")
         }
         
-        return validKeyStrings
+        return validCmdStrings
     }
 
     @objc public func addCommand(_ command: RemoteCommand) -> Bool {

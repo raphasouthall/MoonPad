@@ -39,6 +39,8 @@ import UIKit
     private var touchLockedForMoveEvent: UITouch
     private var touchBegan: Bool = false
     private let stickBallMaxOffset = 18.0
+    private var comboKeyStrings: [String] = []
+    private var comboKeyTimeIntervalMs: UInt32 = 10
     
     // for LSVPAD, RSVPAD
     @objc public var deltaX: CGFloat
@@ -100,6 +102,29 @@ import UIKit
     
     @objc init(keyString: String, keyLabel: String, shape:String) {
         self.keyString = keyString
+        if self.keyString.contains("-"){
+            // 安全解包并处理 `comboKeyStrings`
+            if let comboKeyStrings = CommandManager.shared.extractSinglCmdStringsFromComboKeys(from: self.keyString) {
+                self.comboKeyStrings = comboKeyStrings
+                // 检查最后一个元素是否包含 "MS"
+                if let lastComboKey = self.comboKeyStrings.last, lastComboKey.contains("MS") {
+                    // 移除 "MS" 后的部分并转换为整数
+                    let timeIntervalString = lastComboKey.replacingOccurrences(of: "MS", with: "")
+                    // 安全地将字符串转换为整数
+                    if let timeInterval = UInt32(timeIntervalString) {
+                        self.comboKeyTimeIntervalMs = timeInterval
+                    } else {
+                        // 处理转换失败的情况
+                        print("无法将时间字符串转换为整数")
+                    }
+                }
+                self.comboKeyStrings.removeLast()
+            } else {
+                // 如果无法提取 comboKeyStrings
+                print("无法从 keyString 提取 comboKeyStrings")
+            }
+        }
+
         self.keyLabel = keyLabel
         self.shape = shape
         self.label = UILabel()
@@ -806,7 +831,9 @@ import UIKit
                 if CommandManager.mouseButtonMappings.keys.contains(comboString) {
                     LiSendMouseButtonEvent(CChar(BUTTON_ACTION_PRESS), Int32(CommandManager.mouseButtonMappings[comboString]!))
                 }
-                usleep(10000) // delay 10ms
+                if comboString != comboStrings.last {
+                    usleep(self.comboKeyTimeIntervalMs*1000) // delay xxx ms
+                }
             }
         }
     }
@@ -823,14 +850,14 @@ import UIKit
                 if CommandManager.mouseButtonMappings.keys.contains(comboString) {
                     LiSendMouseButtonEvent(CChar(BUTTON_ACTION_RELEASE), Int32(CommandManager.mouseButtonMappings[comboString]!))
                 }
-                usleep(10000) //delay 10ms
+                if comboString != comboStrings.last {
+                    usleep(self.comboKeyTimeIntervalMs*1000) // delay xxx ms
+                }
             }
         }
     }
     
 //==============================================================================
-
-    
     // Touch event handling
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         self.touchBegan = true
@@ -920,8 +947,7 @@ import UIKit
             
             // if the command(keystring contains "-", it's a multi-type super combo button
             if self.keyString.contains("-"){
-                let comboStrings = CommandManager.shared.extractKeyStringsFromComboKeys(from: self.keyString)!
-                self.sendComboButtonsDownEvent(comboStrings: comboStrings)
+                self.sendComboButtonsDownEvent(comboStrings: self.comboKeyStrings)
             }
             
             // if the command(keystring contains "+", it's a multi-key command or a quick triggering key, rather than a physical button
@@ -1104,7 +1130,7 @@ import UIKit
         
         // if the command(keystring contains "-", it's a multi-type super combo button
         if !OnScreenWidgetView.editMode && self.keyString.contains("-"){
-            let comboStrings = CommandManager.shared.extractKeyStringsFromComboKeys(from: self.keyString)!
+            let comboStrings = CommandManager.shared.extractSinglCmdStringsFromComboKeys(from: self.keyString)!
             self.sendComboButtonsUpEvent(comboStrings: comboStrings)
         }
         

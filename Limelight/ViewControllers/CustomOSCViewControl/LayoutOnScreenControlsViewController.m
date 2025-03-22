@@ -396,7 +396,7 @@
         
         if([keyLabel isEqualToString:@""]) keyLabel = [[cmdString lowercaseString] capitalizedString];
         bool noValidKeyboardString = [CommandManager.shared extractKeyStringsFromComboCommandFrom:cmdString] == nil; // this is a invalid string.
-        bool noValidSuperComboButtonString = [CommandManager.shared extractKeyStringsFromComboKeysFrom:cmdString] == nil; // this is a invalid string.
+        bool noValidSuperComboButtonString = [CommandManager.shared extractSinglCmdStringsFromComboKeysFrom:cmdString] == nil; // this is a invalid string.
         bool noValidMouseButtonString = ![CommandManager.mouseButtonMappings.allKeys containsObject:cmdString];
         bool noValidTouchPadString = ![CommandManager.touchPadCmds containsObject:cmdString];
         bool noValidOscButtonString = ![CommandManager.oscButtonMappings.allKeys containsObject:cmdString];
