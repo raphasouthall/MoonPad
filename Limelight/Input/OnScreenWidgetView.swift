@@ -2,8 +2,8 @@
 //  OnScreenKey.swift
 //  Moonlight-ZWM
 //
-//  Created by ZWM on 2024/8/4.
-//  Copyright © 2024 Moonlight Game Streaming Project. All rights reserved.
+//  Created by True砖家 on 2024/8/4.
+//  Copyright © 2024 True砖家 on Bilibili. All rights reserved.
 //
 
 import UIKit
@@ -149,9 +149,9 @@ import UIKit
                 self.touchPadString = touchPadString
                 self.buttonString = self.comboButtonStrings.first ?? ""
                 
-                let stickAndMouseTouchpads = ["LSPAD", "RSPAD", "LSVPAD", "RSVPAD", "MOUSEPAD"]
+               //  let stickAndMouseTouchpads = ["LSPAD", "RSPAD", "LSVPAD", "RSVPAD", "MOUSEPAD"]
                 let nonVectorStickPads = ["LSPAD", "RSPAD"]
-                if stickAndMouseTouchpads.contains(self.touchPadString) {self.hasSensitivityTweak = true}
+                if CommandManager.touchPadCmds.contains(self.touchPadString) {self.hasSensitivityTweak = true}
                 if nonVectorStickPads.contains(self.touchPadString) && widgetType == WidgetTypeEnum.touchPad {self.hasStickIndicator = true}
                 
                 switch self.cmdString {
@@ -630,7 +630,7 @@ import UIKit
             case down = 8
         }
         
-        let nearZeroPoint = abs(offSetX)<28 && abs(offSetY)<28
+        let nearZeroPoint = abs(offSetX) < 16/sensitivityFactor && abs(offSetY) < 16/sensitivityFactor
         // NSLog("deltaX: %f, detalY: %f", deltaX, deltaY)
         
         var buttonPressed = 0;
@@ -975,10 +975,10 @@ import UIKit
                 case "DPAD", "WASDPAD", "ARROWPAD":
                     self.lrudIndicatorBall = createAndShowLrudBall(at: touchBeganLocation)
                     if quickDoubleTapDetected {
-                        LiSendKeyboardEvent(CommandManager.keyboardButtonMappings[self.buttonString]!,Int8(KEY_ACTION_DOWN), 0)
+                        self.sendComboButtonsDownEvent(comboStrings: self.comboButtonStrings)
                         DispatchQueue.global(qos: .userInitiated).async {
                             usleep(100000)
-                            LiSendKeyboardEvent(CommandManager.keyboardButtonMappings[self.buttonString]!,Int8(KEY_ACTION_UP), 0)
+                            self.sendComboButtonsUpEvent(comboStrings: self.comboButtonStrings)
                         }
                     }
                 default:

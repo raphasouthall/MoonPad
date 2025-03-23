@@ -2,9 +2,8 @@
 //  RelativeTouchHandler.m
 //  Moonlight
 //
-//  Completely refactored by ZWM on 2024.9.13
-//  Created by Cameron Gutman on 11/1/20.
-//  Copyright © 2020 Moonlight Game Streaming Project. All rights reserved.
+//  Completely refactored by True砖家 on 2024.9.13
+//  Copyright © 2024 True砖家 on Bilibili. All rights reserved.
 //
 
 #import "RelativeTouchHandler.h"

@@ -2,8 +2,8 @@
 //  CustomEdgeSlideGestureRecognizer.h
 //  Moonlight-ZWM
 //
-//  Created by ZWM on 2024/4/30.
-//  Copyright © 2024 Moonlight Game Streaming Project. All rights reserved.
+//  Created by True砖家 on 2024/4/30.
+//  Copyright © 2024 True砖家 on Bilibili. All rights reserved.
 //
 
 #ifndef CustomEdgeSlideGestureRecognizer_h
