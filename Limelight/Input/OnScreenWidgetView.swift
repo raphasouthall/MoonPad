@@ -19,9 +19,23 @@ import UIKit
         }
     }
     
+    enum WidgetTypeEnum: UInt8 {
+        case uninitialized = 0
+        case button = 1
+        case touchPad = 2
+    }
+    
+    private var widgetType: WidgetTypeEnum = WidgetTypeEnum.uninitialized
+    
     @objc static public var editMode: Bool = false
-    @objc public var keyLabel: String
-    @objc public var keyString: String
+    @objc public var buttonLabel: String
+    @objc public var cmdString: String
+    private var buttonString: String = ""
+    private var touchPadString: String = ""
+    // super combo key string set
+    private var comboButtonStrings: [String] = []
+    private var comboKeyTimeIntervalMs: UInt32 = 0
+
     @objc public var pressed: Bool
     @objc public var widthFactor: CGFloat = 1.0
     @objc public var heightFactor: CGFloat = 1.0
@@ -36,9 +50,17 @@ import UIKit
 
     
     
-        
+
+
+    // for all touchPad or buttons hybrid with touchPads
+    @objc public var hasStickIndicator: Bool = false
+    @objc public var hasSensitivityTweak: Bool = false
+    
+    // for all stick pads
+    @objc public var minStickOffset: CGFloat = 0
     public let stickMaxOffset: CGFloat = 0x7FFE
 
+    
     // for LSVPAD, RSVPAD
     @objc public var deltaX: CGFloat
     @objc public var deltaY: CGFloat
@@ -94,40 +116,66 @@ import UIKit
     private var defaultBorderColor: CGColor = UIColor(white: 0.2, alpha: 0.3).cgColor
     private let moonlightPurple: CGColor = UIColor(red: 0.5, green: 0.5, blue: 1.0, alpha: 0.86).cgColor
 
-    // super combo key string set
-    private var comboKeyStrings: [String] = []
-    private var comboKeyTimeIntervalMs: UInt32 = 10
     
     // whole button press down visual effect
     @objc public let buttonDownVisualEffectLayer = CAShapeLayer()
     private var buttonDownVisualEffectWidth: CGFloat
     
-    @objc init(keyString: String, keyLabel: String, shape:String) {
-        self.keyString = keyString
-        if self.keyString.contains("-"){
+    @objc init(cmdString: String, buttonLabel: String, shape:String) {
+        
+        self.cmdString = cmdString
+        self.touchPadString = ""
+        
+        if !self.cmdString.contains("+"){
             // 安全解包并处理 `comboKeyStrings`
-            if let comboKeyStrings = CommandManager.shared.extractSinglCmdStringsFromComboKeys(from: self.keyString) {
-                self.comboKeyStrings = comboKeyStrings
-                // 检查最后一个元素是否包含 "MS"
-                if let lastComboKey = self.comboKeyStrings.last, lastComboKey.contains("MS") {
+            if var comboStrings = CommandManager.shared.extractSinglCmdStringsFromComboKeys(from: self.cmdString) {
+                
+                // extract timeInterval
+                if let lastString = comboStrings.last, lastString.contains("MS") {
                     // 移除 "MS" 后的部分并转换为整数
-                    let timeIntervalString = lastComboKey.replacingOccurrences(of: "MS", with: "")
+                    let timeIntervalString = lastString.replacingOccurrences(of: "MS", with: "")
                     // 安全地将字符串转换为整数
                     if let timeInterval = UInt32(timeIntervalString) {
                         self.comboKeyTimeIntervalMs = timeInterval
-                    } else {
-                        // 处理转换失败的情况
-                        print("无法将时间字符串转换为整数")
-                    }
+                    } else {print("无法将时间字符串转换为整数")}
+                    comboStrings.removeLast()
                 }
-                self.comboKeyStrings.removeLast()
-            } else {
-                // 如果无法提取 comboKeyStrings
-                print("无法从 keyString 提取 comboKeyStrings")
+                
+                if CommandManager.touchPadCmds.contains(comboStrings.first ?? "") {self.widgetType = WidgetTypeEnum.touchPad}
+                else {self.widgetType = WidgetTypeEnum.button}
+                
+                let touchPadString = Set(comboStrings).intersection(Set(CommandManager.touchPadCmds)).first ?? ""
+                self.comboButtonStrings = comboStrings.filter{$0 != touchPadString}
+                self.touchPadString = touchPadString
+                self.buttonString = self.comboButtonStrings.first ?? ""
+                
+                let stickAndMouseTouchpads = ["LSPAD", "RSPAD", "LSVPAD", "RSVPAD", "MOUSEPAD"]
+                let nonVectorStickPads = ["LSPAD", "RSPAD"]
+                if stickAndMouseTouchpads.contains(self.touchPadString) {self.hasSensitivityTweak = true}
+                if nonVectorStickPads.contains(self.touchPadString) && widgetType == WidgetTypeEnum.touchPad {self.hasStickIndicator = true}
+                
+                switch self.cmdString {
+                case "LSPAD", "LSVPAD":
+                    self.comboButtonStrings = ["OSCL3"]
+                case "RSPAD", "RSVPAD":
+                    self.comboButtonStrings = ["OSCR3"]
+                default: break
+                }
             }
+            else {print("无法从 keyString 提取 comboKeyStrings")}
+        }
+        else {
+            self.widgetType = WidgetTypeEnum.button // legacy combo button connected by "+"
+        }
+        
+        
+        print("widgetType: \(self.widgetType)")
+        print("touchPadString: \(self.touchPadString)")
+        for comboButtonString in comboButtonStrings {
+            print("comboButtonString: \(comboButtonString)")
         }
 
-        self.keyLabel = keyLabel
+        self.buttonLabel = buttonLabel
         self.shape = shape
         self.label = UILabel()
         // self.originalBackgroundColor = UIColor(white: 0.2, alpha: 0.7)
@@ -172,7 +220,6 @@ import UIKit
         fatalError("init(coder:) has not been implemented")
     }
     
-
     
     // ======================================================================================================
     
@@ -246,7 +293,7 @@ import UIKit
         let realBackgroundAlpha = self.backgroundAlpha - 0.18 // offset to be consistent with legacy onScreen controller layer opacity
         self.backgroundColor = UIColor(white: 0.2, alpha: realBackgroundAlpha) // offset to be consistent with legacy onScreen controller layer opacity
         var borderAlpha = realBackgroundAlpha * 1.01
-        if CommandManager.touchPadCmds.contains(self.keyString){
+        if widgetType == WidgetTypeEnum.touchPad {
            minimumBorderAlpha = 0.0
         }
         if borderAlpha < minimumBorderAlpha {
@@ -255,7 +302,7 @@ import UIKit
         defaultBorderColor = UIColor(white: 0.2, alpha: borderAlpha).cgColor
         self.layer.borderColor = defaultBorderColor
 
-        if CommandManager.touchPadCmds.contains(self.keyString){
+        if widgetType == WidgetTypeEnum.touchPad {
             self.backgroundColor = UIColor.clear // make touchPad transparent
             self.layer.borderColor = UIColor(white: 0.2, alpha: borderAlpha - 0.15).cgColor // reduced border alpha for touchPad
         }
@@ -286,7 +333,7 @@ import UIKit
     }
     
     private func setupView() {
-        label.text = self.keyLabel
+        label.text = self.buttonLabel
         label.font = UIFont.boldSystemFont(ofSize: 19)
         label.translatesAutoresizingMaskIntoConstraints = false
         label.adjustsFontSizeToFitWidth = true
@@ -306,7 +353,7 @@ import UIKit
         self.tweakAlpha()
         
         if self.shape == "default" || self.shape.isEmpty {
-            if CommandManager.oscButtonMappings.keys.contains(self.keyString) && !CommandManager.oscRectangleButtonCmds.contains(self.keyString){ //make oscButtons round
+            if CommandManager.oscButtonMappings.keys.contains(self.buttonString) && !CommandManager.oscRectangleButtonCmds.contains(self.buttonString){ //make oscButtons round
                 self.shape = "round"
             }
             else {
@@ -314,18 +361,17 @@ import UIKit
             }
         }
         
-        
-        if CommandManager.touchPadCmds.contains(self.keyString){
+        if self.widgetType == WidgetTypeEnum.touchPad {
             self.shape = "largeSquare" // override shape from user input
             if(self.borderWidth < 1) {self.layer.borderWidth = 1}
             else {self.layer.borderWidth = self.borderWidth}
             label.text = "" // make touchPad display no text
             if OnScreenWidgetView.editMode { //display label in edit mode to make the pad more visible
-                label.text = self.keyString
+                label.text = self.cmdString
             }
         }
 
-        if CommandManager.specialOverlayButtonCmds.contains(self.keyString){
+        if CommandManager.specialOverlayButtonCmds.contains(self.cmdString){
             self.layer.borderWidth = 0
         }
 
@@ -608,8 +654,8 @@ import UIKit
         
         if(buttonPressed & Direction.up.rawValue == Direction.up.rawValue){
             showLrudDirectionIndicator(with: upIndicator)
-            switch keyString {
-            case "WASDPAD","YSWASD": LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["W"]!,Int8(KEY_ACTION_DOWN), 0)
+            switch touchPadString {
+            case "WASDPAD": LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["W"]!,Int8(KEY_ACTION_DOWN), 0)
             case "ARROWPAD": LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["UP_ARROW"]!,Int8(KEY_ACTION_DOWN), 0)
             case "DPAD": self.onScreenControls.pressDownControllerButton(UP_FLAG)
             default: break
@@ -617,8 +663,8 @@ import UIKit
         }
         else{
             self.upIndicator.removeFromSuperlayer()
-            switch keyString {
-            case "WASDPAD","YSWASD": LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["W"]!,Int8(KEY_ACTION_UP), 0)
+            switch touchPadString {
+            case "WASDPAD": LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["W"]!,Int8(KEY_ACTION_UP), 0)
             case "ARROWPAD": LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["UP_ARROW"]!,Int8(KEY_ACTION_UP), 0)
             case "DPAD": self.onScreenControls.releaseControllerButton(UP_FLAG)
             default: break
@@ -626,8 +672,8 @@ import UIKit
         }
         if(buttonPressed & Direction.down.rawValue == Direction.down.rawValue){
             showLrudDirectionIndicator(with: downIndicator)
-            switch keyString {
-            case "WASDPAD","YSWASD": LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["S"]!,Int8(KEY_ACTION_DOWN), 0)
+            switch touchPadString {
+            case "WASDPAD": LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["S"]!,Int8(KEY_ACTION_DOWN), 0)
             case "ARROWPAD": LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["DOWN_ARROW"]!,Int8(KEY_ACTION_DOWN), 0)
             case "DPAD": self.onScreenControls.pressDownControllerButton(DOWN_FLAG)
             default: break
@@ -635,8 +681,8 @@ import UIKit
         }
         else{
             self.downIndicator.removeFromSuperlayer()
-            switch keyString {
-            case "WASDPAD","YSWASD": LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["S"]!,Int8(KEY_ACTION_UP), 0)
+            switch touchPadString {
+            case "WASDPAD": LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["S"]!,Int8(KEY_ACTION_UP), 0)
             case "ARROWPAD": LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["DOWN_ARROW"]!,Int8(KEY_ACTION_UP), 0)
             case "DPAD": self.onScreenControls.releaseControllerButton(DOWN_FLAG)
             default: break
@@ -644,8 +690,8 @@ import UIKit
         }
         if(buttonPressed & Direction.left.rawValue == Direction.left.rawValue){
             showLrudDirectionIndicator(with: leftIndicator)
-            switch keyString {
-            case "WASDPAD","YSWASD": LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["A"]!,Int8(KEY_ACTION_DOWN), 0)
+            switch touchPadString {
+            case "WASDPAD": LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["A"]!,Int8(KEY_ACTION_DOWN), 0)
             case "ARROWPAD": LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["LEFT_ARROW"]!,Int8(KEY_ACTION_DOWN), 0)
             case "DPAD": self.onScreenControls.pressDownControllerButton(LEFT_FLAG)
             default: break
@@ -653,8 +699,8 @@ import UIKit
         }
         else{
             self.leftIndicator.removeFromSuperlayer()
-            switch keyString {
-            case "WASDPAD","YSWASD": LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["A"]!,Int8(KEY_ACTION_UP), 0)
+            switch touchPadString {
+            case "WASDPAD": LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["A"]!,Int8(KEY_ACTION_UP), 0)
             case "ARROWPAD": LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["LEFT_ARROW"]!,Int8(KEY_ACTION_UP), 0)
             case "DPAD": self.onScreenControls.releaseControllerButton(LEFT_FLAG)
             default: break
@@ -662,8 +708,8 @@ import UIKit
         }
         if(buttonPressed & Direction.right.rawValue == Direction.right.rawValue){
             showLrudDirectionIndicator(with: rightIndicator)
-            switch keyString {
-            case "WASDPAD","YSWASD": LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["D"]!,Int8(KEY_ACTION_DOWN), 0)
+            switch touchPadString {
+            case "WASDPAD": LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["D"]!,Int8(KEY_ACTION_DOWN), 0)
             case "ARROWPAD": LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["RIGHT_ARROW"]!,Int8(KEY_ACTION_DOWN), 0)
             case "DPAD": self.onScreenControls.pressDownControllerButton(RIGHT_FLAG)
             default: break
@@ -671,8 +717,8 @@ import UIKit
         }
         else{
             self.rightIndicator.removeFromSuperlayer()
-            switch keyString {
-            case "WASDPAD","YSWASD": LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["D"]!,Int8(KEY_ACTION_UP), 0)
+            switch touchPadString {
+            case "WASDPAD": LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["D"]!,Int8(KEY_ACTION_UP), 0)
             case "ARROWPAD": LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["RIGHT_ARROW"]!,Int8(KEY_ACTION_UP), 0)
             case "DPAD": self.onScreenControls.releaseControllerButton(RIGHT_FLAG)
             default: break
@@ -794,39 +840,42 @@ import UIKit
         var targetX = self.touchInputToStickInput(input: inputX)
         var targetY = -self.touchInputToStickInput(input: inputY)
  // vertical input must be inverted
-        switch self.keyString {
-            //tweaking yuanshen RsvPad related widgets
-        case "YSB", "YSRT", "YSRB", "YSRSV":
-            targetX = (targetX >= 0 ? 1.0 : -1.0) * 3000.0 + (stickMaxOffset - 3000.0) * (targetX/stickMaxOffset)
-            targetY = (targetY >= 0 ? 1.0 : -1.0) * 3000.0 + (stickMaxOffset - 3000.0) * (targetY/stickMaxOffset)
-        default: break
-        }
+        targetX = (targetX >= 0 ? 1.0 : -1.0) * minStickOffset + (stickMaxOffset - minStickOffset) * (targetX/stickMaxOffset)
+        targetY = (targetY >= 0 ? 1.0 : -1.0) * minStickOffset + (stickMaxOffset - minStickOffset) * (targetY/stickMaxOffset)
         self.onScreenControls.sendRightStickTouchPadEvent(targetX, targetY)
     }
     
     private func sendLeftStickTouchPadEvent(inputX: CGFloat, inputY: CGFloat){
         let targetX = self.touchInputToStickInput(input: inputX)
         let targetY = -self.touchInputToStickInput(input: inputY)
+        // targetX = (targetX >= 0 ? 1.0 : -1.0) * Float(minStickOffset) + (stickMaxOffset - Float(minStickOffset)) * (targetX/stickMaxOffset)
+        // targetY = (targetY >= 0 ? 1.0 : -1.0) * Float(minStickOffset) + (stickMaxOffset - Float(minStickOffset)) * (targetY/stickMaxOffset)
         self.onScreenControls.sendLeftStickTouchPadEvent(targetX, targetY)
     }
     //==========================================================================================================
     
-    private func sendOscButtonDownEvent(keyString: String){
-        let buttonFlag = CommandManager.oscButtonMappings[keyString]
+    private func sendOscButtonDownEvent(oscString: String){
+        let buttonFlag = CommandManager.oscButtonMappings[oscString]
         if buttonFlag != 0 {self.onScreenControls.pressDownControllerButton(buttonFlag!)}
-        if keyString == "OSCL2" || keyString == "YSLT" {
+        else {switch oscString {
+        case "OSCL2", "L2", "LT":
             self.onScreenControls.updateLeftTrigger(0xFF)
-        }
-        if keyString == "OSCR2" || keyString == "YSRT" {self.onScreenControls.updateRightTrigger(0xFF)}
+        case "OSCR2", "R2", "RT":
+            self.onScreenControls.updateRightTrigger(0xFF)
+        default:break
+        }}
     }
 
-    private func sendOscButtonUpEvent(keyString: String){
-        let buttonFlag = CommandManager.oscButtonMappings[keyString]
+    private func sendOscButtonUpEvent(oscString: String){
+        let buttonFlag = CommandManager.oscButtonMappings[oscString]
         if buttonFlag != 0 {self.onScreenControls.releaseControllerButton(buttonFlag!)}
-        if keyString == "OSCL2" || keyString == "YSLT" {
+        else {switch oscString {
+        case "OSCL2", "L2", "LT":
             self.onScreenControls.updateLeftTrigger(0x00)
-        }
-        if keyString == "OSCR2" || keyString == "YSRT" {self.onScreenControls.updateRightTrigger(0x00)}
+        case "OSCR2", "R2", "RT":
+            self.onScreenControls.updateRightTrigger(0x00)
+        default:break
+        }}
     }
     
 //==============================================================================
@@ -834,7 +883,7 @@ import UIKit
         DispatchQueue.global(qos: .userInitiated).async {
             for comboString in comboStrings {
                 if CommandManager.oscButtonMappings.keys.contains(comboString) {
-                    self.sendOscButtonDownEvent(keyString: comboString)
+                    self.sendOscButtonDownEvent(oscString: comboString)
                 }
                 if CommandManager.keyboardButtonMappings.keys.contains(comboString) {
                     LiSendKeyboardEvent(CommandManager.keyboardButtonMappings[comboString]!,Int8(KEY_ACTION_DOWN), 0)
@@ -853,7 +902,7 @@ import UIKit
         DispatchQueue.global(qos: .userInitiated).async {
             for comboString in comboStrings {
                 if CommandManager.oscButtonMappings.keys.contains(comboString) {
-                    self.sendOscButtonUpEvent(keyString: comboString)
+                    self.sendOscButtonUpEvent(oscString: comboString)
                 }
                 if CommandManager.keyboardButtonMappings.keys.contains(comboString) {
                     LiSendKeyboardEvent(CommandManager.keyboardButtonMappings[comboString]!,Int8(KEY_ACTION_UP), 0)
@@ -875,7 +924,7 @@ import UIKit
         
         self.touchBegan = true
         super.touchesBegan(touches, with: event)
-        self.isMultipleTouchEnabled = self.keyString == "MOUSEPAD" // only enable multi-touch in mousePad mode
+        self.isMultipleTouchEnabled = self.touchPadString == "MOUSEPAD" // only enable multi-touch in mousePad mode
 
         if touches.count == 1 { // to make sure touchBegan location captured properly, don't use event.alltouches.count here
             let currentTime = CACurrentMediaTime()
@@ -897,9 +946,8 @@ import UIKit
         self.pressed = true
 
         if !OnScreenWidgetView.editMode {
-
-            if CommandManager.touchPadCmds.contains(self.keyString) && touches.count == 1{ // don't use event?.allTouches?.count here, it will counts all touches including the ones captured by other UIViews
-                switch self.keyString {
+            if self.widgetType == WidgetTypeEnum.touchPad && touches.count == 1{ // don't use event?.allTouches?.count here, it will counts all touches including the ones captured by other UIViews
+                switch self.touchPadString {
                 case "LSPAD":
                     self.crossMarkLayer.removeFromSuperlayer()
                     self.stickBallLayer.removeFromSuperlayer()
@@ -907,8 +955,7 @@ import UIKit
                     self.showStickIndicator()
                     if quickDoubleTapDetected {
                         self.l3r3Indicator = self.createAndShowl3r3Indicator()
-                        self.onScreenControls.pressDownControllerButton(LS_CLK_FLAG)}
-                    break
+                        self.sendComboButtonsDownEvent(comboStrings: self.comboButtonStrings)}
                 case "RSPAD":
                     self.crossMarkLayer.removeFromSuperlayer()
                     self.stickBallLayer.removeFromSuperlayer()
@@ -916,64 +963,57 @@ import UIKit
                     self.showStickIndicator()
                     if quickDoubleTapDetected {
                         self.l3r3Indicator = self.createAndShowl3r3Indicator()
-                        self.onScreenControls.pressDownControllerButton(RS_CLK_FLAG)}
-                    break
+                        self.sendComboButtonsDownEvent(comboStrings: self.comboButtonStrings)}
                 case "LSVPAD":
                     if quickDoubleTapDetected {
                         self.l3r3Indicator = self.createAndShowl3r3Indicator()
-                        self.onScreenControls.pressDownControllerButton(LS_CLK_FLAG)}
-                    break
-                case "RSVPAD", "YSRSV":
+                        self.sendComboButtonsDownEvent(comboStrings: self.comboButtonStrings)}
+                case "RSVPAD":
                     if quickDoubleTapDetected {
                         self.l3r3Indicator = self.createAndShowl3r3Indicator()
-                        self.onScreenControls.pressDownControllerButton(RS_CLK_FLAG)}
-                    break
+                        self.sendComboButtonsDownEvent(comboStrings: self.comboButtonStrings)}
                 case "DPAD", "WASDPAD", "ARROWPAD":
                     self.lrudIndicatorBall = createAndShowLrudBall(at: touchBeganLocation)
-                case "YSWASD":
-                    self.lrudIndicatorBall = createAndShowLrudBall(at: touchBeganLocation)
                     if quickDoubleTapDetected {
-                        LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["CTRL"]!,Int8(KEY_ACTION_DOWN), 0)
+                        LiSendKeyboardEvent(CommandManager.keyboardButtonMappings[self.buttonString]!,Int8(KEY_ACTION_DOWN), 0)
                         DispatchQueue.global(qos: .userInitiated).async {
                             usleep(100000)
-                            LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["CTRL"]!,Int8(KEY_ACTION_UP), 0)
+                            LiSendKeyboardEvent(CommandManager.keyboardButtonMappings[self.buttonString]!,Int8(KEY_ACTION_UP), 0)
                         }
                     }
-                    break
                 default:
                     break
                 }
             }
             
-            if !self.keyString.contains("+") && !self.keyString.contains("-") {
+            /*
+            if !self.buttonString.isEmpty {
                 // if there's no "+" in the keystring, treat it as a regular button:
-                if CommandManager.oscButtonMappings.keys.contains(self.keyString) {
-                    self.sendOscButtonDownEvent(keyString: self.keyString)
+                if CommandManager.oscButtonMappings.keys.contains(self.cmdString) {
+                    self.sendOscButtonDownEvent(keyString: self.cmdString)
                 }
-                if CommandManager.keyboardButtonMappings.keys.contains(self.keyString) {
-                    LiSendKeyboardEvent(CommandManager.keyboardButtonMappings[self.keyString]!,Int8(KEY_ACTION_DOWN), 0)
+                if CommandManager.keyboardButtonMappings.keys.contains(self.cmdString) {
+                    LiSendKeyboardEvent(CommandManager.keyboardButtonMappings[self.cmdString]!,Int8(KEY_ACTION_DOWN), 0)
                 }
-                if CommandManager.mouseButtonMappings.keys.contains(self.keyString) {
-                    LiSendMouseButtonEvent(CChar(BUTTON_ACTION_PRESS), Int32(CommandManager.mouseButtonMappings[self.keyString]!))
+                if CommandManager.mouseButtonMappings.keys.contains(self.cmdString) {
+                    LiSendMouseButtonEvent(CChar(BUTTON_ACTION_PRESS), Int32(CommandManager.mouseButtonMappings[self.cmdString]!))
                 }
             }
+            */
             
-            // if the command(keystring contains "-", it's a multi-type super combo button
-            if self.keyString.contains("-"){
-                self.sendComboButtonsDownEvent(comboStrings: self.comboKeyStrings)
+            // this will also deal with button events
+            if self.widgetType == WidgetTypeEnum.button && !self.comboButtonStrings.isEmpty {
+                self.buttonDownVisualEffect()
+                self.sendComboButtonsDownEvent(comboStrings: self.comboButtonStrings)
             }
             
-            // if the command(keystring contains "+", it's a multi-key command or a quick triggering key, rather than a physical button
-            if self.keyString.contains("+") && !self.keyString.contains("-"){
-                let keyboardCmdStrings = CommandManager.shared.extractKeyStringsFromComboCommand(from: self.keyString)!
+            // legacy keyboard button combo connected by "+"
+            if self.cmdString.contains("+") && !self.cmdString.contains("-"){
+                let keyboardCmdStrings = CommandManager.shared.extractKeyStringsFromComboCommand(from: self.cmdString)!
                 CommandManager.shared.sendKeyComboCommand(keyboardCmdStrings: keyboardCmdStrings) // send multi-key command
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.03) { // reset shadow color immediately 50ms later
                     self.buttonUpVisualEffect()
                 }
-            }
-            
-            if !CommandManager.touchPadCmds.contains(self.keyString) {
-                self.buttonDownVisualEffect()
             }
         }
         // here is in edit mode:
@@ -981,7 +1021,6 @@ import UIKit
             self.buttonDownVisualEffect()
             NotificationCenter.default.post(name: Notification.Name("OnScreenWidgetViewSelected"),object: self) // inform layout tool controller to fetch button size factors. self will be passed as the object of the notification
         }
-        
     }
     
     private func moveByTouch(touch: UITouch){
@@ -1004,10 +1043,8 @@ import UIKit
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesMoved(touches, with: event)
         if !OnScreenWidgetView.editMode {
-            
             handleTouchPadMoveEvent(touches, with: event)
-            
-            if CommandManager.specialOverlayButtonCmds.contains(self.keyString){
+            if CommandManager.specialOverlayButtonCmds.contains(self.cmdString){
                 if let touch = touches.first {
                     NSLog("touchTapTimeStamp %f", self.touchTapTimeStamp)
                     if CACurrentMediaTime() - self.touchTapTimeStamp > 0.3 { // temporarily relocate special buttons
@@ -1023,11 +1060,8 @@ import UIKit
             if let touch = touches.first {
                 self.moveByTouch(touch: touch)
                 }
-
-            if CommandManager.nonVectorStickPads.contains(self.keyString) {
-                self.stickBallLayer.removeFromSuperlayer()
-                self.crossMarkLayer.removeFromSuperlayer()
-            }
+            self.stickBallLayer.removeFromSuperlayer()
+            self.crossMarkLayer.removeFromSuperlayer()
         }
     }
     
@@ -1041,26 +1075,25 @@ import UIKit
             self.offSetY = currentTouchLocation.y - self.touchBeganLocation.y
             self.latestTouchLocation = currentTouchLocation
             
-            switch self.keyString{
-            case "MOUSEPAD","YSEM","YSML","YSMR":
+            switch self.touchPadString{
+            case "MOUSEPAD":
                 LiSendMouseMoveEvent(Int16(truncatingIfNeeded: Int(deltaX * 1.7 * sensitivityFactor)), Int16(truncatingIfNeeded: Int(deltaY * 1.7 * sensitivityFactor)))
                 break
-            case "LSPAD", "YSLT":
-                self.sendLeftStickTouchPadEvent(inputX: offSetX * sensitivityFactor, inputY: offSetY*sensitivityFactor)
-                updateStickIndicator()
+            case "LSPAD":
+                self.sendLeftStickTouchPadEvent(inputX: offSetX * sensitivityFactor, inputY: offSetY * sensitivityFactor)
+                if widgetType == WidgetTypeEnum.touchPad {updateStickIndicator()}
             case "RSPAD":
                 self.sendRightStickTouchPadEvent(inputX: offSetX * sensitivityFactor, inputY: offSetY * sensitivityFactor);
-                updateStickIndicator()
+                if widgetType == WidgetTypeEnum.touchPad {updateStickIndicator()}
             case "LSVPAD":
                 self.sendLeftStickTouchPadEvent(inputX: deltaX*1.5167*sensitivityFactor, inputY: deltaY*1.5167*sensitivityFactor)
-            case "RSVPAD", "YSB", "YSRT", "YSRB", "YSRSV":
+            case "RSVPAD":
                 self.sendRightStickTouchPadEvent(inputX: deltaX*1.5167*sensitivityFactor, inputY: deltaY*1.5167*sensitivityFactor);
-            case "DPAD", "WASDPAD", "ARROWPAD", "YSWASD":
+            case "DPAD", "WASDPAD", "ARROWPAD":
                 handleLrudTouchMove()
             default:
                 break
             }
-
         }
     }
     
@@ -1070,13 +1103,13 @@ import UIKit
         
         // for checking stationary touch points
 
-        if self.keyString != "MOUSEPAD" {quickDoubleTapDetected = false} //do not reset this flag here in mousePad mode
+        if self.touchPadString != "MOUSEPAD" {quickDoubleTapDetected = false} //do not reset this flag here in mousePad mode
         
         let allCapturedTouchesCount = event?.allTouches?.filter({ $0.view == self }).count // this will counts all valid touches within the self widgetView, and excludes touches in other widgetViews
         
         
-        // deal with MOUSPAD first
-        if !OnScreenWidgetView.editMode && self.keyString == "MOUSEPAD" && allCapturedTouchesCount == 1 && !twoTouchesDetected {
+        // deal with pure MOUSPAD first
+        if !OnScreenWidgetView.editMode && self.widgetType == WidgetTypeEnum.touchPad && self.touchPadString == "MOUSEPAD" && allCapturedTouchesCount == 1 && !twoTouchesDetected {
             if !mousePointerMoved && !quickDoubleTapDetected {self.sendLongMouseLeftButtonClickEvent()} // deal with single tap(click)
             if quickDoubleTapDetected { //deal with quick double tap
                 LiSendMouseButtonEvent(CChar(BUTTON_ACTION_RELEASE), BUTTON_LEFT) //must release the button anyway, because the button is likely being held down since the long click turned into a dragging event.
@@ -1085,29 +1118,26 @@ import UIKit
             }
             mousePointerMoved = false // reset this flag
         }
-        
-        if !OnScreenWidgetView.editMode && self.keyString == "MOUSEPAD" && twoTouchesDetected && touches.count == allCapturedTouchesCount { // need to enable multi-touch first
+        if !OnScreenWidgetView.editMode && self.widgetType == WidgetTypeEnum.touchPad && self.touchPadString == "MOUSEPAD" && twoTouchesDetected && touches.count == allCapturedTouchesCount { // need to enable multi-touch first
             // touches.count == allCapturedTouchesCount means allfingers are lifting
             self.sendMouseRightButtonClickEvent()
             twoTouchesDetected = false
         }
         
-        // then other types of pads
-        if !OnScreenWidgetView.editMode && (CommandManager.touchPadCmds.contains(self.keyString) || CommandManager.yuanshenStickPadButtonCmds.contains(self.keyString)) {
-            switch self.keyString{
+        // then other types of pads or buttons with touchPad function
+        if !OnScreenWidgetView.editMode && !self.touchPadString.isEmpty {
+            switch self.touchPadString{
             case "LSPAD":
                 self.onScreenControls.clearLeftStickTouchPadFlag()
-                self.resetStickBallPositionAndRemoveIndicator()
-            case "YSLT":
-                self.onScreenControls.clearLeftStickTouchPadFlag()
+                if widgetType == WidgetTypeEnum.touchPad {self.resetStickBallPositionAndRemoveIndicator()}
             case "RSPAD":
                 self.onScreenControls.clearRightStickTouchPadFlag()
-                self.resetStickBallPositionAndRemoveIndicator()
+                if widgetType == WidgetTypeEnum.touchPad {self.resetStickBallPositionAndRemoveIndicator()}
             case "LSVPAD":
                 self.onScreenControls.clearLeftStickTouchPadFlag()
-            case "RSVPAD", "YSB", "YSRT", "YSRB", "YSRSV":
+            case "RSVPAD":
                 self.onScreenControls.clearRightStickTouchPadFlag()
-            case "WASDPAD","YSWASD":
+            case "WASDPAD":
                 LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["W"]!,Int8(KEY_ACTION_UP), 0)
                 LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["A"]!,Int8(KEY_ACTION_UP), 0)
                 LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["S"]!,Int8(KEY_ACTION_UP), 0)
@@ -1133,27 +1163,13 @@ import UIKit
         self.rightIndicator.removeFromSuperlayer()
         self.lrudIndicatorBall.removeFromSuperlayer()
                                 
-        if !OnScreenWidgetView.editMode && !self.keyString.contains("+") && !self.keyString.contains("-") { // if the command(keystring contains "+", it's a multi-key command rather than a single key button
-            if CommandManager.oscButtonMappings.keys.contains(self.keyString) {
-                sendOscButtonUpEvent(keyString: self.keyString)
-            }
-            if CommandManager.keyboardButtonMappings.keys.contains(self.keyString) {
-                LiSendKeyboardEvent(CommandManager.keyboardButtonMappings[self.keyString]!,Int8(KEY_ACTION_UP), 0)
-            }
-            if CommandManager.mouseButtonMappings.keys.contains(self.keyString){
-                LiSendMouseButtonEvent(CChar(BUTTON_ACTION_RELEASE), Int32(CommandManager.mouseButtonMappings[self.keyString]!))
-            }
+        if !OnScreenWidgetView.editMode && !self.cmdString.contains("+") && !self.comboButtonStrings.isEmpty { // if the command(keystring contains "+", it's a legacy multi-key command
+            self.sendComboButtonsUpEvent(comboStrings: self.comboButtonStrings)
         }
         
-        // if the command(keystring contains "-", it's a multi-type super combo button
-        if !OnScreenWidgetView.editMode && self.keyString.contains("-"){
-            let comboStrings = CommandManager.shared.extractSinglCmdStringsFromComboKeys(from: self.keyString)!
-            self.sendComboButtonsUpEvent(comboStrings: comboStrings)
-        }
-        
-        if !OnScreenWidgetView.editMode && CommandManager.specialOverlayButtonCmds.contains(self.keyString){
+        if !OnScreenWidgetView.editMode && CommandManager.specialOverlayButtonCmds.contains(self.cmdString){
             if CACurrentMediaTime() - self.touchTapTimeStamp < 0.3 {
-                switch self.keyString {
+                switch self.cmdString {
                 case "SETTINGS":
                     NotificationCenter.default.post(name: Notification.Name("SettingsOverlayButtonPressedNotification"), object:nil) // inform layout tool controller to fetch button size factors. self will be passed as the object of the notification
                 default:
@@ -1183,11 +1199,15 @@ import UIKit
             
             setupView(); //re-setup widgetView style
             
-            if CommandManager.nonVectorStickPads.contains(self.keyString) {
-                self.crossMarkLayer.removeFromSuperlayer()
-                self.stickBallLayer.removeFromSuperlayer()
-                self.showStickIndicator()
-                self.updateStickIndicator()
+            self.crossMarkLayer.removeFromSuperlayer()
+            self.stickBallLayer.removeFromSuperlayer()
+            if self.widgetType == WidgetTypeEnum.touchPad{
+                switch self.touchPadString{
+                case "LSPAD", "RSPAD":
+                    self.showStickIndicator()
+                    self.updateStickIndicator()
+                default: break
+                }
             }
         }
         

@@ -291,8 +291,8 @@ static NSMutableSet *OnScreenWidgetViews;
     
     // save on-screen widget views (keyboard & mouse command) as buttonstate:
     for(OnScreenWidgetView* widgetView in OnScreenWidgetViews){
-        OnScreenButtonState *buttonState = [[OnScreenButtonState alloc] initWithButtonName:widgetView.keyString buttonType:CustomOnScreenWidget andPosition:widgetView.center];
-        buttonState.alias = widgetView.keyLabel;
+        OnScreenButtonState *buttonState = [[OnScreenButtonState alloc] initWithButtonName:widgetView.cmdString buttonType:CustomOnScreenWidget andPosition:widgetView.center];
+        buttonState.alias = widgetView.buttonLabel;
         buttonState.widthFactor = widgetView.widthFactor;
         buttonState.heightFactor = widgetView.heightFactor;
         buttonState.backgroundAlpha = widgetView.backgroundAlpha;
@@ -300,6 +300,7 @@ static NSMutableSet *OnScreenWidgetViews;
         buttonState.sensitivityFactor = widgetView.sensitivityFactor;
         buttonState.stickIndicatorOffset = widgetView.stickIndicatorOffset;
         buttonState.widgetShape = widgetView.shape;
+        buttonState.minStickOffset = widgetView.minStickOffset;
         
         NSData *buttonStateEncoded = [NSKeyedArchiver archivedDataWithRootObject:buttonState requiringSecureCoding:YES error:nil];
         [buttonStatesEncoded addObject: buttonStateEncoded];

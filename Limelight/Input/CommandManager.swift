@@ -52,8 +52,6 @@ import UIKit
     @objc public static let shared = CommandManager()
     
     @objc public static let mouseButtonMappings: [String: Int32] = [
-        "YSML" : BUTTON_LEFT,
-        "YSMR" : BUTTON_RIGHT,
         "M_LEFT" : BUTTON_LEFT,
         "MLEFT" : BUTTON_LEFT,
         "M_MIDDLE" : BUTTON_MIDDLE,
@@ -68,26 +66,37 @@ import UIKit
     
     
     @objc public static let oscButtonMappings: [String: Int32] = [
-        "YSLT" : 0,
-        "YSRT" : 0,  // RT button & RsvPad in GenshinImpact
-        "YSRB" : RB_FLAG,  // RB button & RsvPad in GenshinImpact
-        "YSB"  : B_FLAG, // B button & RsvPad in GenshinImpact
         "OSCA" : A_FLAG,
         "OSCB" : B_FLAG,
         "OSCX" : X_FLAG,
         "OSCY" : Y_FLAG,
         "OSCL1" : LB_FLAG,
+        "L1" : LB_FLAG,
+        "LB" : LB_FLAG,
         "OSCR1" : RB_FLAG,
+        "R1" : RB_FLAG,
+        "RB" : RB_FLAG,
         "OSCL3" : LS_CLK_FLAG,
+        "L3" : LS_CLK_FLAG,
+        "LS" : LS_CLK_FLAG,
         "OSCR3" : RS_CLK_FLAG,
+        "R3" : RS_CLK_FLAG,
+        "RS" : RS_CLK_FLAG,
         "OSCSTART" : PLAY_FLAG,
+        "OSCPLAY" : PLAY_FLAG,
         "OSCSELECT" : BACK_FLAG,
+        "OSCBACK" : BACK_FLAG,
         "OSCUP" : UP_FLAG,
         "OSCDOWN" : DOWN_FLAG,
         "OSCLEFT" : LEFT_FLAG,
         "OSCRIGHT" : RIGHT_FLAG,
         "OSCL2" : 0,
-        "OSCR2" : 0]
+        "L2" : 0,
+        "LT" : 0,
+        "OSCR2" : 0,
+        "R2" : 0,
+        "RT" : 0
+    ]
 
     @objc public static let oscRectangleButtonCmds: [String] = [
         "OSCUP",
@@ -95,20 +104,21 @@ import UIKit
         "OSCLEFT",
         "OSCRIGHT",
         "OSCSTART",
-        "OSCSELECT"]
+        "OSCPLAY",
+        "OSCSELECT",
+        "OSCBACK"
+    ]
     
-    @objc public static let touchPadCmds: [String] = ["YSRSV", "LSVPAD", "RSVPAD", "LSPAD", "RSPAD", "MOUSEPAD", "DPAD", "WASDPAD", "ARROWPAD", "YSWASD"]
-    @objc public static let stickTouchPads: [String] = ["YSRSV", "LSVPAD", "RSVPAD", "LSPAD", "RSPAD"]
+    @objc public static let touchPadCmds: [String] = ["LSVPAD", "RSVPAD", "LSPAD", "RSPAD", "MOUSEPAD", "DPAD", "WASDPAD", "ARROWPAD"]
+    @objc public static let stickTouchPads: [String] = ["LSVPAD", "RSVPAD", "LSPAD", "RSPAD"]
     @objc public static let nonVectorStickPads: [String] = ["LSPAD", "RSPAD"]
     @objc public static let specialOverlayButtonCmds: [String] = ["SETTINGS"]
 
-    @objc public static let specialGameWidgets: [String] = ["YSRSV", "YSLT", "YSRT", "YSRB", "YSB", "YSRT2", "YSRB2", "YSB2", "YSEM", "YSML", "YSMR", "YSWASD"]
-    @objc public static let yuanshenStickPadButtonCmds: [String] = ["YSLT", "YSRT", "YSRB", "YSB"]
-    @objc public static let yuanshenMouseMoveButtonCmds: [String] = ["YSEM", "YSML", "YSMR"]
+    // @objc public static let specialGameWidgets: [String] = ["YSRSV", "YSLT", "YSRT", "YSRB", "YSB", "YSRT2", "YSRB2", "YSB2", "YSEM", "YSML", "YSMR", "YSWASD"]
     
     static let keyboardButtonMappings: [String: Int16] = [
         // Windows Key Codes
-        "YSEM": 0x45,           // 'E' & mousePad button in GenshinImpact
+        "NULL": 0xFF,
         "CTRL": 0x11,        // VK_CONTROL
         "SHIFT": 0x10,       // VK_SHIFT
         "ALT": 0x12,         // VK_MENU
@@ -445,12 +455,15 @@ import UIKit
     @objc public func extractSinglCmdStringsFromComboKeys(from input: String) -> [String]? {
         let combinedStrings =  [CommandManager.keyboardButtonMappings.keys.map { $0 as String },
                                 CommandManager.oscButtonMappings.keys.map { $0 as String },
-                                CommandManager.mouseButtonMappings.keys.map { $0 as String }]
+                                CommandManager.mouseButtonMappings.keys.map { $0 as String },
+                                CommandManager.touchPadCmds.map { $0 as String }
+                                ]
                                 .lazy            // 零内存开销
                                 .flatMap { $0 }  // 三维展开
                                 .map(String.init(describing:)) // 安全类型转换
         
         let keys = combinedStrings.joined(separator: "|")
+        print(keys)
         let pattern = "^(?:\(keys))(?:-(?:\(keys)))*(?:-\\d+MS)?$"
 
         

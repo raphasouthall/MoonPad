@@ -40,6 +40,7 @@
     [encoder encodeFloat:self.backgroundAlpha forKey:@"backgroundAlpha"];
     [encoder encodeFloat:self.borderWidth forKey:@"borderWidth"];
     [encoder encodeObject:self.widgetShape forKey:@"widgetShape"];
+    [encoder encodeFloat:self.minStickOffset forKey:@"minStickOffset"];
 }
 
 - (id) initWithCoder:(NSCoder*)decoder {
@@ -57,6 +58,7 @@
         self.backgroundAlpha = [decoder decodeFloatForKey:@"backgroundAlpha"];
         self.borderWidth = [decoder decodeFloatForKey:@"borderWidth"];
         self.widgetShape = [decoder decodeObjectForKey:@"widgetShape"];
+        self.minStickOffset = [decoder decodeFloatForKey:@"minStickOffset"];
     }
     return self;
 }

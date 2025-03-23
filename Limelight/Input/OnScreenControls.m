@@ -159,13 +159,13 @@ static float L3_Y;
 
 - (void) clearRightStickTouchPadFlag{
     [_controllerSupport updateRightStick:_controller x:0 y:0];
-    [_controllerSupport clearButtonFlag:_controller flags:RS_CLK_FLAG];
+    // [_controllerSupport clearButtonFlag:_controller flags:RS_CLK_FLAG];
     [_controllerSupport updateFinished:_controller];
 }
 
 - (void) clearLeftStickTouchPadFlag{
     [_controllerSupport updateLeftStick:_controller x:0 y:0];
-    [_controllerSupport clearButtonFlag:_controller flags:LS_CLK_FLAG];
+    // [_controllerSupport clearButtonFlag:_controller flags:LS_CLK_FLAG];
     [_controllerSupport updateFinished:_controller];
 }
 

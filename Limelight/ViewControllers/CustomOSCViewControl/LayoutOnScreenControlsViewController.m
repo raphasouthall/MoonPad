@@ -69,6 +69,9 @@
 }
 
 - (void) reloadOnScreenWidgetViews {
+    [self->selectedWidgetView.stickBallLayer removeFromSuperlayer];
+    [self->selectedWidgetView.crossMarkLayer removeFromSuperlayer];
+    
     for (UIView *subview in self.view.subviews) {
         // 检查子视图是否是特定类型的实例
         if ([subview isKindOfClass:[OnScreenWidgetView class]]) {
@@ -78,6 +81,7 @@
     }
     
     [self.OnScreenWidgetViews removeAllObjects];
+
     
     NSLog(@"reload os Key here");
     
@@ -86,14 +90,14 @@
     for (NSData *buttonStateEncoded in oscProfile.buttonStates) {
         OnScreenButtonState* buttonState = [NSKeyedUnarchiver unarchivedObjectOfClass:[OnScreenButtonState class] fromData:buttonStateEncoded error:nil];
         if(buttonState.buttonType == CustomOnScreenWidget){
-            OnScreenWidgetView* widgetView = [[OnScreenWidgetView alloc] initWithKeyString:buttonState.name keyLabel:buttonState.alias shape:buttonState.widgetShape]; //reconstruct widgetView
+            OnScreenWidgetView* widgetView = [[OnScreenWidgetView alloc] initWithCmdString:buttonState.name buttonLabel:buttonState.alias shape:buttonState.widgetShape]; //reconstruct widgetView
             widgetView.translatesAutoresizingMaskIntoConstraints = NO; // weird but this is mandatory, or you will find no key views added to the right place
             widgetView.widthFactor = buttonState.widthFactor;
             widgetView.heightFactor = buttonState.heightFactor;
             widgetView.borderWidth = buttonState.borderWidth;
             widgetView.sensitivityFactor = buttonState.sensitivityFactor;
             widgetView.stickIndicatorOffset = buttonState.stickIndicatorOffset;
-            // widgetView.backgroundAlpha = buttonState.backgroundAlpha;
+            widgetView.minStickOffset = buttonState.minStickOffset;
             // Add the widgetView to the view controller's view
             [self.view addSubview:widgetView];
             [widgetView setLocationWithXOffset:buttonState.position.x yOffset:buttonState.position.y];
@@ -350,8 +354,8 @@
 
 - (IBAction) addTapped:(id)sender{
     
-    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:[LocalizationHelper localizedStringForKey:@"New On-Screen Widget"]
-                                                                             message:[LocalizationHelper localizedStringForKey:@"Enter the command & alias label"]
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:[LocalizationHelper localizedStringForKey:@""]
+                                                                             message:[LocalizationHelper localizedStringForKey:@"New On-Screen Widget"]
                                                                       preferredStyle:UIAlertControllerStyleAlert];
     
     [alertController addTextFieldWithConfigurationHandler:^(UITextField *textField) {
@@ -367,13 +371,31 @@
         textField.autocorrectionType = UITextAutocorrectionTypeNo;
         textField.spellCheckingType = UITextSpellCheckingTypeNo;
     }];
-
+    
+    [alertController addTextFieldWithConfigurationHandler:^(UITextField *textField) {
+        textField.placeholder = [LocalizationHelper localizedStringForKey:@"Minimum stick offset (0~32766)"];
+        textField.keyboardType = UIKeyboardTypeASCIICapable;
+        textField.autocorrectionType = UITextAutocorrectionTypeNo;
+        textField.spellCheckingType = UITextSpellCheckingTypeNo;
+    }];
+    
     [alertController addTextFieldWithConfigurationHandler:^(UITextField *textField) {
         textField.placeholder = [LocalizationHelper localizedStringForKey:@"Shape (r - round, s - square)"];
         textField.keyboardType = UIKeyboardTypeASCIICapable;
         textField.autocorrectionType = UITextAutocorrectionTypeNo;
         textField.spellCheckingType = UITextSpellCheckingTypeNo;
     }];
+
+
+    UIAlertAction *readInstruction = [UIAlertAction actionWithTitle:[LocalizationHelper localizedStringForKey:@"Read Widget Instruction"]
+                                                           style:UIAlertActionStyleDefault
+                                                            handler:^(UIAlertAction *action){
+        NSURL *url = [NSURL URLWithString:@"https://b23.tv/J8qEXOr"];
+        if ([[UIApplication sharedApplication] canOpenURL:url]) {
+            [[UIApplication sharedApplication] openURL:url options:@{} completionHandler:nil];
+        }
+    }];
+    
     
     UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:[LocalizationHelper localizedStringForKey:@"Cancel"]
                                                            style:UIAlertActionStyleCancel
@@ -391,24 +413,30 @@
         alertController.textFields[1].spellCheckingType = UITextSpellCheckingTypeNo;*/
         
         NSString *cmdString = [alertController.textFields[0].text uppercaseString]; // convert to uppercase
-        NSString *keyLabel = alertController.textFields[1].text;
-        NSString *widgetShape = [alertController.textFields[2].text lowercaseString];
+        NSString *buttonLabel = alertController.textFields[1].text;
+        NSString *minStickOffsetString = alertController.textFields[2].text;
+        NSString *widgetShape = [alertController.textFields[3].text lowercaseString];
+
         
-        if([keyLabel isEqualToString:@""]) keyLabel = [[cmdString lowercaseString] capitalizedString];
+        if([buttonLabel isEqualToString:@""]) buttonLabel = [[cmdString lowercaseString] capitalizedString];
         bool noValidKeyboardString = [CommandManager.shared extractKeyStringsFromComboCommandFrom:cmdString] == nil; // this is a invalid string.
         bool noValidSuperComboButtonString = [CommandManager.shared extractSinglCmdStringsFromComboKeysFrom:cmdString] == nil; // this is a invalid string.
         bool noValidMouseButtonString = ![CommandManager.mouseButtonMappings.allKeys containsObject:cmdString];
         bool noValidTouchPadString = ![CommandManager.touchPadCmds containsObject:cmdString];
         bool noValidOscButtonString = ![CommandManager.oscButtonMappings.allKeys containsObject:cmdString];
         bool noValidSpecialButtonString = ![CommandManager.specialOverlayButtonCmds containsObject:cmdString];
-        bool noValidSpecialGameWidgetString = ![CommandManager.specialGameWidgets containsObject:cmdString];
 
-        bool invalidInput = noValidKeyboardString && noValidMouseButtonString && noValidTouchPadString && noValidOscButtonString && noValidSpecialButtonString && noValidSuperComboButtonString && noValidSpecialGameWidgetString;
+        bool invalidInput = noValidKeyboardString && noValidMouseButtonString && noValidTouchPadString && noValidOscButtonString && noValidSpecialButtonString && noValidSuperComboButtonString;
         
         if([widgetShape isEqualToString:@"r"]) widgetShape = @"round";
         else if([widgetShape isEqualToString:@"s"]) widgetShape = @"square";
         else if([widgetShape isEqualToString:@""]) widgetShape = @"default";
         else invalidInput = true;
+
+        NSCharacterSet *nonDigitCharacterSet = [[NSCharacterSet decimalDigitCharacterSet] invertedSet];
+        NSString *trimmedString = [minStickOffsetString stringByTrimmingCharactersInSet:nonDigitCharacterSet];
+        if(trimmedString.length != minStickOffsetString.length) invalidInput = true;
+        minStickOffsetString = trimmedString;
 
         if(invalidInput) {
             [self presentInvalidWidgetCommandAlert];
@@ -416,15 +444,16 @@
         }
         
         //saving & present the keyboard button:
-        OnScreenWidgetView* widgetView = [[OnScreenWidgetView alloc] initWithKeyString:cmdString keyLabel:keyLabel shape:widgetShape];
+        OnScreenWidgetView* widgetView = [[OnScreenWidgetView alloc] initWithCmdString:cmdString buttonLabel:buttonLabel shape:widgetShape];
         widgetView.translatesAutoresizingMaskIntoConstraints = NO; // weird but this is mandatory, or you will find no key views added to the right place
-        
+        widgetView.minStickOffset = [minStickOffsetString floatValue];
         [self.OnScreenWidgetViews addObject:widgetView];
         // Add the widgetView to the view controller's view
         [self.view addSubview:widgetView];
         [widgetView setLocationWithXOffset:50 yOffset:50];
         [widgetView resizeWidgetView];
     }];
+    [alertController addAction:readInstruction];
     [alertController addAction:cancelAction];
     [alertController addAction:okAction];
     [self presentViewController:alertController animated:YES completion:nil];
@@ -466,12 +495,8 @@
     [self.widgetAlphaSlider setValue: self->selectedWidgetView.backgroundAlpha];
     [self.widgetBorderWidthSlider setValue:self->selectedWidgetView.borderWidth];
     
-    NSSet *stickAndMouseTouchpads = [NSSet setWithObjects:@"YSRSV", @"YSB", @"YSLT", @"YSRT", @"YSRB",@"YSB2", @"YSRT2", @"YSRB2", @"YSEM", @"YSML", @"YSMR", @"LSPAD", @"RSPAD", @"LSVPAD", @"RSVPAD", @"MOUSEPAD", nil];
-    NSSet *nonVectorStickPads = [NSSet setWithObjects: @"LSPAD", @"RSPAD", nil];
-
-    
-    bool showSensitivityFactorSlider = [stickAndMouseTouchpads containsObject:self->selectedWidgetView.keyString];
-    bool showStickIndicatorOffsetSlider = [nonVectorStickPads containsObject:self->selectedWidgetView.keyString];
+    bool showSensitivityFactorSlider = selectedWidgetView.hasSensitivityTweak;
+    bool showStickIndicatorOffsetSlider = selectedWidgetView.hasStickIndicator;
     self.sensitivityFactorSlider.hidden = self->sensitivitySliderLabel.hidden = !showSensitivityFactorSlider;
     self.stickIndicatorOffsetSlider.hidden = self->stickIndicatorOffsetExplain.hidden = self->stickIndicatorOffsetSliderLabel.hidden = !showStickIndicatorOffsetSlider;
     if(showSensitivityFactorSlider){

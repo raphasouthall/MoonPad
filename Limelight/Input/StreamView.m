@@ -393,7 +393,7 @@ static const double X1_MOUSE_SPEED_DIVISOR = 2.5;
         for (NSData *buttonStateEncoded in oscProfile.buttonStates) {
             OnScreenButtonState* buttonState = [NSKeyedUnarchiver unarchivedObjectOfClass:[OnScreenButtonState class] fromData:buttonStateEncoded error:nil];
             if(buttonState.buttonType == CustomOnScreenWidget){
-                OnScreenWidgetView* widgetView = [[OnScreenWidgetView alloc] initWithKeyString:buttonState.name keyLabel:buttonState.alias shape:buttonState.widgetShape]; //reconstruct widgetView
+                OnScreenWidgetView* widgetView = [[OnScreenWidgetView alloc] initWithCmdString:buttonState.name buttonLabel:buttonState.alias shape:buttonState.widgetShape]; //reconstruct widgetView
                 //--------------------------------------------------
                 onScreenControls.delegate = widgetView; // connecting onScreenControls to OnScreenWidgetView, sending the active instance for touchPad stick control
                 [onScreenControls sendInstance];
@@ -404,6 +404,7 @@ static const double X1_MOUSE_SPEED_DIVISOR = 2.5;
                 widgetView.borderWidth = buttonState.borderWidth;
                 widgetView.sensitivityFactor = buttonState.sensitivityFactor;
                 widgetView.stickIndicatorOffset = buttonState.stickIndicatorOffset;
+                widgetView.minStickOffset = buttonState.minStickOffset;
                 // Add the widgetView to the view controller's view
                 [self->streamFrameTopLayerView addSubview:widgetView]; // add keyboard button to the stream frame view. must add it to the target view before setting location.
                 [widgetView setLocationWithXOffset:buttonState.position.x yOffset:buttonState.position.y];
