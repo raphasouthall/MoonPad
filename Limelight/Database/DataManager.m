@@ -65,7 +65,7 @@
       pointerVelocityModeDivider:(CGFloat)pointerVelocityModeDivider
       touchPointerVelocityFactor:(CGFloat)touchPointerVelocityFactor
       mousePointerVelocityFactor:(CGFloat)mousePointerVelocityFactor
-          oscTapExlusionAreaSize:(CGFloat)oscTapExlusionAreaSize
+          touchMoveEventInterval:(NSInteger)touchMoveEventInterval
       reverseMouseWheelDirection:(BOOL)reverseMouseWheelDirection
                   largerStickLR1:(BOOL)largerStickLR1
        liftStreamViewForKeyboard:(BOOL)liftStreamViewForKeyboard
@@ -103,7 +103,7 @@
         settingsToSave.pointerVelocityModeDivider = [NSNumber numberWithFloat:pointerVelocityModeDivider];
         settingsToSave.touchPointerVelocityFactor = [NSNumber numberWithFloat:touchPointerVelocityFactor];
         settingsToSave.mousePointerVelocityFactor = [NSNumber numberWithFloat:mousePointerVelocityFactor];
-        settingsToSave.oscTapExlusionAreaSize = [NSNumber numberWithFloat:oscTapExlusionAreaSize];
+        settingsToSave.touchMoveEventInterval = [NSNumber numberWithInteger:touchMoveEventInterval];
         settingsToSave.reverseMouseWheelDirection = reverseMouseWheelDirection;
         settingsToSave.largerStickLR1 = largerStickLR1;
         settingsToSave.liftStreamViewForKeyboard = liftStreamViewForKeyboard;

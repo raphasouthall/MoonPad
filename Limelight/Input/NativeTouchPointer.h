@@ -13,18 +13,18 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface NativeTouchPointer : NSObject
 @property (nonatomic, assign) bool needResetCoords;
+@property (nonatomic, assign) CGPoint initialPoint;
+@property (nonatomic, assign) CGPoint latestPoint;
+@property (nonatomic, assign) CGPoint previousPoint;
+@property (nonatomic, assign) CGPoint latestRelativePoint;
+@property (nonatomic, assign) CGPoint previousRelativePoint;
+@property (nonatomic, assign) bool useRelativeCoords;
 
-+ (void)initContextWithView:(StreamView *)view;
-+ (void)setPointerVelocityDivider:(CGFloat)dividerLocation;
-+ (void)setPointerVelocityFactor:(CGFloat)velocityFactor;
 
-+ (NativeTouchPointer* )getPointerObjFromDict:(UITouch*)touch;
++ (void)initContextWithView:(StreamView*)view andSettings:(TemporarySettings*)settings;
+
 - (bool)doesNeedResetCoords;
-
-+ (void)populatePointerObjIntoDict:(UITouch*)touch;
-+ (void)removePointerObjFromDict:(UITouch*)touch;
-+ (void)updatePointerObjInDict:(UITouch *)touch;
-+ (CGPoint)selectCoordsFor:(UITouch *)touch;
+- (void)updatePointerCoords:(UITouch *)touch;
 
 
 - (instancetype)initWithTouch:(UITouch *)touch;

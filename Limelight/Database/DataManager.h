@@ -26,7 +26,7 @@
       pointerVelocityModeDivider:(CGFloat)pointerVelocityModeDivider
       touchPointerVelocityFactor:(CGFloat)touchPointerVelocityFactor
       mousePointerVelocityFactor:(CGFloat)mousePointerVelocityFactor
-          oscTapExlusionAreaSize:(CGFloat)oscTapExlusionAreaSize
+          touchMoveEventInterval:(NSInteger)touchMoveEventInterval
       reverseMouseWheelDirection:(BOOL)reverseMouseWheelDirection
                   largerStickLR1:(BOOL)largerStickLR1
        liftStreamViewForKeyboard:(BOOL)liftStreamViewForKeyboard

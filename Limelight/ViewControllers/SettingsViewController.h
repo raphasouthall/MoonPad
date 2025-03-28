@@ -41,8 +41,8 @@
 @property (strong, nonatomic) IBOutlet UISegmentedControl *showKeyboardToolbarSelector;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *slideToSettingsScreenEdgeSelector;
 
-@property (strong, nonatomic) IBOutlet UILabel *oscTapExlusionAreaSizeLabel;
-@property (strong, nonatomic) IBOutlet UISlider *oscTapExlusionAreaSizeSlider;
+@property (strong, nonatomic) IBOutlet UILabel *touchMoveEventIntervalLabel;
+@property (strong, nonatomic) IBOutlet UISlider *touchMoveEventIntervalSlider;
 @property (strong, nonatomic) IBOutlet UILabel *slideToSettingsScreenEdgeUILabel;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *cmdToolScreenEdgeSelector;
 @property (strong, nonatomic) IBOutlet UILabel *slideToSettingsDistanceUILabel;

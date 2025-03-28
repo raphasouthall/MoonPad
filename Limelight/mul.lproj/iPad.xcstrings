@@ -1100,13 +1100,13 @@
       }
     },
     "FJv-HJ-UYJ.text" : {
-      "comment" : "Class = \"UILabel\"; text = \"Tap Exclusion Area Size for Custom OSC: 200%                      \"; ObjectID = \"FJv-HJ-UYJ\";",
+      "comment" : "Class = \"UILabel\"; text = \"Interval of Multi-Touch Move Events: 200 us                            \"; ObjectID = \"FJv-HJ-UYJ\";",
       "extractionState" : "extracted_with_value",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "Tap Exclusion Area Size for Custom OSC: 200%                      "
+            "value" : "Interval of Multi-Touch Move Events: 200 us                            "
           }
         }
       }

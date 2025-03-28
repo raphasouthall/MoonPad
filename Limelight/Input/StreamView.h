@@ -29,6 +29,7 @@
 #endif
 
 @property (assign, nonatomic) UIView* streamFrameTopLayerView;
+@property (assign, nonatomic) CGFloat streamAspectRatio;
 
 - (void) setupStreamView:(ControllerSupport*)controllerSupport
      interactionDelegate:(id<UserInteractionDelegate>)interactionDelegate

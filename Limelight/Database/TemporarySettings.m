@@ -97,7 +97,7 @@
     self.slideToSettingsDistance = settings.slideToSettingsDistance;
     self.liftStreamViewForKeyboard = settings.liftStreamViewForKeyboard;
     self.showKeyboardToolbar = settings.showKeyboardToolbar;
-    self.oscTapExlusionAreaSize = settings.oscTapExlusionAreaSize;
+    self.touchMoveEventInterval = settings.touchMoveEventInterval;
     self.touchPointerVelocityFactor = settings.touchPointerVelocityFactor;
     self.mousePointerVelocityFactor = settings.mousePointerVelocityFactor;
     self.pointerVelocityModeDivider = settings.pointerVelocityModeDivider;

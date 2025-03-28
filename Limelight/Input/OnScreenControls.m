@@ -222,7 +222,7 @@ static float L3_Y;
     DataManager* dataMan = [[DataManager alloc] init];
     Settings* settings = [dataMan retrieveSettings];
     _largerStickLR1 = settings.largerStickLR1;
-    _oscTapExlusionAreaSizeFactor = settings.oscTapExlusionAreaSize.floatValue;
+    _oscTapExlusionAreaSizeFactor = 1.05;
         
     _iPad = ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad);
     _controlArea = CGRectMake(0, 0, _view.frame.size.width, _view.frame.size.height);

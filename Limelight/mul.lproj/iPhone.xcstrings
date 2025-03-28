@@ -920,13 +920,13 @@
       }
     },
     "Dfl-gL-00M.text" : {
-      "comment" : "Class = \"UILabel\"; text = \"Tap Exclusion Area Size for Custom OSC: 200%                      \"; ObjectID = \"Dfl-gL-00M\";",
+      "comment" : "Class = \"UILabel\"; text = \"Interval of Multi-Touch Move Events: 200 us                               \"; ObjectID = \"Dfl-gL-00M\";",
       "extractionState" : "extracted_with_value",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "Tap Exclusion Area Size for Custom OSC: 200%                      "
+            "value" : "Interval of Multi-Touch Move Events: 200 us                               "
           }
         }
       }

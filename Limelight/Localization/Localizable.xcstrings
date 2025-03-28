@@ -1123,6 +1123,29 @@
         }
       }
     },
+    "Interval of Multi-Touch Move Events: %d μs" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "触点移动事件间隔: %d μs"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "触点移动事件间隔: %d μs"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "触点移动事件间隔: %d μs"
+          }
+        }
+      }
+    },
     "Invalid Input" : {
       "extractionState" : "manual",
       "localizations" : {

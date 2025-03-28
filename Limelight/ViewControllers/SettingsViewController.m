@@ -545,10 +545,10 @@ BOOL isCustomResolution(CGSize res) {
     [self onscreenControlChanged];
     [self.largerStickLR1Selector setSelectedSegmentIndex:currentSettings.largerStickLR1 ? 1 : 0]; // load old setting of largerStickLR1
     
-    // tap exclusion area size for custom OSC, must be loaded before touchMode & osc selector.
-    [self.oscTapExlusionAreaSizeSlider setValue:currentSettings.oscTapExlusionAreaSize.floatValue * 100 animated:YES]; // Load old setting.
-    [self.oscTapExlusionAreaSizeSlider addTarget:self action:@selector(oscTapExlusionAreaSizeSliderMoved) forControlEvents:(UIControlEventValueChanged)]; // Update label display when slider is being moved.
-    [self oscTapExlusionAreaSizeSliderMoved];
+    // touch move event interval for native-touch.
+    [self.touchMoveEventIntervalSlider setValue:currentSettings.touchMoveEventInterval.intValue animated:YES]; // Load old setting.
+    [self.touchMoveEventIntervalSlider addTarget:self action:@selector(touchMoveEventIntervalSliderMoved) forControlEvents:(UIControlEventValueChanged)]; // Update label display when slider is being moved.
+    [self touchMoveEventIntervalSliderMoved];
 
 
     // [self.touchModeSelector setSelectedSegmentIndex:currentSettings.absoluteTouchMode ? 1 : 0];
@@ -661,7 +661,6 @@ BOOL isCustomResolution(CGSize res) {
     
     bool customOscEnabled = [self isOnScreenControllerOrButtonEnabled] && [self.onscreenControlSelector selectedSegmentIndex] == OnScreenControlsLevelCustom;
     // [self widget:self.keyboardToggleFingerNumSlider setEnabled:!customOscEnabled];
-    [self widget:self.oscTapExlusionAreaSizeSlider setEnabled:customOscEnabled];
     if(customOscEnabled && !justEnteredSettingsViewDoNotOpenOscLayoutTool) {
         // [self.keyboardToggleFingerNumSlider setValue:3.0];
         // [self keyboardToggleFingerNumSliderMoved];
@@ -748,11 +747,11 @@ BOOL isCustomResolution(CGSize res) {
     
     [self.onscreenControlSelector setEnabled:oscSelectorEnabled];
     [self.largerStickLR1Selector setEnabled:oscSelectorEnabled]; // this selector stay aligned with oscSelector
-    
+
     [self widget:self.pointerVelocityModeDividerSlider setEnabled:isNativeTouch]; // pointer velocity scaling works only in native touch mode.
     [self widget:self.touchPointerVelocityFactorSlider setEnabled:isNativeTouch]; // pointer velocity scaling works only in native touch mode.
+    [self widget:self.touchMoveEventIntervalSlider setEnabled:isNativeTouch]; // applys to native touch
     [self widget:self.mousePointerVelocityFactorSlider setEnabled:[self.touchModeSelector selectedSegmentIndex] == RELATIVE_TOUCH]; // mouse velocity scaling works only in relative touch mode.
-    [self widget:self.oscTapExlusionAreaSizeSlider setEnabled:customOscEnabled];
 
     // number of touches required to toggle keyboard will be fixed to 3 when OSC is enabled.
     // [self widget:self.keyboardToggleFingerNumSlider setEnabled: !customOscEnabled];  // cancel OSC limitation for regular native touch,
@@ -957,8 +956,8 @@ BOOL isCustomResolution(CGSize res) {
     [self.resolutionDisplayView addSubview:label2];
 }
 
-- (void) oscTapExlusionAreaSizeSliderMoved{
-    [self.oscTapExlusionAreaSizeLabel setText:[LocalizationHelper localizedStringForKey:@"Tap Exclusion Area Size for Custom OSC: %d%%", (uint16_t)self.oscTapExlusionAreaSizeSlider.value]];
+- (void) touchMoveEventIntervalSliderMoved{
+    [self.touchMoveEventIntervalLabel setText:[LocalizationHelper localizedStringForKey:@"Interval of Multi-Touch Move Events: %d μs", (uint16_t)self.touchMoveEventIntervalSlider.value]];
 }
 
 - (void) keyboardToggleFingerNumSliderMoved{
@@ -1064,7 +1063,7 @@ BOOL isCustomResolution(CGSize res) {
     CGFloat mousePointerVelocityFactor = (CGFloat)(uint16_t)[self map_velocFactorDisplay_fromSliderValue:self.mousePointerVelocityFactorSlider.value]/100;
 
     // CGFloat mousePointerVelocityFactor =(CGFloat)(uint16_t)self.mousePointerVelocityFactorSlider.value/100;
-    CGFloat oscTapExlusionAreaSize =(CGFloat)(uint16_t)self.oscTapExlusionAreaSizeSlider.value/100;
+    uint16_t touchMoveEventInterval = (uint16_t)self.touchMoveEventIntervalSlider.value;
 
     BOOL reverseMouseWheelDirection = [self.reverseMouseWheelDirectionSelector selectedSegmentIndex] == 1;
     BOOL largerStickLR1 = [self.largerStickLR1Selector selectedSegmentIndex] == 1;
@@ -1100,7 +1099,7 @@ BOOL isCustomResolution(CGSize res) {
           pointerVelocityModeDivider:pointerVelocityModeDivider
           touchPointerVelocityFactor:touchPointerVelocityFactor
           mousePointerVelocityFactor:mousePointerVelocityFactor
-              oscTapExlusionAreaSize:oscTapExlusionAreaSize
+              touchMoveEventInterval:touchMoveEventInterval
           reverseMouseWheelDirection:reverseMouseWheelDirection
                    largerStickLR1:largerStickLR1
            liftStreamViewForKeyboard:liftStreamViewForKeyboard

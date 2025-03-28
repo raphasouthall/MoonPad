@@ -81,6 +81,7 @@ static const double X1_MOUSE_SPEED_DIVISOR = 2.5;
     self.streamFrameTopLayerView = topLayerView; // this will be used as a read-only pointer for other class
     self->interactionDelegate = interactionDelegate;
     self->streamAspectRatio = (float)streamConfig.width / (float)streamConfig.height;
+    self.streamAspectRatio = self->streamAspectRatio;
     
     settings = [[[DataManager alloc] init] getSettings];
     
@@ -598,8 +599,8 @@ static const double X1_MOUSE_SPEED_DIVISOR = 2.5;
     [self startInteractionTimer];
     
     if(settings.touchMode.intValue == REGULAR_NATIVE_TOUCH || settings.touchMode.intValue == RELATIVE_TOUCH){
-        [onScreenControls handleTouchDownEvent:touches];
-        [touchHandler touchesBegan:touches withEvent:event];
+        [self->onScreenControls handleTouchDownEvent:touches];
+        [self->touchHandler touchesBegan:touches withEvent:event];
     }
     else if(![onScreenControls handleTouchDownEvent:touches]) [touchHandler touchesBegan:touches withEvent:event];
 }
@@ -761,11 +762,12 @@ static const double X1_MOUSE_SPEED_DIVISOR = 2.5;
     }
     
     hasUserInteracted = YES;
-    if(settings.touchMode.intValue == REGULAR_NATIVE_TOUCH || settings.touchMode.intValue == RELATIVE_TOUCH){
-        [touchHandler touchesMoved:touches withEvent:event];
-        [onScreenControls handleTouchMovedEvent:touches];
+    
+    if(self->settings.touchMode.intValue == REGULAR_NATIVE_TOUCH || self->settings.touchMode.intValue == RELATIVE_TOUCH){
+        [self->touchHandler touchesMoved:touches withEvent:event];
+        [self->onScreenControls handleTouchMovedEvent:touches];
     }
-    else if(![onScreenControls handleTouchMovedEvent:touches]) [touchHandler touchesMoved:touches withEvent:event];
+    else if(![self->onScreenControls handleTouchMovedEvent:touches]) [self->touchHandler touchesMoved:touches withEvent:event];
 }
 
 - (void) handleKeyCombos:(UIPress*) press{
@@ -858,8 +860,8 @@ static const double X1_MOUSE_SPEED_DIVISOR = 2.5;
     hasUserInteracted = YES;
     
     if(settings.touchMode.intValue == REGULAR_NATIVE_TOUCH || settings.touchMode.intValue == RELATIVE_TOUCH){
-        [touchHandler touchesEnded:touches withEvent:event]; // when touches ended, must call the native touchhandler before onScreenControls, since the NSSet of touches captured by on screen button shall be updated later
-        [onScreenControls handleTouchUpEvent:touches];
+        [self->touchHandler touchesEnded:touches withEvent:event]; // when touches ended, must call the native touchhandler before onScreenControls, since the NSSet of touches captured by on screen button shall be updated later
+        [self->onScreenControls handleTouchUpEvent:touches];
     }
     else if(![onScreenControls handleTouchUpEvent:touches]) [touchHandler touchesEnded:touches withEvent:event];
 }
