@@ -204,7 +204,7 @@ static float L3_Y;
     self.isLayingOut = false; // set false by default (play mode instead of layout mode)
     _view = view;
     
-    profilesManager = [OSCProfilesManager sharedManager];
+    profilesManager = [OSCProfilesManager sharedManager:view.bounds];
     
     self.OSCButtonLayers = [[NSMutableArray alloc] init];
 

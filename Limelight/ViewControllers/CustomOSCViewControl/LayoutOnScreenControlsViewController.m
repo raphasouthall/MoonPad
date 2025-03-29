@@ -112,7 +112,7 @@
 
 - (void) viewDidLoad {
     [super viewDidLoad];
-    profilesManager = [OSCProfilesManager sharedManager];
+    profilesManager = [OSCProfilesManager sharedManager:self.view.bounds];
     self.OnScreenWidgetViews = [[NSMutableSet alloc] init]; // will be revised to read persisted data , somewhere else
     [OSCProfilesManager setOnScreenWidgetViewsSet:self.OnScreenWidgetViews];   // pass the keyboard button dict to profiles manager
 
@@ -811,7 +811,8 @@
         storyboard = [UIStoryboard storyboardWithName:@"iPad" bundle:nil];
     }
     
-    _oscProfilesTableViewController = [storyboard instantiateViewControllerWithIdentifier:@"OSCProfilesTableViewController"] ;
+    _oscProfilesTableViewController = [storyboard instantiateViewControllerWithIdentifier:@"OSCProfilesTableViewController"];
+    _oscProfilesTableViewController.streamViewBounds = self.view.bounds;
     
     _oscProfilesTableViewController.needToUpdateOscLayoutTVC = ^() {   // a block that will be called when the modally presented 'OSCProfilesTableViewController' VC is dismissed. By the time the 'OSCProfilesTableViewController' VC is dismissed the user would have potentially selected a different OSC ofile with a different layout and they want to see this layout on this 'LayoutOnScreenControlsViewController.' This block of code will load the profile and then hide/show and move each OSC button to their appropriate position
         [self.layoutOSC updateControls];  // creates and saves a 'Default' OSC profile or loads the one the user selected on the previous screen

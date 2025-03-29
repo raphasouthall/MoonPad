@@ -49,7 +49,7 @@ const double NAV_BAR_HEIGHT = 50;
     [super viewDidLoad];
     
     
-    profilesManager = [OSCProfilesManager sharedManager];
+    profilesManager = [OSCProfilesManager sharedManager:_streamViewBounds];
     
     self.tableView.tableHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, NAV_BAR_HEIGHT)];
     

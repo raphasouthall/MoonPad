@@ -18,7 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface OSCProfilesManager : NSObject
 
 
-+ (OSCProfilesManager *) sharedManager;
++ (OSCProfilesManager *) sharedManager:(CGRect)viewBounds;
 + (void) setOnScreenWidgetViewsSet:(NSMutableSet* )set;
 
 #pragma mark - Getters

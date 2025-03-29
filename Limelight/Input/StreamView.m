@@ -387,7 +387,7 @@ static const double X1_MOUSE_SPEED_DIVISOR = 2.5;
     
     if(![self isOnScreenButtonEnabled]) return;
     
-    OSCProfilesManager* profilesManager = [OSCProfilesManager sharedManager];
+    OSCProfilesManager* profilesManager = [OSCProfilesManager sharedManager: self.bounds];
     OSCProfile *oscProfile = [profilesManager getSelectedProfile]; //returns the currently selected OSCProfile
 
     if(!OnScreenWidgetView.editMode){ // in edit mode, keyboard widget view will be updated within layoutool view controller.

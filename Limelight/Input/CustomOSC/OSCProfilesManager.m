@@ -15,13 +15,15 @@
 @implementation OSCProfilesManager
 
 static NSMutableSet *OnScreenWidgetViews;
+static CGRect streamViewBounds;
 
 #pragma mark - Initializer
 
-+ (OSCProfilesManager *) sharedManager {
++ (OSCProfilesManager *) sharedManager:(CGRect)viewBounds {
     static OSCProfilesManager *_sharedManager = nil;
     static dispatch_once_t onceToken;
-    
+    streamViewBounds = viewBounds;
+    NSLog(@"bounds width: %f, height: %f", streamViewBounds.size.width, streamViewBounds.size.height);
     dispatch_once(&onceToken, ^{
         _sharedManager = [[self alloc] init];
     });
@@ -251,6 +253,13 @@ static NSMutableSet *OnScreenWidgetViews;
     }
 }
 
+- (CGPoint)normalizeWidgetPosition:(CGPoint)position {
+    if(position.x > 1.0 && position.y >1.0){
+        position.x = position.x / streamViewBounds.size.width;
+        position.y = position.y / streamViewBounds.size.height;
+    }
+    return position;
+}
 
 - (NSMutableArray* ) convertOnScreenControllerAndButtonsToButtonStates:(NSMutableArray *) oscButtonLayers {
     /* iterate through each OSC button the user sees on screen, create an 'OnScreenButtonState' object from each button, encode each object, and then add each object to an array */
@@ -275,7 +284,7 @@ static NSMutableSet *OnScreenWidgetViews;
     // save on-screen game controller buttons & sticks as buttonstate:
     for (CALayer *oscButtonLayer in oscButtonLayers) {
         
-        OnScreenButtonState *buttonState = [[OnScreenButtonState alloc] initWithButtonName:oscButtonLayer.name buttonType:LegacyOscButton andPosition:oscButtonLayer.position];
+        OnScreenButtonState *buttonState = [[OnScreenButtonState alloc] initWithButtonName:oscButtonLayer.name buttonType:LegacyOscButton andPosition:[self normalizeWidgetPosition:oscButtonLayer.position]];
         // add hidden attr here
         buttonState.isHidden = oscButtonLayer.isHidden;
         buttonState.oscLayerSizeFactor = [OnScreenControls getControllerLayerSizeFactor:oscButtonLayer];
