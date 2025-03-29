@@ -166,9 +166,37 @@ const double NAV_BAR_HEIGHT = 50;
     [self profileViewRefresh];
 }
 
+- (IBAction) exportDataTapped:(id)sender {
+    // 创建临时占位文件（仅用于提供文件名）
+    NSString *tempPath = [NSTemporaryDirectory() stringByAppendingPathComponent:@"profiles.bin"];
+    [[NSData new] writeToFile:tempPath atomically:YES]; // 空文件
+    
+    // 初始化选择器
+    UIDocumentPickerViewController *picker = [[UIDocumentPickerViewController alloc] initWithURL:[NSURL fileURLWithPath:tempPath] inMode:UIDocumentPickerModeExportToService];
+    picker.delegate = self;
+    [self presentViewController:picker animated:YES completion:nil];
+}
 
-- (IBAction) exitTapped:(id)sender {
-    [self dismissViewControllerAnimated:YES completion:nil];
+#pragma mark - UIDocumentPickerDelegate
+- (void)documentPicker:(UIDocumentPickerViewController *)controller
+didPickDocumentsAtURLs:(NSArray<NSURL *> *)urls {
+    if (urls.count == 0) return;
+    NSURL *destinationURL = urls.firstObject;
+    NSArray *profiles = [profilesManager getAllProfiles];
+    // 1. 序列化数据
+    NSError *error;
+    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:profiles requiringSecureCoding:YES error:&error];
+    if (!data) {
+        NSLog(@"序列化失败: %@", error);
+        return;
+    }
+    // 2. 安全写入
+    [destinationURL startAccessingSecurityScopedResource];
+    BOOL success = [data writeToURL:destinationURL options:NSDataWritingAtomic error:&error];
+    [destinationURL stopAccessingSecurityScopedResource];
+    if (!success) {
+        NSLog(@"写入失败: %@", error);
+    }
 }
 
 

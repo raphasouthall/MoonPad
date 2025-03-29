@@ -247,7 +247,8 @@ static CGRect streamViewBounds;
         /*
         NSString *documentsPath = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES).firstObject;
         NSString *path = [documentsPath stringByAppendingPathComponent:@"newDefault.bin"];
-        [newProfileEncoded writeToFile:path atomically:YES];
+        
+        [profiles writeToFile:path atomically:YES];
         NSLog(@"默认 Profile 数据已保存到: %@", path);
          */
     }
