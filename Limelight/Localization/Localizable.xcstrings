@@ -893,6 +893,29 @@
         }
       }
     },
+    "Failed to import profiles" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "布局导入失败"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "布局导入失败"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "布局导入失败"
+          }
+        }
+      }
+    },
     "Failed to quit app. If this app was started by another device, you'll need to quit from that device." : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1787,6 +1810,29 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "配对失败"
+          }
+        }
+      }
+    },
+    "Pofiles imported" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "布局已导入"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "布局已导入"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "布局已导入"
           }
         }
       }

@@ -400,7 +400,7 @@ static const double X1_MOUSE_SPEED_DIVISOR = 2.5;
 
     if(!OnScreenWidgetView.editMode){ // in edit mode, keyboard widget view will be updated within layoutool view controller.
         for (NSData *buttonStateEncoded in oscProfile.buttonStates) {
-            OnScreenButtonState* buttonState = [NSKeyedUnarchiver unarchivedObjectOfClass:[OnScreenButtonState class] fromData:buttonStateEncoded error:nil];
+            OnScreenButtonState* buttonState = [profilesManager unarchiveButtonStateEncoded:buttonStateEncoded];
             if(buttonState.buttonType == CustomOnScreenWidget){
                 OnScreenWidgetView* widgetView = [[OnScreenWidgetView alloc] initWithCmdString:buttonState.name buttonLabel:buttonState.alias shape:buttonState.widgetShape]; //reconstruct widgetView
                 //--------------------------------------------------

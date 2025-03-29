@@ -890,31 +890,31 @@
       }
     },
     "D9X-7p-9oc.title" : {
-      "comment" : "Class = \"UIBarButtonItem\"; title = \"Exit\"; ObjectID = \"D9X-7p-9oc\";",
+      "comment" : "Class = \"UIBarButtonItem\"; title = \"Export All\"; ObjectID = \"D9X-7p-9oc\";",
       "extractionState" : "extracted_with_value",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "Exit"
+            "value" : "Export All"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "退出"
+            "state" : "translated",
+            "value" : "导出所有"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "退出"
+            "state" : "translated",
+            "value" : "导出所有"
           }
         },
         "zh-HK" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "退出"
+            "state" : "translated",
+            "value" : "导出所有"
           }
         }
       }

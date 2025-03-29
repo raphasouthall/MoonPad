@@ -37,7 +37,9 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (NSInteger) getIndexOfSelectedProfile;
 
-
+- (NSMutableArray *) getEncodedProfiles;
+- (void) importEncodedProfiles:(NSMutableArray* )profilesEncoded;
+- (OnScreenButtonState *)unarchiveButtonStateEncoded:(NSData *)data;
 
 
 #pragma mark - Setters

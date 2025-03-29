@@ -154,7 +154,6 @@ const double NAV_BAR_HEIGHT = 50;
     //[self dismissViewControllerAnimated:YES completion:nil];
     //[selfparentLayoutOSCViewController]
     [self.tableView reloadData]; // table view will be refreshed by calling reloadData
-    
     if (self.needToUpdateOscLayoutTVC) {    // tells the presenting view controller to lay out the on screen buttons according to the selected profile's instructions
         self.needToUpdateOscLayoutTVC();
     }
@@ -168,6 +167,7 @@ const double NAV_BAR_HEIGHT = 50;
 
 - (IBAction) exportDataTapped:(id)sender {
     // 创建临时占位文件（仅用于提供文件名）
+    self.currentFileOperation = Export;
     NSString *tempPath = [NSTemporaryDirectory() stringByAppendingPathComponent:@"profiles.bin"];
     [[NSData new] writeToFile:tempPath atomically:YES]; // 空文件
     
@@ -177,15 +177,38 @@ const double NAV_BAR_HEIGHT = 50;
     [self presentViewController:picker animated:YES completion:nil];
 }
 
+
+- (IBAction) importDataTapped:(id)sender {
+    self.currentFileOperation = Import;
+    // 2. 创建文件选择器
+    // UIDocumentPickerViewController *picker = [[UIDocumentPickerViewController alloc] initWithDocumentTypes:supportedTypes inMode:UIDocumentPickerModeImport];
+    // UIDocumentPickerViewController *picker = [[UIDocumentPickerViewController alloc] initWithDocumentTypes:@[@"public.data"] inMode:UIDocumentPickerModeOpen];
+    UIDocumentPickerViewController *documentPicker = [[UIDocumentPickerViewController alloc] initWithDocumentTypes:@[@"public.item"] inMode:UIDocumentPickerModeOpen];
+    documentPicker.delegate = self;
+    documentPicker.allowsMultipleSelection = NO; // 只允许选择一个文件
+    [self presentViewController:documentPicker animated:YES completion:nil];
+}
+
+
 #pragma mark - UIDocumentPickerDelegate
 - (void)documentPicker:(UIDocumentPickerViewController *)controller
 didPickDocumentsAtURLs:(NSArray<NSURL *> *)urls {
-    if (urls.count == 0) return;
-    NSURL *destinationURL = urls.firstObject;
-    NSArray *profiles = [profilesManager getAllProfiles];
+    NSURL* url = urls.firstObject;
+    switch(self.currentFileOperation){
+        case Export:
+            [self profilesToFile:url];break;
+        case Import:
+            [self fileToProfiles:url];break;
+        default:break;
+    }
+}
+
+- (void)profilesToFile:(NSURL* )destinationURL{
+    
+    // NSArray *profiles = [profilesManager getAllProfiles];
     // 1. 序列化数据
     NSError *error;
-    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:profiles requiringSecureCoding:YES error:&error];
+    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:[profilesManager getEncodedProfiles] requiringSecureCoding:YES error:&error];
     if (!data) {
         NSLog(@"序列化失败: %@", error);
         return;
@@ -196,6 +219,60 @@ didPickDocumentsAtURLs:(NSArray<NSURL *> *)urls {
     [destinationURL stopAccessingSecurityScopedResource];
     if (!success) {
         NSLog(@"写入失败: %@", error);
+    }
+}
+
+
+- (void)fileToProfiles:(NSURL* )sourceURL{
+    bool restoreFailed = false;
+    if (![sourceURL startAccessingSecurityScopedResource]) {
+        restoreFailed = true;
+    }
+    NSError* error;
+    NSData* fileData = [NSData dataWithContentsOfURL:sourceURL options:0 error:&error];// 读取数据
+    [sourceURL stopAccessingSecurityScopedResource]; // 立即释放权限
+    if (!fileData) {
+        restoreFailed = true;
+    }
+    else NSLog(@"profile file read: %d", (uint32_t)fileData.length);
+    // 定义需要解码的类集
+    NSSet *classes = [NSSet setWithObjects: [NSMutableData class], [NSMutableArray class], nil];
+    NSMutableArray *profilesEncoded;
+    // 解码原始的NSArray对象，得到包含编码对象的数组
+    error = nil;
+    if (@available(iOS 13.0, *)) {
+        // 在 iOS 13 及以上使用 unarchivedObjectOfClasses
+        profilesEncoded = [NSKeyedUnarchiver unarchivedObjectOfClasses:classes fromData:fileData error:&error];
+    } else {
+        // 在 iOS 12 及以下使用 unarchiveObjectWithData（旧方法）
+        profilesEncoded = [NSKeyedUnarchiver unarchivedObjectOfClass:[NSMutableArray class] fromData:fileData error:&error];
+    }
+    
+    restoreFailed = error != nil;
+
+    UIAlertController *restoredAlertController = [UIAlertController alertControllerWithTitle: [LocalizationHelper localizedStringForKey:@""] message: [LocalizationHelper localizedStringForKey:@"Pofiles imported"] preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertController *failedAlertController = [UIAlertController alertControllerWithTitle: [LocalizationHelper localizedStringForKey:@""] message: [LocalizationHelper localizedStringForKey:@"Failed to import profiles"] preferredStyle:UIAlertControllerStyleAlert];
+
+
+    UIAlertAction *okAction = [UIAlertAction actionWithTitle:[LocalizationHelper localizedStringForKey:@"OK"]
+                                                           style:UIAlertActionStyleDefault
+                                                     handler:nil];
+    
+    if(restoreFailed){
+        [failedAlertController addAction:okAction];
+        [self presentViewController:failedAlertController animated:YES completion:nil];
+    }
+    else{
+        [profilesManager importEncodedProfiles:profilesEncoded];
+        [restoredAlertController addAction:okAction];
+        [self presentViewController:restoredAlertController animated:YES completion:nil];
+    }
+    
+    [self profileViewRefresh];
+    NSLog(@"profile test: %d", (uint32_t)profilesEncoded.count);
+    if (error) {
+        NSLog(@"解码失败: %@", error);
+        return;
     }
 }
 

@@ -985,7 +985,7 @@ ICAgICAgICAgICAgICA
                                 </constraints>
                                 <items>
                                     <navigationItem title="Controller &amp; Widget Profiles" id="Q2V-XF-4jq">
-                                        <barButtonItem key="leftBarButtonItem" title="Export All Pofiles" width="90" style="plain" id="Bhn-IO-Wlt" userLabel="Export Data">
+                                        <barButtonItem key="leftBarButtonItem" title="Export All" width="90" style="plain" id="Bhn-IO-Wlt" userLabel="Export Data">
                                             <connections>
                                                 <action selector="exportDataTapped:" destination="Atv-Nj-0qv" id="pwG-sO-9he"/>
                                             </connections>

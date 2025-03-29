@@ -130,6 +130,21 @@ static CGRect streamViewBounds;
     [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
+- (NSMutableArray *) getEncodedProfiles {
+    NSMutableArray *profiles = [self getAllProfiles];
+    NSMutableArray *profilesEncoded = [self encodedProfilesFromArray:profiles]; // encode each 'profile' object in the array and add them to a new array
+    return profilesEncoded;
+}
+
+- (void) importEncodedProfiles:(NSMutableArray* )profilesEncoded {
+    NSMutableArray* localEncodedPofiles = [self getEncodedProfiles];
+    [localEncodedPofiles removeObjectAtIndex:0];
+    [profilesEncoded addObjectsFromArray:localEncodedPofiles];
+    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:profilesEncoded requiringSecureCoding:YES error:nil];
+    [[NSUserDefaults standardUserDefaults] setObject:data forKey:@"OSCProfiles"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
 
 #pragma mark - Globally Accessible Methods
 
@@ -349,8 +364,18 @@ static CGRect streamViewBounds;
     return NO;
 }
 
-
-
-
+- (OnScreenButtonState *)unarchiveButtonStateEncoded:(NSData *)data {
+    OnScreenButtonState* buttonState;
+    if (@available(iOS 13.0, *)) {
+        // 在 iOS 13 及以上使用 unarchivedObjectOfClasses
+        buttonState = [NSKeyedUnarchiver unarchivedObjectOfClasses:[NSSet setWithObjects:[NSString class], [OnScreenButtonState class], nil]
+                                                        fromData:data
+                                                        error:nil];
+    } else {
+        // 在 iOS 12 及以下使用 unarchiveObjectWithData（旧方法）
+        buttonState = [NSKeyedUnarchiver unarchivedObjectOfClass: [OnScreenButtonState class] fromData:data error:nil];
+    }
+    return buttonState;
+}
 
 @end

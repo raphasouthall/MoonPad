@@ -17,6 +17,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)profileViewRefresh;
 
+typedef NS_ENUM(NSUInteger, FileOperation) {
+    Import,
+    Export
+};
+
+@property (nonatomic, assign) FileOperation currentFileOperation;
 
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (nonatomic, copy) void (^needToUpdateOscLayoutTVC)(void);

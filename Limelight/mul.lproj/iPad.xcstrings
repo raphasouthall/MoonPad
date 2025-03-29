@@ -536,13 +536,13 @@
       }
     },
     "Bhn-IO-Wlt.title" : {
-      "comment" : "Class = \"UIBarButtonItem\"; title = \"Export All Pofiles\"; ObjectID = \"Bhn-IO-Wlt\";",
+      "comment" : "Class = \"UIBarButtonItem\"; title = \"Export All\"; ObjectID = \"Bhn-IO-Wlt\";",
       "extractionState" : "extracted_with_value",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "Export All Pofiles"
+            "value" : "Export All"
           }
         },
         "zh-Hans" : {

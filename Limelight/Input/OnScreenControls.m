@@ -369,7 +369,7 @@ static float L3_Y;
         [_activeCustomOscButtonPositionDict removeAllObjects]; //reset the Dict.
         NSLog(@"_activeCustomOscButtonPositionDict update: STARTOVER");
         for (NSData *buttonStateEncoded in oscProfile.buttonStates) {
-            OnScreenButtonState *buttonState = [NSKeyedUnarchiver unarchivedObjectOfClass:[OnScreenButtonState class] fromData:buttonStateEncoded error:nil];
+            OnScreenButtonState* buttonState = [profilesManager unarchiveButtonStateEncoded:buttonStateEncoded];
             buttonState.position = [self denormalizeWidgetPosition:buttonState.position];
             if(!buttonState.isHidden && [validPositionButtonNames containsObject:buttonState.name] && (buttonState.buttonType == LegacyOscButton || [profilesManager getIndexOfSelectedProfile] == 0 ) ){
                 [_activeCustomOscButtonPositionDict setObject:[NSValue valueWithCGPoint:buttonState.position] forKey:buttonState.name]; // we got a buttonname -> position dict here
@@ -725,8 +725,7 @@ static float L3_Y;
     OSCProfile *oscProfile = [profilesManager getSelectedProfile]; //returns the currently selected OSCProfile
     
     for (NSData *buttonStateEncoded in oscProfile.buttonStates) {
-        OnScreenButtonState *buttonState = [NSKeyedUnarchiver unarchivedObjectOfClass:[OnScreenButtonState class] fromData:buttonStateEncoded error:nil];
-            
+        OnScreenButtonState* buttonState = [profilesManager unarchiveButtonStateEncoded:buttonStateEncoded];
         if ([buttonState.name isEqualToString:@"dPad"]) {
             buttonState.position = [self denormalizeWidgetPosition:buttonState.position];
             D_PAD_CENTER_X = buttonState.position.x;
@@ -742,7 +741,7 @@ static float L3_Y;
     OSCProfile *oscProfile = [profilesManager getSelectedProfile]; // returns the currently selected OSCProfile
     
     for (NSData *buttonStateEncoded in oscProfile.buttonStates) {
-        OnScreenButtonState *buttonState = [NSKeyedUnarchiver unarchivedObjectOfClass:[OnScreenButtonState class] fromData:buttonStateEncoded error:nil];
+        OnScreenButtonState* buttonState = [profilesManager unarchiveButtonStateEncoded:buttonStateEncoded];
         buttonState.position = [self denormalizeWidgetPosition:buttonState.position];
         if ([buttonState.name isEqualToString:@"leftStickBackground"]) {
             LS_CENTER_X = buttonState.position.x;
@@ -767,8 +766,9 @@ static float L3_Y;
     
     for (NSData *buttonStateEncoded in oscProfile.buttonStates) {
         
-        OnScreenButtonState *buttonStateDecoded = [NSKeyedUnarchiver unarchivedObjectOfClass:[OnScreenButtonState class] fromData:buttonStateEncoded error:nil];
-        
+        OnScreenButtonState *buttonStateDecoded = [profilesManager unarchiveButtonStateEncoded:buttonStateEncoded];
+
+
         for (CALayer *buttonLayer in self.OSCButtonLayers) {    // iterate through each button layer on screen and position and hide/unhide each according to the instructions of its associated 'buttonState'
             if ([buttonLayer.name isEqualToString:buttonStateDecoded.name]) {
                 if ([buttonLayer.name isEqualToString:@"upButton"] == NO &&
@@ -827,7 +827,8 @@ static float L3_Y;
     bool defaultProfileSelected = [profilesManager getIndexOfSelectedProfile] == 0;
     
     for (NSData *buttonStateEncoded in oscProfile.buttonStates) {
-        OnScreenButtonState *buttonStateDecoded = [NSKeyedUnarchiver unarchivedObjectOfClass:[OnScreenButtonState class] fromData:buttonStateEncoded error:nil];
+        OnScreenButtonState* buttonStateDecoded = [profilesManager unarchiveButtonStateEncoded:buttonStateEncoded];
+
         for (CALayer *buttonLayer in self.OSCButtonLayers) {    // iterate through each button layer on screen
             // Here we deal with resizing single layer controllers only
             if ([buttonLayer.name isEqualToString:buttonStateDecoded.name]) {
