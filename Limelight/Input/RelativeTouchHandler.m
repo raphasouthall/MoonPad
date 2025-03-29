@@ -12,6 +12,7 @@
 #include <Limelight.h>
 
 
+
 static const int REFERENCE_WIDTH = 1280;
 static const int REFERENCE_HEIGHT = 720;
 static const float QUICK_TAP_TIME_INTERVAL = 0.2;
@@ -21,6 +22,7 @@ static const float QUICK_TAP_TIME_INTERVAL = 0.2;
     CGPoint latestMousePointerLocation, initialMousePointerLocation;
     CGPoint twoFingerTouchLocation;
     NSTimeInterval mousePointerTimestamp;
+    CGRect streamViewBounds;
     BOOL mousePointerMoved;
     BOOL quickTapDetected;
     BOOL isInMouseWheelScrollingMode;
@@ -48,6 +50,7 @@ static const float QUICK_TAP_TIME_INTERVAL = 0.2;
 - (id)initWithView:(StreamView*)view andSettings:(TemporarySettings*)settings {
     self = [self init];
     self->streamView = view;
+    self->streamViewBounds = view.bounds;
     self->currentSettings = settings;
     // replace righclick recoginizing with my CustomTapGestureRecognizer for better experience, higher recoginizing rate.
     _mouseRightClickTapRecognizer = [[CustomTapGestureRecognizer alloc] initWithTarget:self action:@selector(mouseRightClick)];
@@ -66,6 +69,8 @@ static const float QUICK_TAP_TIME_INTERVAL = 0.2;
     slideGestureVerticalThreshold = CGRectGetHeight([[UIScreen mainScreen] bounds]) * 0.4;
     screenWidthWithThreshold = CGRectGetWidth([[UIScreen mainScreen] bounds]) - EDGE_TOLERANCE;
     self->touchPointSpawnedAtUpperScreenEdge = false;
+    
+    [self setupDisplayLink];
 
 #if TARGET_OS_TV
     remotePressRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(remoteButtonPressed:)];
@@ -81,6 +86,21 @@ static const float QUICK_TAP_TIME_INTERVAL = 0.2;
     return self;
 }
 
+- (void)setupDisplayLink {
+    __weak typeof(self) weakSelf = self;
+    self.displayLink = [CADisplayLink displayLinkWithTarget:weakSelf selector:@selector(handleDisplayLink:)];
+    [self.displayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSRunLoopCommonModes];
+    self.displayLink.paused = YES;
+}
+
+- (void)handleDisplayLink:(CADisplayLink *)sender {
+
+    if(!mousePointerMoved && touchLockedForMouseMove != nil){
+        [self sendMouseMoveEvent:touchLockedForMouseMove];
+        NSLog(@"stationary mouse event, %f", CACurrentMediaTime());
+    }
+    mousePointerMoved = false;
+}
 
 - (bool)isOnScreenControllerBeingPressed:(NSSet* )touches{
     for(UITouch* touch in touches){
@@ -114,7 +134,7 @@ static const float QUICK_TAP_TIME_INTERVAL = 0.2;
 
 
 - (void)mouseRightClick {
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+    dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INTERACTIVE, 0), ^{
         Log(LOG_D, @"Sending right mouse button press");
         LiSendMouseButtonEvent(BUTTON_ACTION_PRESS, BUTTON_RIGHT);
         // Wait 100 ms to simulate a real button press
@@ -123,13 +143,13 @@ static const float QUICK_TAP_TIME_INTERVAL = 0.2;
     });
 }
 
+/*
 - (BOOL)isConfirmedMove:(CGPoint)currentPoint from:(CGPoint)originalPoint {
-    // Movements of greater than 5 pixels are considered confirmed
-    return hypotf(originalPoint.x - currentPoint.x, originalPoint.y - currentPoint.y) >= 5;
-}
+    // Movements of greater than 1 point are considered confirmed
+    return hypotf(originalPoint.x - currentPoint.x, originalPoint.y - currentPoint.y) >= 1;
+}*/
 
 - (BOOL)isAdjacentTouches:(CGPoint)currentPoint from:(CGPoint)originalPoint {
-    // Movements of greater than 5 pixels are considered confirmed
     return hypotf(originalPoint.x - currentPoint.x, originalPoint.y - currentPoint.y) <= 100;
 }
 
@@ -178,6 +198,7 @@ static const float QUICK_TAP_TIME_INTERVAL = 0.2;
 
     // we must use [event allTouches] to check if touchLockedForMouseMove is captured, because the UITouch object could be captured by upper layer of UIView(in cases like tap gestures), not passed to the touches callbacks in this class, but still available in [event allTouches]
     if(candidateTouch != nil && ![[event allTouches] containsObject:touchLockedForMouseMove]){
+        self.displayLink.paused = NO;
         touchLockedForMouseMove = candidateTouch;
         NSLog(@"Candidate touch for mouse movement locked");
         mousePointerTimestamp = CACurrentMediaTime();
@@ -230,11 +251,13 @@ static const float QUICK_TAP_TIME_INTERVAL = 0.2;
         }
         touchLockedForMouseMove = nil;
         mousePointerMoved = false;
+        self.displayLink.paused = YES;
     }
     
     if([[event allTouches] count] == [touches count]){
         isInMouseWheelScrollingMode = false;
         touchLockedForMouseMove = nil;
+        self.displayLink.paused = YES;
         mousePointerMoved = false; // need to reset this anyway
         [self resetAllPressedFlagsForOnScreenWidgetViews]; // reset all pressed flag for on-screen widget views after all fingers lifted from screen.
         touchPointSpawnedAtUpperScreenEdge = false;
@@ -243,33 +266,29 @@ static const float QUICK_TAP_TIME_INTERVAL = 0.2;
 
 
 - (void)sendMouseMoveEvent:(UITouch* )touch{
-    if(touchPointSpawnedAtUpperScreenEdge) return; // we're done here. this touch event will not be sent to the remote PC.
-
-    CGPoint currentLocation = [touch locationInView:streamView];
-    
-    if (latestMousePointerLocation.x != currentLocation.x ||
-        latestMousePointerLocation.y != currentLocation.y)
-    {
-        int deltaX = (currentLocation.x - latestMousePointerLocation.x) * (REFERENCE_WIDTH / streamView.bounds.size.width) * currentSettings.mousePointerVelocityFactor.floatValue;
-        int deltaY = (currentLocation.y - latestMousePointerLocation.y) * (REFERENCE_HEIGHT / streamView.bounds.size.height) * currentSettings.mousePointerVelocityFactor.floatValue;
+    dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INTERACTIVE, 0), ^{
+        if(self->touchPointSpawnedAtUpperScreenEdge) return; // we're done here. this touch event will not be sent to the remote PC.
         
-        if (deltaX != 0 || deltaY != 0) {
-            LiSendMouseMoveEvent(deltaX, deltaY);
-            latestMousePointerLocation = currentLocation;
+        CGPoint currentLocation = [touch locationInView:self->streamView];
+        
+        if (self->latestMousePointerLocation.x != currentLocation.x ||
+            self->latestMousePointerLocation.y != currentLocation.y)
+        {
+            int deltaX = (currentLocation.x - self->latestMousePointerLocation.x) * (REFERENCE_WIDTH / self->streamViewBounds.size.width) * self->currentSettings.mousePointerVelocityFactor.floatValue;
+            int deltaY = (currentLocation.y - self->latestMousePointerLocation.y) * (REFERENCE_HEIGHT / self->streamViewBounds.size.height) * self->currentSettings.mousePointerVelocityFactor.floatValue;
             
-            // If we've moved far enough to confirm this wasn't just human/machine error,
-            // mark it as such.
-            if ([self isConfirmedMove:latestMousePointerLocation from:initialMousePointerLocation]) {
-                mousePointerMoved = true;
+            if (deltaX != 0 || deltaY != 0) {
+                LiSendMouseMoveEvent(deltaX, deltaY);
+                self->latestMousePointerLocation = currentLocation;
             }
         }
-    }
+    });
 }
 
 
 // this will turn into a dragging anytime...
 - (void)sendLongMouseLeftButtonClickEvent{
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+    dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INTERACTIVE, 0), ^{
         // if (!self->isDragging){
         Log(LOG_D, @"Sending left mouse button press");
         LiSendMouseButtonEvent(BUTTON_ACTION_PRESS, BUTTON_LEFT);
@@ -285,7 +304,7 @@ static const float QUICK_TAP_TIME_INTERVAL = 0.2;
 }
 
 - (void)sendShortMouseLeftButtonClickEvent{
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+    dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INTERACTIVE, 0), ^{
         usleep(50 * 1000);
         LiSendMouseButtonEvent(BUTTON_ACTION_PRESS, BUTTON_LEFT);
         usleep(50 * 1000);
