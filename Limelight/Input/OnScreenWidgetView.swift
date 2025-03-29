@@ -732,7 +732,7 @@ import UIKit
     
     //===== MOUSEPAD related methods=============================================================
     private func sendLongMouseLeftButtonClickEvent() {
-        DispatchQueue.global(qos: .userInitiated).async {
+        DispatchQueue.global(qos: .userInteractive).async {
             // Logging the press event
             NSLog("Sending left mouse button press")
             LiSendMouseButtonEvent(CChar(BUTTON_ACTION_PRESS), BUTTON_LEFT)
@@ -751,7 +751,7 @@ import UIKit
     }
 
     private func sendShortMouseLeftButtonClickEvent() {
-        DispatchQueue.global(qos: .userInitiated).async {
+        DispatchQueue.global(qos: .userInteractive).async {
             NSLog("double click: sending short click")
             usleep(UInt32(50 * 1000))
             LiSendMouseButtonEvent(CChar(BUTTON_ACTION_PRESS), BUTTON_LEFT)
@@ -761,7 +761,7 @@ import UIKit
     }
     
     private func sendMouseRightButtonClickEvent() {
-        DispatchQueue.global(qos: .userInitiated).async {
+        DispatchQueue.global(qos: .userInteractive).async {
             usleep(UInt32(50 * 1000))
             LiSendMouseButtonEvent(CChar(BUTTON_ACTION_PRESS), BUTTON_RIGHT)
             usleep(UInt32(50 * 1000))
@@ -839,17 +839,17 @@ import UIKit
     private func sendRightStickTouchPadEvent(inputX: CGFloat, inputY: CGFloat){
         var targetX = self.touchInputToStickInput(input: inputX)
         var targetY = -self.touchInputToStickInput(input: inputY)
- // vertical input must be inverted
-        targetX = (targetX >= 0 ? 1.0 : -1.0) * minStickOffset + (stickMaxOffset - minStickOffset) * (targetX/stickMaxOffset)
-        targetY = (targetY >= 0 ? 1.0 : -1.0) * minStickOffset + (stickMaxOffset - minStickOffset) * (targetY/stickMaxOffset)
+        // vertical input must be inverted
+        targetX = (targetX >= 0 ? 1.0 : -1.0) * self.minStickOffset + (self.stickMaxOffset - self.minStickOffset) * (targetX/self.stickMaxOffset)
+        targetY = (targetY >= 0 ? 1.0 : -1.0) * self.minStickOffset + (self.stickMaxOffset - self.minStickOffset) * (targetY/self.stickMaxOffset)
         self.onScreenControls.sendRightStickTouchPadEvent(targetX, targetY)
     }
     
     private func sendLeftStickTouchPadEvent(inputX: CGFloat, inputY: CGFloat){
-        let targetX = self.touchInputToStickInput(input: inputX)
-        let targetY = -self.touchInputToStickInput(input: inputY)
-        // targetX = (targetX >= 0 ? 1.0 : -1.0) * Float(minStickOffset) + (stickMaxOffset - Float(minStickOffset)) * (targetX/stickMaxOffset)
-        // targetY = (targetY >= 0 ? 1.0 : -1.0) * Float(minStickOffset) + (stickMaxOffset - Float(minStickOffset)) * (targetY/stickMaxOffset)
+        var targetX = self.touchInputToStickInput(input: inputX)
+        var targetY = -self.touchInputToStickInput(input: inputY)
+        targetX = (targetX >= 0 ? 1.0 : -1.0) * self.minStickOffset + (self.stickMaxOffset - self.minStickOffset) * (targetX/self.stickMaxOffset)
+        targetY = (targetY >= 0 ? 1.0 : -1.0) * self.minStickOffset + (self.stickMaxOffset - self.minStickOffset) * (targetY/self.stickMaxOffset)
         self.onScreenControls.sendLeftStickTouchPadEvent(targetX, targetY)
     }
     //==========================================================================================================
@@ -880,7 +880,7 @@ import UIKit
     
 //==============================================================================
     private func sendComboButtonsDownEvent(comboStrings: [String]) {
-        DispatchQueue.global(qos: .userInitiated).async {
+        DispatchQueue.global(qos: .userInteractive).async {
             for comboString in comboStrings {
                 if CommandManager.oscButtonMappings.keys.contains(comboString) {
                     self.sendOscButtonDownEvent(oscString: comboString)
@@ -899,7 +899,7 @@ import UIKit
     }
 
     private func sendComboButtonsUpEvent(comboStrings: [String]) {
-        DispatchQueue.global(qos: .userInitiated).async {
+        DispatchQueue.global(qos: .userInteractive).async {
             for comboString in comboStrings {
                 if CommandManager.oscButtonMappings.keys.contains(comboString) {
                     self.sendOscButtonUpEvent(oscString: comboString)
@@ -976,7 +976,7 @@ import UIKit
                     self.lrudIndicatorBall = createAndShowLrudBall(at: touchBeganLocation)
                     if quickDoubleTapDetected {
                         self.sendComboButtonsDownEvent(comboStrings: self.comboButtonStrings)
-                        DispatchQueue.global(qos: .userInitiated).async {
+                        DispatchQueue.global(qos: .userInteractive).async {
                             usleep(100000)
                             self.sendComboButtonsUpEvent(comboStrings: self.comboButtonStrings)
                         }
@@ -1065,31 +1065,50 @@ import UIKit
         }
     }
     
+    private func updateTouchLocation (touch: UITouch) {
+        self.mousePointerMoved = true
+        let currentTouchLocation: CGPoint = (touch.location(in: self))
+        self.deltaX = currentTouchLocation.x - self.latestTouchLocation.x
+        self.deltaY = currentTouchLocation.y - self.latestTouchLocation.y
+        self.offSetX = currentTouchLocation.x - self.touchBeganLocation.x
+        self.offSetY = currentTouchLocation.y - self.touchBeganLocation.y
+        self.latestTouchLocation = currentTouchLocation
+    }
+    
     private func handleTouchPadMoveEvent (_ touches: Set<UITouch>, with event: UIEvent?){
         if touches.count == 1{ // don't use event.alltouches.count here, it will counts all touches
-            self.mousePointerMoved = true
-            let currentTouchLocation: CGPoint = (touches.first?.location(in: self))!
-            self.deltaX = currentTouchLocation.x - self.latestTouchLocation.x
-            self.deltaY = currentTouchLocation.y - self.latestTouchLocation.y
-            self.offSetX = currentTouchLocation.x - self.touchBeganLocation.x
-            self.offSetY = currentTouchLocation.y - self.touchBeganLocation.y
-            self.latestTouchLocation = currentTouchLocation
             
             switch self.touchPadString{
             case "MOUSEPAD":
-                LiSendMouseMoveEvent(Int16(truncatingIfNeeded: Int(deltaX * 1.7 * sensitivityFactor)), Int16(truncatingIfNeeded: Int(deltaY * 1.7 * sensitivityFactor)))
+                DispatchQueue.global(qos: .userInteractive).async {
+                    self.updateTouchLocation(touch: touches.first!)
+                    LiSendMouseMoveEvent(Int16(truncatingIfNeeded: Int(self.deltaX * 1.7 * self.sensitivityFactor)), Int16(truncatingIfNeeded: Int(self.deltaY * 1.7 * self.sensitivityFactor)))
+                }
                 break
             case "LSPAD":
-                self.sendLeftStickTouchPadEvent(inputX: offSetX * sensitivityFactor, inputY: offSetY * sensitivityFactor)
+                DispatchQueue.global(qos: .userInteractive).async {
+                    self.updateTouchLocation(touch: touches.first!)
+                    self.sendLeftStickTouchPadEvent(inputX: self.offSetX * self.sensitivityFactor, inputY: self.offSetY * self.sensitivityFactor)
+                }
                 if widgetType == WidgetTypeEnum.touchPad {updateStickIndicator()}
             case "RSPAD":
-                self.sendRightStickTouchPadEvent(inputX: offSetX * sensitivityFactor, inputY: offSetY * sensitivityFactor);
+                DispatchQueue.global(qos: .userInteractive).async {
+                    self.updateTouchLocation(touch: touches.first!)
+                    self.sendRightStickTouchPadEvent(inputX: self.offSetX * self.sensitivityFactor, inputY: self.offSetY * self.sensitivityFactor)
+                }
                 if widgetType == WidgetTypeEnum.touchPad {updateStickIndicator()}
             case "LSVPAD":
-                self.sendLeftStickTouchPadEvent(inputX: deltaX*1.5167*sensitivityFactor, inputY: deltaY*1.5167*sensitivityFactor)
+                DispatchQueue.global(qos: .userInteractive).async {
+                    self.updateTouchLocation(touch: touches.first!)
+                    self.sendLeftStickTouchPadEvent(inputX: self.deltaX*1.5167*self.sensitivityFactor, inputY: self.deltaY*1.5167*self.sensitivityFactor)
+                }
             case "RSVPAD":
-                self.sendRightStickTouchPadEvent(inputX: deltaX*1.5167*sensitivityFactor, inputY: deltaY*1.5167*sensitivityFactor);
+                DispatchQueue.global(qos: .userInteractive).async {
+                    self.updateTouchLocation(touch: touches.first!)
+                    self.sendRightStickTouchPadEvent(inputX: self.deltaX*1.5167*self.sensitivityFactor, inputY: self.deltaY*1.5167*self.sensitivityFactor)
+                }
             case "DPAD", "WASDPAD", "ARROWPAD":
+                self.updateTouchLocation(touch: touches.first!)
                 handleLrudTouchMove()
             default:
                 break
