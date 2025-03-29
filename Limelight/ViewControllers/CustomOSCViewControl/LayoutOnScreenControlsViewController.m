@@ -68,6 +68,14 @@
     [[NSNotificationCenter defaultCenter] postNotificationName:@"OscLayoutCloseNotification" object:self];
 }
 
+- (CGPoint)denormalizeWidgetPosition:(CGPoint)position {
+    if(position.x < 1.0 && position.y < 1.0){
+        position.x = position.x * self.view.bounds.size.width;
+        position.y = position.y * self.view.bounds.size.height;
+    }
+    return position;
+}
+
 - (void) reloadOnScreenWidgetViews {
     [self->selectedWidgetView.stickBallLayer removeFromSuperlayer];
     [self->selectedWidgetView.crossMarkLayer removeFromSuperlayer];
@@ -100,6 +108,7 @@
             widgetView.minStickOffset = buttonState.minStickOffset;
             // Add the widgetView to the view controller's view
             [self.view addSubview:widgetView];
+            buttonState.position = [self denormalizeWidgetPosition:buttonState.position];
             [widgetView setLocationWithXOffset:buttonState.position.x yOffset:buttonState.position.y];
             [widgetView resizeWidgetView]; // resize must be called after relocation
             [widgetView adjustTransparencyWithAlpha:buttonState.backgroundAlpha];

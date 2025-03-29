@@ -261,6 +261,14 @@ static CGRect streamViewBounds;
     return position;
 }
 
+- (CGPoint)denormalizeWidgetPosition:(CGPoint)position {
+    if(position.x < 1.0 && position.y < 1.0){
+        position.x = position.x * streamViewBounds.size.width;
+        position.y = position.y * streamViewBounds.size.height;
+    }
+    return position;
+}
+
 - (NSMutableArray* ) convertOnScreenControllerAndButtonsToButtonStates:(NSMutableArray *) oscButtonLayers {
     /* iterate through each OSC button the user sees on screen, create an 'OnScreenButtonState' object from each button, encode each object, and then add each object to an array */
     /*
@@ -283,8 +291,9 @@ static CGRect streamViewBounds;
     
     // save on-screen game controller buttons & sticks as buttonstate:
     for (CALayer *oscButtonLayer in oscButtonLayers) {
-        
-        OnScreenButtonState *buttonState = [[OnScreenButtonState alloc] initWithButtonName:oscButtonLayer.name buttonType:LegacyOscButton andPosition:[self normalizeWidgetPosition:oscButtonLayer.position]];
+        oscButtonLayer.position = [self normalizeWidgetPosition:oscButtonLayer.position];
+        OnScreenButtonState *buttonState = [[OnScreenButtonState alloc] initWithButtonName:oscButtonLayer.name buttonType:LegacyOscButton andPosition:oscButtonLayer.position];
+        oscButtonLayer.position = [self denormalizeWidgetPosition:oscButtonLayer.position];
         // add hidden attr here
         buttonState.isHidden = oscButtonLayer.isHidden;
         buttonState.oscLayerSizeFactor = [OnScreenControls getControllerLayerSizeFactor:oscButtonLayer];
@@ -300,7 +309,10 @@ static CGRect streamViewBounds;
     
     // save on-screen widget views (keyboard & mouse command) as buttonstate:
     for(OnScreenWidgetView* widgetView in OnScreenWidgetViews){
-        OnScreenButtonState *buttonState = [[OnScreenButtonState alloc] initWithButtonName:widgetView.cmdString buttonType:CustomOnScreenWidget andPosition:widgetView.center];
+
+        widgetView.center = [self normalizeWidgetPosition:widgetView.center];
+        OnScreenButtonState *buttonState = [[OnScreenButtonState alloc] initWithButtonName:widgetView.buttonLabel buttonType:CustomOnScreenWidget andPosition:widgetView.center];
+        widgetView.center = [self denormalizeWidgetPosition:widgetView.center];
         buttonState.alias = widgetView.buttonLabel;
         buttonState.widthFactor = widgetView.widthFactor;
         buttonState.heightFactor = widgetView.heightFactor;

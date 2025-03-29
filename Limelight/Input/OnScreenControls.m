@@ -336,6 +336,15 @@ static float L3_Y;
     return _level;
 }
 
+- (CGPoint) denormalizeWidgetPosition:(CGPoint)position {
+    if(position.x < 1.0 && position.y < 1.0) {
+        position.x = position.x * _view.bounds.size.width;
+        position.y = position.y * _view.bounds.size.height;
+        NSLog(@"denormalizing position: %f, %f", position.x, position.y);
+    }
+    return position;
+}
+
 - (void) updateControls {
     if(self._level == OnScreenControlsLevelCustom){
         // mark all OSC buttons that has valid coords of positions
@@ -361,7 +370,7 @@ static float L3_Y;
         NSLog(@"_activeCustomOscButtonPositionDict update: STARTOVER");
         for (NSData *buttonStateEncoded in oscProfile.buttonStates) {
             OnScreenButtonState *buttonState = [NSKeyedUnarchiver unarchivedObjectOfClass:[OnScreenButtonState class] fromData:buttonStateEncoded error:nil];
-            
+            buttonState.position = [self denormalizeWidgetPosition:buttonState.position];
             if(!buttonState.isHidden && [validPositionButtonNames containsObject:buttonState.name] && (buttonState.buttonType == LegacyOscButton || [profilesManager getIndexOfSelectedProfile] == 0 ) ){
                 [_activeCustomOscButtonPositionDict setObject:[NSValue valueWithCGPoint:buttonState.position] forKey:buttonState.name]; // we got a buttonname -> position dict here
                 NSLog(@"_activeCustomOscButtonPositionDict update, button name:%@,  position: %f, %f", buttonState.name, buttonState.position.x, buttonState.position.y);
@@ -719,6 +728,7 @@ static float L3_Y;
         OnScreenButtonState *buttonState = [NSKeyedUnarchiver unarchivedObjectOfClass:[OnScreenButtonState class] fromData:buttonStateEncoded error:nil];
             
         if ([buttonState.name isEqualToString:@"dPad"]) {
+            buttonState.position = [self denormalizeWidgetPosition:buttonState.position];
             D_PAD_CENTER_X = buttonState.position.x;
             D_PAD_CENTER_Y = buttonState.position.y;
         }
@@ -733,7 +743,7 @@ static float L3_Y;
     
     for (NSData *buttonStateEncoded in oscProfile.buttonStates) {
         OnScreenButtonState *buttonState = [NSKeyedUnarchiver unarchivedObjectOfClass:[OnScreenButtonState class] fromData:buttonStateEncoded error:nil];
-            
+        buttonState.position = [self denormalizeWidgetPosition:buttonState.position];
         if ([buttonState.name isEqualToString:@"leftStickBackground"]) {
             LS_CENTER_X = buttonState.position.x;
             LS_CENTER_Y = buttonState.position.y;
@@ -767,6 +777,7 @@ static float L3_Y;
                     [buttonLayer.name isEqualToString:@"leftButton"] == NO &&
                     [buttonLayer.name isEqualToString:@"leftStick"] == NO &&
                     [buttonLayer.name isEqualToString:@"rightStick"] == NO) {   // Don't move these buttons since they've already been positioned correctly in the 'drawButtons' and 'drawSticks' methods called before this method is called. The 'buttonStateDecoded' object associated with these buttons contains positions relative to a parent CALayer which only exists on 'LayoutOnScreenControls'. These positions relative to the parent layers would translate incorrectly when placed on the game stream VC's 'view' layer
+                    buttonStateDecoded.position = [self denormalizeWidgetPosition:buttonStateDecoded.position];
                     buttonLayer.position = buttonStateDecoded.position;
                 }
                 buttonLayer.hidden = buttonStateDecoded.isHidden;

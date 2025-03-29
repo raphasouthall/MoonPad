@@ -376,6 +376,14 @@ static const double X1_MOUSE_SPEED_DIVISOR = 2.5;
     }
 }
 
+- (CGPoint)denormalizeWidgetPosition:(CGPoint)position {
+    if(position.x < 1.0 && position.y < 1.0){
+        position.x = position.x * self.bounds.size.width;
+        position.y = position.y * self.bounds.size.height;
+    }
+    return position;
+}
+
 - (void) reloadOnScreenWidgetViews{
     
     NSLog(@"reload on screen keyboard buttons here");
@@ -408,6 +416,7 @@ static const double X1_MOUSE_SPEED_DIVISOR = 2.5;
                 widgetView.minStickOffset = buttonState.minStickOffset;
                 // Add the widgetView to the view controller's view
                 [self->streamFrameTopLayerView addSubview:widgetView]; // add keyboard button to the stream frame view. must add it to the target view before setting location.
+                buttonState.position = [self denormalizeWidgetPosition:buttonState.position];
                 [widgetView setLocationWithXOffset:buttonState.position.x yOffset:buttonState.position.y];
                 [widgetView resizeWidgetView]; // resize must be called after relocation
                 [widgetView adjustTransparencyWithAlpha:buttonState.backgroundAlpha];
