@@ -311,18 +311,18 @@ import UIKit
     private func changeAndActivateContraints(){
         if self.shape == "round"{ // we'll make custom osc buttons round & smaller
             NSLayoutConstraint.activate([
-                self.widthAnchor.constraint(equalToConstant: 60 * self.widthFactor),
-                self.heightAnchor.constraint(equalToConstant: 60 * self.heightFactor),])
+                self.widthAnchor.constraint(equalToConstant: CGFloat(Int(60 * self.widthFactor / 2) * 2)),
+                self.heightAnchor.constraint(equalToConstant: CGFloat(Int(60 * self.heightFactor / 2) * 2)),])
         }
         if self.shape == "square" {
             NSLayoutConstraint.activate([
-                self.widthAnchor.constraint(equalToConstant: 70 * self.widthFactor),
-                self.heightAnchor.constraint(equalToConstant: 65 * self.heightFactor),])
+                self.widthAnchor.constraint(equalToConstant: CGFloat(Int(70 * self.widthFactor / 2) * 2)),
+                self.heightAnchor.constraint(equalToConstant: CGFloat(Int(65 * self.heightFactor / 2) * 2)),])
         }
         if self.shape == "largeSquare" { // override all shape strings
             NSLayoutConstraint.activate([
-                self.widthAnchor.constraint(equalToConstant: 170 * self.widthFactor),
-                self.heightAnchor.constraint(equalToConstant: 150 * self.heightFactor),])
+                self.widthAnchor.constraint(equalToConstant: CGFloat(Int(170 * self.widthFactor / 2) * 2)),
+                self.heightAnchor.constraint(equalToConstant: CGFloat(Int(150 * self.heightFactor / 2) * 2)),])
         }
 
         NSLayoutConstraint.activate([
@@ -592,7 +592,7 @@ import UIKit
         let indicatorFrame = CAShapeLayer();
         let indicatorBorder = CAShapeLayer();
         
-        indicatorFrame.frame = CGRectMake(0, 0, 78.5, 78.5)
+        indicatorFrame.frame = CGRectMake(0, 0, 70, 70)
         indicatorFrame.cornerRadius = 9
         indicatorBorder.borderWidth = 6
         indicatorBorder.frame = indicatorFrame.bounds.insetBy(dx: -indicatorBorder.borderWidth, dy: -indicatorBorder.borderWidth) // Adjust the inset as needed
