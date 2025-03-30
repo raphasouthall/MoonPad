@@ -783,10 +783,10 @@ static float L3_Y;
                 buttonLayer.hidden = buttonStateDecoded.isHidden;
                 
                 // adjust default layout for largerStickLR1
-                if( defaultProfileSelected && _largerStickLR1)
+                if(defaultProfileSelected && _largerStickLR1){
                     if([buttonLayer.name isEqualToString:@"l2Button"] || [buttonLayer.name isEqualToString:@"r2Button"]) buttonLayer.position = CGPointMake(buttonLayer.position.x, buttonLayer.position.y - LR2_Y_UP_OFFSET);
                     if([buttonLayer.name isEqualToString:@"l1Button"] || [buttonLayer.name isEqualToString:@"r1Button"]) buttonLayer.position = CGPointMake(buttonLayer.position.x, buttonLayer.position.y + LR1_Y_DOWN_OFFSET);
-                
+                }
                 // Here we deal with resizing single layer controllers only
                 if ([buttonLayer.name isEqualToString:@"l1Button"] ||
                     [buttonLayer.name isEqualToString:@"r1Button"] ||
