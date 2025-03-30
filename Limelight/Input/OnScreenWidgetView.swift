@@ -1086,14 +1086,14 @@ import UIKit
                 }
                 break
             case "LSPAD":
+                self.updateTouchLocation(touch: touches.first!)
                 DispatchQueue.global(qos: .userInteractive).async {
-                    self.updateTouchLocation(touch: touches.first!)
                     self.sendLeftStickTouchPadEvent(inputX: self.offSetX * self.sensitivityFactor, inputY: self.offSetY * self.sensitivityFactor)
                 }
                 if widgetType == WidgetTypeEnum.touchPad {updateStickIndicator()}
             case "RSPAD":
+                self.updateTouchLocation(touch: touches.first!)
                 DispatchQueue.global(qos: .userInteractive).async {
-                    self.updateTouchLocation(touch: touches.first!)
                     self.sendRightStickTouchPadEvent(inputX: self.offSetX * self.sensitivityFactor, inputY: self.offSetY * self.sensitivityFactor)
                 }
                 if widgetType == WidgetTypeEnum.touchPad {updateStickIndicator()}
