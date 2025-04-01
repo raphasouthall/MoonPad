@@ -70,8 +70,6 @@ static const float QUICK_TAP_TIME_INTERVAL = 0.2;
     screenWidthWithThreshold = CGRectGetWidth([[UIScreen mainScreen] bounds]) - EDGE_TOLERANCE;
     self->touchPointSpawnedAtUpperScreenEdge = false;
     
-    [self setupDisplayLink];
-
 #if TARGET_OS_TV
     remotePressRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(remoteButtonPressed:)];
     remotePressRecognizer.allowedPressTypes = @[@(UIPressTypeSelect)];
@@ -84,22 +82,6 @@ static const float QUICK_TAP_TIME_INTERVAL = 0.2;
 #endif
     
     return self;
-}
-
-- (void)setupDisplayLink {
-    __weak typeof(self) weakSelf = self;
-    self.displayLink = [CADisplayLink displayLinkWithTarget:weakSelf selector:@selector(handleDisplayLink:)];
-    [self.displayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSRunLoopCommonModes];
-    self.displayLink.paused = YES;
-}
-
-- (void)handleDisplayLink:(CADisplayLink *)sender {
-
-    if(!mousePointerMoved && touchLockedForMouseMove != nil){
-        [self sendMouseMoveEvent:touchLockedForMouseMove];
-        NSLog(@"stationary mouse event, %f", CACurrentMediaTime());
-    }
-    mousePointerMoved = false;
 }
 
 - (bool)isOnScreenControllerBeingPressed:(NSSet* )touches{
@@ -198,7 +180,6 @@ static const float QUICK_TAP_TIME_INTERVAL = 0.2;
 
     // we must use [event allTouches] to check if touchLockedForMouseMove is captured, because the UITouch object could be captured by upper layer of UIView(in cases like tap gestures), not passed to the touches callbacks in this class, but still available in [event allTouches]
     if(candidateTouch != nil && ![[event allTouches] containsObject:touchLockedForMouseMove]){
-        self.displayLink.paused = NO;
         touchLockedForMouseMove = candidateTouch;
         NSLog(@"Candidate touch for mouse movement locked");
         mousePointerTimestamp = CACurrentMediaTime();
@@ -251,13 +232,11 @@ static const float QUICK_TAP_TIME_INTERVAL = 0.2;
         }
         touchLockedForMouseMove = nil;
         mousePointerMoved = false;
-        self.displayLink.paused = YES;
     }
     
     if([[event allTouches] count] == [touches count]){
         isInMouseWheelScrollingMode = false;
         touchLockedForMouseMove = nil;
-        self.displayLink.paused = YES;
         mousePointerMoved = false; // need to reset this anyway
         [self resetAllPressedFlagsForOnScreenWidgetViews]; // reset all pressed flag for on-screen widget views after all fingers lifted from screen.
         touchPointSpawnedAtUpperScreenEdge = false;
