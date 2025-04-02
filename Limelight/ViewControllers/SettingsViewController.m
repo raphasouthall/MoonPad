@@ -677,6 +677,7 @@ BOOL isCustomResolution(CGSize res) {
 }
 
 - (void)invokeOscLayout{
+    self.layoutOnScreenControlsVC.view.backgroundColor = [UIColor colorWithWhite:0.55 alpha:1.0];
     [self presentViewController:self.layoutOnScreenControlsVC animated:YES completion:nil];
 }
 
