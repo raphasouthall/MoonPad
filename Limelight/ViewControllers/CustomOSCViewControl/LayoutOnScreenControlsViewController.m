@@ -494,6 +494,7 @@
     self->widgetViewSelected = true;
     self->controllerLayerSelected = false;
     self->selectedWidgetView = widgetView;
+    [self.layoutOSC updateGuidelinesForOnScreenWidget:self->selectedWidgetView]; // shows guideline immediately when widget is tapped
     // setup slider values
     [self.widgetSizeSlider setValue: self->selectedWidgetView.widthFactor];
     [self.widgetHeightSlider setValue: self->selectedWidgetView.heightFactor];

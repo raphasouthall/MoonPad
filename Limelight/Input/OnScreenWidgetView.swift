@@ -367,7 +367,7 @@ import UIKit
             else {self.layer.borderWidth = self.borderWidth}
             label.text = "" // make touchPad display no text
             if OnScreenWidgetView.editMode { //display label in edit mode to make the pad more visible
-                label.text = self.cmdString
+                label.text = self.buttonLabel
             }
         }
 

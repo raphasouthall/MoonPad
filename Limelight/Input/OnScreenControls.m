@@ -1037,10 +1037,7 @@ static float L3_Y;
 }
 
 - (BOOL) handleTouchMovedEvent:touches {
-    
-    // Start a new transaction
     [CATransaction begin];
-    // Disable implicit animations for onScreenStick movements
     [CATransaction setDisableActions:YES];
 
     BOOL updated = false;
@@ -1178,7 +1175,7 @@ static float L3_Y;
 
 - (void)oscButtonTouchDownVisualEffect:(CALayer* )button{
     [CATransaction begin];
-    [CATransaction setDisableActions:YES]; // Disable implicit animations for
+    [CATransaction setDisableActions:YES]; 
     
     /*
     if(![[_originalControllerLayerOpacityDict allKeys] containsObject:button.name]){
