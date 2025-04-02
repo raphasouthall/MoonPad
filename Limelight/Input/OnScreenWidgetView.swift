@@ -404,9 +404,9 @@ import UIKit
         let indicatorFrame = CAShapeLayer();
         let indicatorBorder = CAShapeLayer();
         
-        indicatorFrame.frame = CGRectMake(0, 0, 80, 80)
+        indicatorFrame.frame = CGRectMake(0, 0, 75, 75)
         indicatorFrame.cornerRadius = 9
-        indicatorBorder.borderWidth = 7.5
+        indicatorBorder.borderWidth = 7
         indicatorBorder.frame = indicatorFrame.bounds.insetBy(dx: -indicatorBorder.borderWidth, dy: -indicatorBorder.borderWidth) // Adjust the inset as needed
         indicatorBorder.borderColor = UIColor.clear.cgColor
         
@@ -592,7 +592,7 @@ import UIKit
         let indicatorFrame = CAShapeLayer();
         let indicatorBorder = CAShapeLayer();
         
-        indicatorFrame.frame = CGRectMake(0, 0, 70, 70)
+        indicatorFrame.frame = CGRectMake(0, 0, 75, 75)
         indicatorFrame.cornerRadius = 9
         indicatorBorder.borderWidth = 6
         indicatorBorder.frame = indicatorFrame.bounds.insetBy(dx: -indicatorBorder.borderWidth, dy: -indicatorBorder.borderWidth) // Adjust the inset as needed
