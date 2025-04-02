@@ -168,7 +168,7 @@
     }
     
     [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(clearSelectedWidgetView)
+                                             selector:@selector(setControllerCALayerSliderValues:)
                                                  name:@"LegacyOscCALayerSelectedNotification"
                                                object:nil];
     
@@ -188,10 +188,7 @@
                                                  name:@"OnScreenWidgetViewSelected"
                                                object:nil];
 
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(setControllerCALayerSliderValues:)
-                                                 name:@"ControllerCALayerSelected"
-                                               object:nil];
+
 
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(OSCLayoutChanged) name:@"OSCLayoutChanged" object:nil];    // used to notifiy this view controller that the user made a change to the OSC layout so that the VC can either fade in or out its 'Undo button' which will signify to the user whether there are any OSC layout changes to undo
@@ -489,13 +486,11 @@
     }
 }
 
-- (void)clearSelectedWidgetView{
-    selectedWidgetView = nil;
-}
-
 - (void)widgetViewTapped: (NSNotification *)notification{
     // receive the selected widgetView obj passed from the notification
     OnScreenWidgetView* widgetView = (OnScreenWidgetView* )notification.object;
+    [self->selectedWidgetView.stickBallLayer removeFromSuperlayer];
+    [self->selectedWidgetView.crossMarkLayer removeFromSuperlayer];
     self->widgetViewSelected = true;
     self->controllerLayerSelected = false;
     self->selectedWidgetView = widgetView;
@@ -532,7 +527,10 @@
 - (void)setControllerCALayerSliderValues: (NSNotification *)notification{
     // receive the selected widgetView obj passed from the notification
     CALayer* controllerLayer = (CALayer* )notification.object;
+    [self->selectedWidgetView.stickBallLayer removeFromSuperlayer];
+    [self->selectedWidgetView.crossMarkLayer removeFromSuperlayer];
     self->widgetViewSelected = false;
+    self->selectedWidgetView = nil;
     self->stickIndicatorOffsetExplain.hidden = true;
     self->stickIndicatorOffsetSliderLabel.hidden = true;
     self.stickIndicatorOffsetSlider.hidden = true;
@@ -837,9 +835,19 @@
     self.widgetSizeSlider.hidden = YES;
     self.widgetHeightSlider.hidden = YES;
     self.widgetAlphaSlider.hidden = YES;
+    self.widgetBorderWidthSlider.hidden = YES;
+    self.sensitivityFactorSlider.hidden = YES;
+    self.stickIndicatorOffsetSlider.hidden = YES;
     widgetSizeSliderLabel.hidden = YES;
     widgetHeightSliderLabel.hidden = YES;
     widgetAlphaSliderLabel.hidden = YES;
+    widgetBorderWidthSliderLabel.hidden = YES;
+    sensitivitySliderLabel.hidden = YES;
+    stickIndicatorOffsetSliderLabel.hidden = YES;
+    stickIndicatorOffsetExplain.hidden = YES;
+    
+    [self->selectedWidgetView.stickBallLayer removeFromSuperlayer];
+    [self->selectedWidgetView.crossMarkLayer removeFromSuperlayer];
     _oscProfilesTableViewController.currentOSCButtonLayers = self.layoutOSC.OSCButtonLayers;
     [self presentViewController:_oscProfilesTableViewController animated:YES completion:nil];
 }
