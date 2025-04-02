@@ -162,10 +162,17 @@
     [self addInnerAnalogSticksToOuterAnalogLayers]; // allows inner and analog sticks to be dragged together around the screen together as one unit which is the expected behavior
 
     self.undoButton.alpha = 0.3;    // no changes to undo yet, so fade out the undo button a bit
-    
-    if ([[profilesManager getAllProfiles] count] == 0) { // if no saved OSC profiles exist yet then create one called 'Default' and associate it with Moonlight's legacy 'Full' OSC layout that's already been laid out on the screen at this point
+        
+    NSMutableArray* allProfiles = [profilesManager getAllProfiles];
+    /*
+    if ([allProfiles count] == 0) { // if no saved OSC profiles exist yet then create one called 'Default' and associate it with Moonlight's legacy 'Full' OSC layout that's already been laid out on the screen at this point
         [profilesManager saveProfileWithName:@"Default" andButtonLayers:self.layoutOSC.OSCButtonLayers];
+        [profilesManager importDefaultTemplates];
+    }*/
+    if (![profilesManager profileName:DEFAULT_TEMPLATE_NAME alreadyExistIn:allProfiles]){
+        [profilesManager importDefaultTemplates];
     }
+    
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(setControllerCALayerSliderValues:)

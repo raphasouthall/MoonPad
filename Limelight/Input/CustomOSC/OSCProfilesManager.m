@@ -27,6 +27,7 @@ static CGRect streamViewBounds;
     dispatch_once(&onceToken, ^{
         _sharedManager = [[self alloc] init];
     });
+    // _sharedManager.currentProfiles = [_sharedManager getAllProfiles];
     return _sharedManager;
 }
 
@@ -137,12 +138,36 @@ static CGRect streamViewBounds;
 }
 
 - (void) importEncodedProfiles:(NSMutableArray* )profilesEncoded {
-    NSMutableArray* localEncodedPofiles = [self getEncodedProfiles];
-    [localEncodedPofiles removeObjectAtIndex:0];
+    NSMutableArray* targetProfiles = [_currentProfiles mutableCopy]; //_currentProfiles is availabled as long as getAllProfiles was called before calling this method (_currentProfiles avoids frequent accessing persisted data)
+    if([self profileName:DEFAULT_TEMPLATE_NAME alreadyExistIn:targetProfiles] && targetProfiles.count > 1) [targetProfiles removeObjectAtIndex:1];
+    if(targetProfiles.count > 0) [targetProfiles removeObjectAtIndex:0];
+    NSMutableArray* localEncodedPofiles = [self encodedProfilesFromArray:targetProfiles];
     [profilesEncoded addObjectsFromArray:localEncodedPofiles];
     NSData *data = [NSKeyedArchiver archivedDataWithRootObject:profilesEncoded requiringSecureCoding:YES error:nil];
     [[NSUserDefaults standardUserDefaults] setObject:data forKey:@"OSCProfiles"];
     [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
+- (void) importDefaultTemplates{
+    NSString *filePath = [[NSBundle mainBundle] pathForResource:@"widgetTemplates" ofType:@"bin"];
+    if (filePath) {
+        // 2. 读取二进制数据
+        NSError *error;
+        NSData *fileData = [NSData dataWithContentsOfFile:filePath options:NSDataReadingMappedIfSafe error:&error];
+        NSMutableArray *profilesEncoded;
+        if (fileData && !error) {
+            // 3. 成功读取
+            NSSet *classes = [NSSet setWithObjects: [NSMutableData class], [NSMutableArray class], nil];
+            if (@available(iOS 13.0, *)) {
+                // 在 iOS 13 及以上使用 unarchivedObjectOfClasses
+                profilesEncoded = [NSKeyedUnarchiver unarchivedObjectOfClasses:classes fromData:fileData error:&error];
+            } else {
+                // 在 iOS 12 及以下使用 unarchiveObjectWithData（旧方法）
+                profilesEncoded = [NSKeyedUnarchiver unarchivedObjectOfClass:[NSMutableArray class] fromData:fileData error:&error];
+            }
+            [self importEncodedProfiles:profilesEncoded];
+        }
+    }
 }
 
 
@@ -165,6 +190,7 @@ static CGRect streamViewBounds;
         profileDecoded = [NSKeyedUnarchiver unarchivedObjectOfClasses: classes fromData:profileEncoded error: nil];
         [profilesDecoded addObject: profileDecoded];
     }
+    _currentProfiles = profilesDecoded;
     return profilesDecoded;
 }
 
@@ -352,15 +378,22 @@ static CGRect streamViewBounds;
 
 - (BOOL) profileNameAlreadyExist:(NSString*)name {
     NSMutableArray *profiles = [self getAllProfiles];
-    
     /* Iterate through the decoded profiles and return 'YES' if one of the profiles' 'name' properties equals the 'name' passed into this method */
     for (OSCProfile *profile in profiles) {
-        
         if ([profile.name isEqualToString:name]) {
             return YES;
         }
     }
-    
+    return NO;
+}
+
+- (BOOL) profileName:(NSString*) name alreadyExistIn:(NSMutableArray*)profiles {
+    /* Iterate through the decoded profiles and return 'YES' if one of the profiles' 'name' properties equals the 'name' passed into this method */
+    for (OSCProfile *profile in profiles) {
+        if ([profile.name isEqualToString:name]) {
+            return YES;
+        }
+    }
     return NO;
 }
 
@@ -373,7 +406,7 @@ static CGRect streamViewBounds;
                                                         error:nil];
     } else {
         // 在 iOS 12 及以下使用 unarchiveObjectWithData（旧方法）
-        buttonState = [NSKeyedUnarchiver unarchivedObjectOfClass: [OnScreenButtonState class] fromData:data error:nil];
+        buttonState = [NSKeyedUnarchiver unarchivedObjectOfClass:[OnScreenButtonState class] fromData:data error:nil];
     }
     return buttonState;
 }

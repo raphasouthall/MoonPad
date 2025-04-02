@@ -18,6 +18,7 @@
 		84351B2D2C29AD6100A77989 /* ToolBarContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 84351B292C29AD6000A77989 /* ToolBarContainerView.m */; };
 		84351B5C2C29ADBE00A77989 /* ProfileTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 84351B592C29ADBE00A77989 /* ProfileTableViewCell.m */; };
 		84351B5D2C29ADBE00A77989 /* ProfileTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 84351B5B2C29ADBE00A77989 /* ProfileTableViewCell.xib */; };
+		843667F02D9D7173004A7D7F /* widgetTemplates.bin in Resources */ = {isa = PBXBuildFile; fileRef = 843667EF2D9D7173004A7D7F /* widgetTemplates.bin */; };
 		843CC7F02C1E757D00BBC475 /* NativeTouchPointer.m in Sources */ = {isa = PBXBuildFile; fileRef = 843CC7EF2C1E757D00BBC475 /* NativeTouchPointer.m */; };
 		843CC7F62C1E7A1700BBC475 /* NativeTouchHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 843CC7F52C1E7A1700BBC475 /* NativeTouchHandler.m */; };
 		843E93BE2C41528700B1651F /* OrientationHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 843E93BD2C41528700B1651F /* OrientationHelper.swift */; };
@@ -145,6 +146,7 @@
 		84351B592C29ADBE00A77989 /* ProfileTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProfileTableViewCell.m; sourceTree = "<group>"; };
 		84351B5A2C29ADBE00A77989 /* ProfileTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProfileTableViewCell.h; sourceTree = "<group>"; };
 		84351B5B2C29ADBE00A77989 /* ProfileTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ProfileTableViewCell.xib; sourceTree = "<group>"; };
+		843667EF2D9D7173004A7D7F /* widgetTemplates.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; name = widgetTemplates.bin; path = Limelight/PresetConfigs/widgetTemplates.bin; sourceTree = SOURCE_ROOT; };
 		843CC7EE2C1E757D00BBC475 /* NativeTouchPointer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NativeTouchPointer.h; sourceTree = "<group>"; };
 		843CC7EF2C1E757D00BBC475 /* NativeTouchPointer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NativeTouchPointer.m; sourceTree = "<group>"; };
 		843CC7F42C1E778000BBC475 /* NativeTouchHandler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NativeTouchHandler.h; sourceTree = "<group>"; };
@@ -453,6 +455,14 @@
 			path = Cells;
 			sourceTree = "<group>";
 		};
+		843667ED2D9D70A3004A7D7F /* PresetConfigs */ = {
+			isa = PBXGroup;
+			children = (
+				843667EF2D9D7173004A7D7F /* widgetTemplates.bin */,
+			);
+			name = PresetConfigs;
+			sourceTree = "<group>";
+		};
 		84FD0B492C312C0B006B5BE5 /* Localization */ = {
 			isa = PBXGroup;
 			children = (
@@ -578,6 +588,7 @@
 		FB290CFA19B2C406004C83CF /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				843667ED2D9D70A3004A7D7F /* PresetConfigs */,
 				FB290CFB19B2C406004C83CF /* Limelight-Info.plist */,
 				FB290CFC19B2C406004C83CF /* InfoPlist.strings */,
 				FB290CFF19B2C406004C83CF /* main.m */,
@@ -1000,6 +1011,7 @@
 				FB89463819F6473800339C8A /* Launch Screen.xib in Resources */,
 				8454AC662C31907F00F0A302 /* iPad.storyboard in Resources */,
 				8454AC6A2C319BDA00F0A302 /* iPhone.storyboard in Resources */,
+				843667F02D9D7173004A7D7F /* widgetTemplates.bin in Resources */,
 				84FD0B542C3134A6006B5BE5 /* Localizable.xcstrings in Resources */,
 				84351B5D2C29ADBE00A77989 /* ProfileTableViewCell.xib in Resources */,
 			);
