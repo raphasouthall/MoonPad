@@ -561,7 +561,6 @@ ICAgICAgICAgICAgICA
                                 <segments>
                                     <segment title="Stage Manager"/>
                                     <segment title="AirPlay"/>
-                                    <segment title="Disabled"/>
                                 </segments>
                                 <color key="tintColor" red="0.6716768742" green="0.61711704730000005" blue="0.99902987480000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <color key="selectedSegmentTintColor" red="0.6716768742" green="0.61711704730000005" blue="0.99902987480000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -971,32 +970,45 @@ ICAgICAgICAgICAgICA
                         <viewControllerLayoutGuide type="bottom" id="8ja-wQ-jbJ"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="PlJ-LJ-d1p">
-                        <rect key="frame" x="0.0" y="0.0" width="834" height="1194"/>
+                        <rect key="frame" x="0.0" y="0.0" width="1133" height="744"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView opaque="NO" clearsContextBeforeDrawing="NO" alpha="0.5" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="BA3-hd-bDp">
-                                <rect key="frame" x="0.0" y="44" width="834" height="1150"/>
+                                <rect key="frame" x="50" y="0.0" width="1033" height="744"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </tableView>
-                            <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="62V-DN-FUk">
-                                <rect key="frame" x="0.0" y="0.0" width="834" height="44"/>
+                            <navigationBar clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="62V-DN-FUk">
+                                <rect key="frame" x="50" y="0.0" width="1033" height="44"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="44" id="lQr-5u-g05"/>
                                 </constraints>
                                 <items>
                                     <navigationItem title="Controller &amp; Widget Profiles" id="Q2V-XF-4jq">
-                                        <barButtonItem key="leftBarButtonItem" title="Export All" width="90" style="plain" id="Bhn-IO-Wlt" userLabel="Export Data">
-                                            <connections>
-                                                <action selector="exportDataTapped:" destination="Atv-Nj-0qv" id="pwG-sO-9he"/>
-                                            </connections>
-                                        </barButtonItem>
+
+                                        <leftBarButtonItems>
+                                            <barButtonItem title="Exit" width="45" style="plain" id="czn-mj-8d1">
+                                                <connections>
+                                                    <action selector="exitTapped:" destination="Atv-Nj-0qv" id="IvQ-c3-bmW"/>
+                                                </connections>
+                                            </barButtonItem>
+                                            <barButtonItem title="ExportAll" width="70" style="plain" id="Bhn-IO-Wlt" userLabel="Export Data">
+                                                <connections>
+                                                    <action selector="exportDataTapped:" destination="Atv-Nj-0qv" id="pwG-sO-9he"/>
+                                                </connections>
+                                            </barButtonItem>
+                                            <barButtonItem title="Import" width="48" style="plain" id="CpY-Sb-BDc" userLabel="Import Data">
+                                                <connections>
+                                                    <action selector="importDataTapped:" destination="Atv-Nj-0qv" id="Uq0-Ct-LbS"/>
+                                                </connections>
+                                            </barButtonItem>
+                                        </leftBarButtonItems>
                                         <rightBarButtonItems>
-                                            <barButtonItem title="Duplicate" width="90" style="plain" id="P34-hO-6cX">
+                                            <barButtonItem title="Duplicate" width="80" style="plain" id="P34-hO-6cX">
                                                 <connections>
                                                     <action selector="duplicateTapped:" destination="Atv-Nj-0qv" id="Ymg-8q-iIc"/>
                                                 </connections>
                                             </barButtonItem>
-                                            <barButtonItem title="Delete" width="90" style="plain" id="egC-9E-zS4" userLabel="Delete">
+                                            <barButtonItem title="Delete" width="80" style="plain" id="egC-9E-zS4" userLabel="Delete">
                                                 <connections>
                                                     <action selector="deleteTapped:" destination="Atv-Nj-0qv" id="UpR-VB-qez"/>
                                                 </connections>
@@ -1008,24 +1020,26 @@ ICAgICAgICAgICAgICA
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="62V-DN-FUk" firstAttribute="leading" secondItem="PlJ-LJ-d1p" secondAttribute="leading" id="5fw-ZV-2GR"/>
+                            <constraint firstItem="62V-DN-FUk" firstAttribute="leading" secondItem="PlJ-LJ-d1p" secondAttribute="leading" constant="50" id="5fw-ZV-2GR"/>
                             <constraint firstAttribute="bottom" secondItem="BA3-hd-bDp" secondAttribute="bottom" id="5xN-fy-xH7"/>
-                            <constraint firstAttribute="trailing" secondItem="62V-DN-FUk" secondAttribute="trailing" id="7ZT-th-hPo"/>
-                            <constraint firstItem="BA3-hd-bDp" firstAttribute="leading" secondItem="PlJ-LJ-d1p" secondAttribute="leading" id="AYr-wz-Qrt"/>
-                            <constraint firstItem="BA3-hd-bDp" firstAttribute="top" secondItem="62V-DN-FUk" secondAttribute="bottom" id="TgZ-Pm-jit"/>
-                            <constraint firstItem="62V-DN-FUk" firstAttribute="top" secondItem="PlJ-LJ-d1p" secondAttribute="top" id="g6N-4g-Wej"/>
-                            <constraint firstAttribute="trailing" secondItem="BA3-hd-bDp" secondAttribute="trailing" id="iwN-Gw-g4S"/>
+                            <constraint firstAttribute="trailing" secondItem="62V-DN-FUk" secondAttribute="trailing" constant="50" id="7ZT-th-hPo"/>
+                            <constraint firstItem="BA3-hd-bDp" firstAttribute="leading" secondItem="PlJ-LJ-d1p" secondAttribute="leading" constant="50" id="AYr-wz-Qrt"/>
+                            <constraint firstItem="BA3-hd-bDp" firstAttribute="top" secondItem="62V-DN-FUk" secondAttribute="top" id="TgZ-Pm-jit"/>
+                            <constraint firstItem="62V-DN-FUk" firstAttribute="top" secondItem="PlJ-LJ-d1p" secondAttribute="top" symbolic="YES" id="g6N-4g-Wej"/>
+                            <constraint firstAttribute="trailing" secondItem="BA3-hd-bDp" secondAttribute="trailing" constant="50" id="iwN-Gw-g4S"/>
                         </constraints>
                     </view>
                     <toolbarItems/>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
+                    <size key="freeformSize" width="1133" height="744"/>
                     <connections>
+                        <outlet property="profileTableViewNavigationBar" destination="62V-DN-FUk" id="c3i-qa-4ix"/>
                         <outlet property="tableView" destination="BA3-hd-bDp" id="Jzl-sP-ANp"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="K4u-Tz-tXU" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3388" y="1068"/>
+            <point key="canvasLocation" x="3514" y="1068"/>
         </scene>
     </scenes>
     <resources>
@@ -1036,13 +1050,13 @@ ICAgICAgICAgICAgICA
         <image name="SquaresArrowUp" width="40" height="40"/>
         <image name="Trash" width="40" height="40"/>
         <systemColor name="secondaryLabelColor">
-            <color red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="tintColor">
-            <color red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.0" green="0.47843137254901963" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="viewFlipsideBackgroundColor">
             <color red="0.12156862745098039" green="0.12941176470588237" blue="0.14117647058823529" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

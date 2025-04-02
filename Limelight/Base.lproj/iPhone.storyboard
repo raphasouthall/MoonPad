@@ -552,7 +552,6 @@ ICAgICAgICAgICAgIA
                                 <segments>
                                     <segment title="Stage Manager"/>
                                     <segment title="AirPlay"/>
-                                    <segment title="Disabled"/>
                                 </segments>
                                 <color key="tintColor" red="0.6716768742" green="0.61711704730000005" blue="0.99902987480000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <color key="selectedSegmentTintColor" red="0.6716768742" green="0.61711704730000005" blue="0.99902987480000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -974,26 +973,38 @@ ICAgICAgICAgICAgIA
                         <viewControllerLayoutGuide type="bottom" id="9SV-fx-82v"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="bTO-bs-q93">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <rect key="frame" x="0.0" y="0.0" width="852" height="393"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView opaque="NO" clearsContextBeforeDrawing="NO" alpha="0.5" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="kTH-ez-aKD">
-                                <rect key="frame" x="0.0" y="48" width="414" height="848"/>
+                                <rect key="frame" x="80" y="48" width="692" height="325"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <color key="sectionIndexBackgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </tableView>
                             <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zsA-6X-Qc5">
-                                <rect key="frame" x="0.0" y="48" width="414" height="44"/>
+                                <rect key="frame" x="80" y="48" width="692" height="44"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="44" id="R90-2b-UrU"/>
                                 </constraints>
                                 <items>
                                     <navigationItem title="Controller &amp; Widget Profiles" id="5pN-Sn-SCN">
-                                        <barButtonItem key="leftBarButtonItem" title="Export All" id="D9X-7p-9oc">
-                                            <connections>
-                                                <action selector="exportDataTapped:" destination="0K8-kQ-xlN" id="Sam-Ct-kqC"/>
-                                            </connections>
-                                        </barButtonItem>
+                                        <leftBarButtonItems>
+                                            <barButtonItem title="Exit" id="sUC-Ur-7eI">
+                                                <connections>
+                                                    <action selector="exitTapped:" destination="0K8-kQ-xlN" id="lAJ-eO-ez7"/>
+                                                </connections>
+                                            </barButtonItem>
+                                            <barButtonItem title="ExportAll" id="D9X-7p-9oc">
+                                                <connections>
+                                                    <action selector="exportDataTapped:" destination="0K8-kQ-xlN" id="Sam-Ct-kqC"/>
+                                                </connections>
+                                            </barButtonItem>
+                                            <barButtonItem title="Import" id="Z9M-yq-an2">
+                                                <connections>
+                                                    <action selector="importDataTapped:" destination="0K8-kQ-xlN" id="OaF-8j-7Wy"/>
+                                                </connections>
+                                            </barButtonItem>
+                                        </leftBarButtonItems>
                                         <rightBarButtonItems>
                                             <barButtonItem title="Duplicate" width="80" style="plain" id="bue-hp-CWD">
                                                 <connections>
@@ -1012,16 +1023,18 @@ ICAgICAgICAgICAgIA
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="zsA-6X-Qc5" firstAttribute="leading" secondItem="bTO-bs-q93" secondAttribute="leading" id="0Fi-vo-M6P"/>
-                            <constraint firstAttribute="bottom" secondItem="kTH-ez-aKD" secondAttribute="bottom" id="1FM-gO-6PR"/>
-                            <constraint firstAttribute="trailing" secondItem="kTH-ez-aKD" secondAttribute="trailing" id="ArS-pG-QUR"/>
-                            <constraint firstItem="kTH-ez-aKD" firstAttribute="leading" secondItem="bTO-bs-q93" secondAttribute="leading" id="Ujg-Sw-4hq"/>
-                            <constraint firstAttribute="trailing" secondItem="zsA-6X-Qc5" secondAttribute="trailing" id="YKK-qs-mZR"/>
+                            <constraint firstItem="zsA-6X-Qc5" firstAttribute="leading" secondItem="bTO-bs-q93" secondAttribute="leading" constant="80" id="0Fi-vo-M6P"/>
+                            <constraint firstAttribute="bottom" secondItem="kTH-ez-aKD" secondAttribute="bottom" constant="20" symbolic="YES" id="1FM-gO-6PR"/>
+                            <constraint firstAttribute="trailing" secondItem="kTH-ez-aKD" secondAttribute="trailing" constant="80" id="ArS-pG-QUR"/>
+                            <constraint firstItem="kTH-ez-aKD" firstAttribute="leading" secondItem="bTO-bs-q93" secondAttribute="leading" constant="80" id="Ujg-Sw-4hq"/>
+                            <constraint firstAttribute="trailing" secondItem="zsA-6X-Qc5" secondAttribute="trailing" constant="80" id="YKK-qs-mZR"/>
                             <constraint firstItem="zsA-6X-Qc5" firstAttribute="top" secondItem="bTO-bs-q93" secondAttribute="topMargin" id="gZg-eJ-rnP"/>
                             <constraint firstItem="kTH-ez-aKD" firstAttribute="top" secondItem="Nat-X1-41w" secondAttribute="bottom" id="txs-Df-ANQ"/>
                         </constraints>
                     </view>
+                    <size key="freeformSize" width="852" height="393"/>
                     <connections>
+                        <outlet property="profileTableViewNavigationBar" destination="zsA-6X-Qc5" id="13u-ks-fVC"/>
                         <outlet property="tableView" destination="kTH-ez-aKD" id="pqR-CC-Kfh"/>
                     </connections>
                 </viewController>

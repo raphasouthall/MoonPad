@@ -45,9 +45,31 @@ const double NAV_BAR_HEIGHT = 50;
 }
 
 
+- (void) viewDidLayoutSubviews {
+    CGRect bounds = self.profileTableViewNavigationBar.bounds;
+    CGSize cornerSize = CGSizeMake(15, 15);
+    
+    // 创建一个 UIBezierPath，设置顶部圆角
+    UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:bounds byRoundingCorners:(UIRectCornerTopLeft | UIRectCornerTopRight) cornerRadii:cornerSize];
+                                               //byRoundingCorners:(UIRectCornerTopLeft | UIRectCornerTopRight)  // 只设置上半部分圆角
+                                                 //    cornerRadius:10];  // 圆角半径
+
+    // 创建一个 CAShapeLayer 并将圆角路径应用到该图层
+    CAShapeLayer *maskLayer = [CAShapeLayer layer];
+    maskLayer.frame = bounds;
+    maskLayer.path = path.CGPath;
+
+    self.profileTableViewNavigationBar.layer.masksToBounds = true;  // 使圆角生效
+    self.profileTableViewNavigationBar.layer.mask = maskLayer;
+    
+    self.tableView.layer.cornerRadius = 15;  // 设置圆角半径
+    self.tableView.layer.masksToBounds = true;  // 使圆角生效
+}
+
 - (void) viewDidLoad {
     [super viewDidLoad];
     
+    // self.profileTableViewNavigationBar.layer.cornerRadius = 15;  // 设置圆角半径
     
     profilesManager = [OSCProfilesManager sharedManager:_streamViewBounds];
     
@@ -67,8 +89,8 @@ const double NAV_BAR_HEIGHT = 50;
 - (void) viewDidAppear:(BOOL)animated {
     [super viewDidAppear: animated];
     
-    self.tableView.tableHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, NAV_BAR_HEIGHT)];
 
+    self.tableView.tableHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, NAV_BAR_HEIGHT)];
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     
@@ -189,6 +211,9 @@ const double NAV_BAR_HEIGHT = 50;
     [self presentViewController:documentPicker animated:YES completion:nil];
 }
 
+- (IBAction) exitTapped:(id)sender {
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
 
 #pragma mark - UIDocumentPickerDelegate
 - (void)documentPicker:(UIDocumentPickerViewController *)controller

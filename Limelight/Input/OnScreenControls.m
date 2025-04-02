@@ -824,7 +824,7 @@ static float L3_Y;
 
 - (void) setOpacityForCutsomControllerLayers {
     OSCProfile *oscProfile = [profilesManager getSelectedProfile];
-    bool defaultProfileSelected = [profilesManager getIndexOfSelectedProfile] == 0;
+    // bool defaultProfileSelected = [profilesManager getIndexOfSelectedProfile] == 0;
     
     for (NSData *buttonStateEncoded in oscProfile.buttonStates) {
         OnScreenButtonState* buttonStateDecoded = [profilesManager unarchiveButtonStateEncoded:buttonStateEncoded];

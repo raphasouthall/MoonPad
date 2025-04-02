@@ -890,30 +890,30 @@
       }
     },
     "D9X-7p-9oc.title" : {
-      "comment" : "Class = \"UIBarButtonItem\"; title = \"Export All\"; ObjectID = \"D9X-7p-9oc\";",
+      "comment" : "Class = \"UIBarButtonItem\"; title = \"ExportAll\"; ObjectID = \"D9X-7p-9oc\";",
       "extractionState" : "extracted_with_value",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "Export All"
+            "value" : "ExportAll"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "导出所有"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "导出所有"
           }
         },
         "zh-HK" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "导出所有"
           }
         }
@@ -2149,6 +2149,36 @@
         }
       }
     },
+    "sUC-Ur-7eI.title" : {
+      "comment" : "Class = \"UIBarButtonItem\"; title = \"Exit\"; ObjectID = \"sUC-Ur-7eI\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Exit"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "退出"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "退出"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "退出"
+          }
+        }
+      }
+    },
     "svh-LO-bTr.text" : {
       "comment" : "Class = \"UILabel\"; text = \"Reverse Wheel Direction for Physical Mouse                           \"; ObjectID = \"svh-LO-bTr\";",
       "extractionState" : "extracted_with_value",
@@ -2313,7 +2343,7 @@
     },
     "VWB-YB-Ptj.segmentTitles[2]" : {
       "comment" : "Class = \"UISegmentedControl\"; VWB-YB-Ptj.segmentTitles[2] = \"Disabled\"; ObjectID = \"VWB-YB-Ptj\";",
-      "extractionState" : "extracted_with_value",
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {

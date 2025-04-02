@@ -536,13 +536,13 @@
       }
     },
     "Bhn-IO-Wlt.title" : {
-      "comment" : "Class = \"UIBarButtonItem\"; title = \"Export All\"; ObjectID = \"Bhn-IO-Wlt\";",
+      "comment" : "Class = \"UIBarButtonItem\"; title = \"ExportAll\"; ObjectID = \"Bhn-IO-Wlt\";",
       "extractionState" : "extracted_with_value",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "Export All"
+            "value" : "ExportAll"
           }
         },
         "zh-Hans" : {
@@ -891,6 +891,36 @@
           "stringUnit" : {
             "state" : "needs_review",
             "value" : "当前布局: "
+          }
+        }
+      }
+    },
+    "czn-mj-8d1.title" : {
+      "comment" : "Class = \"UIBarButtonItem\"; title = \"Exit\"; ObjectID = \"czn-mj-8d1\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Exit"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "退出"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "退出"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "退出"
           }
         }
       }
@@ -2529,7 +2559,7 @@
     },
     "VWB-YB-Ptj.segmentTitles[2]" : {
       "comment" : "Class = \"UISegmentedControl\"; VWB-YB-Ptj.segmentTitles[2] = \"Disabled\"; ObjectID = \"VWB-YB-Ptj\";",
-      "extractionState" : "extracted_with_value",
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
