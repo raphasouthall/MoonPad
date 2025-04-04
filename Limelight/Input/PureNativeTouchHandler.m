@@ -203,7 +203,7 @@
 }
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
-    if (asyncNativeTouch) dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INTERACTIVE, 0), ^{
+    if (asyncNativeTouch) dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0), ^{
         for (UITouch* touch in touches){
             if(self->activateCoordSelector) [self updatePointerObjInDict:touch];
             [self sendTouchEvent:touch withTouchtype:LI_TOUCH_EVENT_MOVE];
@@ -223,7 +223,7 @@
 
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
-    if(asyncNativeTouch) dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INTERACTIVE, 0), ^{
+    if(asyncNativeTouch) dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0), ^{
         for (UITouch* touch in touches){
             [self sendTouchEvent:touch withTouchtype:LI_TOUCH_EVENT_UP]; //send touch event before remove pointerId
             [self removePointerId:touch]; //then remove pointerId

@@ -208,7 +208,7 @@
 }
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
-    if (asyncNativeTouch) dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INTERACTIVE, 0), ^{
+    if (asyncNativeTouch) dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0), ^{
         for (UITouch* touch in touches){
             // continue to the next loop if current touch is already captured by OSC. works only in regular native touch
             if([OnScreenControls.touchAddrsCapturedByOnScreenControls containsObject:@((uintptr_t)touch)]) continue;
@@ -232,7 +232,7 @@
 
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
-    if(asyncNativeTouch) dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INTERACTIVE, 0), ^{
+    if(asyncNativeTouch) dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0), ^{
         for (UITouch* touch in touches){
             // continue to the next loop if current touch is already captured by OSC. works only in regular native touch
             if([OnScreenControls.touchAddrsCapturedByOnScreenControls containsObject:@((uintptr_t)touch)]) continue;
