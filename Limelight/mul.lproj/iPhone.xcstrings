@@ -242,31 +242,31 @@
       }
     },
     "2LZ-cX-teZ.text" : {
-      "comment" : "Class = \"UILabel\"; text = \"Larger Sticks & L1/R1 Buttons                                                     \"; ObjectID = \"2LZ-cX-teZ\";",
+      "comment" : "Class = \"UILabel\"; text = \"Async Native Touch\"; ObjectID = \"2LZ-cX-teZ\";",
       "extractionState" : "extracted_with_value",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "Larger Sticks & L1/R1 Buttons                                                     "
+            "value" : "Async Native Touch"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "更大的摇杆和L1/R1按键"
+            "state" : "needs_review",
+            "value" : "异步多点触控"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "更大的摇杆和L1/R1按键"
+            "state" : "needs_review",
+            "value" : "异步多点触控"
           }
         },
         "zh-HK" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "更大的摇杆和L1/R1按键"
+            "state" : "needs_review",
+            "value" : "异步多点触控"
           }
         }
       }

@@ -44,7 +44,7 @@
 } preferredCodec;
 @property (nonatomic) BOOL enableYUV444;
 @property (nonatomic) BOOL reverseMouseWheelDirection;
-@property (nonatomic) BOOL largerStickLR1;
+@property (nonatomic) BOOL asyncNativeTouch;
 @property (nonatomic) BOOL useFramePacing;
 @property (nonatomic) BOOL multiController;
 @property (nonatomic) BOOL swapABXYButtons;

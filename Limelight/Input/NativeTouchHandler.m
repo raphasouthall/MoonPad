@@ -14,23 +14,13 @@
 
 #include <Limelight.h>
 
-/*
-@interface TouchInfoCarrier : NSObject // 明确继承NSObject
-@property (nonatomic, copy) NSString *name;
-@end
-
-@implementation TouchInfoCarrier {
-    
-}
-@end
- */
-
 
 @implementation NativeTouchHandler {
     StreamView* streamView;
     TemporarySettings* currentSettings;
     bool activateCoordSelector;
     bool touchPointSpawnedAtUpperScreenEdge;
+    bool asyncNativeTouch;
     CGFloat pointerVelocityDividerLocationByPoints;
     uint16_t touchMoveEventIntervalUs;
     
@@ -68,7 +58,7 @@
     // self->excludedPointerIds = [[NSMutableSet alloc] init];
     self->touchPointSpawnedAtUpperScreenEdge = false;
     
-    
+    self->asyncNativeTouch = settings.asyncNativeTouch;
     
     self->pointerObjDict = [NSMutableDictionary dictionary];
     
@@ -197,7 +187,7 @@
 }
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
-    dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INTERACTIVE, 0), ^{
+    if (asyncNativeTouch) dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INTERACTIVE, 0), ^{
         for (UITouch* touch in touches){
             // continue to the next loop if current touch is already captured by OSC. works only in regular native touch
             if([OnScreenControls.touchAddrsCapturedByOnScreenControls containsObject:@((uintptr_t)touch)]) continue;
@@ -206,11 +196,19 @@
             [self sendTouchEvent:touch withTouchtype:LI_TOUCH_EVENT_DOWN];
         }
     });
+    else{
+        for (UITouch* touch in touches){
+            // continue to the next loop if current touch is already captured by OSC. works only in regular native touch
+            if([OnScreenControls.touchAddrsCapturedByOnScreenControls containsObject:@((uintptr_t)touch)]) continue;
+            [self handleTouchDown:touch]; //generate & populate pointerId
+            if(self->activateCoordSelector) [self populatePointerObjIntoDict:touch];
+            [self sendTouchEvent:touch withTouchtype:LI_TOUCH_EVENT_DOWN];
+        }
+    }
 }
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
-    dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INTERACTIVE, 0), ^{
-    // NSLog(@"captured by OSB touches: %d", (uint32_t)[OnScreenControls.touchAddrsCapturedByOnScreenControls count]);
+    if (asyncNativeTouch) dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INTERACTIVE, 0), ^{
         for (UITouch* touch in touches){
             // continue to the next loop if current touch is already captured by OSC. works only in regular native touch
             if([OnScreenControls.touchAddrsCapturedByOnScreenControls containsObject:@((uintptr_t)touch)]) continue;
@@ -218,15 +216,23 @@
             [self sendTouchEvent:touch withTouchtype:LI_TOUCH_EVENT_MOVE];
             [[self getPointerObjFromDict:touch] doesNeedResetCoords]; // execute the judging of doesReachBoundary for current pointer instance. (happens after the event is sent to Sunshine service)
             usleep(self->touchMoveEventIntervalUs);
-            // NSLog(@"interval: %d", self->touchMoveEventIntervalUs);
         }
     });
-    return;
+    else {
+        for (UITouch* touch in touches){
+            // continue to the next loop if current touch is already captured by OSC. works only in regular native touch
+            if([OnScreenControls.touchAddrsCapturedByOnScreenControls containsObject:@((uintptr_t)touch)]) continue;
+            if(self->activateCoordSelector) [self updatePointerObjInDict:touch];
+            [self sendTouchEvent:touch withTouchtype:LI_TOUCH_EVENT_MOVE];
+            [[self getPointerObjFromDict:touch] doesNeedResetCoords]; // execute the judging of doesReachBoundary for current pointer instance. (happens after the event is sent to Sunshine service)
+            usleep(self->touchMoveEventIntervalUs);
+        }
+    }
 }
 
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
-    dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INTERACTIVE, 0), ^{
+    if(asyncNativeTouch) dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INTERACTIVE, 0), ^{
         for (UITouch* touch in touches){
             // continue to the next loop if current touch is already captured by OSC. works only in regular native touch
             if([OnScreenControls.touchAddrsCapturedByOnScreenControls containsObject:@((uintptr_t)touch)]) continue;
@@ -236,7 +242,16 @@
         }
         if(self->touchPointSpawnedAtUpperScreenEdge && [[event allTouches] count] == [touches count]) self->touchPointSpawnedAtUpperScreenEdge = false;
     });
-    return;
+    else{
+        for (UITouch* touch in touches){
+            // continue to the next loop if current touch is already captured by OSC. works only in regular native touch
+            if([OnScreenControls.touchAddrsCapturedByOnScreenControls containsObject:@((uintptr_t)touch)]) continue;
+            [self sendTouchEvent:touch withTouchtype:LI_TOUCH_EVENT_UP]; //send touch event before remove pointerId
+            [self removePointerId:touch]; //then remove pointerId
+            if(self->activateCoordSelector) [self removePointerObjFromDict:touch];
+        }
+        if(self->touchPointSpawnedAtUpperScreenEdge && [[event allTouches] count] == [touches count]) self->touchPointSpawnedAtUpperScreenEdge = false;
+    }
 }
 
 - (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event {

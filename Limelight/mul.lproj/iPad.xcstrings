@@ -2,38 +2,38 @@
   "sourceLanguage" : "en",
   "strings" : {
     "2Bp-XZ-cCw.text" : {
-      "comment" : "Class = \"UILabel\"; text = \"Larger Sticks & L1/R1 Buttons\"; ObjectID = \"2Bp-XZ-cCw\";",
+      "comment" : "Class = \"UILabel\"; text = \"Async Native Touch\"; ObjectID = \"2Bp-XZ-cCw\";",
       "extractionState" : "extracted_with_value",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "Larger Sticks & L1/R1 Buttons"
+            "value" : "Async Native Touch"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "更大的摇杆和L1/R1按键"
+            "state" : "needs_review",
+            "value" : "异步多点触控"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "更大的摇杆和L1/R1按键"
+            "state" : "needs_review",
+            "value" : "异步多点触控"
           }
         },
         "zh-HK" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "更大的摇杆和L1/R1按键"
+            "state" : "needs_review",
+            "value" : "异步多点触控"
           }
         }
       }
     },
     "2Jx-qH-E3Y.segmentTitles[0]" : {
       "comment" : "Class = \"UISegmentedControl\"; 2Jx-qH-E3Y.segmentTitles[0] = \"No\"; ObjectID = \"2Jx-qH-E3Y\";",
-      "extractionState" : "extracted_with_value",
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -63,7 +63,7 @@
     },
     "2Jx-qH-E3Y.segmentTitles[1]" : {
       "comment" : "Class = \"UISegmentedControl\"; 2Jx-qH-E3Y.segmentTitles[1] = \"Yes\"; ObjectID = \"2Jx-qH-E3Y\";",
-      "extractionState" : "extracted_with_value",
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -243,7 +243,7 @@
     },
     "7Gm-zB-s7s.segmentTitles[0]" : {
       "comment" : "Class = \"UISegmentedControl\"; 7Gm-zB-s7s.segmentTitles[0] = \"No\"; ObjectID = \"7Gm-zB-s7s\";",
-      "extractionState" : "extracted_with_value",
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -273,7 +273,7 @@
     },
     "7Gm-zB-s7s.segmentTitles[1]" : {
       "comment" : "Class = \"UISegmentedControl\"; 7Gm-zB-s7s.segmentTitles[1] = \"Yes\"; ObjectID = \"7Gm-zB-s7s\";",
-      "extractionState" : "extracted_with_value",
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -303,7 +303,7 @@
     },
     "7va-uJ-IfD.segmentTitles[0]" : {
       "comment" : "Class = \"UISegmentedControl\"; 7va-uJ-IfD.segmentTitles[0] = \"Lowest Latency\"; ObjectID = \"7va-uJ-IfD\";",
-      "extractionState" : "extracted_with_value",
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -333,7 +333,7 @@
     },
     "7va-uJ-IfD.segmentTitles[1]" : {
       "comment" : "Class = \"UISegmentedControl\"; 7va-uJ-IfD.segmentTitles[1] = \"Smoothest Video\"; ObjectID = \"7va-uJ-IfD\";",
-      "extractionState" : "extracted_with_value",
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -357,6 +357,42 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "最高流畅度"
+          }
+        }
+      }
+    },
+    "8hF-kb-2uV.segmentTitles[0]" : {
+      "comment" : "Class = \"UISegmentedControl\"; 8hF-kb-2uV.segmentTitles[0] = \"30 FPS\"; ObjectID = \"8hF-kb-2uV\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "30 FPS"
+          }
+        }
+      }
+    },
+    "8hF-kb-2uV.segmentTitles[1]" : {
+      "comment" : "Class = \"UISegmentedControl\"; 8hF-kb-2uV.segmentTitles[1] = \"60 FPS\"; ObjectID = \"8hF-kb-2uV\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "60 FPS"
+          }
+        }
+      }
+    },
+    "8hF-kb-2uV.segmentTitles[2]" : {
+      "comment" : "Class = \"UISegmentedControl\"; 8hF-kb-2uV.segmentTitles[2] = \"120 FPS\"; ObjectID = \"8hF-kb-2uV\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "120 FPS"
           }
         }
       }
@@ -505,6 +541,126 @@
         }
       }
     },
+    "Awc-Oh-s9n.segmentTitles[0]" : {
+      "comment" : "Class = \"UISegmentedControl\"; Awc-Oh-s9n.segmentTitles[0] = \"No\"; ObjectID = \"Awc-Oh-s9n\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "No"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "关闭"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "关闭"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "关闭"
+          }
+        }
+      }
+    },
+    "Awc-Oh-s9n.segmentTitles[1]" : {
+      "comment" : "Class = \"UISegmentedControl\"; Awc-Oh-s9n.segmentTitles[1] = \"Yes\"; ObjectID = \"Awc-Oh-s9n\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Yes"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "启用"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "启用"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "启用"
+          }
+        }
+      }
+    },
+    "AXb-DO-LzB.segmentTitles[0]" : {
+      "comment" : "Class = \"UISegmentedControl\"; AXb-DO-LzB.segmentTitles[0] = \"No\"; ObjectID = \"AXb-DO-LzB\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "No"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "关闭"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "关闭"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "关闭"
+          }
+        }
+      }
+    },
+    "AXb-DO-LzB.segmentTitles[1]" : {
+      "comment" : "Class = \"UISegmentedControl\"; AXb-DO-LzB.segmentTitles[1] = \"Yes\"; ObjectID = \"AXb-DO-LzB\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Yes"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "启用"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "启用"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "启用"
+          }
+        }
+      }
+    },
     "bFD-Ng-abn.text" : {
       "comment" : "Class = \"UILabel\"; text = \"Multi-Controller Mode                                                                   \"; ObjectID = \"bFD-Ng-abn\";",
       "extractionState" : "extracted_with_value",
@@ -579,7 +735,7 @@
     },
     "bw9-4S-s2V.segmentTitles[0]" : {
       "comment" : "Class = \"UISegmentedControl\"; bw9-4S-s2V.segmentTitles[0] = \"No\"; ObjectID = \"bw9-4S-s2V\";",
-      "extractionState" : "extracted_with_value",
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -609,7 +765,7 @@
     },
     "bw9-4S-s2V.segmentTitles[1]" : {
       "comment" : "Class = \"UISegmentedControl\"; bw9-4S-s2V.segmentTitles[1] = \"Yes\"; ObjectID = \"bw9-4S-s2V\";",
-      "extractionState" : "extracted_with_value",
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -639,7 +795,7 @@
     },
     "byH-Qz-Nbw.segmentTitles[0]" : {
       "comment" : "Class = \"UISegmentedControl\"; byH-Qz-Nbw.segmentTitles[0] = \"No\"; ObjectID = \"byH-Qz-Nbw\";",
-      "extractionState" : "extracted_with_value",
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -669,7 +825,7 @@
     },
     "byH-Qz-Nbw.segmentTitles[1]" : {
       "comment" : "Class = \"UISegmentedControl\"; byH-Qz-Nbw.segmentTitles[1] = \"Yes\"; ObjectID = \"byH-Qz-Nbw\";",
-      "extractionState" : "extracted_with_value",
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -925,6 +1081,66 @@
         }
       }
     },
+    "D2u-4j-7kg.segmentTitles[0]" : {
+      "comment" : "Class = \"UISegmentedControl\"; D2u-4j-7kg.segmentTitles[0] = \"No\"; ObjectID = \"D2u-4j-7kg\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "No"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "关闭"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "关闭"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "关闭"
+          }
+        }
+      }
+    },
+    "D2u-4j-7kg.segmentTitles[1]" : {
+      "comment" : "Class = \"UISegmentedControl\"; D2u-4j-7kg.segmentTitles[1] = \"Yes\"; ObjectID = \"D2u-4j-7kg\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Yes"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "启用"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "启用"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "启用"
+          }
+        }
+      }
+    },
     "DkI-w6-jku.text" : {
       "comment" : "Class = \"UILabel\"; text = \"Touch Pointer Velocity: Scaled on 0% of Right Screen           \"; ObjectID = \"DkI-w6-jku\";",
       "extractionState" : "extracted_with_value",
@@ -963,6 +1179,66 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "交换A/B键、X/Y键位置"
+          }
+        }
+      }
+    },
+    "dpd-Bw-aHE.segmentTitles[0]" : {
+      "comment" : "Class = \"UISegmentedControl\"; dpd-Bw-aHE.segmentTitles[0] = \"No\"; ObjectID = \"dpd-Bw-aHE\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "No"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "关闭"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "关闭"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "关闭"
+          }
+        }
+      }
+    },
+    "dpd-Bw-aHE.segmentTitles[1]" : {
+      "comment" : "Class = \"UISegmentedControl\"; dpd-Bw-aHE.segmentTitles[1] = \"Yes\"; ObjectID = \"dpd-Bw-aHE\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Yes"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "启用"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "启用"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "启用"
           }
         }
       }
@@ -1201,6 +1477,246 @@
         }
       }
     },
+    "G1P-WG-aRD.segmentTitles[0]" : {
+      "comment" : "Class = \"UISegmentedControl\"; G1P-WG-aRD.segmentTitles[0] = \"No\"; ObjectID = \"G1P-WG-aRD\";",
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "No"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "关闭"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "关闭"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "关闭"
+          }
+        }
+      }
+    },
+    "G1P-WG-aRD.segmentTitles[1]" : {
+      "comment" : "Class = \"UISegmentedControl\"; G1P-WG-aRD.segmentTitles[1] = \"Yes\"; ObjectID = \"G1P-WG-aRD\";",
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Yes"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "启用"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "启用"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "启用"
+          }
+        }
+      }
+    },
+    "gc9-54-xjV.segmentTitles[0]" : {
+      "comment" : "Class = \"UISegmentedControl\"; gc9-54-xjV.segmentTitles[0] = \"No\"; ObjectID = \"gc9-54-xjV\";",
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "No"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "关闭"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "关闭"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "关闭"
+          }
+        }
+      }
+    },
+    "gc9-54-xjV.segmentTitles[1]" : {
+      "comment" : "Class = \"UISegmentedControl\"; gc9-54-xjV.segmentTitles[1] = \"Yes\"; ObjectID = \"gc9-54-xjV\";",
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Yes"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "启用"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "启用"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "启用"
+          }
+        }
+      }
+    },
+    "gid-cU-pV9.segmentTitles[0]" : {
+      "comment" : "Class = \"UISegmentedControl\"; gid-cU-pV9.segmentTitles[0] = \"No\"; ObjectID = \"gid-cU-pV9\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "No"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "关闭"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "关闭"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "关闭"
+          }
+        }
+      }
+    },
+    "gid-cU-pV9.segmentTitles[1]" : {
+      "comment" : "Class = \"UISegmentedControl\"; gid-cU-pV9.segmentTitles[1] = \"Yes\"; ObjectID = \"gid-cU-pV9\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Yes"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "启用"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "启用"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "启用"
+          }
+        }
+      }
+    },
+    "goy-IW-LuT.segmentTitles[0]" : {
+      "comment" : "Class = \"UISegmentedControl\"; goy-IW-LuT.segmentTitles[0] = \"No\"; ObjectID = \"goy-IW-LuT\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "No"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "关闭"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "关闭"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "关闭"
+          }
+        }
+      }
+    },
+    "goy-IW-LuT.segmentTitles[1]" : {
+      "comment" : "Class = \"UISegmentedControl\"; goy-IW-LuT.segmentTitles[1] = \"Yes\"; ObjectID = \"goy-IW-LuT\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Yes"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "启用"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "启用"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "启用"
+          }
+        }
+      }
+    },
     "h5g-U1-Z2J.text" : {
       "comment" : "Class = \"UILabel\"; text = \"Touch Mode                                                                            \"; ObjectID = \"h5g-U1-Z2J\";",
       "extractionState" : "extracted_with_value",
@@ -1263,7 +1779,7 @@
     },
     "hm3-EV-h6d.segmentTitles[0]" : {
       "comment" : "Class = \"UISegmentedControl\"; hm3-EV-h6d.segmentTitles[0] = \"No\"; ObjectID = \"hm3-EV-h6d\";",
-      "extractionState" : "extracted_with_value",
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1293,7 +1809,7 @@
     },
     "hm3-EV-h6d.segmentTitles[1]" : {
       "comment" : "Class = \"UISegmentedControl\"; hm3-EV-h6d.segmentTitles[1] = \"Yes\"; ObjectID = \"hm3-EV-h6d\";",
-      "extractionState" : "extracted_with_value",
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1351,32 +1867,92 @@
         }
       }
     },
-    "KlC-fG-wEi.segmentTitles[0]" : {
-      "comment" : "Class = \"UISegmentedControl\"; KlC-fG-wEi.segmentTitles[0] = \"Single\"; ObjectID = \"KlC-fG-wEi\";",
+    "KJd-PE-5cS.segmentTitles[0]" : {
+      "comment" : "Class = \"UISegmentedControl\"; KJd-PE-5cS.segmentTitles[0] = \"No\"; ObjectID = \"KJd-PE-5cS\";",
       "extractionState" : "extracted_with_value",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "Single"
+            "value" : "No"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "单手柄"
+            "value" : "关闭"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "单手柄"
+            "value" : "关闭"
           }
         },
         "zh-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "单手柄"
+            "value" : "关闭"
+          }
+        }
+      }
+    },
+    "KJd-PE-5cS.segmentTitles[1]" : {
+      "comment" : "Class = \"UISegmentedControl\"; KJd-PE-5cS.segmentTitles[1] = \"Yes\"; ObjectID = \"KJd-PE-5cS\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Yes"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "启用"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "启用"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "启用"
+          }
+        }
+      }
+    },
+    "KlC-fG-wEi.segmentTitles[0]" : {
+      "comment" : "Class = \"UISegmentedControl\"; KlC-fG-wEi.segmentTitles[0] = \"No\"; ObjectID = \"KlC-fG-wEi\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "No"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "关闭"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "关闭"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "关闭"
           }
         }
       }
@@ -1413,7 +1989,7 @@
     },
     "KMg-3j-F9p.segmentTitles[0]" : {
       "comment" : "Class = \"UISegmentedControl\"; KMg-3j-F9p.segmentTitles[0] = \"No\"; ObjectID = \"KMg-3j-F9p\";",
-      "extractionState" : "extracted_with_value",
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1443,6 +2019,66 @@
     },
     "KMg-3j-F9p.segmentTitles[1]" : {
       "comment" : "Class = \"UISegmentedControl\"; KMg-3j-F9p.segmentTitles[1] = \"Yes\"; ObjectID = \"KMg-3j-F9p\";",
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Yes"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "启用"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "启用"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "启用"
+          }
+        }
+      }
+    },
+    "KNe-bN-CDb.segmentTitles[0]" : {
+      "comment" : "Class = \"UISegmentedControl\"; KNe-bN-CDb.segmentTitles[0] = \"No\"; ObjectID = \"KNe-bN-CDb\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "No"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "关闭"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "关闭"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "关闭"
+          }
+        }
+      }
+    },
+    "KNe-bN-CDb.segmentTitles[1]" : {
+      "comment" : "Class = \"UISegmentedControl\"; KNe-bN-CDb.segmentTitles[1] = \"Yes\"; ObjectID = \"KNe-bN-CDb\";",
       "extractionState" : "extracted_with_value",
       "localizations" : {
         "en" : {
@@ -1473,7 +2109,7 @@
     },
     "lcO-6v-Tbg.segmentTitles[0]" : {
       "comment" : "Class = \"UISegmentedControl\"; lcO-6v-Tbg.segmentTitles[0] = \"No\"; ObjectID = \"lcO-6v-Tbg\";",
-      "extractionState" : "extracted_with_value",
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1503,7 +2139,7 @@
     },
     "lcO-6v-Tbg.segmentTitles[1]" : {
       "comment" : "Class = \"UISegmentedControl\"; lcO-6v-Tbg.segmentTitles[1] = \"Yes\"; ObjectID = \"lcO-6v-Tbg\";",
-      "extractionState" : "extracted_with_value",
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1527,42 +2163,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "启用"
-          }
-        }
-      }
-    },
-    "lGK-vl-pdw.segmentTitles[0]" : {
-      "comment" : "Class = \"UISegmentedControl\"; lGK-vl-pdw.segmentTitles[0] = \"30 FPS\"; ObjectID = \"lGK-vl-pdw\";",
-      "extractionState" : "extracted_with_value",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "30 FPS"
-          }
-        }
-      }
-    },
-    "lGK-vl-pdw.segmentTitles[1]" : {
-      "comment" : "Class = \"UISegmentedControl\"; lGK-vl-pdw.segmentTitles[1] = \"60 FPS\"; ObjectID = \"lGK-vl-pdw\";",
-      "extractionState" : "extracted_with_value",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "60 FPS"
-          }
-        }
-      }
-    },
-    "lGK-vl-pdw.segmentTitles[2]" : {
-      "comment" : "Class = \"UISegmentedControl\"; lGK-vl-pdw.segmentTitles[2] = \"120 FPS\"; ObjectID = \"lGK-vl-pdw\";",
-      "extractionState" : "extracted_with_value",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "120 FPS"
           }
         }
       }
@@ -1717,6 +2317,66 @@
         }
       }
     },
+    "MM5-O0-vK3.segmentTitles[0]" : {
+      "comment" : "Class = \"UISegmentedControl\"; MM5-O0-vK3.segmentTitles[0] = \"No\"; ObjectID = \"MM5-O0-vK3\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "No"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "关闭"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "关闭"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "关闭"
+          }
+        }
+      }
+    },
+    "MM5-O0-vK3.segmentTitles[1]" : {
+      "comment" : "Class = \"UISegmentedControl\"; MM5-O0-vK3.segmentTitles[1] = \"Yes\"; ObjectID = \"MM5-O0-vK3\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Yes"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "启用"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "启用"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "启用"
+          }
+        }
+      }
+    },
     "mSL-ru-nRm.title" : {
       "comment" : "Class = \"UIBarButtonItem\"; title = \"Settings\"; ObjectID = \"mSL-ru-nRm\";",
       "extractionState" : "extracted_with_value",
@@ -1747,9 +2407,69 @@
         }
       }
     },
+    "mTM-NL-CcF.segmentTitles[0]" : {
+      "comment" : "Class = \"UISegmentedControl\"; mTM-NL-CcF.segmentTitles[0] = \"No\"; ObjectID = \"mTM-NL-CcF\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "No"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "关闭"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "关闭"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "关闭"
+          }
+        }
+      }
+    },
+    "mTM-NL-CcF.segmentTitles[1]" : {
+      "comment" : "Class = \"UISegmentedControl\"; mTM-NL-CcF.segmentTitles[1] = \"Yes\"; ObjectID = \"mTM-NL-CcF\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Yes"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "启用"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "启用"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "启用"
+          }
+        }
+      }
+    },
     "nCO-OT-dV1.segmentTitles[0]" : {
       "comment" : "Class = \"UISegmentedControl\"; nCO-OT-dV1.segmentTitles[0] = \"No\"; ObjectID = \"nCO-OT-dV1\";",
-      "extractionState" : "extracted_with_value",
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1779,7 +2499,7 @@
     },
     "nCO-OT-dV1.segmentTitles[1]" : {
       "comment" : "Class = \"UISegmentedControl\"; nCO-OT-dV1.segmentTitles[1] = \"Yes\"; ObjectID = \"nCO-OT-dV1\";",
-      "extractionState" : "extracted_with_value",
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1899,7 +2619,7 @@
     },
     "OA2-SA-bBO.segmentTitles[0]" : {
       "comment" : "Class = \"UISegmentedControl\"; OA2-SA-bBO.segmentTitles[0] = \"No\"; ObjectID = \"OA2-SA-bBO\";",
-      "extractionState" : "extracted_with_value",
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1929,7 +2649,7 @@
     },
     "OA2-SA-bBO.segmentTitles[1]" : {
       "comment" : "Class = \"UISegmentedControl\"; OA2-SA-bBO.segmentTitles[1] = \"Yes\"; ObjectID = \"OA2-SA-bBO\";",
-      "extractionState" : "extracted_with_value",
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1987,6 +2707,66 @@
         }
       }
     },
+    "OOg-A3-DdM.segmentTitles[0]" : {
+      "comment" : "Class = \"UISegmentedControl\"; OOg-A3-DdM.segmentTitles[0] = \"Lowest Latency\"; ObjectID = \"OOg-A3-DdM\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Lowest Latency"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "低延迟"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "低延迟"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "低延迟"
+          }
+        }
+      }
+    },
+    "OOg-A3-DdM.segmentTitles[1]" : {
+      "comment" : "Class = \"UISegmentedControl\"; OOg-A3-DdM.segmentTitles[1] = \"Smoothest Video\"; ObjectID = \"OOg-A3-DdM\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Smoothest Video"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "最高流畅度"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "最高流畅度"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "最高流畅度"
+          }
+        }
+      }
+    },
     "oPM-G6-u5O.text" : {
       "comment" : "Class = \"UILabel\"; text = \"Mouse Pointer Velocity: 100%                                                   \"; ObjectID = \"oPM-G6-u5O\";",
       "extractionState" : "extracted_with_value",
@@ -1995,6 +2775,66 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Mouse Pointer Velocity: 100%                                                   "
+          }
+        }
+      }
+    },
+    "OSK-8N-FWc.segmentTitles[0]" : {
+      "comment" : "Class = \"UISegmentedControl\"; OSK-8N-FWc.segmentTitles[0] = \"No\"; ObjectID = \"OSK-8N-FWc\";",
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "No"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "关闭"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "关闭"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "关闭"
+          }
+        }
+      }
+    },
+    "OSK-8N-FWc.segmentTitles[1]" : {
+      "comment" : "Class = \"UISegmentedControl\"; OSK-8N-FWc.segmentTitles[1] = \"Yes\"; ObjectID = \"OSK-8N-FWc\";",
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Yes"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "启用"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "启用"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "启用"
           }
         }
       }
@@ -2287,6 +3127,66 @@
         }
       }
     },
+    "RRk-03-hIr.segmentTitles[0]" : {
+      "comment" : "Class = \"UISegmentedControl\"; RRk-03-hIr.segmentTitles[0] = \"No\"; ObjectID = \"RRk-03-hIr\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "No"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "关闭"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "关闭"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "关闭"
+          }
+        }
+      }
+    },
+    "RRk-03-hIr.segmentTitles[1]" : {
+      "comment" : "Class = \"UISegmentedControl\"; RRk-03-hIr.segmentTitles[1] = \"Yes\"; ObjectID = \"RRk-03-hIr\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Yes"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "启用"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "启用"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "启用"
+          }
+        }
+      }
+    },
     "s2i-ZL-Gz4.text" : {
       "comment" : "Class = \"UILabel\"; text = \"Statistics Overlay                                                                            \"; ObjectID = \"s2i-ZL-Gz4\";",
       "extractionState" : "extracted_with_value",
@@ -2319,7 +3219,7 @@
     },
     "sIU-PH-H7V.segmentTitles[0]" : {
       "comment" : "Class = \"UISegmentedControl\"; sIU-PH-H7V.segmentTitles[0] = \"No\"; ObjectID = \"sIU-PH-H7V\";",
-      "extractionState" : "extracted_with_value",
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2349,7 +3249,7 @@
     },
     "sIU-PH-H7V.segmentTitles[1]" : {
       "comment" : "Class = \"UISegmentedControl\"; sIU-PH-H7V.segmentTitles[1] = \"Yes\"; ObjectID = \"sIU-PH-H7V\";",
-      "extractionState" : "extracted_with_value",
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2589,7 +3489,7 @@
     },
     "WDY-9o-6Hb.segmentTitles[0]" : {
       "comment" : "Class = \"UISegmentedControl\"; WDY-9o-6Hb.segmentTitles[0] = \"No\"; ObjectID = \"WDY-9o-6Hb\";",
-      "extractionState" : "extracted_with_value",
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2619,7 +3519,7 @@
     },
     "WDY-9o-6Hb.segmentTitles[1]" : {
       "comment" : "Class = \"UISegmentedControl\"; WDY-9o-6Hb.segmentTitles[1] = \"Yes\"; ObjectID = \"WDY-9o-6Hb\";",
-      "extractionState" : "extracted_with_value",
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {

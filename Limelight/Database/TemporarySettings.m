@@ -85,7 +85,7 @@
     self.swapABXYButtons = settings.swapABXYButtons;
     self.onscreenControls = settings.onscreenControls;
     self.reverseMouseWheelDirection = settings.reverseMouseWheelDirection;
-    self.largerStickLR1 = settings.largerStickLR1;
+    self.asyncNativeTouch = settings.asyncNativeTouch;
     self.btMouseSupport = settings.btMouseSupport;
     // self.absoluteTouchMode = settings.absoluteTouchMode;
     self.touchMode = settings.touchMode;

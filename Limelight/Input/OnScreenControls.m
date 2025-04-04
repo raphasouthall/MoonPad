@@ -221,7 +221,7 @@ static float L3_Y;
     // we have to retrieve largerStickLR1 setting direct from the database, since streamConfig is invalid in LayoutOnScreenControls
     DataManager* dataMan = [[DataManager alloc] init];
     Settings* settings = [dataMan retrieveSettings];
-    _largerStickLR1 = settings.largerStickLR1;
+    _largerStickLR1 = true;
     _oscTapExlusionAreaSizeFactor = 1.05;
         
     _iPad = ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad);

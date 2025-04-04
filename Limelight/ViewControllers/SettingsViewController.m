@@ -525,6 +525,10 @@ BOOL isCustomResolution(CGSize res) {
     [self.touchPointerVelocityFactorSlider addTarget:self action:@selector(touchPointerVelocityFactorSliderMoved) forControlEvents:(UIControlEventValueChanged)]; // Update label display when slider is being moved.
     [self touchPointerVelocityFactorSliderMoved];
     
+    // async native touch event
+    [self.asyncNativeTouchSelector setSelectedSegmentIndex:currentSettings.asyncNativeTouch ? 1 : 0]; // load old setting of asyncNativeTouch
+
+    
     // init relative touch mouse pointer veloc setting,  will be enable/disabled by touchMode
     [self.mousePointerVelocityFactorSlider setValue:[self map_SliderValue_fromVelocFactor: currentSettings.mousePointerVelocityFactor.floatValue] animated:YES]; // Load old setting.
     [self.mousePointerVelocityFactorSlider addTarget:self action:@selector(mousePointerVelocityFactorSliderMoved) forControlEvents:(UIControlEventValueChanged)]; // Update label display when slider is being moved.
@@ -543,7 +547,6 @@ BOOL isCustomResolution(CGSize res) {
     [self.onscreenControlSelector setSelectedSegmentIndex:onscreenControlsLevel];
     [self.onscreenControlSelector addTarget:self action:@selector(onscreenControlChanged) forControlEvents:UIControlEventValueChanged];
     [self onscreenControlChanged];
-    [self.largerStickLR1Selector setSelectedSegmentIndex:currentSettings.largerStickLR1 ? 1 : 0]; // load old setting of largerStickLR1
     
     // touch move event interval for native-touch.
     [self.touchMoveEventIntervalSlider setValue:currentSettings.touchMoveEventInterval.intValue animated:YES]; // Load old setting.
@@ -552,7 +555,7 @@ BOOL isCustomResolution(CGSize res) {
 
 
     // [self.touchModeSelector setSelectedSegmentIndex:currentSettings.absoluteTouchMode ? 1 : 0];
-    // this part will enable/disable oscSelector & the largerStickLR1 selector
+    // this part will enable/disable oscSelector & the asyncNativeTouch selector
     [self.touchModeSelector setSelectedSegmentIndex:currentSettings.touchMode.intValue]; //Load old touchMode setting
     [self.touchModeSelector addTarget:self action:@selector(touchModeChanged) forControlEvents:UIControlEventValueChanged];
     [self touchModeChanged];
@@ -747,7 +750,7 @@ BOOL isCustomResolution(CGSize res) {
     bool isNativeTouch = [self.touchModeSelector selectedSegmentIndex] == PURE_NATIVE_TOUCH || [self.touchModeSelector selectedSegmentIndex] == REGULAR_NATIVE_TOUCH;
     
     [self.onscreenControlSelector setEnabled:oscSelectorEnabled];
-    [self.largerStickLR1Selector setEnabled:oscSelectorEnabled]; // this selector stay aligned with oscSelector
+    [self.asyncNativeTouchSelector setEnabled:isNativeTouch]; // this selector stay aligned with oscSelector
 
     [self widget:self.pointerVelocityModeDividerSlider setEnabled:isNativeTouch]; // pointer velocity scaling works only in native touch mode.
     [self widget:self.touchPointerVelocityFactorSlider setEnabled:isNativeTouch]; // pointer velocity scaling works only in native touch mode.
@@ -1067,7 +1070,7 @@ BOOL isCustomResolution(CGSize res) {
     uint16_t touchMoveEventInterval = (uint16_t)self.touchMoveEventIntervalSlider.value;
 
     BOOL reverseMouseWheelDirection = [self.reverseMouseWheelDirectionSelector selectedSegmentIndex] == 1;
-    BOOL largerStickLR1 = [self.largerStickLR1Selector selectedSegmentIndex] == 1;
+    BOOL asyncNativeTouch = [self.asyncNativeTouchSelector selectedSegmentIndex] == 1;
     BOOL liftStreamViewForKeyboard = [self.liftStreamViewForKeyboardSelector selectedSegmentIndex] == 1;
     BOOL showKeyboardToolbar = [self.showKeyboardToolbarSelector selectedSegmentIndex] == 1;
     BOOL optimizeGames = [self.optimizeSettingsSelector selectedSegmentIndex] == 1;
@@ -1102,7 +1105,7 @@ BOOL isCustomResolution(CGSize res) {
           mousePointerVelocityFactor:mousePointerVelocityFactor
               touchMoveEventInterval:touchMoveEventInterval
           reverseMouseWheelDirection:reverseMouseWheelDirection
-                   largerStickLR1:largerStickLR1
+                   asyncNativeTouch:asyncNativeTouch
            liftStreamViewForKeyboard:liftStreamViewForKeyboard
                  showKeyboardToolbar:showKeyboardToolbar
                        optimizeGames:optimizeGames

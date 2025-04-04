@@ -28,7 +28,7 @@
       mousePointerVelocityFactor:(CGFloat)mousePointerVelocityFactor
           touchMoveEventInterval:(NSInteger)touchMoveEventInterval
       reverseMouseWheelDirection:(BOOL)reverseMouseWheelDirection
-                  largerStickLR1:(BOOL)largerStickLR1
+                  asyncNativeTouch:(BOOL)asyncNativeTouch
        liftStreamViewForKeyboard:(BOOL)liftStreamViewForKeyboard
              showKeyboardToolbar:(BOOL)showKeyboardToolbar
                    optimizeGames:(BOOL)optimizeGames
