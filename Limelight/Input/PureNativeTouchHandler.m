@@ -19,9 +19,13 @@
     TemporarySettings* currentSettings;
     bool activateCoordSelector;
     bool touchPointSpawnedAtUpperScreenEdge;
-    bool asyncNativeTouch;
     CGFloat pointerVelocityDividerLocationByPoints;
     uint16_t touchMoveEventIntervalUs;
+    
+    bool asyncNativeTouch;
+    unsigned int touchDownQos;
+    unsigned int touchMoveQos;
+    unsigned int touchEndQos;
     
     // Use a Dictionary to store UITouch object's memory address as key, and pointerId as value,字典存放UITouch对象地址和pointerId映射关系
     // pointerId will be generated from a pre-defined pool
@@ -57,7 +61,27 @@
     // self->excludedPointerIds = [[NSMutableSet alloc] init];
     self->touchPointSpawnedAtUpperScreenEdge = false;
     
-    self->asyncNativeTouch = settings.asyncNativeTouch;
+    self->asyncNativeTouch = settings.asyncNativeTouchPriority.intValue != AsyncNativeTouchOff;
+    
+    switch(settings.asyncNativeTouchPriority.intValue){
+        case TouchDownPriority:
+            touchDownQos = QOS_CLASS_USER_INTERACTIVE;
+            touchMoveQos = QOS_CLASS_USER_INITIATED;
+            touchEndQos = QOS_CLASS_USER_INITIATED;
+            break;
+        case TouchMovePriority:
+            touchDownQos = QOS_CLASS_USER_INITIATED;
+            touchMoveQos = QOS_CLASS_USER_INTERACTIVE;
+            touchEndQos = QOS_CLASS_USER_INITIATED;
+            break;
+        case EqualPriority:
+            touchDownQos = QOS_CLASS_USER_INTERACTIVE;
+            touchMoveQos = QOS_CLASS_USER_INTERACTIVE;
+            touchEndQos = QOS_CLASS_USER_INITIATED;
+            break;
+        default: break;
+    }
+    
     
     self->pointerObjDict = [NSMutableDictionary dictionary];
     
@@ -186,7 +210,7 @@
 }
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
-    if (asyncNativeTouch) dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INTERACTIVE, 0), ^{
+    if (asyncNativeTouch) dispatch_async(dispatch_get_global_queue(touchDownQos, 0), ^{
         for (UITouch* touch in touches){
             [self handleTouchDown:touch]; //generate & populate pointerId
             if(self->activateCoordSelector) [self populatePointerObjIntoDict:touch];
@@ -203,7 +227,7 @@
 }
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
-    if (asyncNativeTouch) dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0), ^{
+    if (asyncNativeTouch) dispatch_async(dispatch_get_global_queue(touchMoveQos, 0), ^{
         for (UITouch* touch in touches){
             if(self->activateCoordSelector) [self updatePointerObjInDict:touch];
             [self sendTouchEvent:touch withTouchtype:LI_TOUCH_EVENT_MOVE];
@@ -216,14 +240,14 @@
             if(self->activateCoordSelector) [self updatePointerObjInDict:touch];
             [self sendTouchEvent:touch withTouchtype:LI_TOUCH_EVENT_MOVE];
             [[self getPointerObjFromDict:touch] doesNeedResetCoords]; // execute the judging of doesReachBoundary for current pointer instance. (happens after the event is sent to Sunshine service)
-            usleep(self->touchMoveEventIntervalUs);
+            // usleep(self->touchMoveEventIntervalUs);
         }
     }
 }
 
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
-    if(asyncNativeTouch) dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0), ^{
+    if(asyncNativeTouch) dispatch_async(dispatch_get_global_queue(touchEndQos, 0), ^{
         for (UITouch* touch in touches){
             [self sendTouchEvent:touch withTouchtype:LI_TOUCH_EVENT_UP]; //send touch event before remove pointerId
             [self removePointerId:touch]; //then remove pointerId

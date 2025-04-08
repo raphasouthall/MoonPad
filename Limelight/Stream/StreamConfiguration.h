@@ -27,7 +27,7 @@
 @property BOOL optimizeGameSettings;
 @property BOOL playAudioOnPC;
 @property BOOL swapABXYButtons;
-@property BOOL asyncNativeTouch;
+@property BOOL asyncNativeTouchPriority;
 @property int audioConfiguration;
 @property int supportedVideoFormats;
 @property BOOL multiController;

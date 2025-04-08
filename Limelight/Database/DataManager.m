@@ -67,7 +67,7 @@
       mousePointerVelocityFactor:(CGFloat)mousePointerVelocityFactor
           touchMoveEventInterval:(NSInteger)touchMoveEventInterval
       reverseMouseWheelDirection:(BOOL)reverseMouseWheelDirection
-                  asyncNativeTouch:(BOOL)asyncNativeTouch
+                  asyncNativeTouchPriority:(NSInteger)asyncNativeTouchPriority
        liftStreamViewForKeyboard:(BOOL)liftStreamViewForKeyboard
              showKeyboardToolbar:(BOOL)showKeyboardToolbar
                    optimizeGames:(BOOL)optimizeGames
@@ -105,7 +105,7 @@
         settingsToSave.mousePointerVelocityFactor = [NSNumber numberWithFloat:mousePointerVelocityFactor];
         settingsToSave.touchMoveEventInterval = [NSNumber numberWithInteger:touchMoveEventInterval];
         settingsToSave.reverseMouseWheelDirection = reverseMouseWheelDirection;
-        settingsToSave.asyncNativeTouch = asyncNativeTouch;
+        settingsToSave.asyncNativeTouchPriority = [NSNumber numberWithInteger:asyncNativeTouchPriority];
         settingsToSave.liftStreamViewForKeyboard = liftStreamViewForKeyboard;
         settingsToSave.showKeyboardToolbar = showKeyboardToolbar;
         settingsToSave.optimizeGames = optimizeGames;

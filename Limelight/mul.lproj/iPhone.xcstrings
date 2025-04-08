@@ -243,7 +243,7 @@
     },
     "2LZ-cX-teZ.text" : {
       "comment" : "Class = \"UILabel\"; text = \"Async Native Touch\"; ObjectID = \"2LZ-cX-teZ\";",
-      "extractionState" : "extracted_with_value",
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -667,6 +667,126 @@
         }
       }
     },
+    "BE3-KW-nge.segmentTitles[0]" : {
+      "comment" : "Class = \"UISegmentedControl\"; BE3-KW-nge.segmentTitles[0] = \"Off\"; ObjectID = \"BE3-KW-nge\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Off"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "关闭"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "关闭"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "关闭"
+          }
+        }
+      }
+    },
+    "BE3-KW-nge.segmentTitles[1]" : {
+      "comment" : "Class = \"UISegmentedControl\"; BE3-KW-nge.segmentTitles[1] = \"Touch Down\"; ObjectID = \"BE3-KW-nge\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Touch Down"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "触发优先"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "触发优先"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "触发优先"
+          }
+        }
+      }
+    },
+    "BE3-KW-nge.segmentTitles[2]" : {
+      "comment" : "Class = \"UISegmentedControl\"; BE3-KW-nge.segmentTitles[2] = \"Touch Move\"; ObjectID = \"BE3-KW-nge\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Touch Move"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "移动优先"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "移动优先"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "移动优先"
+          }
+        }
+      }
+    },
+    "BE3-KW-nge.segmentTitles[3]" : {
+      "comment" : "Class = \"UISegmentedControl\"; BE3-KW-nge.segmentTitles[3] = \"Equal Priority\"; ObjectID = \"BE3-KW-nge\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Equal Priority"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "均衡"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "均衡"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "均衡"
+          }
+        }
+      }
+    },
     "BEG-Id-J8y.text" : {
       "comment" : "Class = \"UILabel\"; text = \"Preferred Codec                                                                            \"; ObjectID = \"BEG-Id-J8y\";",
       "extractionState" : "extracted_with_value",
@@ -920,13 +1040,13 @@
       }
     },
     "Dfl-gL-00M.text" : {
-      "comment" : "Class = \"UILabel\"; text = \"Interval of Multi-Touch Move Events: 200 us                               \"; ObjectID = \"Dfl-gL-00M\";",
+      "comment" : "Class = \"UILabel\"; text = \"Interval of Multi-Touch Move Events: 200 us                             \"; ObjectID = \"Dfl-gL-00M\";",
       "extractionState" : "extracted_with_value",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "Interval of Multi-Touch Move Events: 200 us                               "
+            "value" : "Interval of Multi-Touch Move Events: 200 us                             "
           }
         }
       }
@@ -1257,6 +1377,36 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "启用"
+          }
+        }
+      }
+    },
+    "HtQ-3L-0hA.text" : {
+      "comment" : "Class = \"UILabel\"; text = \"Async Native Touch Priority\"; ObjectID = \"HtQ-3L-0hA\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Async Native Touch Priority"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "异步多点触控优先级"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "异步多点触控优先级"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "异步多点触控优先级"
           }
         }
       }
@@ -2637,7 +2787,7 @@
     },
     "XbO-CV-orB.segmentTitles[0]" : {
       "comment" : "Class = \"UISegmentedControl\"; XbO-CV-orB.segmentTitles[0] = \"No\"; ObjectID = \"XbO-CV-orB\";",
-      "extractionState" : "extracted_with_value",
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2667,7 +2817,7 @@
     },
     "XbO-CV-orB.segmentTitles[1]" : {
       "comment" : "Class = \"UISegmentedControl\"; XbO-CV-orB.segmentTitles[1] = \"Yes\"; ObjectID = \"XbO-CV-orB\";",
-      "extractionState" : "extracted_with_value",
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {

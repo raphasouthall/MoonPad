@@ -526,8 +526,9 @@ BOOL isCustomResolution(CGSize res) {
     [self touchPointerVelocityFactorSliderMoved];
     
     // async native touch event
-    [self.asyncNativeTouchSelector setSelectedSegmentIndex:currentSettings.asyncNativeTouch ? 1 : 0]; // load old setting of asyncNativeTouch
-
+    [self.asyncNativeTouchPrioritySelector setSelectedSegmentIndex:currentSettings.asyncNativeTouchPriority.intValue]; // load old setting of asyncNativeTouchPriority
+    [self.asyncNativeTouchPrioritySelector addTarget:self action:@selector(asyncNativeTouchPriorityChanged) forControlEvents:UIControlEventValueChanged];
+    [self asyncNativeTouchPriorityChanged];
     
     // init relative touch mouse pointer veloc setting,  will be enable/disabled by touchMode
     [self.mousePointerVelocityFactorSlider setValue:[self map_SliderValue_fromVelocFactor: currentSettings.mousePointerVelocityFactor.floatValue] animated:YES]; // Load old setting.
@@ -555,7 +556,7 @@ BOOL isCustomResolution(CGSize res) {
 
 
     // [self.touchModeSelector setSelectedSegmentIndex:currentSettings.absoluteTouchMode ? 1 : 0];
-    // this part will enable/disable oscSelector & the asyncNativeTouch selector
+    // this part will enable/disable oscSelector & the asyncNativeTouchPriority selector
     [self.touchModeSelector setSelectedSegmentIndex:currentSettings.touchMode.intValue]; //Load old touchMode setting
     [self.touchModeSelector addTarget:self action:@selector(touchModeChanged) forControlEvents:UIControlEventValueChanged];
     [self touchModeChanged];
@@ -743,18 +744,24 @@ BOOL isCustomResolution(CGSize res) {
     else widget.alpha = 0.5; // this is for updating widget visibility on low iOS version like mini5 ios14
 }
 
+- (void) asyncNativeTouchPriorityChanged {
+    bool isNativeTouch = [self.touchModeSelector selectedSegmentIndex] == PURE_NATIVE_TOUCH || [self.touchModeSelector selectedSegmentIndex] == REGULAR_NATIVE_TOUCH;
+    bool asyncNativeTouchEnabled = [self.asyncNativeTouchPrioritySelector selectedSegmentIndex] != AsyncNativeTouchOff;
+    [self widget:self.touchMoveEventIntervalSlider setEnabled:isNativeTouch && asyncNativeTouchEnabled];
+}
+
 - (void) touchModeChanged {
     // Disable On-Screen Controls & Widgets in non-relative touch mode
     bool oscSelectorEnabled = [self.touchModeSelector selectedSegmentIndex] == RELATIVE_TOUCH || [self.touchModeSelector selectedSegmentIndex] == REGULAR_NATIVE_TOUCH || [self.touchModeSelector selectedSegmentIndex] == ABSOLUTE_TOUCH;
     bool customOscEnabled = [self isOnScreenControllerOrButtonEnabled] && [self.onscreenControlSelector selectedSegmentIndex] == OnScreenControlsLevelCustom;
     bool isNativeTouch = [self.touchModeSelector selectedSegmentIndex] == PURE_NATIVE_TOUCH || [self.touchModeSelector selectedSegmentIndex] == REGULAR_NATIVE_TOUCH;
+    bool asyncNativeTouchEnabled = [self.asyncNativeTouchPrioritySelector selectedSegmentIndex] != AsyncNativeTouchOff;
     
     [self.onscreenControlSelector setEnabled:oscSelectorEnabled];
-    [self.asyncNativeTouchSelector setEnabled:isNativeTouch]; // this selector stay aligned with oscSelector
-
+    [self.asyncNativeTouchPrioritySelector setEnabled:isNativeTouch]; // this selector stay aligned with oscSelector
+    [self widget:self.touchMoveEventIntervalSlider setEnabled:isNativeTouch && asyncNativeTouchEnabled]; // applies to native touch modes only
     [self widget:self.pointerVelocityModeDividerSlider setEnabled:isNativeTouch]; // pointer velocity scaling works only in native touch mode.
     [self widget:self.touchPointerVelocityFactorSlider setEnabled:isNativeTouch]; // pointer velocity scaling works only in native touch mode.
-    [self widget:self.touchMoveEventIntervalSlider setEnabled:isNativeTouch]; // applys to native touch
     [self widget:self.mousePointerVelocityFactorSlider setEnabled:[self.touchModeSelector selectedSegmentIndex] == RELATIVE_TOUCH]; // mouse velocity scaling works only in relative touch mode.
 
     // number of touches required to toggle keyboard will be fixed to 3 when OSC is enabled.
@@ -1070,7 +1077,7 @@ BOOL isCustomResolution(CGSize res) {
     uint16_t touchMoveEventInterval = (uint16_t)self.touchMoveEventIntervalSlider.value;
 
     BOOL reverseMouseWheelDirection = [self.reverseMouseWheelDirectionSelector selectedSegmentIndex] == 1;
-    BOOL asyncNativeTouch = [self.asyncNativeTouchSelector selectedSegmentIndex] == 1;
+    NSInteger asyncNativeTouchPriority = [self.asyncNativeTouchPrioritySelector selectedSegmentIndex];
     BOOL liftStreamViewForKeyboard = [self.liftStreamViewForKeyboardSelector selectedSegmentIndex] == 1;
     BOOL showKeyboardToolbar = [self.showKeyboardToolbarSelector selectedSegmentIndex] == 1;
     BOOL optimizeGames = [self.optimizeSettingsSelector selectedSegmentIndex] == 1;
@@ -1105,7 +1112,7 @@ BOOL isCustomResolution(CGSize res) {
           mousePointerVelocityFactor:mousePointerVelocityFactor
               touchMoveEventInterval:touchMoveEventInterval
           reverseMouseWheelDirection:reverseMouseWheelDirection
-                   asyncNativeTouch:asyncNativeTouch
+                   asyncNativeTouchPriority:asyncNativeTouchPriority
            liftStreamViewForKeyboard:liftStreamViewForKeyboard
                  showKeyboardToolbar:showKeyboardToolbar
                        optimizeGames:optimizeGames

@@ -13,6 +13,13 @@
 
 @interface DataManager : NSObject
 
+typedef NS_ENUM(NSInteger, TouchEventPriorityEnum) {
+    AsyncNativeTouchOff,
+    TouchDownPriority,
+    TouchMovePriority,
+    EqualPriority
+};
+
 - (void) saveSettingsWithBitrate:(NSInteger)bitrate
                        framerate:(NSInteger)framerate
                           height:(NSInteger)height
@@ -28,7 +35,7 @@
       mousePointerVelocityFactor:(CGFloat)mousePointerVelocityFactor
           touchMoveEventInterval:(NSInteger)touchMoveEventInterval
       reverseMouseWheelDirection:(BOOL)reverseMouseWheelDirection
-                  asyncNativeTouch:(BOOL)asyncNativeTouch
+                  asyncNativeTouchPriority:(NSInteger)asyncNativeTouchPriority
        liftStreamViewForKeyboard:(BOOL)liftStreamViewForKeyboard
              showKeyboardToolbar:(BOOL)showKeyboardToolbar
                    optimizeGames:(BOOL)optimizeGames
