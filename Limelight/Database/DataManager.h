@@ -15,9 +15,9 @@
 
 typedef NS_ENUM(NSInteger, TouchEventPriorityEnum) {
     AsyncNativeTouchOff,
-    TouchDownPriority,
-    TouchMovePriority,
-    EqualPriority
+    EqualPriority,
+    TouchDownPriority,// deprecated by GUI
+    TouchMovePriority// deprecated by GUI
 };
 
 - (void) saveSettingsWithBitrate:(NSInteger)bitrate

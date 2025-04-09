@@ -668,121 +668,61 @@
       }
     },
     "BE3-KW-nge.segmentTitles[0]" : {
-      "comment" : "Class = \"UISegmentedControl\"; BE3-KW-nge.segmentTitles[0] = \"Off\"; ObjectID = \"BE3-KW-nge\";",
+      "comment" : "Class = \"UISegmentedControl\"; BE3-KW-nge.segmentTitles[0] = \"No\"; ObjectID = \"BE3-KW-nge\";",
       "extractionState" : "extracted_with_value",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "Off"
+            "value" : "No"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "关闭"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "关闭"
           }
         },
         "zh-HK" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "关闭"
           }
         }
       }
     },
     "BE3-KW-nge.segmentTitles[1]" : {
-      "comment" : "Class = \"UISegmentedControl\"; BE3-KW-nge.segmentTitles[1] = \"Touch Down\"; ObjectID = \"BE3-KW-nge\";",
+      "comment" : "Class = \"UISegmentedControl\"; BE3-KW-nge.segmentTitles[1] = \"Yes\"; ObjectID = \"BE3-KW-nge\";",
       "extractionState" : "extracted_with_value",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "Touch Down"
+            "value" : "Yes"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "触发优先"
+            "state" : "needs_review",
+            "value" : "开启"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "触发优先"
+            "state" : "needs_review",
+            "value" : "开启"
           }
         },
         "zh-HK" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "触发优先"
-          }
-        }
-      }
-    },
-    "BE3-KW-nge.segmentTitles[2]" : {
-      "comment" : "Class = \"UISegmentedControl\"; BE3-KW-nge.segmentTitles[2] = \"Touch Move\"; ObjectID = \"BE3-KW-nge\";",
-      "extractionState" : "extracted_with_value",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "Touch Move"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "移动优先"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "移动优先"
-          }
-        },
-        "zh-HK" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "移动优先"
-          }
-        }
-      }
-    },
-    "BE3-KW-nge.segmentTitles[3]" : {
-      "comment" : "Class = \"UISegmentedControl\"; BE3-KW-nge.segmentTitles[3] = \"Equal Priority\"; ObjectID = \"BE3-KW-nge\";",
-      "extractionState" : "extracted_with_value",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "Equal Priority"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "均衡"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "均衡"
-          }
-        },
-        "zh-HK" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "均衡"
+            "state" : "needs_review",
+            "value" : "开启"
           }
         }
       }
@@ -1382,31 +1322,31 @@
       }
     },
     "HtQ-3L-0hA.text" : {
-      "comment" : "Class = \"UILabel\"; text = \"Async Native Touch Priority\"; ObjectID = \"HtQ-3L-0hA\";",
+      "comment" : "Class = \"UILabel\"; text = \"Async Native Touch\"; ObjectID = \"HtQ-3L-0hA\";",
       "extractionState" : "extracted_with_value",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "Async Native Touch Priority"
+            "value" : "Async Native Touch"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "异步多点触控优先级"
+            "state" : "needs_review",
+            "value" : "异步多点触控"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "异步多点触控优先级"
+            "state" : "needs_review",
+            "value" : "异步多点触控"
           }
         },
         "zh-HK" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "异步多点触控优先级"
+            "state" : "needs_review",
+            "value" : "异步多点触控"
           }
         }
       }

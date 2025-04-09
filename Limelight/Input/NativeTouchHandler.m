@@ -65,17 +65,17 @@
     self->asyncNativeTouch = settings.asyncNativeTouchPriority.intValue != AsyncNativeTouchOff;
     
     switch(settings.asyncNativeTouchPriority.intValue){
-        case TouchDownPriority:
+        case TouchDownPriority: // deprecated by GUI
             touchDownQos = QOS_CLASS_USER_INTERACTIVE;
             touchMoveQos = QOS_CLASS_USER_INITIATED;
             touchEndQos = QOS_CLASS_USER_INITIATED;
             break;
-        case TouchMovePriority:
+        case TouchMovePriority: // deprecated by GUI
             touchDownQos = QOS_CLASS_USER_INITIATED;
             touchMoveQos = QOS_CLASS_USER_INTERACTIVE;
             touchEndQos = QOS_CLASS_USER_INITIATED;
             break;
-        case EqualPriority:
+        case EqualPriority: // equals to async touch is true now
             touchDownQos = QOS_CLASS_USER_INTERACTIVE;
             touchMoveQos = QOS_CLASS_USER_INTERACTIVE;
             touchEndQos = QOS_CLASS_USER_INITIATED;
