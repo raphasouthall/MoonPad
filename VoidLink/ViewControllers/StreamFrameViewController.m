@@ -9,10 +9,12 @@
 //  Copyright © 2024 True砖家 @ Bilibili. All rights reserved.
 //
 
+#import <AVKit/AVKit.h>
 #import "StreamFrameViewController.h"
 #import "MainFrameViewController.h"
 #import "VideoDecoderRenderer.h"
 #import "StreamManager.h"
+#import "SceneDelegate.h"
 #import "ControllerSupport.h"
 #import "DataManager.h"
 #import "CustomEdgeSlideGestureRecognizer.h"
@@ -69,6 +71,8 @@
      */
     UIWindow *_deviceWindow;
     dispatch_block_t _delayedRemoveExtScreen;
+    VideoDecoderRenderer *_videoRenderer;
+    BOOL _isRestoringFromPiP;
 #if !TARGET_OS_TV
     CustomEdgeSlideGestureRecognizer *_slideToSettingsRecognizer;
     CustomEdgeSlideGestureRecognizer *_slideToCmdToolRecognizer;
@@ -76,12 +80,67 @@
     LayoutOnScreenControlsViewController *_layoutOnScreenControlsVC;
     ToolboxViewController* toolBoxViewController;
 #endif
+
+}
+
+- (void)pictureInPictureControllerWillStartPictureInPicture:(AVPictureInPictureController *)pictureInPictureController {
+    _streamView.hidden = YES;
+}
+
+- (void)pictureInPictureControllerDidStartPictureInPicture:(AVPictureInPictureController *)pictureInPictureController {
+}
+
+- (void)pictureInPictureController:(AVPictureInPictureController *)pictureInPictureController failedToStartPictureInPictureWithError:(NSError *)error {
+    Log(LOG_E, @"PiP Failed to Start: %@", error);
+    _streamView.hidden = NO;
+}
+
+- (void)pictureInPictureControllerWillStopPictureInPicture:(AVPictureInPictureController *)pictureInPictureController {
+}
+
+- (void)pictureInPictureControllerDidStopPictureInPicture:(AVPictureInPictureController *)pictureInPictureController {
+    _streamView.hidden = NO;
+    if (!_isRestoringFromPiP) {
+        [self returnToMainFrame];
+    }
+    _isRestoringFromPiP = NO;
+}
+
+- (void)pictureInPictureController:(AVPictureInPictureController *)pictureInPictureController restoreUserInterfaceForPictureInPictureStopWithCompletionHandler:(void (^)(BOOL restored))completionHandler {
+    _isRestoringFromPiP = YES;
+    _streamView.hidden = NO;
+    completionHandler(YES);
+}
+
+- (void)pictureInPictureController:(AVPictureInPictureController *)pictureInPictureController
+           didTransitionToRenderSize:(CMVideoDimensions)newRenderSize API_AVAILABLE(ios(15.0)){
+    Log(LOG_I, @"PiP transitioned to size: %d x %d", newRenderSize.width, newRenderSize.height);
+ }
+
+// Indicate that playback is never paused for a live stream
+- (BOOL)pictureInPictureControllerIsPlaybackPaused:(AVPictureInPictureController *)pictureInPictureController API_AVAILABLE(ios(14.0)) {
+    return NO;
+}
+
+// Return an indefinite time range for a live stream
+- (CMTimeRange)pictureInPictureControllerTimeRangeForPlayback:(AVPictureInPictureController *)pictureInPictureController API_AVAILABLE(ios(14.0)) {
+    return CMTimeRangeMake(kCMTimeZero, kCMTimePositiveInfinity);
+}
+
+- (void)pictureInPictureController:(AVPictureInPictureController *)pictureInPictureController setPlaying:(BOOL)playing API_AVAILABLE(ios(14.0)) {
+}
+
+// Live streams typically can't skip, so just call the completion handler.
+- (void)pictureInPictureController:(AVPictureInPictureController *)pictureInPictureController skipByInterval:(CMTime)skipInterval completionHandler:(void (^)(void))completionHandler API_AVAILABLE(ios(14.0)) {
+    if (completionHandler) {
+        completionHandler();
+    }
 }
 
 - (BOOL)isFirstLaunch {
     NSString *key = @"hasLaunchedBefore";
     BOOL launchedBefore = [[NSUserDefaults standardUserDefaults] boolForKey:key];
-    
+
     if (!launchedBefore) {
         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:key];
         [[NSUserDefaults standardUserDefaults] synchronize]; // iOS 12+ 可省略
@@ -93,6 +152,52 @@
 
 - (bool)isOscLayoutToolEnabled{
     return (_settings.touchMode.intValue == RelativeTouch || _settings.touchMode.intValue == NativeTouch || _settings.touchMode.intValue == AbsoluteTouch) && _settings.onscreenControls.intValue == OnScreenControlsLevelCustom;
+}
+
+- (void)setupPiPControllerWithRenderer:(VideoDecoderRenderer *)videoRenderer {    // Ensure we have the renderer and its layer
+    if (self.pipController) {
+        return;
+    }
+    Log(LOG_I, @"Setting up PiP controller...");
+
+    if (!videoRenderer || !videoRenderer.displayLayer) {
+        Log(LOG_E, @"PiP setup failed: Video renderer or display layer not ready.");
+        return;
+    }
+
+    AVSampleBufferDisplayLayer *streamLayer = videoRenderer.displayLayer;
+
+    if ([AVPictureInPictureController isPictureInPictureSupported]) {
+        if (@available(iOS 15.0, *)) {
+            self.pipContentSource = [[AVPictureInPictureControllerContentSource alloc] initWithSampleBufferDisplayLayer:streamLayer playbackDelegate:self];
+            self.pipController = [[AVPictureInPictureController alloc] initWithContentSource:self.pipContentSource];
+            self.pipController.canStartPictureInPictureAutomaticallyFromInline = YES;
+        } else {
+            Log(LOG_E, @"PiP not fully supported on this device.");
+            return;
+        }
+
+        if (self.pipController) {
+            self.pipController.delegate = self;
+            Log(LOG_I, @"PiP controller created successfully.");
+        } else {
+            Log(LOG_E, @"Failed to create PiP controller.");
+        }
+    } else {
+        Log(LOG_E, @"PiP not supported on this device.");
+    }
+}
+
+- (void)cleanupPiPController {
+    if (self.pipController) {
+        self.pipController.delegate = nil;
+        self.pipController = nil;
+        if (@available(iOS 15.0, *)) {
+            self.pipContentSource = nil;
+        }
+
+        Log(LOG_I, @"PiP controller cleaned up.");
+    }
 }
 
 - (void)configOscLayoutTool{
@@ -224,9 +329,9 @@
     [super viewDidAppear:animated];
     
     _deviceWindow = self.view.window;
-    
-    if (UIScreen.screens.count > 1 && [self isAirPlayEnabled]) {
-        [self prepExtScreen:UIScreen.screens.lastObject];
+    UIScreen *currentScreen = self.view.window.windowScene.screen;
+    if (UIScreen.screens.count > 1 && [self isAirPlayEnabled] && currentScreen == UIScreen.mainScreen) {
+        [SceneDelegate setExternalDisplayRenderView:self->_streamVideoRenderView];
     }
     else {
         /*
@@ -239,7 +344,7 @@
             if(self->_settings.externalDisplayMode.intValue != 2) [self->_streamView insertSubview:self->_streamVideoRenderView atIndex:0];
         });
     }
-    
+
     self->_streamView.originalFrame = self->_streamView.frame;
 
     // check to see if external screen is connected/disconnected
@@ -270,17 +375,17 @@
                                              selector:@selector(expandSettingsView) // //force expand settings view to update resolution table, and all setting includes current fullscreen resolution will be updated.
                                                  name:@"SettingsOverlayButtonPressedNotification"
                                                object:nil];
-    
+
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(keyboardWillShow:)
                                                  name:UIKeyboardWillShowNotification
                                                object:nil];
-    
+
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(keyboardWillHide)
                                                  name:UIKeyboardWillHideNotification
                                                object:nil];
-    
+
     #endif
 }
 
@@ -300,7 +405,7 @@
     return; // temp disable
     // 初始化倒计时秒数
     __block NSInteger remainingSeconds = 16;
-    
+
     NSString* settingsEdgeSide = _settings.slideToSettingsScreenEdge.intValue == UIRectEdgeLeft ? [LocalizationHelper localizedStringForKey:@"left"] : [LocalizationHelper localizedStringForKey:@"right"];
     NSString* cmdToolEdgeSide = _settings.slideToSettingsScreenEdge.intValue == UIRectEdgeLeft ? [LocalizationHelper localizedStringForKey:@"right"] : [LocalizationHelper localizedStringForKey:@"left"];
     uint8_t slideDist = (uint8_t)(_settings.slideToSettingsDistance.floatValue * 100);
@@ -308,7 +413,7 @@
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:[LocalizationHelper localizedStringForKey:@"First Launch Tips"]
                                                                    message:[LocalizationHelper localizedStringForKey:@"\n1. From %@ edge, slide %d%% screen width to open settings menu\n\n2. From %@ edge, slide %d%% screen width to open command tool\n\n3. Back to Streaming from settings menu: slide from left edge\n\n4. Slide from upper 40%% of screen edge to avoid sending touch events to PC side", settingsEdgeSide, slideDist, cmdToolEdgeSide, slideDist]
                                                           preferredStyle:UIAlertControllerStyleAlert];
-    
+
     // 添加确认按钮（初始禁用）
     UIAlertAction *confirmAction = [UIAlertAction actionWithTitle:[LocalizationHelper localizedStringForKey:@"Got it! (15)"]
                                                            style:UIAlertActionStyleDefault
@@ -316,17 +421,17 @@
     }];
     confirmAction.enabled = NO;
     [alert addAction:confirmAction];
-        
+
     // 显示弹窗
     [self presentViewController:alert animated:YES completion:nil];
-    
+
     // 使用dispatch_source_t实现精确倒计时
     dispatch_source_t timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, dispatch_get_main_queue());
     dispatch_source_set_timer(timer, DISPATCH_TIME_NOW, 1.0 * NSEC_PER_SEC, 0.1 * NSEC_PER_SEC);
-    
+
     dispatch_source_set_event_handler(timer, ^{
         remainingSeconds--;
-        
+
         if (remainingSeconds <= 0) {
             // 倒计时结束
             dispatch_source_cancel(timer);
@@ -338,9 +443,9 @@
             [confirmAction setValue:[NSString stringWithFormat:[LocalizationHelper localizedStringForKey:@"Got it! (%ld)", remainingSeconds], (long)remainingSeconds] forKey:@"title"];
         }
     });
-    
+
     dispatch_resume(timer);
-    
+
 }
 
 
@@ -348,7 +453,7 @@
 {
     viewJustLoaded = true;
     [super viewDidLoad];
-        
+
     [self.navigationController setNavigationBarHidden:YES animated:YES];
     
     [UIApplication sharedApplication].idleTimerDisabled = YES;
@@ -381,7 +486,9 @@
     
     toolBoxViewController = [[ToolboxViewController alloc] init];
     toolBoxViewController.specialEntryDelegate = self;
-    
+
+    _isRestoringFromPiP = NO;
+
     /*
      _settings.externalDisplayMode.intValue:
      0 - stage manager
@@ -399,7 +506,7 @@
     [self reConfigStreamViewRealtime]; // call this method again to make sure all gestures are configured & added to the superview(self.view), including the gestures added from inside the streamview.
     
     if([self isFirstLaunch]) [self popFirstLaunchTip];
-    
+
 #if TARGET_OS_TV
     if (!_menuTapGestureRecognizer || !_menuDoubleTapGestureRecognizer || !_playPauseTapGestureRecognizer) {
         _menuTapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(controllerPauseButtonPressed:)];
@@ -541,7 +648,7 @@
     if (parent == nil) {
         //NSLog(@"gyro cleanup, count: %ld", _controller.count);
         [_controllerSupport cleanup];
-        
+
         [UIApplication sharedApplication].idleTimerDisabled = NO;
         [_streamMan stopStream];
         if (_inactivityTimer != nil) {
@@ -642,7 +749,12 @@
 - (void) returnToMainFrame {
     // Reset display mode back to default
     [self updatePreferredDisplayMode:NO];
-    
+    [SceneDelegate clearExternalDisplayRenderView];
+
+    if (_settings.enablePIP) {
+        [self cleanupPiPController];
+    }
+
     [_statsUpdateTimer invalidate];
     _statsUpdateTimer = nil;
     
@@ -654,19 +766,34 @@
 // External Screen connected
 - (void)extScreenDidConnect:(NSNotification *)notification {
     Log(LOG_I, @"External Screen Connected");
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self prepExtScreen:notification.object];
-    });
+    if ([self isAirPlayEnabled] && [notification.object isKindOfClass:[UIScreen class]]) {
+        UIScreen *extScreen = (UIScreen *)notification.object;
+        if (_streamVideoRenderView) {
+             // Remove from current superview before passing it
+             [_streamVideoRenderView removeFromSuperview];
+             [SceneDelegate setExternalDisplayRenderView:_streamVideoRenderView];
+             NSNotificationCenter* nc = [NSNotificationCenter defaultCenter];
+             [nc postNotificationName:@"ScreenChanged" object:self];
+        } else {
+             Log(LOG_W, @"_streamVideoRenderView is nil when external screen connected.");
+        }
+    }
 }
 
 // External Screen disconnected
 - (void)extScreenDidDisconnect:(NSNotification *)notification {
     Log(LOG_I, @"External Screen Disconnected");
-    if(UIScreen.screens.count < 2)
-    {
-        dispatch_async(dispatch_get_main_queue(), ^{
-        [self removeExtScreen];
-        });
+    if(UIScreen.screens.count < 2) {
+        [SceneDelegate clearExternalDisplayRenderView];
+        // Add the render view back to the local StreamView if AirPlay was active
+        if ([self isAirPlayEnabled]) {
+            if (_streamVideoRenderView && _streamView) {
+                [_streamView insertSubview:_streamVideoRenderView atIndex:0];
+                [self handleViewResize]; // Adjust frames as needed
+            }
+        }
+        NSNotificationCenter* nc = [NSNotificationCenter defaultCenter];
+        [nc postNotificationName:@"ScreenChanged" object:self]; // Your existing notification
     }
 }
 
@@ -675,7 +802,10 @@
 }
 
 - (BOOL) isAirPlaying{
-    return _extWindow != nil && _extWindow.hidden == NO;
+    if (_settings.externalDisplayMode.intValue == 1 && _streamVideoRenderView) {
+        return _streamVideoRenderView.hidden;
+    }
+    return NO;
 }
 
 - (BOOL) isAirPlayEnabled{
@@ -685,43 +815,10 @@
 - (void) reloadAirPlayConfig{
     if (UIScreen.screens.count == 1){return;}
     if (![self isAirPlaying] && [self isAirPlayEnabled]){
-        [self prepExtScreen:UIScreen.screens.lastObject];
+        [SceneDelegate setExternalDisplayRenderView:_streamVideoRenderView];
     }else if ([self isAirPlaying] && ![self isAirPlayEnabled]){
-        [self removeExtScreen];
+        [SceneDelegate clearExternalDisplayRenderView];
     }
-}
-
-// Prepare Screen
-- (void)prepExtScreen:(UIScreen*)extScreen {
-    Log(LOG_I, @"Preparing External Screen");
-    if(![self isAirPlayEnabled]){
-        return;
-    }
-    CGRect frame = extScreen.bounds;
-    extScreen.overscanCompensation = UIScreenOverscanCompensationNone;
-    if(_extWindow==nil){
-        _extWindow = [[UIWindow alloc] initWithFrame:frame];
-    }
-    _extWindow.screen = extScreen;
-    _streamVideoRenderView.bounds = frame;
-    _streamVideoRenderView.frame = frame;
-    NSNotificationCenter* nc = [NSNotificationCenter defaultCenter];
-    [nc postNotificationName:@"ScreenChanged" object:self];
-    [_extWindow addSubview:_streamVideoRenderView];
-    _extWindow.hidden = NO;
-}
-
-- (void)removeExtScreen {
-    Log(LOG_I, @"Removing External Screen");
-    _extWindow.hidden = YES;
-    [self handleViewResize];
-    /*
-     _settings.externalDisplayMode.intValue:
-     0 - stage manager
-     1 - airplay
-     2 - disabled
-     */
-    if(_settings.externalDisplayMode.intValue != 2) [_streamView insertSubview:_streamVideoRenderView atIndex:0];
 }
 
 - (void) handleViewResize{
@@ -739,8 +836,18 @@
 
 // This will fire if the user opens control center or gets a low battery message
 - (void)applicationWillResignActive:(NSNotification *)notification {
+    if (_settings.enablePIP && self.pipController && !self.pipController.isPictureInPictureActive && self.pipController.isPictureInPicturePossible) {
+        VideoDecoderRenderer *renderer = self.streamMan.videoRenderer;
+        if (renderer && renderer.displayLayer && self.view.window) {
+            Log(LOG_I, @"Starting Picture in Picture");
+            [self.pipController startPictureInPicture];
+        } else {
+            Log(LOG_I, @"Skipping PiP start: Renderer/Layer/Window not ready OR PiP not possible.");
+        }
+    }
     if (_inactivityTimer != nil) {
         [_inactivityTimer invalidate];
+        _inactivityTimer = nil;
     }
     
 #if !TARGET_OS_TV
@@ -769,11 +876,14 @@
         [_inactivityTimer invalidate];
         _inactivityTimer = nil;
     }
+    if (self.pipController && self.pipController.isPictureInPictureActive) {
+        [self.pipController stopPictureInPicture];
+    }
 }
 
 // This fires when the home button is pressed
 - (void)applicationDidEnterBackground:(UIApplication *)application {
-    
+
     Log(LOG_I, @"Terminating stream immediately for backgrounding");
 
     if (_inactivityTimer != nil) {
@@ -782,6 +892,21 @@
     }
     
     // [self returnToMainFrame];
+    // Don't terminate if pip is active
+    if (_settings.enablePIP && self.pipController && self.pipController.isPictureInPictureActive) {
+        Log(LOG_I, @"PIP is active, not terminating stream");
+        return;
+    }
+
+#if !TARGET_OS_TV
+    // Terminate the stream if the app is inactive for 60 seconds
+    Log(LOG_I, @"Starting inactivity termination timer");
+    _inactivityTimer = [NSTimer scheduledTimerWithTimeInterval:60
+                                                      target:self
+                                                    selector:@selector(inactiveTimerExpired:)
+                                                    userInfo:nil
+                                                     repeats:NO];
+#endif
 }
 
 - (void)expandSettingsView{
@@ -1059,8 +1184,21 @@
 }
 
 - (void) videoContentShown {
-    [_spinner stopAnimating];
-    [self.view setBackgroundColor:[UIColor blackColor]];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [_spinner stopAnimating];
+        [self.view setBackgroundColor:[UIColor blackColor]];
+
+        if (@available(iOS 15.0, *)) {
+            if (_settings.enablePIP) {
+                if (self->_streamMan && self->_streamMan.videoRenderer) {
+                    Log(LOG_I, @"Setting up PiP with renderer: %p", self->_streamMan.videoRenderer);
+                    [self setupPiPControllerWithRenderer:self->_streamMan.videoRenderer];
+                } else {
+                    Log(LOG_I, @"No renderer available for PiP setup");
+                }
+            }
+        }
+    });
 }
 
 - (void)didReceiveMemoryWarning
