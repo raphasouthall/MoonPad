@@ -335,6 +335,7 @@ import UIKit
     private func handleSpecialEntries(index:Int){
         switch specialEntries[index] as? String {
         case "widgetTool":
+            usleep(1000*150)
             dismiss(animated: true, completion: nil)
             NotificationCenter.default.post(name: Notification.Name("OscLayoutToolOpenedFromCmdToolNotification"),object: nil) // inform streamFrameViewController to open osc tool
         default: break
