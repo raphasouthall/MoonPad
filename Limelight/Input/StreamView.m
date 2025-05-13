@@ -417,7 +417,7 @@ static const double X1_MOUSE_SPEED_DIVISOR = 2.5;
                 // Add the widgetView to the view controller's view
                 [self->streamFrameTopLayerView addSubview:widgetView]; // add keyboard button to the stream frame view. must add it to the target view before setting location.
                 buttonState.position = [self denormalizeWidgetPosition:buttonState.position];
-                [widgetView setLocationWithXOffset:buttonState.position.x yOffset:buttonState.position.y];
+                [widgetView setLocationWithPosition:buttonState.position];
                 [widgetView resizeWidgetView]; // resize must be called after relocation
                 [widgetView adjustTransparencyWithAlpha:buttonState.backgroundAlpha];
                 [widgetView adjustBorderWithWidth:buttonState.borderWidth];

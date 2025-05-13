@@ -751,14 +751,14 @@ ICAgICAgICAgICAgICA
                         <viewControllerLayoutGuide type="bottom" id="eaS-aj-VtA"/>
                     </layoutGuides>
                     <view key="view" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="Acw-S4-f8a">
-                        <rect key="frame" x="0.0" y="0.0" width="834" height="1194"/>
+                        <rect key="frame" x="0.0" y="0.0" width="1300" height="1194"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view alpha="0.75" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fZU-G0-fgM" userLabel="Toolbar Root View" customClass="ToolBarContainerView">
-                                <rect key="frame" x="0.0" y="24" width="834" height="50"/>
+                                <rect key="frame" x="0.0" y="24" width="1300" height="50"/>
                                 <subviews>
                                     <stackView autoresizesSubviews="NO" opaque="NO" contentMode="scaleToFill" spacing="70" translatesAutoresizingMaskIntoConstraints="NO" id="YLK-IE-ajS">
-                                        <rect key="frame" x="152" y="0.0" width="530" height="50"/>
+                                        <rect key="frame" x="235" y="0.0" width="830" height="50"/>
                                         <subviews>
                                             <button opaque="NO" tag="20" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qJs-n8-eV7" userLabel="Trash">
                                                 <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
@@ -786,20 +786,33 @@ ICAgICAgICAgICAgICA
                                                     <action selector="undoTapped:" destination="xSZ-i2-Jts" eventType="touchUpInside" id="54z-kO-oCo"/>
                                                 </connections>
                                             </button>
-                                            <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="EPu-dl-Tv8">
+                                            <button autoresizesSubviews="NO" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uda-zt-xrG" userLabel="Save">
                                                 <rect key="frame" x="240" y="0.0" width="50" height="50"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" constant="50" id="TEB-dw-YGo"/>
+                                                    <constraint firstAttribute="height" constant="50" id="z50-CE-W0m"/>
+                                                </constraints>
+                                                <color key="tintColor" red="0.6705882353" green="0.61568627450000002" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                                <state key="normal" image="SquareAndArrowDown"/>
+                                                <connections>
+                                                    <action selector="saveTapped:" destination="xSZ-i2-Jts" eventType="touchUpInside" id="bUV-Ja-Htd"/>
+                                                </connections>
+                                            </button>
+                                            <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="EPu-dl-Tv8">
+                                                <rect key="frame" x="360" y="0.0" width="50" height="50"/>
                                                 <subviews>
-                                                    <button autoresizesSubviews="NO" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uda-zt-xrG" userLabel="Save">
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OId-gk-Wkg" userLabel="Load">
                                                         <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                                         <constraints>
-                                                            <constraint firstAttribute="width" constant="50" id="TEB-dw-YGo"/>
-                                                            <constraint firstAttribute="height" constant="50" id="z50-CE-W0m"/>
+                                                            <constraint firstAttribute="width" constant="50" id="XlA-qH-mSO"/>
+                                                            <constraint firstAttribute="height" constant="50" id="xSe-dW-zjg"/>
                                                         </constraints>
                                                         <color key="tintColor" red="0.6705882353" green="0.61568627450000002" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                                        <state key="normal" image="SquareAndArrowDown"/>
+                                                        <state key="normal" image="SquaresArrowUp"/>
                                                         <connections>
-                                                            <action selector="saveTapped:" destination="xSZ-i2-Jts" eventType="touchUpInside" id="bUV-Ja-Htd"/>
+                                                            <action selector="loadTapped:" destination="xSZ-i2-Jts" eventType="touchUpInside" id="ZCn-S3-8em"/>
                                                         </connections>
                                                     </button>
                                                 </subviews>
@@ -807,42 +820,43 @@ ICAgICAgICAgICAgICA
                                                     <constraint firstAttribute="width" constant="50" id="G6V-W8-Ech"/>
                                                 </constraints>
                                             </stackView>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1EQ-sU-0bc" userLabel="Load">
-                                                <rect key="frame" x="360" y="0.0" width="50" height="50"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="height" constant="50" id="0Up-sg-4RI"/>
-                                                    <constraint firstAttribute="width" constant="50" id="EBU-5l-gEs"/>
-                                                </constraints>
-                                                <color key="tintColor" red="0.6705882353" green="0.61568627450000002" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                                <state key="normal" image="SquaresArrowUp"/>
-                                                <connections>
-                                                    <action selector="loadTapped:" destination="xSZ-i2-Jts" eventType="touchUpInside" id="84k-1w-sd2"/>
-                                                </connections>
-                                            </button>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bMH-Yb-sb6" userLabel="Add">
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fKN-ja-TRi" userLabel="Add">
                                                 <rect key="frame" x="480" y="0.0" width="50" height="50"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="height" constant="50" id="hGO-XD-eLY"/>
-                                                    <constraint firstAttribute="width" constant="50" id="rWU-3E-f4u"/>
+                                                    <constraint firstAttribute="width" constant="50" id="g75-DA-uPz"/>
+                                                    <constraint firstAttribute="height" constant="50" id="nJF-Od-j7Y"/>
                                                 </constraints>
-                                                <fontDescription key="fontDescription" type="boldSystem" pointSize="53"/>
+                                                <fontDescription key="fontDescription" type="boldSystem" pointSize="23"/>
                                                 <color key="tintColor" red="0.6705882353" green="0.61568627450000002" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                                <state key="normal" title="+"/>
+                                                <state key="normal" title="Add"/>
                                                 <connections>
-                                                    <action selector="addTapped:" destination="xSZ-i2-Jts" eventType="touchUpInside" id="7dP-Lk-Mdj"/>
+                                                    <action selector="addTapped:" destination="xSZ-i2-Jts" eventType="touchUpInside" id="y4c-PU-rbS"/>
+                                                </connections>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="R45-lM-YPl">
+                                                <rect key="frame" x="600" y="0.0" width="230" height="50"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="50" id="SpF-xI-pOI"/>
+                                                    <constraint firstAttribute="width" constant="50" id="p01-nF-Ee8"/>
+                                                </constraints>
+                                                <fontDescription key="fontDescription" type="boldSystem" pointSize="23"/>
+                                                <color key="tintColor" red="0.6705882353" green="0.61568627450000002" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                                <state key="normal" title="Edit"/>
+                                                <connections>
+                                                    <action selector="editTapped:" destination="xSZ-i2-Jts" eventType="touchUpInside" id="hfu-ay-iKZ"/>
                                                 </connections>
                                             </button>
                                         </subviews>
                                         <constraints>
                                             <constraint firstItem="EPu-dl-Tv8" firstAttribute="centerY" secondItem="YLK-IE-ajS" secondAttribute="centerY" id="9Du-ZM-F8k"/>
                                             <constraint firstItem="EPu-dl-Tv8" firstAttribute="centerX" secondItem="YLK-IE-ajS" secondAttribute="centerX" id="9ua-n0-eG4"/>
-                                            <constraint firstAttribute="width" constant="530" id="zzS-yc-O4H"/>
+                                            <constraint firstAttribute="width" constant="830" id="zzS-yc-O4H"/>
                                         </constraints>
                                     </stackView>
                                     <view alpha="0.89999997615814209" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hKp-ds-86I" userLabel="Chevron View">
-                                        <rect key="frame" x="391" y="50" width="52" height="30"/>
+                                        <rect key="frame" x="624" y="50" width="52" height="30"/>
                                         <subviews>
                                             <imageView clipsSubviews="YES" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ChevronCompactUp" translatesAutoresizingMaskIntoConstraints="NO" id="iVZ-Fd-dY7">
                                                 <rect key="frame" x="0.0" y="0.0" width="52" height="30"/>
@@ -939,6 +953,7 @@ ICAgICAgICAgICAgICA
                     </view>
                     <toolbarItems/>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
+                    <size key="freeformSize" width="1300" height="1194"/>
                     <connections>
                         <outlet property="chevronImageView" destination="iVZ-Fd-dY7" id="403-Nj-wRx"/>
                         <outlet property="chevronView" destination="hKp-ds-86I" id="Og9-aT-zNH"/>
@@ -1038,7 +1053,7 @@ ICAgICAgICAgICAgICA
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="K4u-Tz-tXU" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3514" y="1068"/>
+            <point key="canvasLocation" x="3742" y="955"/>
         </scene>
     </scenes>
     <resources>

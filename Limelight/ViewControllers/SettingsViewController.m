@@ -602,8 +602,9 @@ BOOL isCustomResolution(CGSize res) {
 }
 
 - (void)showCustomOSCTip {
-    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:[LocalizationHelper localizedStringForKey:@"Rebase in Stream View"]
-                                                                             message:[LocalizationHelper localizedStringForKey:@"Tap %d fingers to change layout in stream view, or change the number of fingers required to:", self->oscLayoutFingers]
+    NSString* edgeSide = self.slideToSettingsScreenEdgeSelector.selectedSegmentIndex == 1 ? [LocalizationHelper localizedStringForKey:@"left"] : [LocalizationHelper localizedStringForKey:@"right"];
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:[LocalizationHelper localizedStringForKey:@"Rebase in Streaming"]
+                                                                             message:[LocalizationHelper localizedStringForKey:@"Open widget tool in streaming by:\nSliding from %@ screen edge to open cmd tool.\nOr tap %d fingers on stream view, number of fingers required:", edgeSide, self->oscLayoutFingers]
                                                                       preferredStyle:UIAlertControllerStyleAlert];
     
     [alertController addTextFieldWithConfigurationHandler:^(UITextField *textField) {
@@ -612,7 +613,7 @@ BOOL isCustomResolution(CGSize res) {
     }];
     
     UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:[LocalizationHelper localizedStringForKey:@"Cancel"]
-                                                           style:UIAlertActionStyleCancel
+                                                           style:UIAlertActionStyleDefault
                                                          handler:nil];
     
     UIAlertAction *okAction = [UIAlertAction actionWithTitle:[LocalizationHelper localizedStringForKey:@"OK"]

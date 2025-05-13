@@ -223,14 +223,14 @@ import UIKit
     
     // ======================================================================================================
     
-    @objc public func setLocation(xOffset:CGFloat, yOffset:CGFloat) {
+    @objc public func setLocation(position: CGPoint) {
         /*
         NSLayoutConstraint.activate([
             self.centerXAnchor.constraint(equalTo: self.superview!.leadingAnchor, constant: xOffset),
             self.centerYAnchor.constraint(equalTo: self.superview!.topAnchor, constant: yOffset),
         ])
          */
-        storedCenter = CGPointMake(xOffset, yOffset)
+        storedCenter = position
         center = storedCenter
     }
     

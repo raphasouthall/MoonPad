@@ -53,6 +53,29 @@
         }
       }
     },
+    "[ Open On-Screen Widget Tool ]" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "[ 打开屏显控件工具 ]"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "[ 打开屏显控件工具 ]"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "[ 打开屏显控件工具 ]"
+          }
+        }
+      }
+    },
     "%@ is currently running" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -398,6 +421,29 @@
         }
       }
     },
+    "Command Tool" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "命令工具"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "命令工具"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "命令工具"
+          }
+        }
+      }
+    },
     "Connecting" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -561,6 +607,29 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "\n\n检查主机端防火墙以及端口%s的转发规则"
+          }
+        }
+      }
+    },
+    "Create New" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "新增"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "新增"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "新增"
           }
         }
       }
@@ -745,6 +814,29 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "编辑"
+          }
+        }
+      }
+    },
+    "Edit Selected Widget" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "编辑所选控件"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "编辑所选控件"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "编辑所选控件"
           }
         }
       }
@@ -1238,6 +1330,29 @@
         }
       }
     },
+    "left" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "左"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "左"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "左"
+          }
+        }
+      }
+    },
     "Local Keyboard Toggle Disabled" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1338,6 +1453,29 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "无法执行网络测试. 请检查网络连接后重试."
+          }
+        }
+      }
+    },
+    "Modify" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "修改"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "修改"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "修改"
           }
         }
       }
@@ -1768,6 +1906,29 @@
         }
       }
     },
+    "Open widget tool in streaming by:\nSliding from %@ screen edge to open cmd tool.\nOr tap %d fingers on stream view, number of fingers required:" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在串流视图中修改布局:\n从屏幕%@边缘向内滑动.\n或轻按%d根手指, 手势需要的手指数量:"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在串流视图中修改布局:\n从屏幕%@边缘向内滑动.\n或轻按%d根手指, 手势需要的手指数量:"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在串流视图中修改布局:\n从屏幕%@边缘向内滑动.\n或轻按%d根手指, 手势需要的手指数量:"
+          }
+        }
+      }
+    },
     "Pairing" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2113,7 +2274,7 @@
         }
       }
     },
-    "Rebase in Stream View" : {
+    "Rebase in Streaming" : {
       "extractionState" : "manual",
       "localizations" : {
         "zh-Hans" : {
@@ -2201,6 +2362,29 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "恢复运行中的应用"
+          }
+        }
+      }
+    },
+    "right" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "右"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "右"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "右"
           }
         }
       }
@@ -2351,29 +2535,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "选择新主机"
-          }
-        }
-      }
-    },
-    "Send Commands" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "发送命令"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "发送命令"
-          }
-        },
-        "zh-HK" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "发送命令"
           }
         }
       }
@@ -2535,29 +2696,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "成功发送唤醒请求. 主机唤醒需要一定时间. 如果主机未被唤醒, 请检查Wake-on-LAN设置"
-          }
-        }
-      }
-    },
-    "Tap %d fingers to change layout in stream view, or change the number of fingers required to:" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "在串流视图中轻按%d根手指修改布局, 或将手势需要的手指数量改为:"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "在串流视图中轻按%d根手指修改布局, 或将手势需要的手指数量改为:"
-          }
-        },
-        "zh-HK" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "在串流视图中轻按%d根手指修改布局, 或将手势需要的手指数量改为:"
           }
         }
       }

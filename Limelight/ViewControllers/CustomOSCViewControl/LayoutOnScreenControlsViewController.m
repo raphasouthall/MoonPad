@@ -3,7 +3,8 @@
 //  Moonlight
 //
 //  Created by Long Le on 9/27/22.
-//  Copyright © 2022 Moonlight Game Streaming Project. All rights reserved.
+//  Modified by True砖家 since 2024.6.24
+//  Copyright © True砖家 @ Bilibili & 2022 Moonlight Game Streaming Project. All rights reserved.
 //
 
 #import "LayoutOnScreenControlsViewController.h"
@@ -110,7 +111,7 @@
             // Add the widgetView to the view controller's view
             [self.view addSubview:widgetView];
             buttonState.position = [self denormalizeWidgetPosition:buttonState.position];
-            [widgetView setLocationWithXOffset:buttonState.position.x yOffset:buttonState.position.y];
+            [widgetView setLocationWithPosition:buttonState.position];
             [widgetView resizeWidgetView]; // resize must be called after relocation
             [widgetView adjustTransparencyWithAlpha:buttonState.backgroundAlpha];
             [widgetView adjustBorderWithWidth:buttonState.borderWidth];
@@ -118,7 +119,6 @@
         }
     }
 }
-
 
 - (void) viewDidLoad {
     [super viewDidLoad];
@@ -230,6 +230,7 @@
 
 - (void) viewDidAppear:(BOOL)animated {
     OnScreenWidgetView.editMode = true;
+    selectedWidgetView = nil;
     [super viewWillAppear:animated];
     [self profileRefresh];
 }
@@ -368,6 +369,8 @@
 
 - (IBAction) addTapped:(id)sender{
     
+    NSMutableDictionary* widgetInitParams = [NSMutableDictionary dictionary];
+
     UIAlertController *alertController = [UIAlertController alertControllerWithTitle:[LocalizationHelper localizedStringForKey:@""]
                                                                              message:[LocalizationHelper localizedStringForKey:@"New On-Screen Widget"]
                                                                       preferredStyle:UIAlertControllerStyleAlert];
@@ -418,54 +421,11 @@
     UIAlertAction *okAction = [UIAlertAction actionWithTitle:[LocalizationHelper localizedStringForKey:@"OK"]
                                                        style:UIAlertActionStyleDefault
                                                      handler:^(UIAlertAction *action) {
-        /*
-        alertController.textFields[0].keyboardType = UIKeyboardTypeASCIICapable;
-        alertController.textFields[0].autocorrectionType = UITextAutocorrectionTypeNo;
-        alertController.textFields[0].spellCheckingType = UITextSpellCheckingTypeNo;
-        alertController.textFields[1].keyboardType = UIKeyboardTypeASCIICapable;
-        alertController.textFields[1].autocorrectionType = UITextAutocorrectionTypeNo;
-        alertController.textFields[1].spellCheckingType = UITextSpellCheckingTypeNo;*/
-        
-        NSString *cmdString = [alertController.textFields[0].text uppercaseString]; // convert to uppercase
-        NSString *buttonLabel = alertController.textFields[1].text;
-        NSString *minStickOffsetString = alertController.textFields[2].text;
-        NSString *widgetShape = [alertController.textFields[3].text lowercaseString];
-
-        
-        if([buttonLabel isEqualToString:@""]) buttonLabel = [[cmdString lowercaseString] capitalizedString];
-        bool noValidKeyboardString = [CommandManager.shared extractKeyStringsFromComboCommandFrom:cmdString] == nil; // this is a invalid string.
-        bool noValidSuperComboButtonString = [CommandManager.shared extractSinglCmdStringsFromComboKeysFrom:cmdString] == nil; // this is a invalid string.
-        bool noValidMouseButtonString = ![CommandManager.mouseButtonMappings.allKeys containsObject:cmdString];
-        bool noValidTouchPadString = ![CommandManager.touchPadCmds containsObject:cmdString];
-        bool noValidOscButtonString = ![CommandManager.oscButtonMappings.allKeys containsObject:cmdString];
-        bool noValidSpecialButtonString = ![CommandManager.specialOverlayButtonCmds containsObject:cmdString];
-
-        bool invalidInput = noValidKeyboardString && noValidMouseButtonString && noValidTouchPadString && noValidOscButtonString && noValidSpecialButtonString && noValidSuperComboButtonString;
-        
-        if([widgetShape isEqualToString:@"r"]) widgetShape = @"round";
-        else if([widgetShape isEqualToString:@"s"]) widgetShape = @"square";
-        else if([widgetShape isEqualToString:@""]) widgetShape = @"default";
-        else invalidInput = true;
-
-        NSCharacterSet *nonDigitCharacterSet = [[NSCharacterSet decimalDigitCharacterSet] invertedSet];
-        NSString *trimmedString = [minStickOffsetString stringByTrimmingCharactersInSet:nonDigitCharacterSet];
-        if(trimmedString.length != minStickOffsetString.length) invalidInput = true;
-        minStickOffsetString = trimmedString;
-
-        if(invalidInput) {
-            [self presentInvalidWidgetCommandAlert];
-            return;
-        }
-        
-        //saving & present the keyboard button:
-        OnScreenWidgetView* widgetView = [[OnScreenWidgetView alloc] initWithCmdString:cmdString buttonLabel:buttonLabel shape:widgetShape];
-        widgetView.translatesAutoresizingMaskIntoConstraints = NO; // weird but this is mandatory, or you will find no key views added to the right place
-        widgetView.minStickOffset = [minStickOffsetString floatValue];
-        [self.OnScreenWidgetViews addObject:widgetView];
-        // Add the widgetView to the view controller's view
-        [self.view addSubview:widgetView];
-        [widgetView setLocationWithXOffset:50 yOffset:50];
-        [widgetView resizeWidgetView];
+        [widgetInitParams setObject: alertController.textFields[0].text forKey:@"cmdString"]; // convert to uppercase
+        [widgetInitParams setObject: alertController.textFields[1].text forKey:@"buttonLabel"]; // convert to uppercase
+        [widgetInitParams setObject: alertController.textFields[2].text forKey:@"minStickOffsetString"]; // convert to uppercase
+        [widgetInitParams setObject: alertController.textFields[3].text forKey:@"shape"]; // convert to uppercase
+        [self createWidgetFromParams:widgetInitParams];
     }];
     [alertController addAction:readInstruction];
     [alertController addAction:cancelAction];
@@ -473,6 +433,146 @@
     [self presentViewController:alertController animated:YES completion:nil];
 }
 
+
+- (IBAction) editTapped:(id)sender{
+    
+    NSMutableDictionary* widgetInitParams = [NSMutableDictionary dictionary];
+
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:[LocalizationHelper localizedStringForKey:@""]
+                                                                             message:[LocalizationHelper localizedStringForKey:@"Edit Selected Widget"]
+                                                                      preferredStyle:UIAlertControllerStyleAlert];
+    
+    if(self->selectedWidgetView == nil) return;
+    
+    [alertController addTextFieldWithConfigurationHandler:^(UITextField *textField) {
+        textField.placeholder = [LocalizationHelper localizedStringForKey:@"Command"];
+        textField.keyboardType = UIKeyboardTypeASCIICapable;
+        textField.autocorrectionType = UITextAutocorrectionTypeNo;
+        textField.spellCheckingType = UITextSpellCheckingTypeNo;
+        textField.text = [self->selectedWidgetView.cmdString lowercaseString];
+    }];
+    
+    [alertController addTextFieldWithConfigurationHandler:^(UITextField *textField) {
+        textField.placeholder = [LocalizationHelper localizedStringForKey:@"Alias label (optional)"];
+        textField.keyboardType = UIKeyboardTypeASCIICapable;
+        textField.autocorrectionType = UITextAutocorrectionTypeNo;
+        textField.spellCheckingType = UITextSpellCheckingTypeNo;
+        textField.text = self->selectedWidgetView.buttonLabel;
+    }];
+    
+    [alertController addTextFieldWithConfigurationHandler:^(UITextField *textField) {
+        textField.placeholder = [LocalizationHelper localizedStringForKey:@"Minimum stick offset (0~32766)"];
+        textField.keyboardType = UIKeyboardTypeASCIICapable;
+        textField.autocorrectionType = UITextAutocorrectionTypeNo;
+        textField.spellCheckingType = UITextSpellCheckingTypeNo;
+        if(self->selectedWidgetView.minStickOffset > 0) textField.text = [NSString stringWithFormat:@"%d", (int)self->selectedWidgetView.minStickOffset];
+    }];
+    
+    [alertController addTextFieldWithConfigurationHandler:^(UITextField *textField) {
+        textField.placeholder = [LocalizationHelper localizedStringForKey:@"Shape (r - round, s - square)"];
+        textField.keyboardType = UIKeyboardTypeASCIICapable;
+        textField.autocorrectionType = UITextAutocorrectionTypeNo;
+        textField.spellCheckingType = UITextSpellCheckingTypeNo;
+        textField.text = self->selectedWidgetView.shape;
+        if([self->selectedWidgetView.shape isEqualToString: @"largeSquare"]) textField.enabled = false;
+    }];		
+    
+
+    UIAlertAction *createNewAction = [UIAlertAction actionWithTitle:[LocalizationHelper localizedStringForKey:@"Create New"]
+                                                           style:UIAlertActionStyleDefault
+                                                            handler:^(UIAlertAction *action) {
+        [widgetInitParams setObject: alertController.textFields[0].text forKey:@"cmdString"];
+        [widgetInitParams setObject: alertController.textFields[1].text forKey:@"buttonLabel"];
+        [widgetInitParams setObject: alertController.textFields[2].text forKey:@"minStickOffsetString"];
+        [widgetInitParams setObject: alertController.textFields[3].text forKey:@"shape"];
+        [self updateWidget:self->selectedWidgetView byParams:widgetInitParams createNew:true];
+    }];
+
+    UIAlertAction *modifyAction = [UIAlertAction actionWithTitle:[LocalizationHelper localizedStringForKey:@"Modify"]
+                                                       style:UIAlertActionStyleDefault
+                                                     handler:^(UIAlertAction *action) {
+        [widgetInitParams setObject: alertController.textFields[0].text forKey:@"cmdString"];
+        [widgetInitParams setObject: alertController.textFields[1].text forKey:@"buttonLabel"];
+        [widgetInitParams setObject: alertController.textFields[2].text forKey:@"minStickOffsetString"];
+        [widgetInitParams setObject: alertController.textFields[3].text forKey:@"shape"];
+        [self updateWidget:self->selectedWidgetView byParams:widgetInitParams createNew:false];
+    }];
+    
+    [alertController addAction:createNewAction];
+    [alertController addAction:modifyAction];
+    [self presentViewController:alertController animated:YES completion:nil];
+}
+
+- (bool) isWidgetParamsValid:(NSMutableDictionary* )widgetInitParams{
+    NSString *cmdString = [widgetInitParams[@"cmdString"] uppercaseString]; // convert to uppercase
+    NSString *buttonLabel = widgetInitParams[@"buttonLabel"];
+    NSString *minStickOffsetString = widgetInitParams[@"minStickOffsetString"];
+    NSString *widgetShape = [widgetInitParams[@"shape"] lowercaseString];
+        
+    widgetInitParams[@"cmdString"] = cmdString;
+    bool noValidKeyboardString = [CommandManager.shared extractKeyStringsFromComboCommandFrom:cmdString] == nil; // this is a invalid string.
+    bool noValidSuperComboButtonString = [CommandManager.shared extractSinglCmdStringsFromComboKeysFrom:cmdString] == nil; // this is a invalid string.
+    bool noValidMouseButtonString = ![CommandManager.mouseButtonMappings.allKeys containsObject:cmdString];
+    bool noValidTouchPadString = ![CommandManager.touchPadCmds containsObject:cmdString];
+    bool noValidOscButtonString = ![CommandManager.oscButtonMappings.allKeys containsObject:cmdString];
+    bool noValidSpecialButtonString = ![CommandManager.specialOverlayButtonCmds containsObject:cmdString];
+    bool paramInvalid = noValidKeyboardString && noValidMouseButtonString && noValidTouchPadString && noValidOscButtonString && noValidSpecialButtonString && noValidSuperComboButtonString;
+    
+    if([buttonLabel isEqualToString:@""]) widgetInitParams[@"buttonLabel"] = [[cmdString lowercaseString] capitalizedString];
+
+    NSCharacterSet *nonDigitCharacterSet = [[NSCharacterSet decimalDigitCharacterSet] invertedSet];
+    NSString *trimmedString = [minStickOffsetString stringByTrimmingCharactersInSet:nonDigitCharacterSet];
+    if(trimmedString.length != minStickOffsetString.length) paramInvalid = true;
+    widgetInitParams[@"minStickOffsetString"] = trimmedString;
+    
+    NSSet* validShapes = [NSSet setWithObjects:@"round", @"square", @"largesquare", nil];
+    if([widgetShape isEqualToString:@"r"]) widgetShape = @"round";
+    else if([widgetShape isEqualToString:@"s"]) widgetShape = @"square";
+    else if([widgetShape isEqualToString:@""]) widgetShape = @"default";
+    else if(![validShapes containsObject:widgetShape]){
+        paramInvalid = true;}
+    widgetInitParams[@"shape"] = widgetShape;
+
+    if(paramInvalid) [self presentInvalidWidgetCommandAlert];
+    return !paramInvalid;
+}
+
+- (void) updateWidget:(OnScreenWidgetView* )widget byParams:(NSMutableDictionary* )widgetInitParams createNew:(bool)createNew{
+    if(![self isWidgetParamsValid:widgetInitParams]) return;
+    OnScreenWidgetView* newWidget = [[OnScreenWidgetView alloc] initWithCmdString:widgetInitParams[@"cmdString"] buttonLabel:widgetInitParams[@"buttonLabel"] shape:widgetInitParams[@"shape"]]; //reconstruct widgetView
+    newWidget.translatesAutoresizingMaskIntoConstraints = NO; // weird but this is mandatory, or you will find no key views added to the right place
+    newWidget.widthFactor = widget.widthFactor;
+    newWidget.heightFactor = widget.heightFactor;
+    newWidget.borderWidth = widget.borderWidth;
+    newWidget.sensitivityFactor = widget.sensitivityFactor;
+    newWidget.stickIndicatorOffset = widget.stickIndicatorOffset;
+    newWidget.minStickOffset = [widgetInitParams[@"minStickOffsetString"] floatValue];
+    // Add the widgetView to the view controller's view
+    [self.view addSubview:newWidget];
+    if(createNew) [newWidget setLocationWithPosition:CGPointMake(50, 50)];
+    else [newWidget setLocationWithPosition:widget.center];
+    [newWidget resizeWidgetView]; // resize must be called after relocation
+    [newWidget adjustTransparencyWithAlpha:widget.backgroundAlpha];
+    [newWidget adjustBorderWithWidth:widget.borderWidth];
+    if(!createNew) [self.OnScreenWidgetViews removeObject:widget];
+    [self.OnScreenWidgetViews addObject:newWidget];
+    if(!createNew) [widget removeFromSuperview];
+    self->selectedWidgetView = newWidget;
+}
+
+
+- (void) createWidgetFromParams: (NSMutableDictionary*) widgetInitParams{
+    if(![self isWidgetParamsValid:widgetInitParams]) return;
+    //saving & present the keyboard button:
+    OnScreenWidgetView* widgetView = [[OnScreenWidgetView alloc] initWithCmdString:widgetInitParams[@"cmdString"] buttonLabel:widgetInitParams[@"buttonLabel"] shape:widgetInitParams[@"shape"]];
+    widgetView.translatesAutoresizingMaskIntoConstraints = NO; // weird but this is mandatory, or you will find no key views added to the right place
+    widgetView.minStickOffset = [widgetInitParams[@"minStickOffsetString"] floatValue];
+    [self.OnScreenWidgetViews addObject:widgetView];
+    // Add the widgetView to the view controller's view
+    [self.view addSubview:widgetView];
+    [widgetView setLocationWithPosition:CGPointMake(50, 50)];
+    [widgetView resizeWidgetView];
+}
 
 
 /* show pop up notification that lets users choose to save the current OSC layout configuration as a profile they can load when they want. User can also choose to cancel out of this pop up */

@@ -721,18 +721,6 @@
         }
       }
     },
-    "bMH-Yb-sb6.normalTitle" : {
-      "comment" : "Class = \"UIButton\"; normalTitle = \"+\"; ObjectID = \"bMH-Yb-sb6\";",
-      "extractionState" : "extracted_with_value",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "+"
-          }
-        }
-      }
-    },
     "bw9-4S-s2V.segmentTitles[0]" : {
       "comment" : "Class = \"UISegmentedControl\"; bw9-4S-s2V.segmentTitles[0] = \"No\"; ObjectID = \"bw9-4S-s2V\";",
       "extractionState" : "stale",
@@ -1413,6 +1401,18 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Interval of Multi-Touch Move Events: 200 us                            "
+          }
+        }
+      }
+    },
+    "fKN-ja-TRi.normalTitle" : {
+      "comment" : "Class = \"UIButton\"; normalTitle = \"Add\"; ObjectID = \"fKN-ja-TRi\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Add"
           }
         }
       }
@@ -3123,6 +3123,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "唤醒本地软键盘时, 抬升串流视图"
+          }
+        }
+      }
+    },
+    "R45-lM-YPl.normalTitle" : {
+      "comment" : "Class = \"UIButton\"; normalTitle = \"Edit\"; ObjectID = \"R45-lM-YPl\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Edit"
           }
         }
       }

@@ -70,6 +70,7 @@
     CustomEdgeSlideGestureRecognizer *_slideToCmdToolRecognizer;
     CustomTapGestureRecognizer *_oscLayoutTapRecoginizer;
     LayoutOnScreenControlsViewController *_layoutOnScreenControlsVC;
+    CommandManagerViewController* cmdManViewController;
 #endif
 }
 
@@ -79,6 +80,7 @@
 
 - (void)configOscLayoutTool{
     if([self isOscLayoutToolEnabled]){
+        if(![cmdManViewController.specialEntries containsObject:@"widgetTool"]) [cmdManViewController.specialEntries insertObject:@"widgetTool" atIndex:0];
         _oscLayoutTapRecoginizer = [[CustomTapGestureRecognizer alloc] initWithTarget:self action:@selector(layoutOSC)];
         _oscLayoutTapRecoginizer.numberOfTouchesRequired = _settings.oscLayoutToolFingers.intValue; //tap a predefined number of fingers to open osc layout tool
         _oscLayoutTapRecoginizer.tapDownTimeThreshold = 0.2;
@@ -102,10 +104,10 @@
         _layoutOnScreenControlsVC.view.backgroundColor = UIColor.clearColor;
         _layoutOnScreenControlsVC.modalPresentationStyle = UIModalPresentationOverCurrentContext;
     }
+    else [cmdManViewController.specialEntries removeObject:@"widgetTool"];
 }
 
 - (void)presentCommandManagerViewController{
-    CommandManagerViewController* cmdManViewController = [[CommandManagerViewController alloc] init];
     [self presentViewController:cmdManViewController animated:YES completion:nil];
 }
 
@@ -240,7 +242,11 @@
                                              selector:@selector(expandSettingsView) // //force expand settings view to update resolution table, and all setting includes current fullscreen resolution will be updated.
                                                  name:@"SettingsOverlayButtonPressedNotification"
                                                object:nil];
-
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(layoutOSC) // //force expand settings view to update resolution table, and all setting includes current fullscreen resolution will be updated.
+                                                 name:@"OscLayoutToolOpenedFromCmdToolNotification"
+                                               object:nil];
 #endif
 }
 
@@ -290,6 +296,8 @@
     _inactivityTimer = nil;
     
     _streamView = [[StreamView alloc] initWithFrame:self.view.frame];
+    
+    cmdManViewController = [[CommandManagerViewController alloc] init];
     
     /*
      _settings.externalDisplayMode.intValue:

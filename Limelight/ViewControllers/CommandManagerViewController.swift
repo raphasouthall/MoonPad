@@ -19,7 +19,11 @@ import UIKit
     private let viewBackgroundColor = UIColor(white: 0.2, alpha: 0.8);
     private let highlightColor = UIColor(white: 0.39, alpha: 0.8);
     private let titleLabel = UILabel()
-    
+    @objc public var specialEntries : NSMutableArray = ["widgetTool"]
+    private let specialEntryAliasDic : [String:String] = [
+        "widgetTool":SwiftLocalizationHelper.localizedString(forKey: "[ Open On-Screen Widget Tool ]")
+    ]
+
     private var viewPinned: Bool = false
     private var isEditingMode: Bool = false {
         didSet {
@@ -42,9 +46,11 @@ import UIKit
         CommandManager.shared.viewController = self
     }
     
+    
     override public func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         setupConstraints()
+        reloadTableView()
     }
     
     private func setupViews() {
@@ -54,7 +60,7 @@ import UIKit
         view.layer.masksToBounds = true
         
         // Set up the title label
-        titleLabel.text = SwiftLocalizationHelper.localizedString(forKey: "Send Commands")
+        titleLabel.text = SwiftLocalizationHelper.localizedString(forKey: "Command Tool")
         titleLabel.font = UIFont.boldSystemFont(ofSize: 20)  // Adjust font size as needed
         titleLabel.textColor = UIColor.white  // Adjust color as needed
         titleLabel.textAlignment = .center
@@ -96,7 +102,7 @@ import UIKit
     
     private func setupConstraints() {
         
-        guard let superview = view.superview else {
+        guard view.superview != nil else {
             return
         }
         
@@ -187,7 +193,7 @@ import UIKit
         let submitAction = UIAlertAction(title: SwiftLocalizationHelper.localizedString(forKey: "Add"), style: .default) { [unowned alert] _ in
             let keyboardCmdString = alert.textFields?[0].text ?? ""
             let alias = alert.textFields?[1].text ?? keyboardCmdString
-            let newCommand = RemoteCommand(keyboardCmdString: keyboardCmdString, alias: alias)
+            let newCommand = RemoteCommand(cmdString: keyboardCmdString, alias: alias)
             let addCommandSuceeded = CommandManager.shared.addCommand(newCommand)
             //self.reloadTableView() // don't know why but this reload has to be called from the CommandManager, it doesn't work here.
             
@@ -207,8 +213,9 @@ import UIKit
         alert.addAction(cancelAction)
         
         if let selectedIndexPath = self.tableView.indexPathForSelectedRow {
-            let selectedCommand = CommandManager.shared.getAllCommands()[selectedIndexPath.row]
-            alert.textFields?[0].text = selectedCommand.keyboardCmdString // load selected keyboard cmd string
+            if isSpecialEntrySelected() {return}
+            let selectedCommand = CommandManager.shared.getAllCommands()[selectedIndexPath.row-specialEntries.count]
+            alert.textFields?[0].text = selectedCommand.cmdString // load selected keyboard cmd string
             //alert.textFields?[1].text = selectedCommand.alias // leave the alias input field empty
         }
         
@@ -220,9 +227,12 @@ import UIKit
         guard let selectedIndexPath = tableView.indexPathForSelectedRow else {
             return
         }
+        
+        if isSpecialEntrySelected() {return}
+        
         let previouslySelectedIndexPath = selectedIndexPath // memorize selected row before reloading tableview
         
-        CommandManager.shared.deleteCommand(at: selectedIndexPath.row)
+        CommandManager.shared.deleteCommand(at: selectedIndexPath.row-specialEntries.count)
         reloadTableView()
         // target new entry after deletion
         var targetRowAfterDel = previouslySelectedIndexPath.row - 1
@@ -235,6 +245,8 @@ import UIKit
     
     @objc private func editButtonTapped() {
         isEditingMode.toggle()
+        deleteButton.isEnabled = !isSpecialEntrySelected()
+        addButton.isEnabled = !isSpecialEntrySelected()
     }
     
     @objc private func exitButtonTapped() {
@@ -257,7 +269,7 @@ import UIKit
     
     // UITableViewDataSource
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return CommandManager.shared.getAllCommands().count
+        return specialEntries.count + CommandManager.shared.getAllCommands().count
     }
     
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -271,9 +283,14 @@ import UIKit
         let selectedBackgroundView = UIView()
         selectedBackgroundView.backgroundColor = highlightColor // Color for the selected state
         cell.selectedBackgroundView = selectedBackgroundView
-    
-        let command = CommandManager.shared.getAllCommands()[indexPath.row]
-        cell.textLabel?.text = command.alias
+        
+        if indexPath.row < specialEntries.count {
+            cell.textLabel?.text = specialEntryAliasDic[specialEntries[indexPath.row] as! String]
+        }
+        else {
+            let command = CommandManager.shared.getAllCommands()[indexPath.row-specialEntries.count]
+            cell.textLabel?.text = command.alias
+        }
         return cell
     }
     
@@ -292,18 +309,41 @@ import UIKit
                 }
             }
         }
-        
+    
         if !isEditingMode {
             // Sending keyboard command
-            let command = CommandManager.shared.getAllCommands()[indexPath.row]
-            sendKeyboardCommand(command)
+            if indexPath.row < specialEntries.count{
+                handleSpecialEntries(index: indexPath.row)
+            }
+            else {
+                let command = CommandManager.shared.getAllCommands()[indexPath.row-specialEntries.count]
+                sendKeyboardCommand(command)
+            }
             if !viewPinned { dismiss(animated: false, completion: nil) } // dimiss the view in sending mode & the view is not pinned
+        }
+        else {
+            let specialEntrySelected = indexPath.row < specialEntries.count
+            addButton.isEnabled = !specialEntrySelected
+            deleteButton.isEnabled = !specialEntrySelected
+        }
+    }
+    
+    private func isSpecialEntrySelected() -> Bool {
+        return self.tableView.indexPathForSelectedRow?.row ?? specialEntries.count+1 < specialEntries.count
+    }
+    
+    private func handleSpecialEntries(index:Int){
+        switch specialEntries[index] as? String {
+        case "widgetTool":
+            dismiss(animated: true, completion: nil)
+            NotificationCenter.default.post(name: Notification.Name("OscLayoutToolOpenedFromCmdToolNotification"),object: nil) // inform streamFrameViewController to open osc tool
+        default: break
         }
     }
     
     private func sendKeyboardCommand(_ cmd: RemoteCommand) {
         print("Sending key-value")
-        let keyboardCmdStrings = CommandManager.shared.extractKeyStringsFromComboCommand(from: cmd.keyboardCmdString)
+        let keyboardCmdStrings = CommandManager.shared.extractKeyStringsFromComboCommand(from: cmd.cmdString)
         CommandManager.shared.sendKeyComboCommand(keyboardCmdStrings: keyboardCmdStrings!)
     }
 }

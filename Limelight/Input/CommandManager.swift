@@ -19,29 +19,29 @@ import UIKit
     
     // MARK: - Properties
     
-    @objc var keyboardCmdString: String
+    @objc var cmdString: String
     @objc var alias: String
     
     // MARK: - Initialization
 
-    init(keyboardCmdString: String, alias: String) {
-        self.keyboardCmdString = keyboardCmdString
+    init(cmdString: String, alias: String) {
+        self.cmdString = cmdString
         self.alias = alias
     }
 
     // MARK: - NSSecureCoding
 
     required public init?(coder: NSCoder) {
-        guard let keyboardCmdString = coder.decodeObject(of: NSString.self, forKey: "keyboardCmdString") as String?,
+        guard let cmdString = coder.decodeObject(of: NSString.self, forKey: "keyboardCmdString") as String?,
               let alias = coder.decodeObject(of: NSString.self, forKey: "alias") as String? else {
             return nil
         }
-        self.keyboardCmdString = keyboardCmdString
+        self.cmdString = cmdString
         self.alias = alias
     }
 
     public func encode(with coder: NSCoder) {
-        coder.encode(keyboardCmdString, forKey: "keyboardCmdString")
+        coder.encode(cmdString, forKey: "keyboardCmdString")
         coder.encode(alias, forKey: "alias")
     }
 }
@@ -377,21 +377,21 @@ import UIKit
         let defaults = UserDefaults.standard
         //if true {  // save default entries if the data is empty.
         if defaults.data(forKey: "savedCommands") == nil {  // save default entries if the data is empty.
-            let defaultCommands: [RemoteCommand] = [
-                RemoteCommand(keyboardCmdString: "WIN", alias: "WIN"),
-                RemoteCommand(keyboardCmdString: "F11", alias: "F11"),
-                RemoteCommand(keyboardCmdString: "ESC", alias: "ESC"),
-                RemoteCommand(keyboardCmdString: "CTRL+SHIFT+ESC", alias: "任务管理器(Task Manager)"),
-                RemoteCommand(keyboardCmdString: "ALT+F1", alias: "N卡截图(Nvidia Screenshot)"),
-                RemoteCommand(keyboardCmdString: "ALT+F9", alias: "N卡录屏(Nvidia Screen Recording)"),
-                RemoteCommand(keyboardCmdString: "ALT+F4", alias: "关闭窗口(ALT+F4)"),
-                RemoteCommand(keyboardCmdString: "CTRL+A", alias: "全选(Select All)"),
-                RemoteCommand(keyboardCmdString: "CTRL+C", alias: "复制(Copy)"),
-                RemoteCommand(keyboardCmdString: "CTRL+V", alias: "粘贴(Paste)"),
-                RemoteCommand(keyboardCmdString: "WIN+D", alias: "切换桌面(Switch to Desktop)"),
-                RemoteCommand(keyboardCmdString: "WIN+P", alias: "多显模式(Project)"),
-                RemoteCommand(keyboardCmdString: "WIN+G", alias: "Xbox Game Bar"),
-                RemoteCommand(keyboardCmdString: "SHIFT+TAB", alias: "Steam Overlay"),
+            var defaultCommands: [RemoteCommand] = [
+                RemoteCommand(cmdString: "WIN", alias: "WIN"),
+                RemoteCommand(cmdString: "F11", alias: "F11"),
+                RemoteCommand(cmdString: "ESC", alias: "ESC"),
+                RemoteCommand(cmdString: "CTRL+SHIFT+ESC", alias: "任务管理器(Task Manager)"),
+                RemoteCommand(cmdString: "ALT+F1", alias: "N卡截图(Nvidia Screenshot)"),
+                RemoteCommand(cmdString: "ALT+F9", alias: "N卡录屏(Nvidia Screen Recording)"),
+                RemoteCommand(cmdString: "ALT+F4", alias: "关闭窗口(ALT+F4)"),
+                RemoteCommand(cmdString: "CTRL+A", alias: "全选(Select All)"),
+                RemoteCommand(cmdString: "CTRL+C", alias: "复制(Copy)"),
+                RemoteCommand(cmdString: "CTRL+V", alias: "粘贴(Paste)"),
+                RemoteCommand(cmdString: "WIN+D", alias: "切换桌面(Switch to Desktop)"),
+                RemoteCommand(cmdString: "WIN+P", alias: "多显模式(Project)"),
+                RemoteCommand(cmdString: "WIN+G", alias: "Xbox Game Bar"),
+                RemoteCommand(cmdString: "SHIFT+TAB", alias: "Steam Overlay"),
             ]
             
             let data = try? NSKeyedArchiver.archivedData(withRootObject: defaultCommands, requiringSecureCoding: false)
@@ -505,9 +505,9 @@ import UIKit
     }
 
     @objc public func addCommand(_ command: RemoteCommand) -> Bool {
-        command.keyboardCmdString = command.keyboardCmdString.uppercased() // convert all letters to upper case
-        if(command.alias.trimmingCharacters(in: .whitespacesAndNewlines).count == 0) {command.alias = command.keyboardCmdString} // copy cmd string as alias when alias is empty
-        let keyStrings = extractKeyStringsFromComboCommand(from: command.keyboardCmdString)
+        command.cmdString = command.cmdString.uppercased() // convert all letters to upper case
+        if(command.alias.trimmingCharacters(in: .whitespacesAndNewlines).count == 0) {command.alias = command.cmdString} // copy cmd string as alias when alias is empty
+        let keyStrings = extractKeyStringsFromComboCommand(from: command.cmdString)
         if (keyStrings == nil) {return false}  // in case of non-keyboard command strings, return false
         commands.append(command)
         saveCommands()

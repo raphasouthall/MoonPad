@@ -301,6 +301,18 @@
         }
       }
     },
+    "4pE-po-Zn1.normalTitle" : {
+      "comment" : "Class = \"UIButton\"; normalTitle = \"Edit\"; ObjectID = \"4pE-po-Zn1\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Edit"
+          }
+        }
+      }
+    },
     "4Qy-hB-oa5.text" : {
       "comment" : "Class = \"UILabel\"; text = \"External Display Mode\"; ObjectID = \"4Qy-hB-oa5\";",
       "extractionState" : "extracted_with_value",
@@ -2325,6 +2337,18 @@
           "stringUnit" : {
             "state" : "needs_review",
             "value" : "播放主机端声音"
+          }
+        }
+      }
+    },
+    "Up4-28-sgF.normalTitle" : {
+      "comment" : "Class = \"UIButton\"; normalTitle = \"Add\"; ObjectID = \"Up4-28-sgF\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Add"
           }
         }
       }
