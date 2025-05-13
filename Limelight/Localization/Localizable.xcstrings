@@ -1,6 +1,29 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "\n1. From %@ edge, slide %d%% screen width to open settings menu\n\n2. From %@ edge, slide %d%% screen width to open command tool\n\n3. Back to Streaming from settings menu: slide from left edge\n\n4. Slide from upper 40%% of screen edge to avoid sending touch events to PC side" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "\n1. 展开设置菜单: 从%@边缘滑动%d%%屏幕宽度\n\n2. 打开命令工具: 从%@边缘滑动%d%%屏幕宽度\n\n3. 返回串流 / 收起设置菜单: 从左边缘滑动\n\n4. 从40%%上半边缘滑动避免触控事件影响PC端"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "\n1. 展开设置菜单: 从%@边缘滑动%d%%屏幕宽度\n\n2. 打开命令工具: 从%@边缘滑动%d%%屏幕宽度\n\n3. 返回串流 / 收起设置菜单: 从左边缘滑动\n\n4. 从40%%上半边缘滑动避免触控事件影响PC端"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "\n1. 展开设置菜单: 从%@边缘滑动%d%%屏幕宽度\n\n2. 打开命令工具: 从%@边缘滑动%d%%屏幕宽度\n\n3. 返回串流 / 收起设置菜单: 从左边缘滑动\n\n4. 从40%%上半边缘滑动避免触控事件影响PC端"
+          }
+        }
+      }
+    },
     "\nHost processing latency min/max/avg: %.1f/%.1f/%.1f ms" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1054,6 +1077,29 @@
         }
       }
     },
+    "First Launch Tips" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "首次串流提示"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "首次串流提示"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "首次串流提示"
+          }
+        }
+      }
+    },
     "FPS: %5.2f     Network dropped frames: %.2f%%     Network latency: %@" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1096,6 +1142,29 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "了解！"
+          }
+        }
+      }
+    },
+    "Got it! (%ld)" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "了解! (%ld)"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "了解! (%ld)"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "了解! (%ld)"
           }
         }
       }

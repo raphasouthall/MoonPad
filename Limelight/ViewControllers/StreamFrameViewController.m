@@ -74,6 +74,19 @@
 #endif
 }
 
+- (BOOL)isFirstLaunch {
+    NSString *key = @"hasLaunchedBefore";
+    BOOL launchedBefore = [[NSUserDefaults standardUserDefaults] boolForKey:key];
+    
+    if (!launchedBefore) {
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:key];
+        [[NSUserDefaults standardUserDefaults] synchronize]; // iOS 12+ 可省略
+        return YES;
+    }
+    return NO;
+}
+
+
 - (bool)isOscLayoutToolEnabled{
     return (_settings.touchMode.intValue == RELATIVE_TOUCH || _settings.touchMode.intValue == REGULAR_NATIVE_TOUCH || _settings.touchMode.intValue == ABSOLUTE_TOUCH) && _settings.onscreenControls.intValue == OnScreenControlsLevelCustom;
 }
@@ -262,11 +275,60 @@
 }
 #endif
 
+- (void)popFirstLaunchTip {
+    // 初始化倒计时秒数
+    __block NSInteger remainingSeconds = 16;
+    
+    NSString* settingsEdgeSide = _settings.slideToSettingsScreenEdge.intValue == UIRectEdgeLeft ? [LocalizationHelper localizedStringForKey:@"left"] : [LocalizationHelper localizedStringForKey:@"right"];
+    NSString* cmdToolEdgeSide = _settings.slideToSettingsScreenEdge.intValue == UIRectEdgeLeft ? [LocalizationHelper localizedStringForKey:@"right"] : [LocalizationHelper localizedStringForKey:@"left"];
+    uint8_t slideDist = (uint8_t)(_settings.slideToSettingsDistance.floatValue * 100);
+    // 创建弹窗
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:[LocalizationHelper localizedStringForKey:@"First Launch Tips"]
+                                                                   message:[LocalizationHelper localizedStringForKey:@"\n1. From %@ edge, slide %d%% screen width to open settings menu\n\n2. From %@ edge, slide %d%% screen width to open command tool\n\n3. Back to Streaming from settings menu: slide from left edge\n\n4. Slide from upper 40%% of screen edge to avoid sending touch events to PC side", settingsEdgeSide, slideDist, cmdToolEdgeSide, slideDist]
+                                                          preferredStyle:UIAlertControllerStyleAlert];
+    
+    // 添加确认按钮（初始禁用）
+    UIAlertAction *confirmAction = [UIAlertAction actionWithTitle:[LocalizationHelper localizedStringForKey:@"Got it! (15)"]
+                                                           style:UIAlertActionStyleDefault
+                                                         handler:^(UIAlertAction * _Nonnull action) {
+        NSLog(@"用户确认了操作");
+    }];
+    confirmAction.enabled = NO;
+    [alert addAction:confirmAction];
+        
+    // 显示弹窗
+    [self presentViewController:alert animated:YES completion:nil];
+    
+    // 使用dispatch_source_t实现精确倒计时
+    dispatch_source_t timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, dispatch_get_main_queue());
+    dispatch_source_set_timer(timer, DISPATCH_TIME_NOW, 1.0 * NSEC_PER_SEC, 0.1 * NSEC_PER_SEC);
+    
+    dispatch_source_set_event_handler(timer, ^{
+        remainingSeconds--;
+        
+        if (remainingSeconds <= 0) {
+            // 倒计时结束
+            dispatch_source_cancel(timer);
+            // 启用确认按钮
+            confirmAction.enabled = YES;
+            [confirmAction setValue:[LocalizationHelper localizedStringForKey:@"Got it!"] forKey:@"title"];
+        } else {
+            // 更新按钮标题和消息
+            [confirmAction setValue:[NSString stringWithFormat:[LocalizationHelper localizedStringForKey:@"Got it! (%ld)", remainingSeconds], (long)remainingSeconds] forKey:@"title"];
+        }
+    });
+    
+    dispatch_resume(timer);
+    
+    // 防止循环引用（虽然这里用__block已经足够）
+    __weak typeof(alert) weakAlert = alert;
+}
+
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
+        
     [self.navigationController setNavigationBarHidden:YES animated:YES];
     
     [UIApplication sharedApplication].idleTimerDisabled = YES;
@@ -314,6 +376,8 @@
     }
     //[_streamView setupStreamView:_controllerSupport interactionDelegate:self config:self.streamConfig];
     [self reConfigStreamViewRealtime]; // call this method again to make sure all gestures are configured & added to the superview(self.view), including the gestures added from inside the streamview.
+    
+    if([self isFirstLaunch]) [self popFirstLaunchTip];
     
 #if TARGET_OS_TV
     if (!_menuTapGestureRecognizer || !_menuDoubleTapGestureRecognizer || !_playPauseTapGestureRecognizer) {
