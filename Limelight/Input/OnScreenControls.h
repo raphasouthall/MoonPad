@@ -5,6 +5,9 @@
 //  Created by Diego Waxemberg on 12/28/14.
 //  Copyright (c) 2014 Moonlight Stream. All rights reserved.
 //
+//  Modified by True砖家 since 2024.7.7
+//  Copyright © True砖家 @ Bilibili. All rights reserved.
+//
 
 #import <Foundation/Foundation.h>
 #import "ControllerSupport.h"

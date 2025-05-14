@@ -5,6 +5,9 @@
 //  Created by Long Le on 1/1/23.
 //  Copyright © 2023 Moonlight Game Streaming Project. All rights reserved.
 //
+//  Modified by True砖家 since 2024.6.24
+//  Copyright © 2024 True砖家 @ Bilibili. All rights reserved.
+//
 
 #import "OSCProfilesManager.h"
 #import "OnScreenButtonState.h"

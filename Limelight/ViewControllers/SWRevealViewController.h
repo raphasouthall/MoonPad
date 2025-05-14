@@ -1,3 +1,6 @@
+//  Modified by True砖家 since 2024.7.13
+//  Copyright © 2024 True砖家. All rights reserved.
+
 /*
 
  Copyright (c) 2013 Joan Lluch <joan.lluch@sweetwilliamsl.com>

@@ -3,7 +3,10 @@
 //  Moonlight
 //
 //  Created by Cameron Gutman on 11/1/20.
-//  Copyright © 2020 Moonlight Game Streaming Project. All rights reserved.
+//  Copyright © 2020 Moonlight Game Streaming Project. All rights reserved
+//
+//  Modified by True砖家 since 2024.6.1
+//  Copyright © 2024 True砖家 @ Bilibili. All rights reserved
 //
 
 #import "AbsoluteTouchHandler.h"

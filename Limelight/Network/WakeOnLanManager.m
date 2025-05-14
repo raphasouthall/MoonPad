@@ -5,6 +5,9 @@
 //  Created by Diego Waxemberg on 1/2/15.
 //  Copyright (c) 2015 Moonlight Stream. All rights reserved.
 //
+//  Modified by True砖家 since 2024.7.21
+//  Copyright © 2024 True砖家 @ Bilibili. All rights reserved.
+//
 
 #import "WakeOnLanManager.h"
 #import "Utils.h"

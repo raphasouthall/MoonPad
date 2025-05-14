@@ -5,6 +5,9 @@
 //  Created by Cameron Gutman on 12/1/15.
 //  Copyright © 2015 Moonlight Stream. All rights reserved.
 //
+//  Modified by True砖家 since 2024.8.3
+//  Copyright © 2024 True砖家 @ Bilibili. All rights reserved.
+//
 
 #import "DataManager.h"
 #import "TemporaryHost.h"

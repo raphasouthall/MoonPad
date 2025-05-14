@@ -5,6 +5,9 @@
 //  Created by Diego Waxemberg on 1/18/14.
 //  Copyright (c) 2015 Moonlight Stream. All rights reserved.
 //
+//  Modified by True砖家 since 2024.6.1
+//  Copyright © 2024 True砖家 @ Bilibili. All rights reserved.
+//
 
 #import "StreamFrameViewController.h"
 #import "MainFrameViewController.h"

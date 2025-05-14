@@ -3,8 +3,10 @@
 //  Moonlight
 //
 //  Created by Long Le on 9/27/22.
+//  Copyright © 2022 Moonlight Game Streaming Project. All rights reserved.
+//
 //  Modified by True砖家 since 2024.6.24
-//  Copyright © True砖家 @ Bilibili & 2022 Moonlight Game Streaming Project. All rights reserved.
+//  Copyright © 2024 True砖家 @ Bilibili. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>

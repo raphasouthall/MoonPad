@@ -5,6 +5,9 @@
 //  Created by Diego Waxemberg on 10/20/14.
 //  Copyright (c) 2014 Moonlight Stream. All rights reserved.
 //
+//  Modified by True砖家 since 2024.8.10
+//  Copyright © 2024 True砖家 @ Bilibili. All rights reserved.
+//
 
 @interface StreamConfiguration : NSObject
 
