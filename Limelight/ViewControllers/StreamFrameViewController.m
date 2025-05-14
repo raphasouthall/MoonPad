@@ -716,6 +716,7 @@
 
 // This fires when the home button is pressed
 - (void)applicationDidEnterBackground:(UIApplication *)application {
+    /*
     Log(LOG_I, @"Terminating stream immediately for backgrounding");
 
     if (_inactivityTimer != nil) {
@@ -724,6 +725,7 @@
     }
     
     [self returnToMainFrame];
+     */
 }
 
 - (void)expandSettingsView{
