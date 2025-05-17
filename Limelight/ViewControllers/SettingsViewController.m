@@ -12,6 +12,7 @@
 #import "SettingsViewController.h"
 #import "TemporarySettings.h"
 #import "DataManager.h"
+#import "MenuSectionView.h"
 
 #import <UIKit/UIGestureRecognizerSubclass.h>
 #import <VideoToolbox/VideoToolbox.h>
@@ -340,6 +341,51 @@ BOOL isCustomResolution(CGSize res) {
     return [self isIPhone] ? UINavigationBarHeightIPhone : UINavigationBarHeightIPad;
 }
 
+
+- (void)initParentStack{
+    self.scrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentAutomatic;
+    // 可选：确保 scrollView 开启垂直滚动
+    self.scrollView.alwaysBounceVertical = YES;
+    parentStack = [[UIStackView alloc] init];
+    parentStack.axis = UILayoutConstraintAxisVertical;
+    parentStack.spacing = 0;
+    parentStack.translatesAutoresizingMaskIntoConstraints = NO;
+    [self.scrollView addSubview:parentStack];
+    [NSLayoutConstraint activateConstraints:@[
+        [parentStack.topAnchor constraintEqualToAnchor:self.scrollView.contentLayoutGuide.topAnchor constant: [self getStandardNavBarHeight] + 13],
+        [parentStack.bottomAnchor constraintEqualToAnchor:self.scrollView.contentLayoutGuide.bottomAnchor constant:-20],
+        [parentStack.leadingAnchor constraintEqualToAnchor:self.scrollView.contentLayoutGuide.leadingAnchor constant: 14],
+        [parentStack.trailingAnchor constraintEqualToAnchor:self.scrollView.contentLayoutGuide.trailingAnchor constant: -15],
+        [parentStack.widthAnchor constraintEqualToAnchor:self.scrollView.contentLayoutGuide.widthAnchor]
+    ]];
+}
+    
+- (void)layoutSections{
+    MenuSectionView *videoSection = [[MenuSectionView alloc] init];
+    videoSection.sectionTitle = [LocalizationHelper localizedStringForKey:@"Video"];
+    if (@available(iOS 13.0, *)) {
+        [videoSection setSectionIcon:[UIImage systemImageNamed:@"airplayvideo"]];
+    } else [videoSection setSectionIcon:nil];
+    [videoSection addSubStackView:_resolutionStack];
+    [videoSection addSubStackView:_fpsStack];
+    [videoSection addSubStackView:_codecStack];
+    [videoSection addToParentStack:parentStack];
+    [videoSection setExpanded:YES];
+    
+    MenuSectionView *gesturesSection = [[MenuSectionView alloc] init];
+    gesturesSection.sectionTitle = [LocalizationHelper localizedStringForKey:@"Gestures"];
+    if (@available(iOS 13.0, *)) {
+        [gesturesSection setSectionIcon:[UIImage systemImageNamed:@"hand.draw"]];
+    } else [gesturesSection setSectionIcon:nil];
+    [gesturesSection addSubStackView:_keyboardToggleFingerNumStack];
+    [gesturesSection addSubStackView:_slideToSettingsScreenEdgeStack];
+    [gesturesSection addSubStackView:_slideToCmdToolScreenEdgeStack];
+    [gesturesSection addSubStackView:_slideToSettingsDistanceStack];
+    [gesturesSection addToParentStack:parentStack];
+    [gesturesSection setExpanded:YES];
+}
+
+
 - (void)layoutWidgetes {
     
     // [self.view addSubview:self.navigationBar];
@@ -349,60 +395,65 @@ BOOL isCustomResolution(CGSize res) {
     // 可选：确保 scrollView 开启垂直滚动
     self.scrollView.alwaysBounceVertical = YES;
     
-    parentStack = [[UIStackView alloc] init];
-    parentStack.axis = UILayoutConstraintAxisVertical;
-    parentStack.spacing = 13;
-    parentStack.translatesAutoresizingMaskIntoConstraints = NO;
-    [self.scrollView addSubview:parentStack];
+    UIStackView* parentStackTmp = [[UIStackView alloc] init];
+    parentStackTmp.axis = UILayoutConstraintAxisVertical;
+    parentStackTmp.spacing = 13;
+    parentStackTmp.translatesAutoresizingMaskIntoConstraints = NO;
+    [self.scrollView addSubview:parentStackTmp];
     [NSLayoutConstraint activateConstraints:@[
-        [parentStack.topAnchor constraintEqualToAnchor:self.scrollView.contentLayoutGuide.topAnchor constant: [self getStandardNavBarHeight] + 20],
-        [parentStack.bottomAnchor constraintEqualToAnchor:self.scrollView.contentLayoutGuide.bottomAnchor constant:-20],
-        [parentStack.leadingAnchor constraintEqualToAnchor:self.scrollView.contentLayoutGuide.leadingAnchor constant: 14],
-        [parentStack.trailingAnchor constraintEqualToAnchor:self.scrollView.contentLayoutGuide.trailingAnchor constant: -15],
-        [parentStack.widthAnchor constraintEqualToAnchor:self.scrollView.contentLayoutGuide.widthAnchor]
+        [parentStackTmp.topAnchor constraintEqualToAnchor:self.scrollView.contentLayoutGuide.topAnchor constant: [self getStandardNavBarHeight] + 300],
+        [parentStackTmp.bottomAnchor constraintEqualToAnchor:self.scrollView.contentLayoutGuide.bottomAnchor constant:-20],
+        [parentStackTmp.leadingAnchor constraintEqualToAnchor:self.scrollView.contentLayoutGuide.leadingAnchor constant: 14],
+        [parentStackTmp.trailingAnchor constraintEqualToAnchor:self.scrollView.contentLayoutGuide.trailingAnchor constant: -15],
+        [parentStackTmp.widthAnchor constraintEqualToAnchor:self.scrollView.contentLayoutGuide.widthAnchor]
     ]];
     
-    [parentStack addArrangedSubview:self.resolutionStack];
+    
+    [parentStackTmp addArrangedSubview:self.resolutionStack];
     // self.resolutionStack.hidden = YES;
-    [parentStack addArrangedSubview:self.fpsStack];
+    [parentStackTmp addArrangedSubview:self.fpsStack];
     // self.fpsStack.hidden = YES;
-    [parentStack addArrangedSubview:self.bitrateStack];
+    [parentStackTmp addArrangedSubview:self.bitrateStack];
     // self.bitrateStack.hidden = YES;
-    [parentStack addArrangedSubview:self.touchModeStack];
-    [parentStack addArrangedSubview:self.asyncTouchStack];
-    [parentStack addArrangedSubview:self.pointerVelocityDividerStack];
-    [parentStack addArrangedSubview:self.pointerVelocityFactorStack];
-    [parentStack addArrangedSubview:self.touchMoveEventIntervalStack];
-    [parentStack addArrangedSubview:self.mousePointerVelocityStack];
-    [parentStack addArrangedSubview:self.onScreenWidgetStack];
-    [parentStack addArrangedSubview:self.keyboardToggleFingerNumStack];
-    [parentStack addArrangedSubview:self.liftStreamViewForKeyboardStack];
-    [parentStack addArrangedSubview:self.showKeyboardToolbarStack];
-    [parentStack addArrangedSubview:self.slideToSettingsScreenEdgeStack];
-    [parentStack addArrangedSubview:self.slideToCmdToolScreenEdgeStack];
-    [parentStack addArrangedSubview:self.slideToSettingsDistanceStack];
-    [parentStack addArrangedSubview:self.optimizeSettingsStack];
-    [parentStack addArrangedSubview:self.multiControllerStack];
-    [parentStack addArrangedSubview:self.swapAbaxyStack];
-    [parentStack addArrangedSubview:self.audioOnPcStack];
-    [parentStack addArrangedSubview:self.codecStack];
-    [parentStack addArrangedSubview:self.yuv444Stack];
-    [parentStack addArrangedSubview:self.HdrStack];
-    [parentStack addArrangedSubview:self.framepacingStack];
-    [parentStack addArrangedSubview:self.reverseMouseWheelDirectionStack];
-    [parentStack addArrangedSubview:self.citrixX1MouseStack];
-    [parentStack addArrangedSubview:self.statsOverlayStack];
-    [parentStack addArrangedSubview:self.unlockDisplayOrientationStack];
-    [parentStack addArrangedSubview:self.externalDisplayModeStack];
-    [parentStack addArrangedSubview:self.localMousePointerModeStack];
+    [parentStackTmp addArrangedSubview:self.touchModeStack];
+    [parentStackTmp addArrangedSubview:self.asyncTouchStack];
+    [parentStackTmp addArrangedSubview:self.pointerVelocityDividerStack];
+    [parentStackTmp addArrangedSubview:self.pointerVelocityFactorStack];
+    [parentStackTmp addArrangedSubview:self.touchMoveEventIntervalStack];
+    [parentStackTmp addArrangedSubview:self.mousePointerVelocityStack];
+    [parentStackTmp addArrangedSubview:self.onScreenWidgetStack];
+    [parentStackTmp addArrangedSubview:self.keyboardToggleFingerNumStack];
+    [parentStackTmp addArrangedSubview:self.liftStreamViewForKeyboardStack];
+    [parentStackTmp addArrangedSubview:self.showKeyboardToolbarStack];
+    [parentStackTmp addArrangedSubview:self.slideToSettingsScreenEdgeStack];
+    [parentStackTmp addArrangedSubview:self.slideToCmdToolScreenEdgeStack];
+    [parentStackTmp addArrangedSubview:self.slideToSettingsDistanceStack];
+    [parentStackTmp addArrangedSubview:self.optimizeSettingsStack];
+    [parentStackTmp addArrangedSubview:self.multiControllerStack];
+    [parentStackTmp addArrangedSubview:self.swapAbaxyStack];
+    [parentStackTmp addArrangedSubview:self.audioOnPcStack];
+    [parentStackTmp addArrangedSubview:self.codecStack];
+    [parentStackTmp addArrangedSubview:self.yuv444Stack];
+    [parentStackTmp addArrangedSubview:self.HdrStack];
+    [parentStackTmp addArrangedSubview:self.framepacingStack];
+    [parentStackTmp addArrangedSubview:self.reverseMouseWheelDirectionStack];
+    [parentStackTmp addArrangedSubview:self.citrixX1MouseStack];
+    [parentStackTmp addArrangedSubview:self.statsOverlayStack];
+    [parentStackTmp addArrangedSubview:self.unlockDisplayOrientationStack];
+    [parentStackTmp addArrangedSubview:self.externalDisplayModeStack];
+    [parentStackTmp addArrangedSubview:self.localMousePointerModeStack];
+    [parentStackTmp removeFromSuperview];
 }
 
-
 - (void)viewDidLoad {
-    //[self pushDownExistingWidgets];
-    //[self addExitButtonOnTop];
+
     BOOL isIPad = ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad);
-   if(isIPad) [self layoutWidgetes]; // layout for ipad tmply
+    if(isIPad) [self layoutWidgetes]; // layout for ipad tmply
+    
+    [self initParentStack];
+    [self layoutSections];
+     
+    
     
     self->slideToCloseSettingsViewRecognizer = [[CustomEdgeSlideGestureRecognizer alloc] initWithTarget:self action:@selector(edgeSwiped)];
     slideToCloseSettingsViewRecognizer.edges = UIRectEdgeLeft;

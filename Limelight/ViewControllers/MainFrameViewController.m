@@ -32,6 +32,8 @@
 #import "LocalizationHelper.h"
 #import "CustomEdgeSlideGestureRecognizer.h"
 #import "DataManager.h"
+#import "HostCardView.h"
+#import "UIColor+Theme.h"
 #import "Moonlight-Swift.h" // not used yet.
 
 #if !TARGET_OS_TV
@@ -314,7 +316,7 @@ static NSMutableSet* hostList;
     [self updateTitle];
     [self disableUpButton];
     [self.collectionView removeFromSuperview]; // necessary for new scroll host view reloading mechanism
-    [self.view setBackgroundColor:[UIColor darkGrayColor]];
+
     [self reloadScrollHostView]; // host view must be reloaded here
 }
 
@@ -972,16 +974,27 @@ static NSMutableSet* hostList;
         // Fallback on earlier versions
     }
     [settingsViewController.resolutionSelector setEnabled:!self.settingsExpandedInStreamView];
+    settingsViewController.resolutionStack.hidden = self.settingsExpandedInStreamView;
     [settingsViewController.framerateSelector setEnabled:!self.settingsExpandedInStreamView];
+    settingsViewController.fpsStack.hidden = self.settingsExpandedInStreamView;
     [settingsViewController widget:settingsViewController.bitrateSlider setEnabled:!self.settingsExpandedInStreamView];
+    settingsViewController.bitrateStack.hidden = self.settingsExpandedInStreamView;
     [settingsViewController.optimizeSettingsSelector setEnabled:!self.settingsExpandedInStreamView];
+    settingsViewController.optimizeSettingsStack.hidden = self.settingsExpandedInStreamView;
     [settingsViewController.audioOnPCSelector setEnabled:!self.settingsExpandedInStreamView];
+    settingsViewController.audioOnPcStack.hidden = self.settingsExpandedInStreamView;
     [settingsViewController.codecSelector setEnabled:!self.settingsExpandedInStreamView];
+    settingsViewController.codecStack.hidden = self.settingsExpandedInStreamView;
     [settingsViewController.yuv444Selector setEnabled:!self.settingsExpandedInStreamView];
+    settingsViewController.yuv444Stack.hidden = self.settingsExpandedInStreamView;
     [settingsViewController.hdrSelector setEnabled:!self.settingsExpandedInStreamView];
+    settingsViewController.HdrStack.hidden = self.settingsExpandedInStreamView;
     [settingsViewController.framePacingSelector setEnabled:!self.settingsExpandedInStreamView];
+    settingsViewController.framepacingStack.hidden = self.settingsExpandedInStreamView;
     [settingsViewController.btMouseSelector setEnabled:!self.settingsExpandedInStreamView];
+    settingsViewController.citrixX1MouseStack.hidden = self.settingsExpandedInStreamView;
     [settingsViewController.externalDisplayModeSelector setEnabled:!self.settingsExpandedInStreamView];
+    settingsViewController.externalDisplayModeStack.hidden = self.settingsExpandedInStreamView;
     [settingsViewController.backToStreamingButton setEnabled:self.settingsExpandedInStreamView]; // will be deprecated soon
     // [settingsViewController.unlockDisplayOrientationSelector setEnabled:!self.settingsExpandedInStreamView && [self isFullScreenRequired]];//need "requires fullscreen" enabled in the app bunddle to make runtime orientation limitation woring
 }
@@ -1116,10 +1129,10 @@ static NSMutableSet* hostList;
    // return isPortrait;
 }
 
-- (void)viewDidLoad
-{
+- (void)viewDidLoad{
     [super viewDidLoad];
     //[OrientationHelper updateOrientationToLandscape];
+    
 #if !TARGET_OS_TV
     self.settingsExpandedInStreamView = false; // init this flag
     self.revealViewController.isStreaming = false; //init this flag for rvlVC
@@ -1216,6 +1229,10 @@ static NSMutableSet* hostList;
     [self.view addSubview:hostScrollView];
     
     if ([hostList count] == 1) [self hostClicked:[hostList anyObject] view:nil]; // auto click for single host
+    
+    
+    
+
     //if([SettingsViewController isLandscapeNow] != _streamConfig.width > _streamConfig.height)
     //[self simulateSettingsButtonPress]; //force expand setting view if orientation changed since last quit from app.
     //[self simulateSettingsButtonPress]; //force expand setting view if orientation changed since last quit from app.
@@ -1225,8 +1242,7 @@ static NSMutableSet* hostList;
     // [settingsViewController updateResolutionTable];
 }
 
--(void)handleRealOrientationChange{
-    
+-(void)viewDidLayoutSubviews{
 }
 
 -(void)reloadScrollHostView{
@@ -1418,6 +1434,7 @@ static NSMutableSet* hostList;
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:NO];
+    [self reloadScrollHostView];
     [self attachWaterMark];
     
 #if !TARGET_OS_TV
@@ -1462,6 +1479,13 @@ static NSMutableSet* hostList;
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+
+    /* this makes background color works*/
+    for (UIView *subview in self.view.subviews) {
+        [subview removeFromSuperview]; // 暂时移除所有子视图
+    }
+
+    self.view.backgroundColor = [UIColor appBackgroundColorDark]; //theme test
     
     // We can get here on home press while streaming
     // since the stream view segues to us just before
@@ -1568,7 +1592,25 @@ static NSMutableSet* hostList;
         // Sort the host list in alphabetical order
         NSArray* sortedHostList = [[hostList allObjects] sortedArrayUsingSelector:@selector(compareName:)];
         for (TemporaryHost* comp in sortedHostList) {
-            compView = [[UIComputerView alloc] initWithComputer:comp andCallback:self];
+            compView = [[UIComputerView alloc] initWithComputer:comp andCallback:self];    // host view created here
+            
+            // new host card test
+            // if([comp.name isEqualToString: @"ASRockPC"]) {
+            if([comp.name isEqualToString: @"PianoServer"]) {
+            //if([comp.name isEqualToString: @"TrueZj"]) {
+                HostCardView *testCard = [[HostCardView alloc] initWithHost:comp];
+                
+                [self.view addSubview:testCard];
+                // [testCard resizeBySizeFactor:3];
+                [NSLayoutConstraint activateConstraints:@[
+                    [testCard.centerXAnchor constraintEqualToAnchor:self.view.centerXAnchor constant:0],
+                    [testCard.centerYAnchor constraintEqualToAnchor:self.view.centerYAnchor constant:150],
+                ]];
+                 
+            }
+            //
+            
+            
             compView.center = CGPointMake([self getCompViewX:compView addComp:addComp prevEdge:prevEdge], hostScrollView.frame.size.height / 2);
             prevEdge = compView.frame.origin.x + compView.frame.size.width;
             [hostScrollView addSubview:compView];
