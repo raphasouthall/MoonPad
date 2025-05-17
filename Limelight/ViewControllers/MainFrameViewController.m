@@ -961,12 +961,16 @@ static NSMutableSet* hostList;
     }
 }
 
-
-- (void)revealController:(SWRevealViewController *)revealController didMoveToPosition:(FrontViewPosition)position {
-        // If we moved back to the center position, we should save the settings
+- (void)revealController:(SWRevealViewController *)revealController willMoveToPosition:(FrontViewPosition)position {
     SettingsViewController* settingsViewController = (SettingsViewController*)[revealController rearViewController];
     settingsViewController.mainFrameViewController = self;
     // enable / disable widgets acoordingly: in streamview, disable, outside of streamview, enable.
+    if (@available(iOS 16.0, *)) {
+        revealController.disconnectButton.hidden = !self.settingsExpandedInStreamView;
+    } else {
+        revealController.disconnectButton.enabled = self.settingsExpandedInStreamView;
+        // Fallback on earlier versions
+    }
     [settingsViewController.resolutionSelector setEnabled:!self.settingsExpandedInStreamView];
     [settingsViewController.framerateSelector setEnabled:!self.settingsExpandedInStreamView];
     [settingsViewController widget:settingsViewController.bitrateSlider setEnabled:!self.settingsExpandedInStreamView];
@@ -978,8 +982,14 @@ static NSMutableSet* hostList;
     [settingsViewController.framePacingSelector setEnabled:!self.settingsExpandedInStreamView];
     [settingsViewController.btMouseSelector setEnabled:!self.settingsExpandedInStreamView];
     [settingsViewController.externalDisplayModeSelector setEnabled:!self.settingsExpandedInStreamView];
-    [settingsViewController.backToStreamingButton setEnabled:self.settingsExpandedInStreamView];
+    [settingsViewController.backToStreamingButton setEnabled:self.settingsExpandedInStreamView]; // will be deprecated soon
     // [settingsViewController.unlockDisplayOrientationSelector setEnabled:!self.settingsExpandedInStreamView && [self isFullScreenRequired]];//need "requires fullscreen" enabled in the app bunddle to make runtime orientation limitation woring
+}
+
+- (void)revealController:(SWRevealViewController *)revealController didMoveToPosition:(FrontViewPosition)position {
+        // If we moved back to the center position, we should save the settings
+    SettingsViewController* settingsViewController = (SettingsViewController*)[revealController rearViewController];
+    settingsViewController.mainFrameViewController = self;
 
     if (position == FrontViewPositionLeft) {
         [settingsViewController saveSettings];

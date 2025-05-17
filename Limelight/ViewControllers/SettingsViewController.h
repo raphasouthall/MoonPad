@@ -16,6 +16,38 @@
 #import "CustomEdgeSlideGestureRecognizer.h"
 
 @interface SettingsViewController : UIViewController
+@property (strong, nonatomic) IBOutlet UINavigationBar *navigationBar;
+@property (strong, nonatomic) IBOutlet UIStackView *resolutionStack;
+@property (strong, nonatomic) IBOutlet UIStackView *fpsStack;
+@property (strong, nonatomic) IBOutlet UIStackView *bitrateStack;
+@property (strong, nonatomic) IBOutlet UIStackView *touchModeStack;
+@property (strong, nonatomic) IBOutlet UIStackView *asyncTouchStack;
+@property (strong, nonatomic) IBOutlet UIStackView *pointerVelocityDividerStack;
+@property (strong, nonatomic) IBOutlet UIStackView *pointerVelocityFactorStack;
+@property (strong, nonatomic) IBOutlet UIStackView *touchMoveEventIntervalStack;
+@property (strong, nonatomic) IBOutlet UIStackView *mousePointerVelocityStack;
+@property (strong, nonatomic) IBOutlet UIStackView *onScreenWidgetStack;
+@property (strong, nonatomic) IBOutlet UIStackView *keyboardToggleFingerNumStack;
+@property (strong, nonatomic) IBOutlet UIStackView *liftStreamViewForKeyboardStack;
+@property (strong, nonatomic) IBOutlet UIStackView *showKeyboardToolbarStack;
+@property (strong, nonatomic) IBOutlet UIStackView *slideToSettingsScreenEdgeStack;
+@property (strong, nonatomic) IBOutlet UIStackView *slideToCmdToolScreenEdgeStack;
+@property (strong, nonatomic) IBOutlet UIStackView *slideToSettingsDistanceStack;
+@property (strong, nonatomic) IBOutlet UIStackView *optimizeSettingsStack;
+@property (strong, nonatomic) IBOutlet UIStackView *multiControllerStack;
+@property (strong, nonatomic) IBOutlet UIStackView *swapAbaxyStack;
+@property (strong, nonatomic) IBOutlet UIStackView *audioOnPcStack;
+@property (strong, nonatomic) IBOutlet UIStackView *codecStack;
+@property (strong, nonatomic) IBOutlet UIStackView *yuv444Stack;
+@property (strong, nonatomic) IBOutlet UIStackView *HdrStack;
+@property (strong, nonatomic) IBOutlet UIStackView *framepacingStack;
+@property (strong, nonatomic) IBOutlet UIStackView *reverseMouseWheelDirectionStack;
+@property (strong, nonatomic) IBOutlet UIStackView *citrixX1MouseStack;
+@property (strong, nonatomic) IBOutlet UIStackView *statsOverlayStack;
+@property (strong, nonatomic) IBOutlet UIStackView *unlockDisplayOrientationStack;
+@property (strong, nonatomic) IBOutlet UIStackView *externalDisplayModeStack;
+@property (strong, nonatomic) IBOutlet UIStackView *localMousePointerModeStack;
+
 @property (strong, nonatomic) IBOutlet UILabel *bitrateLabel;
 @property (strong, nonatomic) IBOutlet UISlider *bitrateSlider;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *framerateSelector;

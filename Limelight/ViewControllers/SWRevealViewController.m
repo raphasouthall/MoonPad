@@ -30,6 +30,7 @@
 #import <QuartzCore/QuartzCore.h>
 
 #import "SWRevealViewController.h"
+#import "LocalizationHelper.h"
 #import "DataManager.h"
 
 
@@ -59,6 +60,7 @@ static CGFloat statusBarAdjustment( UIView* view )
 }
 
 @property (nonatomic, readonly) UIView *rearView;
+@property (nonatomic, strong) UIView *rearNavView;
 @property (nonatomic, readonly) UIView *rightView;
 @property (nonatomic, readonly) UIView *frontView;
 @property (nonatomic, assign) BOOL disableLayout;
@@ -73,7 +75,9 @@ static CGFloat statusBarAdjustment( UIView* view )
 @end
 
 
-@implementation SWRevealView
+@implementation SWRevealView{
+    
+}
 
 
 static CGFloat scaledValue( CGFloat v1, CGFloat min2, CGFloat max2, CGFloat min1, CGFloat max1)
@@ -99,7 +103,10 @@ static CGFloat scaledValue( CGFloat v1, CGFloat min2, CGFloat max2, CGFloat min1
         [self reloadShadow];
 
         [self addSubview:_frontView];
+        
+        [self setupRearNavView];
     }
+    
     return self;
 }
 
@@ -128,13 +135,39 @@ static CGFloat scaledValue( CGFloat v1, CGFloat min2, CGFloat max2, CGFloat min1
 }
 
 
+- (void)setupRearNavView {
+    // 初始化 rearNavView
+    _rearNavView = [[UIView alloc] init];
+    _rearNavView.translatesAutoresizingMaskIntoConstraints = NO;
+    _rearNavView.backgroundColor = [UIColor lightGrayColor]; // 设置背景色以便查看
+    
+    // NSLog(@"_c.rearViewRevealWidth: %f", _c.rearViewRevealWidth);
+    // _rearNavView.frame = CGRectMake(0, 0, _c.rearViewRevealWidth, 100);
+    // 添加到主视图
+    
+    // 设置约束 - 这里只是一个示例，你可以根据需要调整
+    
+    [self insertSubview:_rearNavView belowSubview:_frontView];
+    
+    CGFloat navBarHeight = [UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPhone ? UINavigationBarHeightIPhone : UINavigationBarHeightIPad;
+    
+    [NSLayoutConstraint activateConstraints:@[
+        [_rearNavView.topAnchor constraintEqualToAnchor:self.topAnchor],
+        [_rearNavView.leadingAnchor constraintEqualToAnchor:self.leadingAnchor],
+        [_rearNavView.trailingAnchor constraintEqualToAnchor:self.trailingAnchor],
+        [_rearNavView.heightAnchor constraintEqualToConstant:navBarHeight]
+        // reserve height for navigation bar
+    ]];
+    // [self setupNavigationBar];
+}
+
 - (void)prepareRearViewForPosition:(FrontViewPosition)newPosition
 {
     if ( _rearView == nil )
     {
         _rearView = [[UIView alloc] initWithFrame:self.bounds];
         _rearView.autoresizingMask = /*UIViewAutoresizingFlexibleWidth|*/UIViewAutoresizingFlexibleHeight;
-        [self insertSubview:_rearView belowSubview:_frontView];
+        [self insertSubview:_rearView belowSubview:_rearNavView];
     }
     
     CGFloat xLocation = [self frontLocationForPosition:_c.frontViewPosition];
@@ -633,7 +666,8 @@ const int FrontViewPositionNone = 0xff;
     _rearViewPosition = FrontViewPositionLeft;
     _rightViewPosition = FrontViewPositionLeft;
     _rearViewRevealWidth = 492.0f;
-    _rearViewRevealOverdraw = 60.0f;
+    // _rearViewRevealOverdraw = 60.0f;
+    _rearViewRevealOverdraw = 0.0f;
     _rearViewRevealDisplacement = 40.0f;
     _rightViewRevealWidth = 492.0f;
     _rightViewRevealOverdraw = 60.0f;
@@ -701,6 +735,8 @@ const int FrontViewPositionNone = 0xff;
     // create a custom content view for the controller
     _contentView = [[SWRevealView alloc] initWithFrame:frame controller:self];
     
+    [self setupNavigationBar];
+    
     // set the content view to resize along with its superview
     [_contentView setAutoresizingMask:UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight];
     
@@ -754,6 +790,9 @@ const int FrontViewPositionNone = 0xff;
     else return [self getCurrentOrientation]; // 90 Degree rotation not allowed in streaming or app view
 }
 
+- (void)viewDidLayoutSubviews{
+    // [self setupNavigationBarConstraints];
+}
 
 
 - (void)viewDidLoad{
@@ -785,6 +824,70 @@ const int FrontViewPositionNone = 0xff;
 }
 
 #pragma mark - Public methods and property accessors
+
+- (void)setupNavigationBar {
+    // 创建导航栏
+    if (_dockedNavBar == nil) _dockedNavBar = [[UINavigationBar alloc] init];
+    _dockedNavBar.translatesAutoresizingMaskIntoConstraints = NO;
+    _dockedNavBar.userInteractionEnabled = YES;
+    
+    // 创建导航项
+    UINavigationItem *navItem = [[UINavigationItem alloc] initWithTitle:[LocalizationHelper localizedStringForKey:@"Settings"]];
+    
+    // Back Button
+    
+    UIButton *customBackButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    if (@available(iOS 13.0, *)) {
+        [customBackButton setImage:[UIImage systemImageNamed:@"chevron.left"] forState:UIControlStateNormal];
+    } else {
+        // Fallback on earlier versions
+    }
+    [customBackButton setTitle:[LocalizationHelper localizedStringForKey:@"Back"] forState:UIControlStateNormal];
+    customBackButton.titleLabel.font = [UIFont systemFontOfSize:19 weight:UIFontWeightRegular];
+    [customBackButton addTarget:self action:@selector(foldRearView) forControlEvents:UIControlEventTouchUpInside];
+    //customBackButton.contentEdgeInsets = UIEdgeInsetsMake(8, 8, 8, 8); // 增加点击区域
+    // customBackButton.titleEdgeInsets = UIEdgeInsetsMake(0, 5, 0, -5);
+    UIBarButtonItem *backButtonItem = [[UIBarButtonItem alloc] initWithCustomView:customBackButton];
+     
+    /*
+    UIBarButtonItem *backButtonItem = [[UIBarButtonItem alloc] initWithTitle:[LocalizationHelper localizedStringForKey:@"Back"]
+                                                                   style:UIBarButtonItemStylePlain
+                                                                  target:self
+                                                                  action:@selector(foldRearView)];
+     */
+    
+    navItem.leftBarButtonItem = backButtonItem;
+    
+    _disconnectButton = [[UIBarButtonItem alloc] initWithTitle:[LocalizationHelper localizedStringForKey:@"Disconnect"]
+                                                                   style:UIBarButtonItemStylePlain
+                                                                  target:self
+                                                                  action:@selector(disconnectRemoteSession)];
+    navItem.rightBarButtonItem = _disconnectButton;
+    
+    [_dockedNavBar setItems:@[navItem]];
+    _dockedNavBar.barTintColor = [UIColor darkGrayColor];
+    _dockedNavBar.titleTextAttributes = @{NSForegroundColorAttributeName: [UIColor whiteColor]};
+    
+    [_contentView.rearNavView addSubview:_dockedNavBar];
+
+    // 设置导航栏约束
+    [NSLayoutConstraint activateConstraints:@[
+        [_dockedNavBar.topAnchor constraintEqualToAnchor:_contentView.rearNavView.topAnchor],
+        [_dockedNavBar.bottomAnchor constraintEqualToAnchor:_contentView.rearNavView.bottomAnchor],
+        [_dockedNavBar.leadingAnchor constraintEqualToAnchor:_contentView.rearNavView.leadingAnchor],
+        [_dockedNavBar.widthAnchor constraintEqualToConstant:_rearViewRevealWidth],
+    ]];
+    
+}
+
+- (void)foldRearView{
+    [self revealToggleAnimated:YES];
+}
+
+- (void)disconnectRemoteSession{
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"SessionDisconnectedBySettingsMenuNotification" object:self];
+    [self foldRearView];
+}
 
 - (void)setFrontViewController:(UIViewController *)frontViewController
 {

@@ -843,7 +843,7 @@
     },
     "CMK-cS-h9b.configuration.title" : {
       "comment" : "Class = \"UIButton\"; configuration.title = \"Exit\"; ObjectID = \"CMK-cS-h9b\";",
-      "extractionState" : "extracted_with_value",
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -873,7 +873,7 @@
     },
     "CMK-cS-h9b.normalTitle" : {
       "comment" : "Class = \"UIButton\"; normalTitle = \"Button\"; ObjectID = \"CMK-cS-h9b\";",
-      "extractionState" : "extracted_with_value",
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1155,7 +1155,7 @@
     },
     "FqF-bM-afQ.configuration.title" : {
       "comment" : "Class = \"UIButton\"; configuration.title = \"Back to Streaming\"; ObjectID = \"FqF-bM-afQ\";",
-      "extractionState" : "extracted_with_value",
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1185,7 +1185,7 @@
     },
     "FqF-bM-afQ.normalTitle" : {
       "comment" : "Class = \"UIButton\"; normalTitle = \"Button\"; ObjectID = \"FqF-bM-afQ\";",
-      "extractionState" : "extracted_with_value",
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {

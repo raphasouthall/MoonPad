@@ -250,8 +250,8 @@
                                                object:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(sessionDisconnectedBySettingView) //quit session when exit button is press in setting view during streaming
-                                                 name:@"SessionDisconnectedBySettingsViewNotification"
+                                             selector:@selector(disconnectRemoteSession) //quit session when exit button is press in setting view during streaming
+                                                 name:@"SessionDisconnectedBySettingsMenuNotification"
                                                object:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -741,7 +741,7 @@
     [self expandSettingsView];  // expand settings view in other cases;
 }
 
-- (void)sessionDisconnectedBySettingView {
+- (void)disconnectRemoteSession {
     Log(LOG_I, @"Settings view disconnect the session in stream view");
     self.mainFrameViewcontroller.settingsExpandedInStreamView = false; // reset this flag to false
     [self returnToMainFrame];

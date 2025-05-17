@@ -25,6 +25,7 @@
     bool justEnteredSettingsViewDoNotOpenOscLayoutTool;
     uint16_t oscLayoutFingers;
     CustomEdgeSlideGestureRecognizer *slideToCloseSettingsViewRecognizer;
+    UIStackView *parentStack;
 }
 
 @dynamic overrideUserInterfaceStyle;
@@ -159,6 +160,7 @@ CGSize resolutionTable[RESOLUTION_TABLE_SIZE];
     // Enumerate the scroll view's subviews looking for the
     // highest view Y value to set our scroll view's content
     // size.
+    
     for (UIView* view in self.scrollView.subviews) {
         // UIScrollViews have 2 default child views
         // which represent the horizontal and vertical scrolling
@@ -177,7 +179,7 @@ CGSize resolutionTable[RESOLUTION_TABLE_SIZE];
     
     // Add a bit of padding so the view doesn't end right at the button of the display
     self.scrollView.contentSize = CGSizeMake(self.scrollView.contentSize.width,
-                                             highestViewY + 20);
+                                             [self isIPhone] ? highestViewY + 20 : parentStack.frame.size.height + [self getStandardNavBarHeight] + 20);
 }
 
 // Adjust the subviews for the safe area on the iPhone X.
@@ -300,23 +302,13 @@ BOOL isCustomResolution(CGSize res) {
     [[NSNotificationCenter defaultCenter] postNotificationName:@"SettingsViewClosedNotification" object:self]; // notify other view that settings view just closed
 }
 
-- (void)pushDownExistingWidgets{
-    // Calculate the height needed for the exit button
-    CGFloat exitButtonHeight = 50.0; // Adjust as needed
-    CGFloat topOffset = exitButtonHeight; // Space needed for the exit button
-    // Iterate through subviews of self.view and adjust their frames
-    for (UIView *subview in self.view.subviews) {
-            CGRect frame = subview.frame;
-            frame.origin.y += topOffset;
-            subview.frame = frame;
-    }
-}
-
+//deprecated
 - (IBAction)exitButtonTapped:(id)sender {
     [self->_mainFrameViewController simulateSettingsButtonPress];
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"SessionDisconnectedBySettingsViewNotification" object:self];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"SessionDisconnectedBySettingsMenuNotification" object:self];
 }
 
+//deprecated
 - (IBAction)backToStreamingButtonTapped:(id)sender {
     [self simulateSettingsButtonPress];
 }
@@ -340,9 +332,77 @@ BOOL isCustomResolution(CGSize res) {
     [self simulateSettingsButtonPress];
 }
 
+- (BOOL)isIPhone {
+    return [UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPhone;
+}
+
+- (CGFloat)getStandardNavBarHeight{
+    return [self isIPhone] ? UINavigationBarHeightIPhone : UINavigationBarHeightIPad;
+}
+
+- (void)layoutWidgetes {
+    
+    // [self.view addSubview:self.navigationBar];
+    
+    self.scrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentAutomatic;
+    
+    // 可选：确保 scrollView 开启垂直滚动
+    self.scrollView.alwaysBounceVertical = YES;
+    
+    parentStack = [[UIStackView alloc] init];
+    parentStack.axis = UILayoutConstraintAxisVertical;
+    parentStack.spacing = 13;
+    parentStack.translatesAutoresizingMaskIntoConstraints = NO;
+    [self.scrollView addSubview:parentStack];
+    [NSLayoutConstraint activateConstraints:@[
+        [parentStack.topAnchor constraintEqualToAnchor:self.scrollView.contentLayoutGuide.topAnchor constant: [self getStandardNavBarHeight] + 20],
+        [parentStack.bottomAnchor constraintEqualToAnchor:self.scrollView.contentLayoutGuide.bottomAnchor constant:-20],
+        [parentStack.leadingAnchor constraintEqualToAnchor:self.scrollView.contentLayoutGuide.leadingAnchor constant: 14],
+        [parentStack.trailingAnchor constraintEqualToAnchor:self.scrollView.contentLayoutGuide.trailingAnchor constant: -15],
+        [parentStack.widthAnchor constraintEqualToAnchor:self.scrollView.contentLayoutGuide.widthAnchor]
+    ]];
+    
+    [parentStack addArrangedSubview:self.resolutionStack];
+    // self.resolutionStack.hidden = YES;
+    [parentStack addArrangedSubview:self.fpsStack];
+    // self.fpsStack.hidden = YES;
+    [parentStack addArrangedSubview:self.bitrateStack];
+    // self.bitrateStack.hidden = YES;
+    [parentStack addArrangedSubview:self.touchModeStack];
+    [parentStack addArrangedSubview:self.asyncTouchStack];
+    [parentStack addArrangedSubview:self.pointerVelocityDividerStack];
+    [parentStack addArrangedSubview:self.pointerVelocityFactorStack];
+    [parentStack addArrangedSubview:self.touchMoveEventIntervalStack];
+    [parentStack addArrangedSubview:self.mousePointerVelocityStack];
+    [parentStack addArrangedSubview:self.onScreenWidgetStack];
+    [parentStack addArrangedSubview:self.keyboardToggleFingerNumStack];
+    [parentStack addArrangedSubview:self.liftStreamViewForKeyboardStack];
+    [parentStack addArrangedSubview:self.showKeyboardToolbarStack];
+    [parentStack addArrangedSubview:self.slideToSettingsScreenEdgeStack];
+    [parentStack addArrangedSubview:self.slideToCmdToolScreenEdgeStack];
+    [parentStack addArrangedSubview:self.slideToSettingsDistanceStack];
+    [parentStack addArrangedSubview:self.optimizeSettingsStack];
+    [parentStack addArrangedSubview:self.multiControllerStack];
+    [parentStack addArrangedSubview:self.swapAbaxyStack];
+    [parentStack addArrangedSubview:self.audioOnPcStack];
+    [parentStack addArrangedSubview:self.codecStack];
+    [parentStack addArrangedSubview:self.yuv444Stack];
+    [parentStack addArrangedSubview:self.HdrStack];
+    [parentStack addArrangedSubview:self.framepacingStack];
+    [parentStack addArrangedSubview:self.reverseMouseWheelDirectionStack];
+    [parentStack addArrangedSubview:self.citrixX1MouseStack];
+    [parentStack addArrangedSubview:self.statsOverlayStack];
+    [parentStack addArrangedSubview:self.unlockDisplayOrientationStack];
+    [parentStack addArrangedSubview:self.externalDisplayModeStack];
+    [parentStack addArrangedSubview:self.localMousePointerModeStack];
+}
+
+
 - (void)viewDidLoad {
     //[self pushDownExistingWidgets];
     //[self addExitButtonOnTop];
+    BOOL isIPad = ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad);
+   if(isIPad) [self layoutWidgetes]; // layout for ipad tmply
     
     self->slideToCloseSettingsViewRecognizer = [[CustomEdgeSlideGestureRecognizer alloc] initWithTarget:self action:@selector(edgeSwiped)];
     slideToCloseSettingsViewRecognizer.edges = UIRectEdgeLeft;
