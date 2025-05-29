@@ -20,9 +20,12 @@
 
 @interface HostCardView : UIView
 @property (nonatomic, assign) CGFloat sizeFactor;
+@property (nonatomic, readonly) CGSize size;
+
 
 - (void)resizeBySizeFactor:(CGFloat)factor;
 - (id) initWithHost:(TemporaryHost*)host;
+- (id) initWithHost:(TemporaryHost*)host andSizeFactor:(CGFloat)sizeFactor;
 
 @end
 

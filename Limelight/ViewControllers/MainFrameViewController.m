@@ -1133,6 +1133,7 @@ static NSMutableSet* hostList;
     [super viewDidLoad];
     //[OrientationHelper updateOrientationToLandscape];
     
+    
 #if !TARGET_OS_TV
     self.settingsExpandedInStreamView = false; // init this flag
     self.revealViewController.isStreaming = false; //init this flag for rvlVC
@@ -1223,16 +1224,14 @@ static NSMutableSet* hostList;
     [self.collectionView addGestureRecognizer:cellLongPress];
     #endif
 
-    [self retrieveSavedHosts];
-    _discMan = [[DiscoveryManager alloc] initWithHosts:[hostList allObjects] andCallback:self];
     [self updateTitle];
-    [self.view addSubview:hostScrollView];
+    // [self.view addSubview:hostScrollView];
     
     if ([hostList count] == 1) [self hostClicked:[hostList anyObject] view:nil]; // auto click for single host
     
-    
-    
+    self.view.backgroundColor = self.view.traitCollection.userInterfaceStyle == UIUserInterfaceStyleDark ? [UIColor appBackgroundColorDark] : [UIColor appBackgroundColorLight];
 
+    
     //if([SettingsViewController isLandscapeNow] != _streamConfig.width > _streamConfig.height)
     //[self simulateSettingsButtonPress]; //force expand setting view if orientation changed since last quit from app.
     //[self simulateSettingsButtonPress]; //force expand setting view if orientation changed since last quit from app.
@@ -1243,6 +1242,9 @@ static NSMutableSet* hostList;
 }
 
 -(void)viewDidLayoutSubviews{
+    [super viewDidLayoutSubviews];
+
+    [self updateHosts];
 }
 
 -(void)reloadScrollHostView{
@@ -1279,7 +1281,7 @@ static NSMutableSet* hostList;
     //[self retrieveSavedHosts];
     //_discMan = [[DiscoveryManager alloc] initWithHosts:[hostList allObjects] andCallback:self];
     [self updateTitle];
-    [self.view addSubview:hostScrollView];
+    // [self.view addSubview:hostScrollView];
 }
 
 // this will also be called back when device orientation changes
@@ -1434,7 +1436,10 @@ static NSMutableSet* hostList;
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:NO];
-    [self reloadScrollHostView];
+ 
+  
+
+    // [self reloadScrollHostView]; //remove this for proper test
     [self attachWaterMark];
     
 #if !TARGET_OS_TV
@@ -1485,7 +1490,6 @@ static NSMutableSet* hostList;
         [subview removeFromSuperview]; // 暂时移除所有子视图
     }
 
-    self.view.backgroundColor = [UIColor appBackgroundColorDark]; //theme test
     
     // We can get here on home press while streaming
     // since the stream view segues to us just before
@@ -1498,6 +1502,12 @@ static NSMutableSet* hostList;
     // this view via an error dialog from the stream
     // view, so we won't get a return to active notification
     // for that which would normally fire beginForegroundRefresh.
+    [self initHostCollection];
+    
+    [self retrieveSavedHosts];
+    
+    _discMan = [[DiscoveryManager alloc] initWithHosts:[hostList allObjects] andCallback:self];
+        
     [self beginForegroundRefresh];
 }
 
@@ -1592,11 +1602,16 @@ static NSMutableSet* hostList;
         // Sort the host list in alphabetical order
         NSArray* sortedHostList = [[hostList allObjects] sortedArrayUsingSelector:@selector(compareName:)];
         for (TemporaryHost* comp in sortedHostList) {
+            
+            [self.hostCollectionVC addHost:comp];
+            
             compView = [[UIComputerView alloc] initWithComputer:comp andCallback:self];    // host view created here
             
             // new host card test
             // if([comp.name isEqualToString: @"ASRockPC"]) {
-            if([comp.name isEqualToString: @"PianoServer"]) {
+            /*
+            if([comp.name isEqualToString: @"ASRockPC"]) {
+            //if([comp.name isEqualToString: @"PianoServer"]) {
             //if([comp.name isEqualToString: @"TrueZj"]) {
                 HostCardView *testCard = [[HostCardView alloc] initWithHost:comp];
                 
@@ -1606,8 +1621,8 @@ static NSMutableSet* hostList;
                     [testCard.centerXAnchor constraintEqualToAnchor:self.view.centerXAnchor constant:0],
                     [testCard.centerYAnchor constraintEqualToAnchor:self.view.centerYAnchor constant:150],
                 ]];
-                 
-            }
+                                 
+            }*/
             //
             
             
@@ -1815,6 +1830,41 @@ static NSMutableSet* hostList;
     }
     [context.previouslyFocusedView setAlpha:1.0];
 #endif
+}
+
+- (CGSize)getHostCardSize{
+    CGSize cardSize;
+    cardSize.height = 0.25*MIN(CGRectGetHeight([[UIScreen mainScreen] bounds]),CGRectGetWidth([[UIScreen mainScreen] bounds]));
+    TemporaryHost* dummyHost = [[TemporaryHost alloc] init];
+    HostCardView* dummyCard = [[HostCardView alloc] initWithHost:dummyHost];
+    cardSize.width = cardSize.height * (dummyCard.size.width/dummyCard.size.height);
+       // cardSize.width =
+    return cardSize;
+}
+
+- (void)initHostCollection{
+    // 初始化 HostCollectionViewController
+    self.hostCollectionVC = [[HostCollectionViewController alloc] init];
+    self.hostCollectionVC.cellSize = [self getHostCardSize];
+    self.hostCollectionVC.interItemMinimumSpacing = 25;
+    self.hostCollectionVC.minimumLineSpacing = 25;
+    // 添加为子控制器
+    [self addChildViewController:self.hostCollectionVC];
+    [self.view addSubview:self.hostCollectionVC.view];
+
+    // 设置其布局（Auto Layout 示例）
+    CGFloat hostCollectionViewPadding = 75;
+    self.hostCollectionVC.view.translatesAutoresizingMaskIntoConstraints = NO;
+    [NSLayoutConstraint activateConstraints:@[
+        [self.hostCollectionVC.view.topAnchor constraintEqualToAnchor:self.view.safeAreaLayoutGuide.topAnchor constant:50],
+        [self.hostCollectionVC.view.leadingAnchor constraintEqualToAnchor:self.view.safeAreaLayoutGuide.leadingAnchor constant:hostCollectionViewPadding],
+        [self.hostCollectionVC.view.trailingAnchor constraintEqualToAnchor:self.view.safeAreaLayoutGuide.trailingAnchor constant:-hostCollectionViewPadding],
+        // [self.hostCollectionVC.view.bottomAnchor constraintEqualToAnchor:self.view.safeAreaLayoutGuide.bottomAnchor constant:0] //?
+    ]];
+
+    // 通知子控制器已添加完成
+    [self.hostCollectionVC didMoveToParentViewController:self];
+
 }
 
 @end

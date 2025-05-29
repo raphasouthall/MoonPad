@@ -17,6 +17,8 @@
 #import "UIAppView.h"
 #import "AppAssetManager.h"
 #import "SWRevealViewController.h"
+#import "HostCollectionViewController.h"
+
 
 @interface MainFrameViewController : UICollectionViewController <DiscoveryCallback, PairCallback, HostCallback, AppCallback, AppAssetCallback, NSURLConnectionDelegate, SWRevealViewControllerDelegate>
 
@@ -24,6 +26,8 @@
 #if !TARGET_OS_TV
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *upButton;
 @property (nonatomic, assign) bool settingsExpandedInStreamView;
+@property (nonatomic, strong) HostCollectionViewController *hostCollectionVC;
+
 
 -(void)simulateSettingsButtonPress;
 -(void)reloadStreamConfig;

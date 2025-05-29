@@ -26,6 +26,8 @@
 @property (nonatomic, strong) UIView *separatorLine;
 @property (nonatomic, assign) CGFloat cardContentpadding;
 @property (nonatomic, assign) UIUserInterfaceStyle userIterfaceStyle;
+@property (nonatomic, assign) CGSize size;
+
 
 @end
 
@@ -50,14 +52,13 @@ static const float REFRESH_CYCLE = 2.0f;
 - (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
-        self.sizeFactor =  1.0; // decisive factor assign
         computerIconMonitorCenterYOffset = -3.3*_sizeFactor;
         iconAndButtonSpacing = 37*_sizeFactor;
         buttonHeight = 40*_sizeFactor;
         defaultBlue = [UIColor appPrimaryColor];
         defaultGreen = [UIColor colorWithRed:52.0/255.0 green:199.0/255.0 blue:89.0/255.0 alpha:1.0];
         self.userIterfaceStyle = self.traitCollection.userInterfaceStyle;
-        self.userIterfaceStyle = UIUserInterfaceStyleLight;
+        // self.userIterfaceStyle = UIUserInterfaceStyleLight;
         [self createBackgroundLayer];
         [self setupUI];
     }
@@ -65,6 +66,17 @@ static const float REFRESH_CYCLE = 2.0f;
 }
 
 - (id) initWithHost:(TemporaryHost*)host {
+    self.sizeFactor =  1.0;
+    self = [self init];
+    _host = host;
+    
+    // Use UIContextMenuInteraction on iOS 13.0+ and a standard UILongPressGestureRecognizer
+    // for tvOS devices and iOS prior to 13.0.
+    return self;
+}
+
+- (id) initWithHost:(TemporaryHost*)host andSizeFactor:(CGFloat)sizeFactor {
+    _sizeFactor = sizeFactor;
     self = [self init];
     _host = host;
     
@@ -268,6 +280,9 @@ static const float REFRESH_CYCLE = 2.0f;
         // Fallback on earlier versions
     }
     
+    [_rightButton addTarget:self action:@selector(buttonTapped) forControlEvents:UIControlEventTouchUpInside];
+    
+    
     [NSLayoutConstraint activateConstraints:@[
         [self.rightButton.leadingAnchor constraintEqualToAnchor:self.leftButton.trailingAnchor constant:15*_sizeFactor],
         [self.rightButton.centerYAnchor constraintEqualToAnchor:self.leftButton.centerYAnchor constant:0],
@@ -328,6 +343,8 @@ static const float REFRESH_CYCLE = 2.0f;
     _widthConstraint.constant = _cardContentpadding*2 + appButtonWidth + 15*_sizeFactor + launchButtonWidth;
     _heightConstraint.constant = _cardContentpadding*2 + _iconBackgroundView.frame.size.height + iconAndButtonSpacing + buttonHeight + 1;
     
+    _size = CGSizeMake(_widthConstraint.constant, _heightConstraint.constant);
+    // standard size: 261 * 184
     
     [self updateTheme:_userIterfaceStyle];
     // [self updateContentsForHost:_host];
@@ -336,8 +353,9 @@ static const float REFRESH_CYCLE = 2.0f;
 
 - (void)createBackgroundLayer{
     backgroundLayer = [CAGradientLayer layer];
-    UIColor *gradientColor = [UIColor colorWithRed:0.0 green:0.319 blue:0.64 alpha:1.0];
-    CGColorRef gradientColorRef = _userIterfaceStyle == UIUserInterfaceStyleDark ? gradientColor.CGColor : [gradientColor colorWithAlphaComponent:0.52].CGColor;
+    UIColor *gradientColorDark = [UIColor colorWithRed:0.0 green:0.319 blue:0.64 alpha:1.0];
+    UIColor *gradientColorLight = [gradientColorDark colorWithAlphaComponent:0.52];
+    CGColorRef gradientColorRef = _userIterfaceStyle == UIUserInterfaceStyleDark ? gradientColorDark.CGColor : gradientColorLight.CGColor;
     backgroundLayer.colors = @[
         (__bridge id)[UIColor clearColor].CGColor,
         (__bridge id)[UIColor clearColor].CGColor,
@@ -380,15 +398,16 @@ static const float REFRESH_CYCLE = 2.0f;
             self.backgroundColor = [UIColor widgetBackgroundColorLight];
             backgroundLayer.hidden = NO;
             break;
-
         default:break;
     }
+    [self updateContentsForHost:_host];
 }
 
 
 - (void)didMoveToSuperview {
     // Start our update loop when we are added to our cell
     if (self.superview != nil && _host != nil) {
+        NSLog(@"start update loop");
         [self updateLoop];
     }
 }
@@ -406,30 +425,21 @@ static const float REFRESH_CYCLE = 2.0f;
 }
 
 
+- (void) buttonTapped {
+    NSLog(@"button test");
+}
+
+
 - (void) updateLoop {
     // Stop immediately if the view has been detached
     if (self.superview == nil) {
         return;
     }
-    
+        
     [self updateContentsForHost:_host];
     
     // Queue the next refresh cycle
     [self performSelector:@selector(updateLoop) withObject:self afterDelay:REFRESH_CYCLE];
-}
-
-- (void) switchButtonsForHostState:(State)hostState{
-    switch (hostState) {
-        case StateOnline:
-            [self.leftButton setTitle:[LocalizationHelper localizedStringForKey:@"Applications"] forState:UIControlStateNormal];
-            [self.rightButton setTitle:[LocalizationHelper localizedStringForKey:@"  Launch"] forState:UIControlStateNormal];
-            
-            break;
-        case StateOffline:
-            break;
-        case StateUnknown:
-            break;
-    }
 }
 
 - (void) updateContentsForHost:(TemporaryHost*)host {

@@ -28,7 +28,9 @@
 }
 
 + (UIColor *)widgetBackgroundColorLight{
-    return [UIColor colorWithRed:242.0/255.0 green:242.0/255.0 blue:247.0/255.0 alpha:1.0];
+    // return [UIColor colorWithRed:242.0/255.0 green:242.0/255.0 blue:247.0/255.0 alpha:1.0];
+    return [UIColor whiteColor];
+
 }
 
 + (UIColor *)separatorColorDark{
@@ -60,7 +62,9 @@
 }
 
 + (UIColor *)appBackgroundColorLight {
-    return [UIColor whiteColor];
+    //return [UIColor whiteColor];
+    return [UIColor colorWithRed:242.0/255.0 green:242.0/255.0 blue:247.0/255.0 alpha:1.0];
+
 }
 
 
