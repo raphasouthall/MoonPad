@@ -32,8 +32,7 @@
 #import "LocalizationHelper.h"
 #import "CustomEdgeSlideGestureRecognizer.h"
 #import "DataManager.h"
-#import "HostCardView.h"
-#import "UIColor+Theme.h"
+#import "ThemeManager.h"
 #import "Moonlight-Swift.h" // not used yet.
 
 #if !TARGET_OS_TV
@@ -339,6 +338,133 @@ static NSMutableSet* hostList;
     [[self activeViewController] presentViewController:alert animated:YES completion:nil];
 }
 
+- (void)enterAppView{
+    [self updateTitle];
+    //_appManager = [[AppAssetManager alloc] initWithCallback:self];
+    [self.collectionView setCollectionViewLayout:self.collectionViewLayout];
+    [self.collectionView reloadData]; //for new scroll host view reloading mechanism
+    [self.view addSubview:self.collectionView]; //for new scroll host view reloading mechanism
+    [self attachWaterMark];
+    [self enableUpButton];
+    [self disableNavigation];
+    [self alreadyPaired];
+}
+
+- (void)leftButtonTappedForHost:(TemporaryHost *)host {
+    if (host.state != StateOnline) return;
+    _selectedHost = host;
+    if (host.state == StateOnline && host.pairState == PairStatePaired && host.appList.count > 0) {
+        [self enterAppView];
+    }
+    
+}
+
+- (void)rightButtonTappedForHost:(TemporaryHost *)host {
+    
+    _selectedHost = host;
+    if (host.state == StateOnline && host.pairState == PairStatePaired && host.appList.count > 0) {
+        [self enterAppView];
+        [self updateAppsForHost:_selectedHost];
+        [self prepareToStreamApp:_sortedAppList.firstObject];
+        [self performSegueWithIdentifier:@"createStreamFrame" sender:nil];
+        return;
+    }
+    
+    NSLog(@"wake testtttttt: hostName: %@, states: %d, %d", host.name, host.state, host.pairState);
+
+    
+    if (host.state == StateOffline && host.pairState == PairStatePaired) {
+        UIAlertController* wolAlert = [UIAlertController alertControllerWithTitle:[LocalizationHelper localizedStringForKey:@"Wake-On-LAN"] message:@"" preferredStyle:UIAlertControllerStyleAlert];
+        [wolAlert addAction:[UIAlertAction actionWithTitle:[LocalizationHelper localizedStringForKey:@"Ok"] style:UIAlertActionStyleDefault handler:nil]];
+        if (host.mac == nil || [host.mac isEqualToString:@"00:00:00:00:00:00"]) {
+            wolAlert.message = [LocalizationHelper localizedStringForKey: @"Host MAC unknown, unable to send WOL Packet"];
+        } else {
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                [WakeOnLanManager wakeHost:host];
+            });
+            wolAlert.message = [LocalizationHelper localizedStringForKey:@"Successfully sent wake-up request. It may take a few moments for the PC to wake. If it never wakes up, ensure it's properly configured for Wake-on-LAN."];
+        }
+        [[self activeViewController] presentViewController:wolAlert animated:YES completion:nil];
+    }
+
+    
+}
+
+- (void)pairButtonTappedForHost:(TemporaryHost *)host{
+    _selectedHost = host;
+    NSLog(@"pairButtonTappedForHost");
+    [self showLoadingFrame: ^{
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            // Wait for the PC's status to be known
+            while (host.state == StateUnknown) {
+                sleep(1);
+            }
+            
+            // Don't bother polling if the server is already offline
+            if (host.state == StateOffline) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self hideLoadingFrame:^{
+                        [self showHostSelectionView];
+                    }];
+                });
+                return;
+            }
+            
+            HttpManager* hMan = [[HttpManager alloc] initWithHost:host];
+            ServerInfoResponse* serverInfoResp = [[ServerInfoResponse alloc] init];
+            
+            // Exempt this host from discovery while handling the serverinfo request
+            [self->_discMan pauseDiscoveryForHost:host];
+            [hMan executeRequestSynchronously:[HttpRequest requestForResponse:serverInfoResp withUrlRequest:[hMan newServerInfoRequest:false]
+                                                                fallbackError:401 fallbackRequest:[hMan newHttpServerInfoRequest]]];
+            [self->_discMan resumeDiscoveryForHost:host];
+            
+            if (![serverInfoResp isStatusOk]) {
+                Log(LOG_W, @"Failed to get server info: %@", serverInfoResp.statusMessage);
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if (host != self->_selectedHost) {
+                        [self hideLoadingFrame:nil];
+                        return;
+                    }
+                    
+                    UIAlertController* applistAlert = [UIAlertController alertControllerWithTitle:[LocalizationHelper localizedStringForKey:@"Connection Failed"]
+                                                                                          message:serverInfoResp.statusMessage
+                                                                                   preferredStyle:UIAlertControllerStyleAlert];
+                    [Utils addHelpOptionToDialog:applistAlert];
+                    [applistAlert addAction:[UIAlertAction actionWithTitle:[LocalizationHelper localizedStringForKey:@"Ok"] style:UIAlertActionStyleDefault handler:nil]];
+                    
+                    // Only display an alert if this was the result of a real
+                    // user action, not just passively entering the foreground again
+                    [self hideLoadingFrame: ^{
+                        [self showHostSelectionView];
+                            [[self activeViewController] presentViewController:applistAlert animated:YES completion:nil];
+                    }];
+                    
+                    host.state = StateOffline;
+                });
+            } else {
+                // Update the host object with this data
+                [serverInfoResp populateHost:host];
+                if (host.pairState == PairStatePaired) {
+                    Log(LOG_I, @"Already Paired");
+                    [self alreadyPaired];
+                }
+                // Only pair when this was the result of explicit user action
+                    Log(LOG_I, @"Trying to pairTrying to pair");
+                    // Polling the server while pairing causes the server to screw up
+                    [self->_discMan stopDiscoveryBlocking];
+                    PairManager* pMan = [[PairManager alloc] initWithManager:hMan clientCert:self->_clientCert callback:self];
+                    [self->_opQueue addOperation:pMan];
+
+            }
+        });
+    }];
+
+    
+}
+
+
+
 - (void) hostClicked:(TemporaryHost *)host view:(UIView *)view {
     // Treat clicks on offline hosts to be long clicks
     // This shows the context menu with wake, delete, etc. rather
@@ -373,7 +499,9 @@ static NSMutableSet* hostList;
     if (host.state == StateOnline && host.pairState == PairStatePaired && host.appList.count > 0 && view != nil) {
         [self alreadyPaired];
         return;
-    }
+    } // 若已配对且在线, 该方法在此结束
+    
+    // 若未在线或未配对, 有以下:
     
     [self showLoadingFrame: ^{
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
@@ -435,7 +563,7 @@ static NSMutableSet* hostList;
                 }
                 // Only pair when this was the result of explicit user action
                 else if (view != nil) {
-                    Log(LOG_I, @"Trying to pair");
+                    Log(LOG_I, @"Trying to pairTrying to pair");
                     // Polling the server while pairing causes the server to screw up
                     [self->_discMan stopDiscoveryBlocking];
                     PairManager* pMan = [[PairManager alloc] initWithManager:hMan clientCert:self->_clientCert callback:self];
@@ -1229,8 +1357,6 @@ static NSMutableSet* hostList;
     
     if ([hostList count] == 1) [self hostClicked:[hostList anyObject] view:nil]; // auto click for single host
     
-    self.view.backgroundColor = self.view.traitCollection.userInterfaceStyle == UIUserInterfaceStyleDark ? [UIColor appBackgroundColorDark] : [UIColor appBackgroundColorLight];
-
     
     //if([SettingsViewController isLandscapeNow] != _streamConfig.width > _streamConfig.height)
     //[self simulateSettingsButtonPress]; //force expand setting view if orientation changed since last quit from app.
@@ -1502,6 +1628,9 @@ static NSMutableSet* hostList;
     // this view via an error dialog from the stream
     // view, so we won't get a return to active notification
     // for that which would normally fire beginForegroundRefresh.
+    self.view.backgroundColor = [ThemeManager appBackgroundColor];
+
+    
     [self initHostCollection];
     
     [self retrieveSavedHosts];
@@ -1602,8 +1731,7 @@ static NSMutableSet* hostList;
         // Sort the host list in alphabetical order
         NSArray* sortedHostList = [[hostList allObjects] sortedArrayUsingSelector:@selector(compareName:)];
         for (TemporaryHost* comp in sortedHostList) {
-            
-            [self.hostCollectionVC addHost:comp];
+            if(comp.state == StateOnline || comp.pairState == PairStatePaired) [self.hostCollectionVC addHost:comp];
             
             compView = [[UIComputerView alloc] initWithComputer:comp andCallback:self];    // host view created here
             
@@ -1832,13 +1960,14 @@ static NSMutableSet* hostList;
 #endif
 }
 
+
 - (CGSize)getHostCardSize{
     CGSize cardSize;
     cardSize.height = 0.25*MIN(CGRectGetHeight([[UIScreen mainScreen] bounds]),CGRectGetWidth([[UIScreen mainScreen] bounds]));
     TemporaryHost* dummyHost = [[TemporaryHost alloc] init];
     HostCardView* dummyCard = [[HostCardView alloc] initWithHost:dummyHost];
     cardSize.width = cardSize.height * (dummyCard.size.width/dummyCard.size.height);
-       // cardSize.width =
+    // cardSize.width =
     return cardSize;
 }
 
@@ -1851,7 +1980,7 @@ static NSMutableSet* hostList;
     // 添加为子控制器
     [self addChildViewController:self.hostCollectionVC];
     [self.view addSubview:self.hostCollectionVC.view];
-
+    
     // 设置其布局（Auto Layout 示例）
     CGFloat hostCollectionViewPadding = 75;
     self.hostCollectionVC.view.translatesAutoresizingMaskIntoConstraints = NO;
@@ -1861,10 +1990,11 @@ static NSMutableSet* hostList;
         [self.hostCollectionVC.view.trailingAnchor constraintEqualToAnchor:self.view.safeAreaLayoutGuide.trailingAnchor constant:-hostCollectionViewPadding],
         // [self.hostCollectionVC.view.bottomAnchor constraintEqualToAnchor:self.view.safeAreaLayoutGuide.bottomAnchor constant:0] //?
     ]];
-
+    
     // 通知子控制器已添加完成
     [self.hostCollectionVC didMoveToParentViewController:self];
-
+    
 }
+
 
 @end

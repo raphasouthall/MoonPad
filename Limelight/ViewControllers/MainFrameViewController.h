@@ -14,13 +14,14 @@
 #import "PairManager.h"
 #import "StreamConfiguration.h"
 #import "UIComputerView.h"
+#import "HostCardView.h"
 #import "UIAppView.h"
 #import "AppAssetManager.h"
 #import "SWRevealViewController.h"
 #import "HostCollectionViewController.h"
 
 
-@interface MainFrameViewController : UICollectionViewController <DiscoveryCallback, PairCallback, HostCallback, AppCallback, AppAssetCallback, NSURLConnectionDelegate, SWRevealViewControllerDelegate>
+@interface MainFrameViewController : UICollectionViewController <DiscoveryCallback, PairCallback, HostCallback, AppCallback, AppAssetCallback, NSURLConnectionDelegate, SWRevealViewControllerDelegate, HostCardButtonActionDelegate>
 
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *settingsButton;
 #if !TARGET_OS_TV

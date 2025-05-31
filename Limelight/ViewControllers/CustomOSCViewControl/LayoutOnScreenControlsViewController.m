@@ -1069,4 +1069,5 @@
     trashCanButton.tintColor = [UIColor colorWithRed:171.0/255.0 green:157.0/255.0 blue:255.0/255.0 alpha:1];
 }
 
+
 @end

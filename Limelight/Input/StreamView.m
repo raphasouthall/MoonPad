@@ -1219,6 +1219,7 @@ static const double X1_MOUSE_SPEED_DIVISOR = 2.5;
     LiSendScrollEvent(deltaZ);
 }
 
+
 #if !TARGET_OS_TV
 - (BOOL)isMultipleTouchEnabled {
     return YES;

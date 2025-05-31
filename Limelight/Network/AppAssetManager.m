@@ -46,7 +46,9 @@ static const int MAX_REQUEST_COUNT = 4;
 
 - (void) retrieveAssetsFromHost:(TemporaryHost*)host {
     for (TemporaryApp* app in host.appList) {
-        if (![[NSFileManager defaultManager] fileExistsAtPath:[AppAssetManager boxArtPathForApp:app]]) {
+        // if (![[NSFileManager defaultManager] fileExistsAtPath:[AppAssetManager boxArtPathForApp:app]]) {
+        if (true) {
+            NSLog(@"retrieve appImage");
             AppAssetRetriever* retriever = [[AppAssetRetriever alloc] init];
             retriever.app = app;
             retriever.host = host;

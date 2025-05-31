@@ -9,11 +9,13 @@
 #import "HostCollectionViewController.h"
 #import "HostCardView.h"
 #import "TemporaryHost.h"
-#import "UIColor+Theme.h"
+#import "ThemeManager.h"
 
 
 
-@implementation HostCell
+@implementation HostCell {
+    UIViewController* parentVC;
+}
 
 - (void)prepareForReuse {
     [super prepareForReuse];
@@ -27,14 +29,34 @@
     return self.contentView.bounds.size.height/dummyCard.size.height;
 }
 
+- (UIViewController *)viewController {
+    UIResponder *responder = self;
+    while (responder) {
+        if ([responder isKindOfClass:[UIViewController class]]) {
+            return (UIViewController *)responder;
+        }
+        responder = responder.nextResponder;
+    }
+    return nil;
+}
+
+- (void)assignDelegateForHostCard{
+    parentVC = [self viewController].parentViewController;
+    if(parentVC != nil){
+        if([parentVC conformsToProtocol:@protocol(HostCardButtonActionDelegate)]) self.cardView.delegate = (id<HostCardButtonActionDelegate>) parentVC;
+    }
+}
+
+- (void)didMoveToWindow {
+    [super didMoveToWindow];
+    [self assignDelegateForHostCard];
+}
 
 - (void)configureWithHost:(TemporaryHost *)host {
     if (!self.cardView) {
         self.cardView = [[HostCardView alloc] initWithHost:host andSizeFactor:[self getHostCardSizeFactor]];
-        // self.cardView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        [self assignDelegateForHostCard];
         [self.contentView addSubview:self.cardView];
-        NSLog(@"contentView width %f, %f", self.contentView.bounds.size.width, self.cardView.size.width);
-
         [NSLayoutConstraint activateConstraints:@[
             [self.cardView.leadingAnchor constraintEqualToAnchor:self.contentView.leadingAnchor],
             [self.cardView.topAnchor constraintEqualToAnchor:self.contentView.topAnchor],
@@ -75,8 +97,10 @@
         // Fallback on earlier versions
     }
     self.collectionView.alwaysBounceVertical = NO;
-    self.collectionView.backgroundColor = self.view.traitCollection.userInterfaceStyle == UIUserInterfaceStyleDark ? [UIColor appBackgroundColorDark] : [UIColor appBackgroundColorLight];
+    self.collectionView.backgroundColor = [ThemeManager appBackgroundColor];
+
 }
+
 
 #pragma mark - Data control
 
@@ -88,7 +112,6 @@
 - (void)didMoveToParentViewController:(UIViewController *)parent {
     [super didMoveToParentViewController:parent];
     NSLog(@"moved to parentVC: %@", parent);
-    
     // 可以在这里进行一些初始化，比如加载数据、刷新 UI 等
 }
 

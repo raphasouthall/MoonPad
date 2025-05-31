@@ -8,7 +8,7 @@
 
 #import "HostCardView.h"
 #import "LocalizationHelper.h"
-#import "UIColor+Theme.h"
+#import "ThemeManager.h"
 
 @interface HostCardView ()
 
@@ -25,7 +25,6 @@
 @property (nonatomic, strong) NSLayoutConstraint *heightConstraint;
 @property (nonatomic, strong) UIView *separatorLine;
 @property (nonatomic, assign) CGFloat cardContentpadding;
-@property (nonatomic, assign) UIUserInterfaceStyle userIterfaceStyle;
 @property (nonatomic, assign) CGSize size;
 
 
@@ -34,7 +33,6 @@
 
 @implementation HostCardView {
     TemporaryHost* _host;
-    id<HostCallback> _callback;
     UIActivityIndicatorView* _hostSpinner;
     UIImageView* lockIconView;
     CGFloat computerIconMonitorCenterYOffset;
@@ -55,9 +53,8 @@ static const float REFRESH_CYCLE = 2.0f;
         computerIconMonitorCenterYOffset = -3.3*_sizeFactor;
         iconAndButtonSpacing = 37*_sizeFactor;
         buttonHeight = 40*_sizeFactor;
-        defaultBlue = [UIColor appPrimaryColor];
+        defaultBlue = [ThemeManager appPrimaryColor];
         defaultGreen = [UIColor colorWithRed:52.0/255.0 green:199.0/255.0 blue:89.0/255.0 alpha:1.0];
-        self.userIterfaceStyle = self.traitCollection.userInterfaceStyle;
         // self.userIterfaceStyle = UIUserInterfaceStyleLight;
         [self createBackgroundLayer];
         [self setupUI];
@@ -86,13 +83,34 @@ static const float REFRESH_CYCLE = 2.0f;
 }
 
 
-
 - (instancetype)initWithCoder:(NSCoder *)coder {
     self = [super initWithCoder:coder];
     if (self) {
         [self setupUI];
     }
     return self;
+}
+
+- (void)leftButtonTapped{
+    NSLog(@"self.delegate: %lu", (uintptr_t)self.delegate);
+    if ([self.delegate respondsToSelector:@selector(leftButtonTappedForHost:)]) {
+        [self.delegate leftButtonTappedForHost:_host];
+    } else NSLog(@"Delegate not set or does not respond to leftButtonTappedForHost:");
+}
+
+- (void)rightButtonTapped{
+    if ([self.delegate respondsToSelector:@selector(rightButtonTappedForHost:)]) {
+        [self.delegate rightButtonTappedForHost:_host];
+    } else NSLog(@"Delegate not set or does not respond to rightButtonTappedForHost:");
+}
+
+-(void)pairButtonTapped{
+    NSLog(@"pairButtonTapped  testtestttttt");
+    
+    if ([self.delegate respondsToSelector:@selector(pairButtonTappedForHost:)]) {
+        [self.delegate pairButtonTappedForHost:_host];
+    } else NSLog(@"Delegate not set or does not respond to rightButtonTappedForHost:");
+     
 }
 
 - (void)resizeBySizeFactor:(CGFloat)factor{
@@ -102,7 +120,7 @@ static const float REFRESH_CYCLE = 2.0f;
 }
 
 - (void)setupUI {
-    self.backgroundColor = [UIColor widgetBackgroundColorDark];  // theme
+    self.backgroundColor = [ThemeManager widgetBackgroundColor];  // theme
     self.layer.cornerRadius = 16;
     self.cardContentpadding = 13 * _sizeFactor;
     self.clipsToBounds = YES;
@@ -247,8 +265,9 @@ static const float REFRESH_CYCLE = 2.0f;
     self.leftButton.translatesAutoresizingMaskIntoConstraints = NO;
     self.leftButton.frame = CGRectMake(20, 200, 150, buttonHeight);
     [self.leftButton setTitle:[LocalizationHelper localizedStringForKey:@"Applications"] forState:UIControlStateNormal];
-    [self.leftButton setTitleColor:[UIColor textColorGray] forState:UIControlStateNormal]; //theme
+    [self.leftButton setTitleColor:[ThemeManager textColorGray] forState:UIControlStateNormal]; //theme
     self.leftButton.titleLabel.font = [UIFont systemFontOfSize:16*_sizeFactor];
+    [self.leftButton addTarget:self action:@selector(leftButtonTapped) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:self.leftButton];
     [NSLayoutConstraint activateConstraints:@[
         [self.leftButton.leadingAnchor constraintEqualToAnchor:self.iconBackgroundView.leadingAnchor constant:0],
@@ -268,9 +287,8 @@ static const float REFRESH_CYCLE = 2.0f;
     [self.rightButton setTitle:[LocalizationHelper localizedStringForKey:@"  Launch"] forState:UIControlStateNormal];
     [self.rightButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal]; // theme
     self.rightButton.titleLabel.font = [UIFont boldSystemFontOfSize:16*_sizeFactor];
-
-    // self.launchButton.imageEdgeInsets = UIEdgeInsetsMake(0, -10, 0, 0);
     self.rightButton.tintColor = [UIColor whiteColor];
+    [self.rightButton addTarget:self action:@selector(rightButtonTapped) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:self.rightButton];
     if (@available(iOS 13.0, *)) {
         UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithPointSize:self.rightButton.frame.size.height/4*_sizeFactor];
@@ -280,9 +298,7 @@ static const float REFRESH_CYCLE = 2.0f;
         // Fallback on earlier versions
     }
     
-    [_rightButton addTarget:self action:@selector(buttonTapped) forControlEvents:UIControlEventTouchUpInside];
-    
-    
+
     [NSLayoutConstraint activateConstraints:@[
         [self.rightButton.leadingAnchor constraintEqualToAnchor:self.leftButton.trailingAnchor constant:15*_sizeFactor],
         [self.rightButton.centerYAnchor constraintEqualToAnchor:self.leftButton.centerYAnchor constant:0],
@@ -295,11 +311,12 @@ static const float REFRESH_CYCLE = 2.0f;
     self.pairButton = [UIButton buttonWithType:UIButtonTypeSystem];
     self.pairButton.translatesAutoresizingMaskIntoConstraints = NO;
     self.pairButton.frame = CGRectMake(0, 0, 150, 50);
-    self.pairButton.backgroundColor = [UIColor appPrimaryColorWithAlpha];
+    self.pairButton.backgroundColor = [ThemeManager appPrimaryColorWithAlpha];
     self.pairButton.layer.cornerRadius = 10;
     [self.pairButton setTitle:[LocalizationHelper localizedStringForKey:@"  Pair with PIN"] forState:UIControlStateNormal];
     [self.pairButton setTitleColor:defaultBlue forState:UIControlStateNormal]; // theme
     self.pairButton.titleLabel.font = [UIFont boldSystemFontOfSize:16*_sizeFactor];
+    [self.pairButton addTarget:self action:@selector(pairButtonTapped) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:self.pairButton];
     
     // self.launchButton.imageEdgeInsets = UIEdgeInsetsMake(0, -10, 0, 0);
@@ -311,7 +328,7 @@ static const float REFRESH_CYCLE = 2.0f;
     } else {
         // Fallback on earlier versions
     }
-    _pairButton.backgroundColor = [UIColor appPrimaryColorWithAlpha];
+    _pairButton.backgroundColor = [ThemeManager appPrimaryColorWithAlpha];
     [_pairButton setTitleColor:defaultBlue forState:UIControlStateNormal]; // theme
 
     [NSLayoutConstraint activateConstraints:@[
@@ -346,7 +363,7 @@ static const float REFRESH_CYCLE = 2.0f;
     _size = CGSizeMake(_widthConstraint.constant, _heightConstraint.constant);
     // standard size: 261 * 184
     
-    [self updateTheme:_userIterfaceStyle];
+    [self updateTheme:ThemeManager.userInterfaceStyle];
     // [self updateContentsForHost:_host];
     // [self updateTheme:UIUserInterfaceStyleLight];
 }
@@ -355,7 +372,7 @@ static const float REFRESH_CYCLE = 2.0f;
     backgroundLayer = [CAGradientLayer layer];
     UIColor *gradientColorDark = [UIColor colorWithRed:0.0 green:0.319 blue:0.64 alpha:1.0];
     UIColor *gradientColorLight = [gradientColorDark colorWithAlphaComponent:0.52];
-    CGColorRef gradientColorRef = _userIterfaceStyle == UIUserInterfaceStyleDark ? gradientColorDark.CGColor : gradientColorLight.CGColor;
+    CGColorRef gradientColorRef = ThemeManager.userInterfaceStyle == UIUserInterfaceStyleDark ? gradientColorDark.CGColor : gradientColorLight.CGColor;
     backgroundLayer.colors = @[
         (__bridge id)[UIColor clearColor].CGColor,
         (__bridge id)[UIColor clearColor].CGColor,
@@ -381,25 +398,34 @@ static const float REFRESH_CYCLE = 2.0f;
 
 
 - (void)updateTheme:(UIUserInterfaceStyle)userIterfaceStyle{
+    self.backgroundColor = [ThemeManager widgetBackgroundColor];
+    _hostNameLabel.textColor = [ThemeManager textColor];
+    [_leftButton setTitleColor:[ThemeManager appPrimaryColor] forState:UIControlStateNormal];
+    _separatorLine.backgroundColor = [ThemeManager separatorColor];
+    backgroundLayer.hidden = NO;
+
+    /*
     switch (userIterfaceStyle) {
         case UIUserInterfaceStyleDark:
-            _hostNameLabel.textColor = [UIColor textColorDark];
-            [_leftButton setTitleColor:[UIColor appPrimaryColor] forState:UIControlStateNormal];
-            _separatorLine.backgroundColor = [UIColor separatorColorDark];
+            _hostNameLabel.textColor = [ThemeManager textColorDark];
+            [_leftButton setTitleColor:[ThemeManager appPrimaryColor] forState:UIControlStateNormal];
+            _separatorLine.backgroundColor = [ThemeManager separatorColorDark];
             // [_rightButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-            self.backgroundColor = [UIColor widgetBackgroundColorDark];
+            //self.backgroundColor = [ThemeManager widgetBackgroundColorDark];
             backgroundLayer.hidden = NO;
             break;
         case UIUserInterfaceStyleLight:
-            _hostNameLabel.textColor = [UIColor textColorLight];
-            [_leftButton setTitleColor:[UIColor appPrimaryColor] forState:UIControlStateNormal];
-            _separatorLine.backgroundColor = [UIColor separatorColorLight];
+            _hostNameLabel.textColor = [ThemeManager textColorLight];
+            [_leftButton setTitleColor:[ThemeManager appPrimaryColor] forState:UIControlStateNormal];
+            _separatorLine.backgroundColor = [ThemeManager separatorColorLight];
             // [_rightButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-            self.backgroundColor = [UIColor widgetBackgroundColorLight];
+            // self.backgroundColor = [ThemeManager widgetBackgroundColorLight];
             backgroundLayer.hidden = NO;
             break;
         default:break;
+            
     }
+    */
     [self updateContentsForHost:_host];
 }
 
@@ -422,11 +448,6 @@ static const float REFRESH_CYCLE = 2.0f;
     } else {
         [self updateTheme:UIUserInterfaceStyleDark];
     }
-}
-
-
-- (void) buttonTapped {
-    NSLog(@"button test");
 }
 
 
@@ -489,7 +510,7 @@ static const float REFRESH_CYCLE = 2.0f;
                 [_rightButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal]; // theme
             }
             else {
-                _iconBackgroundView.backgroundColor = [UIColor appPrimaryColorWithAlpha];
+                _iconBackgroundView.backgroundColor = [ThemeManager appPrimaryColorWithAlpha];
                 lockIconView.hidden = NO;
                 [_leftButton setTitle:[LocalizationHelper localizedStringForKey:@"Applications"] forState:UIControlStateNormal];
                 [_rightButton setTitle:[LocalizationHelper localizedStringForKey:@"  Launch"] forState:UIControlStateNormal];
@@ -508,7 +529,7 @@ static const float REFRESH_CYCLE = 2.0f;
                 } else {
                     // Fallback on earlier versions
                 }
-                _rightButton.backgroundColor = [UIColor appPrimaryColorWithAlpha];
+                _rightButton.backgroundColor = [ThemeManager appPrimaryColorWithAlpha];
                 [_rightButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal]; // theme
             }
             
@@ -517,16 +538,16 @@ static const float REFRESH_CYCLE = 2.0f;
         case StateOffline:
             [_hostSpinner stopAnimating];
             // _iconBackgroundView.backgroundColor = _userIterfaceStyle == UIUserInterfaceStyleDark ? [UIColor appBackgroundColorDark] : [UIColor appBackgroundColorLight];
-            _iconBackgroundView.backgroundColor = _userIterfaceStyle == UIUserInterfaceStyleDark ? [UIColor appBackgroundColorDark] : [UIColor appBackgroundColorLight];
-            _statusLabel.textColor = [UIColor textColorGray];
+            _iconBackgroundView.backgroundColor = [ThemeManager appBackgroundColor];
+            _statusLabel.textColor = [ThemeManager textColorGray];
             _statusLabel.text = @"Offline";
-            _statusIcon.tintColor = [UIColor textColorGray];
+            _statusIcon.tintColor = [ThemeManager textColorGray];
             if (@available(iOS 13.0, *)) {
                 _statusIcon.image = [UIImage systemImageNamed:@"exclamationmark.triangle.fill"];
             } else {
                 // Fallback on earlier versions
             }
-            _hostIconView.tintColor = [UIColor lowProfileGray];
+            _hostIconView.tintColor = [ThemeManager lowProfileGray];
             lockIconView.hidden = YES;
             [_leftButton setTitle:[LocalizationHelper localizedStringForKey:@"Test network"] forState:UIControlStateNormal];
             [_rightButton setTitle:[LocalizationHelper localizedStringForKey:@"  Wakeup"] forState:UIControlStateNormal];
@@ -546,7 +567,7 @@ static const float REFRESH_CYCLE = 2.0f;
             } else {
                 // Fallback on earlier versions
             }
-            _rightButton.backgroundColor = [UIColor appPrimaryColorWithAlpha];
+            _rightButton.backgroundColor = [ThemeManager appPrimaryColorWithAlpha];
             [_rightButton setTitleColor:defaultBlue forState:UIControlStateNormal]; // theme
 
             break;
@@ -554,10 +575,10 @@ static const float REFRESH_CYCLE = 2.0f;
             _hostSpinner.color = [UIColor whiteColor];
             [_hostSpinner startAnimating];
             // _iconBackgroundView.backgroundColor = _userIterfaceStyle == UIUserInterfaceStyleDark ? [UIColor appBackgroundColorDark] : [UIColor appBackgroundColorLight];
-            _iconBackgroundView.backgroundColor = [UIColor appPrimaryColorWithAlpha];
-            _statusLabel.textColor = [UIColor textColorGray];
+            _iconBackgroundView.backgroundColor = [ThemeManager appPrimaryColorWithAlpha];
+            _statusLabel.textColor = [ThemeManager textColorGray];
             _statusLabel.text = @"Detecting...";
-            _statusIcon.tintColor = [UIColor textColorGray];
+            _statusIcon.tintColor = [ThemeManager textColorGray];
             if (@available(iOS 13.0, *)) {
                 _statusIcon.image = [UIImage systemImageNamed:@"antenna.radiowaves.left.and.right"];
             } else {
@@ -575,17 +596,17 @@ static const float REFRESH_CYCLE = 2.0f;
             _pairButton.hidden = YES;
 
             
-            [_leftButton setTitleColor:[UIColor textColorGray] forState:UIControlStateNormal]; // theme
+            [_leftButton setTitleColor:[ThemeManager textColorGray] forState:UIControlStateNormal]; // theme
             if (@available(iOS 13.0, *)) {
                 UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithPointSize:self.rightButton.frame.size.height/3.5*_sizeFactor weight:UIImageSymbolWeightBold];
                 UIImage *templateImage = [UIImage systemImageNamed:@"power" withConfiguration:config];
-                UIImage *coloredImage = [templateImage imageWithTintColor:[UIColor textColorGray] renderingMode:UIImageRenderingModeAlwaysOriginal];
+                UIImage *coloredImage = [templateImage imageWithTintColor:[ThemeManager textColorGray] renderingMode:UIImageRenderingModeAlwaysOriginal];
                 [self.rightButton setImage:coloredImage forState:UIControlStateNormal];
             } else {
                 // Fallback on earlier versions
             }
-            _rightButton.backgroundColor = [[UIColor textColorGray] colorWithAlphaComponent:0.2];
-            [_rightButton setTitleColor:[UIColor textColorGray] forState:UIControlStateNormal]; // theme
+            _rightButton.backgroundColor = [[ThemeManager textColorGray] colorWithAlphaComponent:0.2];
+            [_rightButton setTitleColor:[ThemeManager textColorGray] forState:UIControlStateNormal]; // theme
 
 
             break;

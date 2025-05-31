@@ -115,6 +115,7 @@ static UIImage* noImage;
 #endif
 
 - (void) updateAppImage {
+
     if (_appOverlay != nil) {
         [_appOverlay removeFromSuperview];
         _appOverlay = nil;
@@ -128,6 +129,7 @@ static UIImage* noImage;
     
     // First check the memory cache
     UIImage* appImage = [_artCache objectForKey:_app];
+    // NSLog(@"appImage instance: %lu", (uintptr_t)appImage);
     if (appImage == nil) {
         // Next try to load from the on disk cache
         appImage = [UIImage imageWithContentsOfFile:[AppAssetManager boxArtPathForApp:_app]];
@@ -135,12 +137,17 @@ static UIImage* noImage;
             [_artCache setObject:appImage forKey:_app];
         }
     }
-    
+    // [_artCache setObject:appImage forKey:_app];
+
     if (appImage != nil) {
         // This size of image might be blank image received from GameStream.
+        
+        //AppImage TESTTTTTTTT
         // TODO: Improve no-app image detection
         if (!(appImage.size.width == 130.f && appImage.size.height == 180.f) && // GFE 2.0
-            !(appImage.size.width == 628.f && appImage.size.height == 888.f)) { // GFE 3.0
+            !(appImage.size.width == 628.f && appImage.size.height == 888.f)){
+        
+        // if(true){ // GFE 3.0
             [_appImage setImage:appImage];
         } else {
             noAppImage = true;
@@ -159,7 +166,7 @@ static UIImage* noImage;
         _appOverlay.contentMode = UIViewContentModeScaleAspectFit;
     }
     
-    if (noAppImage) {
+    if (true) {
         _appLabel = [[UILabel alloc] init];
         [_appLabel setTextColor:[UIColor whiteColor]];
         [_appLabel setText:_app.name];
