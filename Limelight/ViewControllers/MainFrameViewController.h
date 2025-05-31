@@ -21,13 +21,14 @@
 #import "HostCollectionViewController.h"
 
 
-@interface MainFrameViewController : UICollectionViewController <DiscoveryCallback, PairCallback, HostCallback, AppCallback, AppAssetCallback, NSURLConnectionDelegate, SWRevealViewControllerDelegate, HostCardButtonActionDelegate>
+@interface MainFrameViewController : UICollectionViewController <DiscoveryCallback, PairCallback, HostCallback, AppCallback, AppAssetCallback, NSURLConnectionDelegate, SWRevealViewControllerDelegate, HostCardActionDelegate>
 
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *settingsButton;
 #if !TARGET_OS_TV
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *upButton;
 @property (nonatomic, assign) bool settingsExpandedInStreamView;
 @property (nonatomic, strong) HostCollectionViewController *hostCollectionVC;
+@property (weak, nonatomic) IBOutlet UINavigationItem *navigationItem;
 
 
 -(void)simulateSettingsButtonPress;

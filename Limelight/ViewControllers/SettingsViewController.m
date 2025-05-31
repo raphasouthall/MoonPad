@@ -446,7 +446,7 @@ BOOL isCustomResolution(CGSize res) {
 }
 
 - (void)viewDidLoad {
-
+    // return;
     BOOL isIPad = ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad);
     if(isIPad) [self layoutWidgetes]; // layout for ipad tmply
     

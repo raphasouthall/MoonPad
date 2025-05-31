@@ -10,18 +10,19 @@
 #import <UIKit/UIKit.h>
 #import "TemporaryHost.h"
 
-
-@protocol HostCardButtonActionDelegate <NSObject>
-- (void)leftButtonTappedForHost:(TemporaryHost *)host;
-- (void)rightButtonTappedForHost:(TemporaryHost *)host;
+@protocol HostCardActionDelegate <NSObject>
+- (void)appButtonTappedForHost:(TemporaryHost *)host;
+- (void)launchButtonTappedForHost:(TemporaryHost *)host;
+- (void)wakeupButtonTappedForHost:(TemporaryHost *)host;
 - (void)pairButtonTappedForHost:(TemporaryHost *)host;
+- (void)hostCardLongPressed:(TemporaryHost *)host view:(UIView *)view;
 @end
 
 
-@interface HostCardView : UIView
+@interface HostCardView : UIView <UIContextMenuInteractionDelegate>
 @property (nonatomic, assign) CGFloat sizeFactor;
 @property (nonatomic, readonly) CGSize size;
-@property (nonatomic, weak) id<HostCardButtonActionDelegate> delegate; // Delegate property
+@property (nonatomic, weak) id<HostCardActionDelegate> delegate; // Delegate property
 
 - (void)resizeBySizeFactor:(CGFloat)factor;
 - (id) initWithHost:(TemporaryHost*)host;

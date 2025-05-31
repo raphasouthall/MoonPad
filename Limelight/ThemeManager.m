@@ -10,123 +10,88 @@
 
 @implementation ThemeManager
 
-static UIUserInterfaceStyle _userInterfaceStyle = UIUserInterfaceStyleLight;
+static UIUserInterfaceStyle _privateUserInterfaceStyle = UIUserInterfaceStyleUnspecified;
+static UIUserInterfaceStyle _userInterfaceStyle;
+
++ (UIColor *)getUIStyle{
+    if (@available(iOS 13.0, *)) {
+        UITraitCollection *traitCollection = [UIScreen mainScreen].traitCollection;
+            if(_privateUserInterfaceStyle == UIUserInterfaceStyleUnspecified) {
+                _userInterfaceStyle = traitCollection.userInterfaceStyle;
+            }
+            else _userInterfaceStyle = _privateUserInterfaceStyle;
+            return [UIColor clearColor];
+    } else {
+        return [UIColor clearColor];
+    }
+}
+
+
 
 + (UIUserInterfaceStyle)userInterfaceStyle {
+    [ThemeManager getUIStyle];
     return _userInterfaceStyle;
 }
 
 + (void)setUserInterfaceStyle:(UIUserInterfaceStyle)style {
-    _userInterfaceStyle = style;
+    _privateUserInterfaceStyle = style;
+    [ThemeManager getUIStyle];
 }
 
 + (UIColor *)appBackgroundColor {
-    if (@available(iOS 13.0, *)) {
-        return [UIColor colorWithDynamicProvider:^UIColor *(UITraitCollection *traitCollection) {
-            UIUserInterfaceStyle style = self.userInterfaceStyle;
-            if (style == UIUserInterfaceStyleUnspecified) {
-                // 跟随系统
-                style = traitCollection.userInterfaceStyle;
-            }
-            switch (style) {
-                case UIUserInterfaceStyleLight:
-                    return [UIColor colorWithRed:242.0/255.0 green:242.0/255.0 blue:247.0/255.0 alpha:1.0];
-                case UIUserInterfaceStyleDark:
-                default:
-                    return [UIColor colorWithRed:28.0/255.0 green:28.0/255.0 blue:30.0/255.0 alpha:1.0];
-            }
-        }];
-    } else {
-        switch (self.userInterfaceStyle) {
-            case UIUserInterfaceStyleLight:
-                return [UIColor colorWithRed:242.0/255.0 green:242.0/255.0 blue:247.0/255.0 alpha:1.0];
-            case UIUserInterfaceStyleDark:
-            default:
-                return [UIColor colorWithRed:28.0/255.0 green:28.0/255.0 blue:30.0/255.0 alpha:1.0];
-        }
+    [ThemeManager getUIStyle];
+    switch (self.userInterfaceStyle) {
+        case UIUserInterfaceStyleLight:
+            return [UIColor colorWithRed:242.0/255.0 green:242.0/255.0 blue:247.0/255.0 alpha:1.0];
+            break;
+        case UIUserInterfaceStyleDark:
+        default:
+            return [UIColor colorWithRed:28.0/255.0 green:28.0/255.0 blue:30.0/255.0 alpha:1.0];
+            break;
     }
 }
 
-
 + (UIColor *)widgetBackgroundColor {
-    if (@available(iOS 13.0, *)) {
-        return [UIColor colorWithDynamicProvider:^UIColor *(UITraitCollection *traitCollection) {
-            UIUserInterfaceStyle style = self.userInterfaceStyle;
-            if (style == UIUserInterfaceStyleUnspecified) {
-                // 跟随系统
-                style = traitCollection.userInterfaceStyle;
-            }
-            switch (style) {
-                case UIUserInterfaceStyleLight:
-                    return [UIColor whiteColor];
-                case UIUserInterfaceStyleDark:
-                default:
-                    return [UIColor colorWithRed:44.0/255.0 green:44.0/255.0 blue:46.0/255.0 alpha:1.0];
-            }
-        }];
-    } else {
-        switch (self.userInterfaceStyle) {
-            case UIUserInterfaceStyleLight:
-                return [UIColor whiteColor];
-            case UIUserInterfaceStyleDark:
-            default:
-                return [UIColor colorWithRed:44.0/255.0 green:44.0/255.0 blue:46.0/255.0 alpha:1.0];
-        }
+    [ThemeManager getUIStyle];
+    switch (self.userInterfaceStyle) {
+        case UIUserInterfaceStyleLight:
+            return [UIColor whiteColor];
+            break;
+        case UIUserInterfaceStyleDark:
+        default:
+            return [UIColor colorWithRed:44.0/255.0 green:44.0/255.0 blue:46.0/255.0 alpha:1.0];
+            break;
     }
 }
 
 + (UIColor *)separatorColor {
-    if (@available(iOS 13.0, *)) {
-        return [UIColor colorWithDynamicProvider:^UIColor *(UITraitCollection *traitCollection) {
-            UIUserInterfaceStyle style = self.userInterfaceStyle;
-            if (style == UIUserInterfaceStyleUnspecified) {
-                // 跟随系统
-                style = traitCollection.userInterfaceStyle;
-            }
-            switch (style) {
-                case UIUserInterfaceStyleLight:
-                    return [UIColor colorWithWhite:0.1 alpha:0.28];
-                case UIUserInterfaceStyleDark:
-                default:
-                    return [UIColor colorWithWhite:0.28 alpha:1.0];
-            }
-        }];
-    } else {
+    [ThemeManager getUIStyle];
         switch (self.userInterfaceStyle) {
             case UIUserInterfaceStyleLight:
+                NSLog(@"themeLightSP");
                 return [UIColor colorWithWhite:0.1 alpha:0.28];
+                break;
             case UIUserInterfaceStyleDark:
             default:
+                NSLog(@"themeDarkSP");
                 return [UIColor colorWithWhite:0.28 alpha:1.0];
+                break;
         }
     }
-}
 
 
 + (UIColor *)textColor {
-    if (@available(iOS 13.0, *)) {
-        return [UIColor colorWithDynamicProvider:^UIColor *(UITraitCollection *traitCollection) {
-            UIUserInterfaceStyle style = self.userInterfaceStyle;
-            if (style == UIUserInterfaceStyleUnspecified) {
-                // 跟随系统
-                style = traitCollection.userInterfaceStyle;
-            }
-            switch (style) {
-                case UIUserInterfaceStyleLight:
-                    return [UIColor blackColor];
-                case UIUserInterfaceStyleDark:
-                default:
-                    return [UIColor whiteColor];
-            }
-        }];
-    } else {
+    [ThemeManager getUIStyle];
         switch (self.userInterfaceStyle) {
-            case UIUserInterfaceStyleLight:
-                return [UIColor blackColor];
-            case UIUserInterfaceStyleDark:
-            default:
-                return [UIColor whiteColor];
-        }
+        case UIUserInterfaceStyleLight:
+                NSLog(@"themeLightTX");
+            return [UIColor blackColor];
+            break;
+        case UIUserInterfaceStyleDark:
+        default:
+                NSLog(@"themeDarkTX");
+            return [UIColor whiteColor];
+            break;
     }
 }
 

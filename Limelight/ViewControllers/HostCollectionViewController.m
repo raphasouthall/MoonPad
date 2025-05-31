@@ -11,7 +11,7 @@
 #import "TemporaryHost.h"
 #import "ThemeManager.h"
 
-
+static const CGFloat cellOffsetY = 20;
 
 @implementation HostCell {
     UIViewController* parentVC;
@@ -43,7 +43,7 @@
 - (void)assignDelegateForHostCard{
     parentVC = [self viewController].parentViewController;
     if(parentVC != nil){
-        if([parentVC conformsToProtocol:@protocol(HostCardButtonActionDelegate)]) self.cardView.delegate = (id<HostCardButtonActionDelegate>) parentVC;
+        if([parentVC conformsToProtocol:@protocol(HostCardActionDelegate)]) self.cardView.delegate = (id<HostCardActionDelegate>) parentVC;
     }
 }
 
@@ -59,7 +59,7 @@
         [self.contentView addSubview:self.cardView];
         [NSLayoutConstraint activateConstraints:@[
             [self.cardView.leadingAnchor constraintEqualToAnchor:self.contentView.leadingAnchor],
-            [self.cardView.topAnchor constraintEqualToAnchor:self.contentView.topAnchor],
+            [self.cardView.topAnchor constraintEqualToAnchor:self.contentView.topAnchor constant:0],
         ]];
     }
 }
@@ -71,11 +71,13 @@
 @property (nonatomic, strong) NSLayoutConstraint *collectionViewHeightConstraint;
 @end
 
-@implementation HostCollectionViewController
+@implementation HostCollectionViewController{
+    UICollectionViewFlowLayout *layout;
+}
 
 - (instancetype)init {
-    UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
-    layout.sectionInset = UIEdgeInsetsMake(0, 0, 0, 13); // 上、左、下、右的间距
+    layout = [[UICollectionViewFlowLayout alloc] init];
+    layout.sectionInset = UIEdgeInsetsMake(7, 0, 0, 0); // 上、左、下、右的间距
     if (self = [super initWithCollectionViewLayout:layout]) {
         _interItemMinimumSpacing = 10;
         _minimumLineSpacing = 10;
@@ -97,6 +99,7 @@
         // Fallback on earlier versions
     }
     self.collectionView.alwaysBounceVertical = NO;
+    self.collectionView.showsVerticalScrollIndicator = NO;
     self.collectionView.backgroundColor = [ThemeManager appBackgroundColor];
 
 }
@@ -121,13 +124,19 @@
         [self.items addObject:host];
         [self.items addObject:host];
         [self.items addObject:host];
-
         [self.collectionView reloadData];
         // [self.view layoutIfNeeded];
     }
     NSLog(@"addhost log");
-
 }
+
+- (void)removeHost:(TemporaryHost *)host {
+    if([self.items containsObject:host]){
+        [self.items removeObject:host];
+        [self.collectionView reloadData];
+    }
+}
+
 
 - (void)removeLastItem {
     if (self.items.count > 0) {
@@ -136,9 +145,27 @@
     }
 }
 
+- (NSInteger)numberOfRowsInCollectionView{
+    NSInteger itemCount = [self.collectionView numberOfItemsInSection:0];
+    
+    if (itemCount == 0) return 0;
+    
+    NSMutableSet<NSNumber *> *rowYs = [NSMutableSet set];
+    for (NSInteger i = 0; i < itemCount; i++) {
+        NSIndexPath *indexPath = [NSIndexPath indexPathForItem:i inSection:0];
+        UICollectionViewLayoutAttributes *attr = [layout layoutAttributesForItemAtIndexPath:indexPath];
+        if (attr) {
+            CGFloat y = CGRectGetMinY(attr.frame);
+            [rowYs addObject:@(round(y))]; // round 防止浮点误差
+        }
+    }
+    
+    return rowYs.count;
+}
+
 - (void)viewDidLayoutSubviews {
     [super viewDidLayoutSubviews];
-    
+
     CGFloat contentHeight = self.collectionView.collectionViewLayout.collectionViewContentSize.height;
     bool contentExceedsView = contentHeight > self.view.superview.bounds.size.height - self.view.frame.origin.y;
     if(contentExceedsView){
@@ -146,7 +173,13 @@
             [self.view.bottomAnchor constraintEqualToAnchor:self.view.superview.safeAreaLayoutGuide.bottomAnchor constant:0]
         ]];
     }
-    else _collectionViewHeightConstraint.constant = contentHeight;
+    else{
+        _collectionViewHeightConstraint.constant = contentHeight;
+    }
+    
+    if([self numberOfRowsInCollectionView]<=2 && !contentExceedsView) layout.sectionInset = UIEdgeInsetsMake(50, 0, 0, 0);
+    if([self numberOfRowsInCollectionView]>2 && !contentExceedsView) layout.sectionInset = UIEdgeInsetsMake(25, 0, 0, 0);
+    if(contentExceedsView) layout.sectionInset = UIEdgeInsetsMake(7, 0, 0, 0);
 }
 
 #pragma mark - UICollectionView DataSource

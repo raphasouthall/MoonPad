@@ -216,7 +216,7 @@ static const int LABEL_DY = 20;
 
 - (void) hostLongClicked:(UILongPressGestureRecognizer*)gesture {
     if (gesture.state == UIGestureRecognizerStateBegan) {
-        [_callback hostLongClicked:_host view:self];
+        [_callback hostCardLongPressed:_host view:self];
     }
 }
 
@@ -228,7 +228,7 @@ static const int LABEL_DY = 20;
     // effect of removing the touch highlight on this view.
     [self cancelTrackingWithEvent:nil];
     
-    [_callback hostLongClicked:_host view:self];
+    [_callback hostCardLongPressed:_host view:self];
     return nil;
 }
 #endif
@@ -238,7 +238,7 @@ static const int LABEL_DY = 20;
 }
 
 - (void) addClicked {
-    [_callback addHostClicked];
+    [_callback addHostTapped];
 }
 
 @end
