@@ -234,7 +234,7 @@ static const int LABEL_DY = 20;
 #endif
 
 - (void) hostClicked {
-    [_callback hostClicked:_host view:self];
+    [_callback noneUserInitiatedHostAction:_host view:self];
 }
 
 - (void) addClicked {

@@ -62,7 +62,6 @@
     StreamConfiguration* _streamConfig;
     UIAlertController* _pairAlert;
     LoadingFrameViewController* _loadingFrame;
-    UIScrollView* hostScrollView;
     FrontViewPosition currentPosition;
     NSArray* _sortedAppList;
     NSCache* _boxArtCache;
@@ -84,7 +83,7 @@ static NSMutableSet* hostList;
             self->_pairAlert = nil;
             [self->_discMan startDiscovery];
             [self hideLoadingFrame: ^{
-                [self showHostSelectionView];
+                [self switchToHostView];
             }];
         }]];
         [[self activeViewController] presentViewController:self->_pairAlert animated:YES completion:nil];
@@ -101,7 +100,7 @@ static NSMutableSet* hostList;
     [_discMan startDiscovery];
     
     [self hideLoadingFrame: ^{
-        [self showHostSelectionView];
+        [self switchToHostView];
         [[self activeViewController] presentViewController:failedDialog animated:YES completion:nil];
     }];
 }
@@ -130,34 +129,17 @@ static NSMutableSet* hostList;
     });
 }
 
-- (void)switchUIToHostView {
-#if !TARGET_OS_TV
-    self.navigationItem.rightBarButtonItems = @[helpButton, addHostButton];
-    [self->_upButton setTitle:nil];
-    self.revealViewController.mainFrameIsInHostView = true;  // to allow orientation change only in app view, tell top view controller the mainframe is not in host view
-    // [self setNeedsUpdateAllowedOrientation];
-#endif
-}
-
-- (void)switchUIToAppView {
-#if !TARGET_OS_TV
-    [self->_upButton setTitle: [LocalizationHelper localizedStringForKey: @"Select New Host"]];
-    self.navigationItem.rightBarButtonItems = @[_upButton];
-    self.revealViewController.mainFrameIsInHostView = false; // to allow orientation change only in app view, tell top view controller the mainframe is not in host view
-    // [self setNeedsUpdateAllowedOrientation];
-#endif
-}
-
 - (void)updateTitle {
 
+    self.navigationController.navigationBar.titleTextAttributes = @{
+        NSFontAttributeName: [UIFont systemFontOfSize:20 weight:UIFontWeightMedium],
+        NSForegroundColorAttributeName: [ThemeManager textColor] // 可选，设置标题颜色
+    };
+
     if (_selectedHost != nil) {
-        // self.title = _selectedHost.name;
+        self.title = _selectedHost.name;
     }
     else if ([hostList count] == 0) {
-        self.navigationController.navigationBar.titleTextAttributes = @{
-            NSFontAttributeName: [UIFont systemFontOfSize:20 weight:UIFontWeightMedium],
-            NSForegroundColorAttributeName: [ThemeManager textColor] // 可选，设置标题颜色
-        };
 
         self.title = [LocalizationHelper localizedStringForKey: @"Searching for PCs on your network..."] ;
     }
@@ -217,7 +199,7 @@ static NSMutableSet* hostList;
                 [Utils addHelpOptionToDialog:applistAlert];
                 [applistAlert addAction:[UIAlertAction actionWithTitle:[LocalizationHelper localizedStringForKey:@"Ok"] style:UIAlertActionStyleDefault handler:nil]];
                 [self hideLoadingFrame: ^{
-                    [self showHostSelectionView];
+                    [self switchToHostView];
                     [[self activeViewController] presentViewController:applistAlert animated:YES completion:nil];
                 }];
                 host.state = StateOffline;
@@ -318,7 +300,7 @@ static NSMutableSet* hostList;
     [self updateHostShortcuts];
 }
 
-- (void)showHostSelectionView {
+- (void)switchToHostView {
 #if TARGET_OS_TV
     // Remove the menu button intercept to allow the app to exit
     // when at the host selection view.
@@ -329,11 +311,11 @@ static NSMutableSet* hostList;
     _selectedHost = nil;
     _sortedAppList = nil;
     
-    [self updateTitle];
-    [self switchUIToHostView];
     [self.collectionView removeFromSuperview]; // necessary for new scroll host view reloading mechanism
-
-    [self reloadScrollHostView]; // host view must be reloaded here
+    [self updateTitle];
+    self.navigationItem.rightBarButtonItems = @[helpButton, addHostButton];
+    [self->_upButton setTitle:nil];
+    self.revealViewController.mainFrameIsInHostView = true;  // to allow orientation change only in app view, tell top view controller the mainframe is not in host view
 }
 
 - (void) receivedAssetForApp:(TemporaryApp*)app {
@@ -355,15 +337,17 @@ static NSMutableSet* hostList;
     [[self activeViewController] presentViewController:alert animated:YES completion:nil];
 }
 
-- (void)enterAppView{
-    [self updateTitle];
+- (void)switchToAppView{
     //_appManager = [[AppAssetManager alloc] initWithCallback:self];
     [self.collectionView setCollectionViewLayout:self.collectionViewLayout];
     [self.collectionView reloadData]; //for new scroll host view reloading mechanism
     [self.view addSubview:self.collectionView]; //for new scroll host view reloading mechanism
     [self attachWaterMark];
-    [self switchUIToAppView];
-    [self disableNavigation];
+    [self->_upButton setTitle: [LocalizationHelper localizedStringForKey: @"Select New Host"]];
+    self.navigationItem.rightBarButtonItems = @[_upButton];
+    self.revealViewController.mainFrameIsInHostView = false;
+    // [self disableNavigation];
+    [self updateTitle];
     [self alreadyPaired];
 }
 
@@ -371,7 +355,7 @@ static NSMutableSet* hostList;
     if (host.state != StateOnline) return;
     _selectedHost = host;
     if (host.state == StateOnline && host.pairState == PairStatePaired && host.appList.count > 0) {
-        [self enterAppView];
+        [self switchToAppView];
     }
     
 }
@@ -379,7 +363,7 @@ static NSMutableSet* hostList;
 - (void)launchButtonTappedForHost:(TemporaryHost *)host {
     _selectedHost = host;
     if (host.state == StateOnline && host.pairState == PairStatePaired && host.appList.count > 0) {
-        [self enterAppView];
+        [self switchToAppView];
         [self updateAppsForHost:_selectedHost];
         [self prepareToStreamApp:_sortedAppList.firstObject];
         [self performSegueWithIdentifier:@"createStreamFrame" sender:nil];
@@ -389,7 +373,6 @@ static NSMutableSet* hostList;
 
 - (void)wakeupButtonTappedForHost:(TemporaryHost *)host{
     _selectedHost = host;
-    NSLog(@"wake testtttttt: hostName: %@, states: %d, %d", host.name, host.state, host.pairState);
     if (host.state == StateOffline && host.pairState == PairStatePaired) {
         UIAlertController* wolAlert = [UIAlertController alertControllerWithTitle:[LocalizationHelper localizedStringForKey:@"Wake-On-LAN"] message:@"" preferredStyle:UIAlertControllerStyleAlert];
         [wolAlert addAction:[UIAlertAction actionWithTitle:[LocalizationHelper localizedStringForKey:@"Ok"] style:UIAlertActionStyleDefault handler:nil]];
@@ -419,7 +402,7 @@ static NSMutableSet* hostList;
             if (host.state == StateOffline) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     [self hideLoadingFrame:^{
-                        [self showHostSelectionView];
+                        [self switchToHostView];
                     }];
                 });
                 return;
@@ -451,7 +434,7 @@ static NSMutableSet* hostList;
                     // Only display an alert if this was the result of a real
                     // user action, not just passively entering the foreground again
                     [self hideLoadingFrame: ^{
-                        [self showHostSelectionView];
+                        [self switchToHostView];
                             [[self activeViewController] presentViewController:applistAlert animated:YES completion:nil];
                     }];
                     
@@ -460,10 +443,6 @@ static NSMutableSet* hostList;
             } else {
                 // Update the host object with this data
                 [serverInfoResp populateHost:host];
-                if (host.pairState == PairStatePaired) {
-                    Log(LOG_I, @"Already Paired");
-                    [self alreadyPaired];
-                }
                 // Only pair when this was the result of explicit user action
                     Log(LOG_I, @"Trying to pairTrying to pair");
                     // Polling the server while pairing causes the server to screw up
@@ -476,41 +455,19 @@ static NSMutableSet* hostList;
     }];
 }
 
-- (void) hostClicked:(TemporaryHost *)host view:(UIView *)view {
-    // Treat clicks on offline hosts to be long clicks
-    // This shows the context menu with wake, delete, etc. rather
-    // than just hanging for a while and failing as we would in this
-    // code path.
-    if (host.state != StateOnline && view != nil) {
-        [self hostCardLongPressed:host view:view];
-        return;
-    }
-    
+
+- (void) noneUserInitiatedHostAction:(TemporaryHost *)host view:(UIView *)view {
     Log(LOG_D, @"Clicked host: %@", host.name);
     _selectedHost = host;
-    [self updateTitle];
     //_appManager = [[AppAssetManager alloc] initWithCallback:self];
     [self.collectionView setCollectionViewLayout:self.collectionViewLayout];
     [self.collectionView reloadData]; //for new scroll host view reloading mechanism
     [self.view addSubview:self.collectionView]; //for new scroll host view reloading mechanism
-    [self attachWaterMark];
-    [self switchUIToAppView];
-    [self disableNavigation];
     
 #if TARGET_OS_TV
     // Intercept the menu key to go back to the host page
     [self.navigationController.view addGestureRecognizer:_menuRecognizer];
 #endif
-    
-    // If we are online, paired, and have a cached app list, skip straight
-    // to the app grid without a loading frame. This is the fast path that users
-    // should hit most. Check for a valid view because we don't want to hit the fast
-    // path after coming back from streaming, since we need to fetch serverinfo too
-    // so that our active game data is correct.
-    if (host.state == StateOnline && host.pairState == PairStatePaired && host.appList.count > 0 && view != nil) {
-        [self alreadyPaired];
-        return;
-    } // 若已配对且在线, 该方法在此结束
     
     // 若未在线或未配对, 有以下:
     
@@ -525,7 +482,7 @@ static NSMutableSet* hostList;
             if (host.state == StateOffline) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     [self hideLoadingFrame:^{
-                        [self showHostSelectionView];
+                        [self switchToHostView];
                     }];
                 });
                 return;
@@ -557,12 +514,8 @@ static NSMutableSet* hostList;
                     // Only display an alert if this was the result of a real
                     // user action, not just passively entering the foreground again
                     [self hideLoadingFrame: ^{
-                        [self showHostSelectionView];
-                        if (view != nil) {
-                            [[self activeViewController] presentViewController:applistAlert animated:YES completion:nil];
-                        }
+                        [self switchToHostView];
                     }];
-                    
                     host.state = StateOffline;
                 });
             } else {
@@ -572,19 +525,11 @@ static NSMutableSet* hostList;
                     Log(LOG_I, @"Already Paired");
                     [self alreadyPaired];
                 }
-                // Only pair when this was the result of explicit user action
-                else if (view != nil) {
-                    Log(LOG_I, @"Trying to pairTrying to pair");
-                    // Polling the server while pairing causes the server to screw up
-                    [self->_discMan stopDiscoveryBlocking];
-                    PairManager* pMan = [[PairManager alloc] initWithManager:hMan clientCert:self->_clientCert callback:self];
-                    [self->_opQueue addOperation:pMan];
-                }
-                else {
+                else if (view == nil) {
                     // Not user action, so just return to host screen
                     dispatch_async(dispatch_get_main_queue(), ^{
                         [self hideLoadingFrame:^{
-                            [self showHostSelectionView];
+                            [self switchToHostView];
                         }];
                     });
                 }
@@ -593,6 +538,7 @@ static NSMutableSet* hostList;
     }];
 }
 
+ 
 - (UIViewController*) activeViewController {
     UIViewController *topController = [UIApplication sharedApplication].keyWindow.rootViewController;
     
@@ -1116,8 +1062,6 @@ static NSMutableSet* hostList;
     dispatch_after(delayTime, dispatch_get_main_queue(), ^{// Code to execute after the delay
         // [self updateResolutionAccordingly];
         [self.settingsButton setEnabled:![self isIPhonePortrait]]; //make sure settings button is disabled in iphone portrait mode.
-        if([self->_upButton title] == nil) [self reloadScrollHostView]; // title of the _upButton is a good flag for judging if we're on the Host selection view
-        //self->recordedScreenWidth = screenWidthInPoints; // kind of obselete, but i keep this in the code.
     });
 }
 
@@ -1226,7 +1170,6 @@ static NSMutableSet* hostList;
     [super viewSafeAreaInsetsDidChange];
     
     [self adjustScrollViewForSafeArea:self.collectionView];
-    [self adjustScrollViewForSafeArea:self->hostScrollView];
 }
 
 - (void)waterMarkTapped {
@@ -1437,9 +1380,7 @@ static NSMutableSet* hostList;
     
     // Set the host name button action. When it's tapped, it'll show the host selection view.
     [_upButton setTarget:self];
-    [_upButton setAction:@selector(showHostSelectionView)];
-    [self switchUIToHostView];
-
+    [_upButton setAction:@selector(switchToHostView)];
 }
 
 - (void)viewDidLoad{
@@ -1474,7 +1415,7 @@ static NSMutableSet* hostList;
     self.collectionView.remembersLastFocusedIndexPath = YES;
     
     _menuRecognizer = [[UITapGestureRecognizer alloc] init];
-    [_menuRecognizer addTarget:self action: @selector(showHostSelectionView)];
+    [_menuRecognizer addTarget:self action: @selector(switchToHostView)];
     _menuRecognizer.allowedPressTypes = [[NSArray alloc] initWithObjects:[NSNumber numberWithLong:UIPressTypeMenu], nil];
     
     self.navigationController.navigationBar.titleTextAttributes = [NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:NSForegroundColorAttributeName];
@@ -1501,7 +1442,6 @@ static NSMutableSet* hostList;
     _boxArtCache = [[NSCache alloc] init];
     
     //recordedScreenWidth = CGRectGetWidth([[UIScreen mainScreen] bounds]);
-    hostScrollView = [[ComputerScrollView alloc] init];
     CGFloat screenWidthInPoints = CGRectGetWidth([[UIScreen mainScreen] bounds]);
     CGFloat screenHeightInPoints = CGRectGetHeight([[UIScreen mainScreen] bounds]);
 
@@ -1515,10 +1455,6 @@ static NSMutableSet* hostList;
         realViewFrameHeight = tmpLength;
     }
 
-    // implementations for initializing hostScrollView from original moonlight-iOS
-    hostScrollView.frame = CGRectMake(0, self.navigationController.navigationBar.frame.origin.y + self.navigationController.navigationBar.frame.size.height, realViewFrameWidth, realViewFrameHeight / 2);
-    [hostScrollView setShowsHorizontalScrollIndicator:NO];
-    hostScrollView.delaysContentTouches = NO;
 
     self.collectionView.delaysContentTouches = NO;
     self.collectionView.allowsMultipleSelection = NO;
@@ -1534,7 +1470,7 @@ static NSMutableSet* hostList;
     [self updateTitle];
     // [self.view addSubview:hostScrollView];
     
-    if ([hostList count] == 1) [self hostClicked:[hostList anyObject] view:nil]; // auto click for single host
+    // if ([hostList count] == 1) [self hostClicked:[hostList anyObject] view:nil]; // auto click for single host
     
     
     //if([SettingsViewController isLandscapeNow] != _streamConfig.width > _streamConfig.height)
@@ -1550,43 +1486,6 @@ static NSMutableSet* hostList;
     [super viewDidLayoutSubviews];
     
     [self updateHosts];
-}
-
--(void)reloadScrollHostView{
-    [hostScrollView removeFromSuperview]; // mandatory for scroll view refresh after orientation change and clicking "select new host"
-    CGFloat screenWidthInPoints = CGRectGetWidth([[UIScreen mainScreen] bounds]);
-    CGFloat screenHeightInPoints = CGRectGetHeight([[UIScreen mainScreen] bounds]);
-
-    // deal with scroll host view reload after device orientation change here:
-    bool isLandscape = screenWidthInPoints > screenHeightInPoints;
-    CGFloat realViewFrameWidth = self.view.frame.size.width > self.view.frame.size.height ? self.view.frame.size.width : self.view.frame.size.height;
-    CGFloat realViewFrameHeight = self.view.frame.size.width < self.view.frame.size.height ? self.view.frame.size.width : self.view.frame.size.height;
-    if(!isLandscape) {
-        CGFloat tmpLength = realViewFrameWidth;
-        realViewFrameWidth = realViewFrameHeight;
-        realViewFrameHeight = tmpLength;
-    }
-
-    hostScrollView.frame = CGRectMake(0, self.navigationController.navigationBar.frame.origin.y + self.navigationController.navigationBar.frame.size.height, realViewFrameWidth, realViewFrameHeight / 2);
-    [hostScrollView setShowsHorizontalScrollIndicator:NO];
-    hostScrollView.delaysContentTouches = NO;
-
-    self.collectionView.delaysContentTouches = NO;
-    self.collectionView.allowsMultipleSelection = NO;
-    #if !TARGET_OS_TV
-    self.collectionView.multipleTouchEnabled = NO;
-    #else
-    // This is the only way to get long press events on a UICollectionViewCell :(
-    UILongPressGestureRecognizer* cellLongPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleCollectionViewLongPress:)];
-    cellLongPress.delaysTouchesBegan = YES;
-    [self.collectionView addGestureRecognizer:cellLongPress];
-    #endif
-
-    // the reloadScrollHostView method cannnot copy what all viewDidLoad does for initializing the host scroll view, the following 2 lines of codes must be annotated, or there'll be issues with deleting hosts.
-    //[self retrieveSavedHosts];
-    //_discMan = [[DiscoveryManager alloc] initWithHosts:[hostList allObjects] andCallback:self];
-    [self updateTitle];
-    // [self.view addSubview:hostScrollView];
 }
 
 // this will also be called back when device orientation changes
@@ -1686,7 +1585,7 @@ static NSMutableSet* hostList;
         
         // This will refresh the applist when a paired host is selected
         if (_selectedHost != nil && _selectedHost.pairState == PairStatePaired) {
-            [self hostClicked:_selectedHost view:nil];
+            [self noneUserInitiatedHostAction:_selectedHost view:nil];
         }
     }
 }
@@ -1716,7 +1615,7 @@ static NSMutableSet* hostList;
         
         if (matchingHost != nil && _selectedHost != matchingHost) {
             // Navigate to the host page
-            [self hostClicked:matchingHost view:nil];
+            [self noneUserInitiatedHostAction:matchingHost view:nil];
         }
     }
 }
@@ -1900,9 +1799,6 @@ static NSMutableSet* hostList;
 
 - (void)updateHosts {
     Log(LOG_I, @"Updating hosts...");
-    [[hostScrollView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
-    UIComputerView* addComp = [[UIComputerView alloc] initForAddWithCallback:self];
-    UIComputerView* compView;
     float prevEdge = -1;
     @synchronized (hostList) {
         // Sort the host list in alphabetical order
@@ -1910,7 +1806,6 @@ static NSMutableSet* hostList;
         for (TemporaryHost* comp in sortedHostList) {
             if(comp.state == StateOnline || comp.pairState == PairStatePaired) [self.hostCollectionVC addHost:comp];
             
-            compView = [[UIComputerView alloc] initWithComputer:comp andCallback:self];    // host view created here
             
             // new host card test
             // if([comp.name isEqualToString: @"ASRockPC"]) {
@@ -1930,11 +1825,7 @@ static NSMutableSet* hostList;
             }*/
             //
             
-            
-            compView.center = CGPointMake([self getCompViewX:compView addComp:addComp prevEdge:prevEdge], hostScrollView.frame.size.height / 2);
-            prevEdge = compView.frame.origin.x + compView.frame.size.width;
-            [hostScrollView addSubview:compView];
-            
+                        
             // Start jobs to decode the box art in advance
             for (TemporaryApp* app in comp.appList) {
                 dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
@@ -1949,28 +1840,6 @@ static NSMutableSet* hostList;
     
     // Update the title in case we now have a PC
     [self updateTitle];
-    
-    prevEdge = [self getCompViewX:addComp addComp:addComp prevEdge:prevEdge];
-    addComp.center = CGPointMake(prevEdge, hostScrollView.frame.size.height / 2);
-    
-    [hostScrollView addSubview:addComp];
-    [hostScrollView setContentSize:CGSizeMake(prevEdge + addComp.frame.size.width, hostScrollView.frame.size.height)];
-}
-
-- (float) getCompViewX:(UIComputerView*)comp addComp:(UIComputerView*)addComp prevEdge:(float)prevEdge {
-    float padding;
-    
-#if TARGET_OS_TV
-    padding = 100;
-#else
-    padding = addComp.frame.size.width / 2;
-#endif
-    
-    if (prevEdge == -1) {
-        return hostScrollView.frame.origin.x + comp.frame.size.width / 2 + padding;
-    } else {
-        return prevEdge + comp.frame.size.width / 2 + padding;
-    }
 }
 
 // This function forces immediate decoding of the UIImage, rather
@@ -2039,7 +1908,6 @@ static NSMutableSet* hostList;
         _sortedAppList = visibleAppList;
     }
     
-    [hostScrollView removeFromSuperview];
     [self.collectionView reloadData];
 }
 

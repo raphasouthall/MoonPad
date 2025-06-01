@@ -11,7 +11,7 @@
 
 @protocol HostCallback <NSObject>
 
-- (void) hostClicked:(TemporaryHost*)host view:(UIView*)view;
+- (void) noneUserInitiatedHostAction:(TemporaryHost*)host view:(UIView*)view;
 - (void) hostCardLongPressed:(TemporaryHost*)host view:(UIView*)view;
 - (void) addHostTapped;
 
