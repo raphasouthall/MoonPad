@@ -785,7 +785,7 @@
         
         if (portTestResults != ML_TEST_RESULT_INCONCLUSIVE && portTestResults != 0) {
             title = [LocalizationHelper localizedStringForKey:@"Connection Error"];
-            message = @"Your device's network connection is blocking Moonlight. Streaming may not work while connected to this network.";
+            message = @"Your device's session connection is being blocked. Streaming may not work while connected to this network.";
         }
         else {
             switch (errorCode) {

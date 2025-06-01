@@ -179,6 +179,7 @@ static const float REFRESH_CYCLE = 2.0f;
     self.translatesAutoresizingMaskIntoConstraints = NO;
     CGFloat appButtonWidth = 100*_sizeFactor;
     CGFloat launchButtonWidth = 120*_sizeFactor;
+    CGFloat cardWidth = _cardContentpadding*2 + appButtonWidth + 15*_sizeFactor + launchButtonWidth;
     /*
      NSLayoutConstraint *topAnchorConstraint;
      topAnchorConstraint = [self.topAnchor constraintEqualToAnchor:self.superview.topAnchor constant:500];
@@ -254,14 +255,17 @@ static const float REFRESH_CYCLE = 2.0f;
     lockIconView.hidden = true;
     
     // 设备名
-    self.hostNameLabel = [[UILabel alloc] initWithFrame:CGRectMake(_cardContentpadding+_iconBackgroundView.frame.size.width+20*_sizeFactor, _cardContentpadding+_iconBackgroundView.frame.size.height/10, 300*_sizeFactor, 30*_sizeFactor)];
+    CGFloat hostNameLabelCoordX = _cardContentpadding+_iconBackgroundView.frame.size.width+16*_sizeFactor;
+    self.hostNameLabel = [[UILabel alloc] initWithFrame:CGRectMake(hostNameLabelCoordX, _cardContentpadding+_iconBackgroundView.frame.size.height*0.02, cardWidth-hostNameLabelCoordX-_cardContentpadding, 30*_sizeFactor)];
     self.hostNameLabel.numberOfLines = 1;
+    self.hostNameLabel.adjustsFontSizeToFitWidth = YES;
+    self.hostNameLabel.minimumScaleFactor = 0.8; // 最小字体缩放比例
     self.hostNameLabel.lineBreakMode = NSLineBreakByTruncatingTail;
     
     self.hostIconView.translatesAutoresizingMaskIntoConstraints = NO;
     self.hostNameLabel.text = @"RazerBlade 16";
     self.hostNameLabel.textColor = [UIColor whiteColor]; //theme
-    self.hostNameLabel.font = [UIFont boldSystemFontOfSize:20*_sizeFactor];
+    self.hostNameLabel.font = [UIFont boldSystemFontOfSize:18*_sizeFactor];
     [self addSubview:self.hostNameLabel];
     
     
@@ -280,8 +284,8 @@ static const float REFRESH_CYCLE = 2.0f;
     [self addSubview:self.statusIcon];
     [NSLayoutConstraint activateConstraints:@[
         [self.statusIcon.leadingAnchor constraintEqualToAnchor:self.hostNameLabel.leadingAnchor],
-        [self.statusIcon.topAnchor constraintEqualToAnchor:self.hostNameLabel.bottomAnchor constant:4*_sizeFactor],
-        [self.statusIcon.widthAnchor constraintEqualToConstant:19*_sizeFactor]
+        [self.statusIcon.topAnchor constraintEqualToAnchor:self.hostNameLabel.bottomAnchor constant:0*_sizeFactor],
+        [self.statusIcon.widthAnchor constraintEqualToConstant:16*_sizeFactor]
     ]];
     
     
@@ -289,7 +293,7 @@ static const float REFRESH_CYCLE = 2.0f;
     self.statusLabel = [[UILabel alloc] initWithFrame:CGRectMake(205, 68, 100, 24)];
     self.statusLabel.translatesAutoresizingMaskIntoConstraints = NO;
     self.statusLabel.text = @"Online";
-    self.statusLabel.font = [UIFont systemFontOfSize:16*_sizeFactor weight:UIFontWeightMedium];
+    self.statusLabel.font = [UIFont systemFontOfSize:15*_sizeFactor weight:UIFontWeightMedium];
     self.statusLabel.textColor = defaultGreen;
     // self.statusLabel.font = [UIFont systemFontOfSize:16*_sizeFactor];
     [self addSubview:self.statusLabel];

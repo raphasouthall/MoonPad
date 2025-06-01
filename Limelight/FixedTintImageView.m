@@ -49,8 +49,10 @@
 }
 
 - (void)setTintColor:(UIColor *)tintColor {
-    if(_fixedTintColor == nil && tintColor != nil) _fixedTintColor = tintColor;
-    if(tintColor != nil) [super setTintColor:tintColor];
+    if(tintColor != nil){
+        _fixedTintColor = tintColor;
+        [super setTintColor:tintColor];
+    }
 }
 
 - (void)tintColorDidChange {

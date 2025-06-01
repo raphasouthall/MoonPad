@@ -53,25 +53,25 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "\n\nYour device's network connection is blocking Moonlight. Streaming may not work while connected to this network."
+            "value" : "\n\nYour device's session connection is being blocked. Streaming may not work while connected to this network."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "\n\n设备的网络连接似乎正在屏蔽Moonlight. 可能无法在此网络中串流."
+            "value" : "\n\n设备的远程会话连接被阻塞. 可能无法在此网络中串流."
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "\n\n设备的网络连接似乎正在屏蔽Moonlight. 可能无法在此网络中串流."
           }
         },
         "zh-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "\n\n设备的网络连接似乎正在屏蔽Moonlight. 可能无法在此网络中串流."
+            "value" : "\n\n设备的网络连接似乎正在屏蔽远程会话. 可能无法在此网络中串流."
           }
         }
       }
@@ -956,6 +956,29 @@
         }
       }
     },
+    "Enter IP address to add host manually" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "输入主机端IP地址"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "输入主机端IP地址"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "输入主机端IP地址"
+          }
+        }
+      }
+    },
     "Enter the command & alias label" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1307,29 +1330,6 @@
         }
       }
     },
-    "If Moonlight doesn't find your local gaming PC automatically, enter the IP address of your PC" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "输入主机端IP地址"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "输入主机端IP地址"
-          }
-        },
-        "zh-HK" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "输入主机端IP地址"
-          }
-        }
-      }
-    },
     "Indicator Offset: %.2f" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1549,24 +1549,24 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "The network test could not be performed because none of Moonlight's connection testing servers were reachable. Check your Internet connection or try again later."
+            "value" : "The network test could not be performed because none of the connection testing servers were reachable. Check your Internet connection or try again later."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "无法执行网络测试. 请检查网络连接后重试."
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "无法执行网络测试. 请检查网络连接后重试."
           }
         },
         "zh-HK" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "无法执行网络测试. 请检查网络连接后重试."
           }
         }
@@ -1591,29 +1591,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "修改"
-          }
-        }
-      }
-    },
-    "Moonlight-iOS/tvOS only supports adding PCs on your local network" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Moonlight-iOS/tvOS仅支持添加局域网中的主机"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Moonlight-iOS/tvOS仅支持添加局域网中的主机"
-          }
-        },
-        "zh-HK" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Moonlight-iOS/tvOS仅支持添加局域网中的主机"
           }
         }
       }
@@ -1670,25 +1647,25 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Your current network connection seems to be blocking Moonlight. Streaming may not work while connected to this network.\n\nThe following network ports were blocked:\n%s"
+            "value" : "Your current network connection seems to be blocking remote session. Streaming may not work while connected to this network.\n\nThe following network ports were blocked:\n%s"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "设备的网络连接似乎正在阻塞Moonlight. 可能无法在此网络中串流.\n\n以下网络端口被阻塞:\n%s"
+            "value" : "设备的网络连接似乎正在阻塞远程会话. 可能无法在此网络中串流.\n\n以下网络端口被阻塞:\n%s"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "设备的网络连接似乎正在阻塞Moonlight. 可能无法在此网络中串流.\n\n以下网络端口被阻塞:\n%s"
           }
         },
         "zh-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "设备的网络连接似乎正在阻塞Moonlight. 可能无法在此网络中串流.\n\n以下网络端口被阻塞:\n%s"
+            "value" : "设备的网络连接似乎正在阻塞远程会话. 可能无法在此网络中串流.\n\n以下网络端口被阻塞:\n%s"
           }
         }
       }
@@ -1699,24 +1676,24 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "This network does not appear to be blocking Moonlight. If you still have trouble connecting, check your PC's firewall settings.\n\nVisit the Moonlight Setup Guide on GitHub for additional setup help and troubleshooting steps."
+            "value" : "This network does not appear to be blocking remote session. If you still have trouble connecting, check your PC's firewall settings."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "网络测试成功. 如果仍然无法连接远程主机, 请检查主机端防火墙设置."
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "网络测试成功. 如果仍然无法连接远程主机, 请检查主机端防火墙设置."
           }
         },
         "zh-HK" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "网络测试成功. 如果仍然无法连接远程主机, 请检查主机端防火墙设置."
           }
         }

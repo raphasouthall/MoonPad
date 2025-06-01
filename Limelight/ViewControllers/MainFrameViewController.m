@@ -732,11 +732,27 @@ static NSMutableSet* hostList;
 
 - (void) addHostTapped {
     Log(LOG_D, @"Tapped add host");
-    UIAlertController* alertController = [UIAlertController alertControllerWithTitle:[LocalizationHelper localizedStringForKey:@"Add Host Manually"] message:[LocalizationHelper localizedStringForKey:@"If Moonlight doesn't find your local gaming PC automatically, enter the IP address of your PC"] preferredStyle:UIAlertControllerStyleAlert];
-    [alertController addAction:[UIAlertAction actionWithTitle:[LocalizationHelper localizedStringForKey:@"Cancel"] style:UIAlertActionStyleCancel handler:nil]];
-    [alertController addAction:[UIAlertAction actionWithTitle:[LocalizationHelper localizedStringForKey:@"Ok"] style:UIAlertActionStyleDefault handler:^(UIAlertAction* action){
-        NSString* hostAddress = [((UITextField*)[[alertController textFields] objectAtIndex:0]).text trim];
-                
+    UIAlertController* alertController = [UIAlertController alertControllerWithTitle:[LocalizationHelper localizedStringForKey:@"Add Host Manually"]
+                                                                             message:[LocalizationHelper localizedStringForKey:@"Enter IP address to add host manually"]
+                                                                      preferredStyle:UIAlertControllerStyleAlert];
+
+    [alertController addTextFieldWithConfigurationHandler:^(UITextField *textField) {
+        textField.placeholder = @"192.168.0.100 or [2001:db8::1]";
+        textField.keyboardType = UIKeyboardTypeASCIICapable;
+        textField.autocorrectionType = UITextAutocorrectionTypeNo;
+        textField.spellCheckingType = UITextSpellCheckingTypeNo;
+    }];
+
+    [alertController addAction:[UIAlertAction actionWithTitle:[LocalizationHelper localizedStringForKey:@"Cancel"]
+                                                        style:UIAlertActionStyleCancel
+                                                      handler:nil]];
+
+    [alertController addAction:[UIAlertAction actionWithTitle:[LocalizationHelper localizedStringForKey:@"Ok"]
+                                                        style:UIAlertActionStyleDefault
+                                                      handler:^(UIAlertAction* action) {
+        UITextField *textField = alertController.textFields.firstObject;
+        NSString *hostAddress = [textField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+
         [self showLoadingFrame:^{
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
                 [self->_discMan discoverHost:hostAddress withCallback:^(TemporaryHost* host, NSString* error){
@@ -769,7 +785,6 @@ static NSMutableSet* hostList;
             });
         }];
     }]];
-    [alertController addTextFieldWithConfigurationHandler:nil];
     [[self activeViewController] presentViewController:alertController animated:YES completion:nil];
 }
 
