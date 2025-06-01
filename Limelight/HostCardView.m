@@ -68,7 +68,7 @@ static const float REFRESH_CYCLE = 2.0f;
         }
         else
         {
-            UILongPressGestureRecognizer* longPressRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(hostLongClicked:)];
+            UILongPressGestureRecognizer* longPressRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(hostCardLongPressed:view:)];
             [self addGestureRecognizer:longPressRecognizer];
         }
 
@@ -268,27 +268,6 @@ static const float REFRESH_CYCLE = 2.0f;
     self.hostNameLabel.font = [UIFont boldSystemFontOfSize:18*_sizeFactor];
     [self addSubview:self.hostNameLabel];
     
-    
-    
-    // 在线状态图标
-    self.statusIcon = [[FixedTintImageView alloc] initWithFrame:CGRectMake(180, 70, 20*_sizeFactor, 20*_sizeFactor)];
-    self.statusIcon.contentMode = UIViewContentModeScaleAspectFit;
-    self.statusIcon.translatesAutoresizingMaskIntoConstraints = NO;
-    if (@available(iOS 13.0, *)) {
-        self.statusIcon.image = [UIImage systemImageNamed:@"wifi"];
-    } else {
-        // Fallback on earlier versions
-    }
-    self.statusIcon.tintColor = defaultGreen;
-    
-    [self addSubview:self.statusIcon];
-    [NSLayoutConstraint activateConstraints:@[
-        [self.statusIcon.leadingAnchor constraintEqualToAnchor:self.hostNameLabel.leadingAnchor],
-        [self.statusIcon.topAnchor constraintEqualToAnchor:self.hostNameLabel.bottomAnchor constant:0*_sizeFactor],
-        [self.statusIcon.widthAnchor constraintEqualToConstant:16*_sizeFactor]
-    ]];
-    
-    
     // 在线文字
     self.statusLabel = [[UILabel alloc] initWithFrame:CGRectMake(205, 68, 100, 24)];
     self.statusLabel.translatesAutoresizingMaskIntoConstraints = NO;
@@ -296,13 +275,22 @@ static const float REFRESH_CYCLE = 2.0f;
     self.statusLabel.font = [UIFont systemFontOfSize:15*_sizeFactor weight:UIFontWeightMedium];
     self.statusLabel.textColor = defaultGreen;
     // self.statusLabel.font = [UIFont systemFontOfSize:16*_sizeFactor];
+    // 在线状态图标
+    self.statusIcon = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 16*_sizeFactor, 16*_sizeFactor)];
+    self.statusIcon.contentMode = UIViewContentModeScaleAspectFit;
+    self.statusIcon.translatesAutoresizingMaskIntoConstraints = NO;
+    self.statusIcon.image = [[UIImage imageNamed:@"wifi_green"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    // self.statusIcon.tintColor = defaultGreen;
+    [self addSubview:self.statusIcon];
     [self addSubview:self.statusLabel];
     [NSLayoutConstraint activateConstraints:@[
         [self.statusLabel.leadingAnchor constraintEqualToAnchor:self.statusIcon.trailingAnchor constant:3*_sizeFactor],
-        [self.statusLabel.centerYAnchor constraintEqualToAnchor:self.statusIcon.centerYAnchor constant:0],
+        [self.statusLabel.topAnchor constraintEqualToAnchor:self.hostNameLabel.bottomAnchor constant:0*_sizeFactor],
+
+        [self.statusIcon.centerYAnchor constraintEqualToAnchor:self.statusLabel.centerYAnchor constant:0],
+        [self.statusIcon.leadingAnchor constraintEqualToAnchor:self.hostNameLabel.leadingAnchor],
+        [self.statusIcon.widthAnchor constraintEqualToConstant:16*_sizeFactor]
     ]];
-    
-    
     
     // 启动应用按钮
     self.appButton = [UIButton buttonWithType:UIButtonTypeSystem];
@@ -532,15 +520,8 @@ static const float REFRESH_CYCLE = 2.0f;
             [_hostSpinner stopAnimating];
             _statusLabel.textColor = defaultGreen;
             _statusLabel.text = @"Online";
-            _statusIcon.tintColor = defaultGreen;
-            
-            if (@available(iOS 13.0, *)) {
-                _statusIcon.image = [UIImage systemImageNamed:@"wifi"];
-            } else {
-                // Fallback on earlier versions
-            }
+            self.statusIcon.image = [[UIImage imageNamed:@"wifi_green"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
             _hostIconView.tintColor = [UIColor whiteColor];
-            
             _appButton.titleLabel.font = [UIFont systemFontOfSize:16*_sizeFactor];
             if(host.pairState == PairStatePaired){
                 _iconBackgroundView.backgroundColor = defaultBlue;
