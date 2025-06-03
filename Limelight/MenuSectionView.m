@@ -8,6 +8,7 @@
 // MenuSectionView.m
 
 #import "MenuSectionView.h"
+#import "ThemeManager.h"
 
 @interface MenuSectionView ()
 
@@ -67,13 +68,14 @@
     _iconImageView = [[UIImageView alloc] init];
     _iconImageView.contentMode = UIViewContentModeScaleAspectFit;
     _iconImageView.translatesAutoresizingMaskIntoConstraints = NO;
-    _iconImageView.tintColor = [UIColor whiteColor];
+    _iconImageView.tintColor = [ThemeManager textColor];
     [_headerView addSubview:_iconImageView];
     
     // 标题标签
     _titleLabel = [[UILabel alloc] init];
     _titleLabel.text = _sectionTitle;
     _titleLabel.font = [UIFont systemFontOfSize:27 weight:UIFontWeightMedium];
+    _titleLabel.textColor = [ThemeManager textColor];
     _titleLabel.textAlignment = NSTextAlignmentLeft;
     _titleLabel.translatesAutoresizingMaskIntoConstraints = NO;
     [_headerView addSubview:_titleLabel];
@@ -105,7 +107,7 @@
     
     // 分隔线
     _separatorLine = [[UIView alloc] init];
-    _separatorLine.backgroundColor = [UIColor colorWithWhite:0.2 alpha:5.0];
+    _separatorLine.backgroundColor = [ThemeManager separatorColor];
     _separatorLine.translatesAutoresizingMaskIntoConstraints = NO;
     
     [self addSubview:_separatorLine];
@@ -187,7 +189,14 @@
 #pragma mark - Public Methods
 
 - (void)setSectionIcon:(UIImage *)icon {
-    _iconImageView.image = icon;
+    if (@available(iOS 13.0, *)) {
+        UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithWeight:UIImageSymbolWeightSemibold];
+        _iconImageView.image = [icon imageWithConfiguration:config];
+
+    } else {
+        _iconImageView.image = icon;
+    }
+
     _iconImageView.hidden = (icon == nil);
     [self updateLayout];
 }
@@ -287,7 +296,7 @@
     [self setupConstraints];
     if (_expanded) {
         _rootStackView.hidden = NO;
-        _separatorLine.hidden = NO;
+        _separatorLine.hidden = YES;
         CGSize fittingSize = [self.rootStackView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize];
         CGFloat rootStackViewHeight = fittingSize.height;
         fittingSize = [self.headerView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize];

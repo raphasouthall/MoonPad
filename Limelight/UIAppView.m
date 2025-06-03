@@ -142,7 +142,6 @@ static UIImage* noImage;
     if (appImage != nil) {
         // This size of image might be blank image received from GameStream.
         
-        //AppImage TESTTTTTTTT
         // TODO: Improve no-app image detection
         if (!(appImage.size.width == 130.f && appImage.size.height == 180.f) && // GFE 2.0
             !(appImage.size.width == 628.f && appImage.size.height == 888.f)){

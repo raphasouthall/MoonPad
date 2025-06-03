@@ -241,7 +241,8 @@ typedef NS_ENUM(NSInteger, SWRevealToggleAnimationType)
 /* The following properties are provided for further customization, they are set to default values on initialization,
    you do not generally have to set them */
 
-@property (strong, nonatomic) UIBarButtonItem *disconnectButton;
+@property (nonatomic, strong) UIBarButtonItem* disconnectButton;
+@property (nonatomic, strong) UIBarButtonItem* moreButton;
 
 // Defines how much of the rear or right view is shown, default is 260.
 // Negative values indicate that the reveal width should be computed by substracting the full front view width,
@@ -320,6 +321,10 @@ typedef NS_ENUM(NSInteger, SWRevealToggleAnimationType)
 
 @property (nonatomic,assign) bool isStreaming;
 @property (nonatomic,assign) bool mainFrameIsInHostView;
+
+- (void)buttonsInStreaming;
+- (void)buttonsNotInStreaming;
+
 
 @end
 

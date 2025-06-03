@@ -32,6 +32,7 @@
 #import "SWRevealViewController.h"
 #import "LocalizationHelper.h"
 #import "DataManager.h"
+#import "ThemeManager.h"
 
 
 #pragma mark - StatusBar Helper Function
@@ -76,8 +77,10 @@ static CGFloat statusBarAdjustment( UIView* view )
 
 
 @implementation SWRevealView{
-    
+    UIView *_safeAreaPadding;
+    UIView* _separatorLine;
 }
+
 
 
 static CGFloat scaledValue( CGFloat v1, CGFloat min2, CGFloat max2, CGFloat min1, CGFloat max1)
@@ -106,6 +109,7 @@ static CGFloat scaledValue( CGFloat v1, CGFloat min2, CGFloat max2, CGFloat min1
         
         [self setupRearNavView];
     }
+    
     
     return self;
 }
@@ -138,8 +142,11 @@ static CGFloat scaledValue( CGFloat v1, CGFloat min2, CGFloat max2, CGFloat min1
 - (void)setupRearNavView {
     // 初始化 rearNavView
     _rearNavView = [[UIView alloc] init];
+    _safeAreaPadding = [[UIView alloc] init];
     _rearNavView.translatesAutoresizingMaskIntoConstraints = NO;
-    _rearNavView.backgroundColor = [UIColor lightGrayColor]; // 设置背景色以便查看
+    _safeAreaPadding.translatesAutoresizingMaskIntoConstraints = NO;
+    // _rearNavView.backgroundColor = [UIColor lightGrayColor]; // 设置背景色以便查看
+    _safeAreaPadding.backgroundColor = [ThemeManager appBackgroundColor];
     
     // NSLog(@"_c.rearViewRevealWidth: %f", _c.rearViewRevealWidth);
     // _rearNavView.frame = CGRectMake(0, 0, _c.rearViewRevealWidth, 100);
@@ -148,17 +155,19 @@ static CGFloat scaledValue( CGFloat v1, CGFloat min2, CGFloat max2, CGFloat min1
     // 设置约束 - 这里只是一个示例，你可以根据需要调整
     
     [self insertSubview:_rearNavView belowSubview:_frontView];
-    
+    [self insertSubview:_safeAreaPadding belowSubview:_frontView];
+
     CGFloat navBarHeight = [UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPhone ? UINavigationBarHeightIPhone : UINavigationBarHeightIPad;
     
     [NSLayoutConstraint activateConstraints:@[
-        [_rearNavView.topAnchor constraintEqualToAnchor:self.topAnchor],
+        [_rearNavView.bottomAnchor constraintEqualToAnchor:self.safeAreaLayoutGuide.topAnchor constant:navBarHeight],
         [_rearNavView.leadingAnchor constraintEqualToAnchor:self.leadingAnchor],
         [_rearNavView.trailingAnchor constraintEqualToAnchor:self.trailingAnchor],
         [_rearNavView.heightAnchor constraintEqualToConstant:navBarHeight]
         // reserve height for navigation bar
     ]];
     // [self setupNavigationBar];
+    
 }
 
 - (void)prepareRearViewForPosition:(FrontViewPosition)newPosition
@@ -250,6 +259,17 @@ static CGFloat scaledValue( CGFloat v1, CGFloat min2, CGFloat max2, CGFloat min1
     
     UIBezierPath *shadowPath = [UIBezierPath bezierPathWithRect:shadowBounds];
     _frontView.layer.shadowPath = shadowPath.CGPath;
+    
+    _safeAreaPadding.hidden = self.safeAreaLayoutGuide.topAnchor == 0;
+    [NSLayoutConstraint activateConstraints:@[
+        [_safeAreaPadding.bottomAnchor constraintEqualToAnchor:self.safeAreaLayoutGuide.topAnchor constant:0],
+        [_safeAreaPadding.topAnchor constraintEqualToAnchor:self.topAnchor],
+        [_safeAreaPadding.leadingAnchor constraintEqualToAnchor:self.leadingAnchor],
+        [_safeAreaPadding.trailingAnchor constraintEqualToAnchor:self.trailingAnchor],
+        // reserve height for navigation bar
+    ]];
+    
+    //NSLog(@"width %f", self.bounds.size.width
 }
 
 
@@ -619,6 +639,8 @@ static CGFloat scaledValue( CGFloat v1, CGFloat min2, CGFloat max2, CGFloat min1
 @implementation SWRevealViewController
 {
     FrontViewPosition _panInitialFrontPosition;
+    UINavigationItem *_navItem;
+    UIView* _separatorLine;
     NSMutableArray *_animationQueue;
     BOOL _userInteractionStore;
     UIViewController *_primaryViewController;
@@ -666,6 +688,7 @@ const int FrontViewPositionNone = 0xff;
     _rearViewPosition = FrontViewPositionLeft;
     _rightViewPosition = FrontViewPositionLeft;
     _rearViewRevealWidth = 492.0f;
+    _rearViewRevealWidth = 400;
     // _rearViewRevealOverdraw = 60.0f;
     _rearViewRevealOverdraw = 0.0f;
     _rearViewRevealDisplacement = 40.0f;
@@ -682,9 +705,11 @@ const int FrontViewPositionNone = 0xff;
     _toggleAnimationType = SWRevealToggleAnimationTypeSpring;
     _springDampingRatio = 1;
     _replaceViewAnimationDuration = 0.25;
+    // _frontViewShadowRadius = 2.5f;
     _frontViewShadowRadius = 2.5f;
-    _frontViewShadowOffset = CGSizeMake(0.0f, 2.5f);
-    _frontViewShadowOpacity = 1.0f;
+    //_frontViewShadowOffset = CGSizeMake(0.0f, 2.5f);
+    _frontViewShadowOffset = CGSizeMake(0, 0);
+    _frontViewShadowOpacity = 0;
     _frontViewShadowColor = [UIColor blackColor];
     _userInteractionStore = YES;
     _animationQueue = [NSMutableArray array];
@@ -736,7 +761,6 @@ const int FrontViewPositionNone = 0xff;
     _contentView = [[SWRevealView alloc] initWithFrame:frame controller:self];
     
     [self setupNavigationBar];
-    
     // set the content view to resize along with its superview
     [_contentView setAutoresizingMask:UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight];
     
@@ -758,6 +782,8 @@ const int FrontViewPositionNone = 0xff;
     
     // now set the desired initial position
     [self _setFrontViewPosition:initialPosition withDuration:0.0];
+    [self setupMenuSeparator];
+
 }
 
 - (bool)isIphone{
@@ -775,9 +801,9 @@ const int FrontViewPositionNone = 0xff;
 // tested on iOS17.
 - (UIInterfaceOrientationMask)supportedInterfaceOrientations {
     // Return the supported interface orientations acoordingly
-    if(self.mainFrameIsInHostView){
-        if([self isIphone]) return UIInterfaceOrientationMaskLandscape;  //always try to lock orientaion to landscape in mainFrameView in order to prevent bug.
-        else return [self getCurrentOrientation]; //always try to lock current orientaion in mainFrameView for iPad in order to prevent bug.
+    if(!_isStreaming){
+        if([self isIphone]) return UIInterfaceOrientationMaskAll;  //always try to lock orientaion to landscape in mainFrameView.
+        else return UIInterfaceOrientationMaskAll; //always try to lock current orientaion in mainFrameView for iPad in order to prevent bug.
     }
     
     //lock the orientation accordingly after streaming is started
@@ -792,6 +818,15 @@ const int FrontViewPositionNone = 0xff;
 
 - (void)viewDidLayoutSubviews{
     // [self setupNavigationBarConstraints];
+}
+
+- (void)viewSafeAreaInsetsDidChange {
+    [super viewSafeAreaInsetsDidChange];
+    
+}
+
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
+    
 }
 
 
@@ -825,46 +860,71 @@ const int FrontViewPositionNone = 0xff;
 
 #pragma mark - Public methods and property accessors
 
+- (void)willMoveToPosition{
+    _separatorLine.hidden = _frontViewPosition == FrontViewPositionLeft;
+}
+
+
+- (void)setupMenuSeparator{
+    // 分隔线
+    _separatorLine = [[UIView alloc] init];
+    _separatorLine.backgroundColor = [ThemeManager separatorColor];
+    _separatorLine.translatesAutoresizingMaskIntoConstraints = NO;
+    [_contentView.frontView addSubview:_separatorLine];
+    _separatorLine.hidden = YES;
+    /*
+    [NSLayoutConstraint activateConstraints:@[
+        [_separatorLine.trailingAnchor constraintEqualToAnchor:self.centerXAnchor constant:-10],
+        [_separatorLine.topAnchor constraintEqualToAnchor:self.topAnchor],
+        [_separatorLine.bottomAnchor constraintEqualToAnchor:self.bottomAnchor],
+        [_separatorLine.widthAnchor constraintEqualToConstant:1.0]
+    ]];
+     */
+    [NSLayoutConstraint activateConstraints:@[
+        [_separatorLine.topAnchor constraintEqualToAnchor:_contentView.topAnchor constant:0],
+
+        [_separatorLine.bottomAnchor constraintEqualToAnchor:_contentView.bottomAnchor constant:0],
+        //[_separatorLine.leadingAnchor constraintEqualToAnchor:self.leadingAnchor constant:self.bounds.size.width-60],
+        [_separatorLine.leadingAnchor constraintEqualToAnchor:_contentView.frontView.leadingAnchor constant:5],
+        [_separatorLine.trailingAnchor constraintEqualToAnchor:_contentView.frontView.leadingAnchor constant:6.5],
+    ]];
+}
+
+
 - (void)setupNavigationBar {
     // 创建导航栏
     if (_dockedNavBar == nil) _dockedNavBar = [[UINavigationBar alloc] init];
     _dockedNavBar.translatesAutoresizingMaskIntoConstraints = NO;
     _dockedNavBar.userInteractionEnabled = YES;
     
-    // 创建导航项
-    UINavigationItem *navItem = [[UINavigationItem alloc] initWithTitle:[LocalizationHelper localizedStringForKey:@"Settings"]];
-    
-    // Back Button
-    
-    UIButton *customBackButton = [UIButton buttonWithType:UIButtonTypeSystem];
     if (@available(iOS 13.0, *)) {
-        [customBackButton setImage:[UIImage systemImageNamed:@"chevron.left"] forState:UIControlStateNormal];
+        UINavigationBarAppearance *navBarAppearanceStandard = [[UINavigationBarAppearance alloc] init];
+        [navBarAppearanceStandard configureWithOpaqueBackground]; // 不透明
+        navBarAppearanceStandard.backgroundColor =[ThemeManager appBackgroundColor];; // 设置你需要的背景色
+        navBarAppearanceStandard.shadowColor = nil; // 去掉底部分割线（可选）
+        navBarAppearanceStandard.titleTextAttributes = @{
+            NSForegroundColorAttributeName: [ThemeManager textColor]
+        };
+        navBarAppearanceStandard.shadowColor = [UIColor clearColor];
+        navBarAppearanceStandard.backgroundImage = nil;
+        _dockedNavBar.standardAppearance = navBarAppearanceStandard;
+        _dockedNavBar.scrollEdgeAppearance = navBarAppearanceStandard;
     } else {
-        // Fallback on earlier versions
+        _dockedNavBar.backgroundColor = [ThemeManager appBackgroundColor];
     }
-    [customBackButton setTitle:[LocalizationHelper localizedStringForKey:@"Back"] forState:UIControlStateNormal];
-    customBackButton.titleLabel.font = [UIFont systemFontOfSize:19 weight:UIFontWeightRegular];
-    [customBackButton addTarget:self action:@selector(foldRearView) forControlEvents:UIControlEventTouchUpInside];
-    //customBackButton.contentEdgeInsets = UIEdgeInsetsMake(8, 8, 8, 8); // 增加点击区域
-    // customBackButton.titleEdgeInsets = UIEdgeInsetsMake(0, 5, 0, -5);
-    UIBarButtonItem *backButtonItem = [[UIBarButtonItem alloc] initWithCustomView:customBackButton];
-     
-    /*
-    UIBarButtonItem *backButtonItem = [[UIBarButtonItem alloc] initWithTitle:[LocalizationHelper localizedStringForKey:@"Back"]
-                                                                   style:UIBarButtonItemStylePlain
-                                                                  target:self
-                                                                  action:@selector(foldRearView)];
-     */
+
     
-    navItem.leftBarButtonItem = backButtonItem;
+    // 创建导航项
+    _navItem = [[UINavigationItem alloc] initWithTitle:[LocalizationHelper localizedStringForKey:@"Settings"]];
     
-    _disconnectButton = [[UIBarButtonItem alloc] initWithTitle:[LocalizationHelper localizedStringForKey:@"Disconnect"]
-                                                                   style:UIBarButtonItemStylePlain
-                                                                  target:self
-                                                                  action:@selector(disconnectRemoteSession)];
-    navItem.rightBarButtonItem = _disconnectButton;
     
-    [_dockedNavBar setItems:@[navItem]];
+    [self setupBackButton];
+    [self setupDisconnectButton];
+    [self setupMoreButton];
+
+    // navItem.rightBarButtonItem = _disconnectButton;
+    
+    [_dockedNavBar setItems:@[_navItem]];
     _dockedNavBar.barTintColor = [UIColor darkGrayColor];
     _dockedNavBar.titleTextAttributes = @{NSForegroundColorAttributeName: [UIColor whiteColor]};
     
@@ -877,7 +937,130 @@ const int FrontViewPositionNone = 0xff;
         [_dockedNavBar.leadingAnchor constraintEqualToAnchor:_contentView.rearNavView.leadingAnchor],
         [_dockedNavBar.widthAnchor constraintEqualToConstant:_rearViewRevealWidth],
     ]];
+    NSLog(@"rearViewRevealWidth %f", _rearViewRevealWidth);
     
+}
+
+
+- (void)setupBackButton{
+    // Back Button
+    UIBarButtonItem *backButton = [[UIBarButtonItem alloc] init];
+    [backButton setTarget:self];
+    [backButton setAction:@selector(foldRearView)];
+    if (@available(iOS 13.0, *)) {
+        [backButton setTitle:nil];
+        UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithPointSize:23 weight:UIImageSymbolWeightMedium ];
+        UIImage *image = [[UIImage systemImageNamed:@"sidebar.left" withConfiguration:config] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+        [backButton setImage:image];
+        backButton.imageInsets = UIEdgeInsetsMake(20, 10, 0, 0);
+    } else {
+        [backButton setTitle:[LocalizationHelper localizedStringForKey:@"Back"]];
+    }
+    _navItem.leftBarButtonItem = backButton;
+}
+
+- (void)setupDisconnectButton{
+    // disconnect button
+    
+    _disconnectButton = [[UIBarButtonItem alloc] init];
+    [_disconnectButton setTarget:self];
+    [_disconnectButton setAction:@selector(disconnectRemoteSession)];
+    if (@available(iOS 13.0, *)) {
+        [_disconnectButton setTitle:nil];
+        UIImage *image = [[UIImage imageNamed:@"disconnect.svg" ]  imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+        
+        [_disconnectButton setImage:image];
+        //_disconnectButton.imageInsets = UIEdgeInsetsMake(5, 5, 5, 5);
+        _disconnectButton.tintColor = [ThemeManager appPrimaryColor];
+    } else {
+        [_disconnectButton setTitle:[LocalizationHelper localizedStringForKey:@"Disconnect"]];
+    }
+
+    /*
+    _disconnectButton = [[UIBarButtonItem alloc] initWithTitle:[LocalizationHelper localizedStringForKey:@"Disconnect"]
+                                                                   style:UIBarButtonItemStylePlain
+                                                                  target:self
+                                                                  action:@selector(disconnectRemoteSession)];
+     */
+}
+
+- (void)setupMoreButton{
+    _moreButton = [[UIBarButtonItem alloc] init];
+    
+    //[moreButton setAction:@selector(moreButtonTapped:)];
+    if (@available(iOS 13.0, *)) {
+        [_moreButton setTitle:nil];
+        UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithPointSize:23 weight:UIImageSymbolWeightMedium ];
+        UIImage *image = [[UIImage systemImageNamed:@"ellipsis.circle" withConfiguration:config] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+        [_moreButton setImage:image];
+        _moreButton.imageInsets = UIEdgeInsetsMake(20, 0, 0, -10);
+    } else {
+        [_moreButton setTitle:[LocalizationHelper localizedStringForKey:@"More"]];
+    }
+
+    if (@available(iOS 14.0, *)) {
+        UIAction *action1 = [UIAction actionWithTitle:@"操作1" image:[UIImage systemImageNamed:@"doc"] identifier:nil handler:^(__kindof UIAction * _Nonnull action) {
+            NSLog(@"执行操作1");
+        }];
+        
+        UIAction *action2 = [UIAction actionWithTitle:@"操作2" image:[UIImage systemImageNamed:@"folder"] identifier:nil handler:^(__kindof UIAction * _Nonnull action) {
+            NSLog(@"执行操作2");
+        }];
+        
+        UIAction *deleteAction = [UIAction actionWithTitle:@"删除" image:[UIImage systemImageNamed:@"trash"] identifier:nil handler:^(__kindof UIAction * _Nonnull action) {
+            NSLog(@"执行删除操作");
+        }];
+        deleteAction.attributes = UIMenuElementAttributesDestructive;
+        // 创建菜单
+        UIMenu *menu = [UIMenu menuWithTitle:@"" children:@[action1, action2, deleteAction]];
+        _moreButton.menu = menu;
+    }
+    else{
+        [_moreButton setTarget:self];
+        [_moreButton setAction:@selector(moreButtonTapped:)];
+    }
+    // more option button
+}
+
+- (void)moreButtonTapped:(UIBarButtonItem *)sender {
+    UIMenuItem *item1 = [[UIMenuItem alloc] initWithTitle:@"操作1" action:@selector(action1)];
+    UIMenuItem *item2 = [[UIMenuItem alloc] initWithTitle:@"操作2" action:@selector(action2)];
+    
+    UIMenuController *menuController = [UIMenuController sharedMenuController];
+    [menuController setMenuItems:@[item1, item2]];
+    
+    UIView *targetView = [sender valueForKey:@"view"];
+    [menuController setTargetRect:targetView.bounds inView:targetView];
+    [menuController setMenuVisible:YES animated:YES];
+    
+    [self becomeFirstResponder];
+}
+
+- (BOOL)canBecomeFirstResponder {
+    return YES;
+}
+
+- (BOOL)canPerformAction:(SEL)action withSender:(id)sender {
+    if (action == @selector(action1) || action == @selector(action2)) {
+        return YES;
+    }
+    return NO;
+}
+
+- (void)action1 {
+    NSLog(@"执行操作1");
+}
+
+- (void)action2 {
+    NSLog(@"执行操作2");
+}
+
+- (void)buttonsInStreaming{
+    _navItem.rightBarButtonItems = @[_disconnectButton];
+}
+
+- (void)buttonsNotInStreaming{
+    _navItem.rightBarButtonItems = @[_moreButton];
 }
 
 - (void)foldRearView{
@@ -887,6 +1070,19 @@ const int FrontViewPositionNone = 0xff;
 - (void)disconnectRemoteSession{
     [[NSNotificationCenter defaultCenter] postNotificationName:@"SessionDisconnectedBySettingsMenuNotification" object:self];
     [self foldRearView];
+}
+
+-(void)deviceOrientationDidChange{
+    /*
+    if(self. == nil) return;
+    [NSLayoutConstraint activateConstraints:@[
+        [self.collectionView.topAnchor constraintEqualToAnchor:self.view.safeAreaLayoutGuide.topAnchor],
+        [self.collectionView.bottomAnchor constraintEqualToAnchor:self.view.safeAreaLayoutGuide.bottomAnchor],
+        [self.collectionView.leadingAnchor constraintEqualToAnchor:self.view.safeAreaLayoutGuide.leadingAnchor],
+        [self.collectionView.trailingAnchor constraintEqualToAnchor:self.view.safeAreaLayoutGuide.trailingAnchor],
+        //[self.collectionView.heightAnchor constraintEqualToConstant:_headerViewHeight]
+    ]];
+     */
 }
 
 - (void)setFrontViewController:(UIViewController *)frontViewController
@@ -1358,7 +1554,7 @@ const int FrontViewPositionNone = 0xff;
 - (void)_handleRevealGestureStateBeganWithRecognizer:(UIPanGestureRecognizer *)recognizer
 {
     // we know that we will not get here unless the animationQueue is empty because the recognizer
-    // delegate prevents it, however we do not want any forthcoming programatic actions to disturb
+    // delegate prevfents it, however we do not want any forthcoming programatic actions to disturb
     // the gesture, so we just enqueue a dummy block to ensure any programatic acctions will be
     // scheduled after the gesture is completed
     [self _enqueueBlock:^{}]; // <-- dummy block
@@ -1697,6 +1893,7 @@ const int FrontViewPositionNone = 0xff;
     }
     
     _frontViewPosition = newPosition;
+    [self willMoveToPosition];
     
     void (^deploymentCompletion)(void) =
         [self _deploymentForViewController:_frontViewController inView:_contentView.frontView appear:appear disappear:disappear];
@@ -1979,6 +2176,12 @@ const int FrontViewPositionNone = 0xff;
     Class revealClass = [SWRevealViewController class];
     while ( nil != (parent = [parent parentViewController]) && ![parent isKindOfClass:revealClass] ) {}
     return (id)parent;
+}
+
+- (void)buttonsInStreaming {
+}
+
+- (void)buttonsNotInStreaming {
 }
 
 @end

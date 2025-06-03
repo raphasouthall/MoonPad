@@ -25,7 +25,6 @@
 
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *settingsButton;
 #if !TARGET_OS_TV
-@property (weak, nonatomic) IBOutlet UIBarButtonItem *upButton;
 @property (nonatomic, assign) bool settingsExpandedInStreamView;
 @property (nonatomic, strong) HostCollectionViewController *hostCollectionVC;
 @property (weak, nonatomic) IBOutlet UINavigationItem *navigationItem;

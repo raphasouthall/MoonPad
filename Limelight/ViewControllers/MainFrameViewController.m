@@ -48,8 +48,10 @@
 
 @implementation MainFrameViewController {
     UILabel* waterMark;
-    UIBarButtonItem* addHostButton;
-    UIBarButtonItem* helpButton;
+    UIBarButtonItem* _addHostButton;
+    UIBarButtonItem* _helpButton;
+    UIBarButtonItem* _upButton;
+
     UILabel* hostViewTitleLabel;
     //CGFloat recordedScreenWidth;
     NSOperationQueue* _opQueue;
@@ -66,6 +68,9 @@
     NSArray* _sortedAppList;
     NSCache* _boxArtCache;
     bool _background;
+    UINavigationBarAppearance *navBarAppearanceStandard;
+    UINavigationBarAppearance *navBarAppearanceScroll;
+
 #if TARGET_OS_TV
     UITapGestureRecognizer* _menuRecognizer;
 #endif
@@ -131,10 +136,12 @@ static NSMutableSet* hostList;
 
 - (void)updateTitle {
 
-    self.navigationController.navigationBar.titleTextAttributes = @{
-        NSFontAttributeName: [UIFont systemFontOfSize:20 weight:UIFontWeightMedium],
-        NSForegroundColorAttributeName: [ThemeManager textColor] // 可选，设置标题颜色
-    };
+    if (@available(iOS 13.0, *)) {
+        navBarAppearanceScroll.titleTextAttributes = navBarAppearanceStandard.titleTextAttributes = @{
+            NSFontAttributeName: [UIFont systemFontOfSize:20 weight:UIFontWeightMedium],
+            NSForegroundColorAttributeName: [ThemeManager textColor] // 可选，设置标题颜色
+        };
+    }
 
     if (_selectedHost != nil) {
         self.title = _selectedHost.name;
@@ -144,12 +151,24 @@ static NSMutableSet* hostList;
         self.title = [LocalizationHelper localizedStringForKey: @"Searching for PCs on your network..."] ;
     }
     else {
+        if (@available(iOS 13.0, *)) {
+            navBarAppearanceScroll.titleTextAttributes = navBarAppearanceStandard.titleTextAttributes = @{
+                NSFontAttributeName: [UIFont systemFontOfSize:24 weight:UIFontWeightSemibold],
+                NSForegroundColorAttributeName: [ThemeManager textColor] // 可选，设置标题颜色
+            };
+        }
+        /*
         self.navigationController.navigationBar.titleTextAttributes = @{
             NSFontAttributeName: [UIFont systemFontOfSize:24 weight:UIFontWeightSemibold],
             NSForegroundColorAttributeName: [ThemeManager textColor] // 可选，设置标题颜色
-        };
+        };*/
         self.title = [LocalizationHelper localizedStringForKey: @"Hosts" ];
         //self.title = nil;
+    }
+    if (@available(iOS 13.0, *)) {
+        [self applyNavBarAppearance];
+    } else {
+        // Fallback on earlier versions
     }
 }
 
@@ -311,10 +330,11 @@ static NSMutableSet* hostList;
     _selectedHost = nil;
     _sortedAppList = nil;
     
-    [self.collectionView removeFromSuperview]; // necessary for new scroll host view reloading mechanism
+    // [self.collectionView removeFromSuperview]; // necessary for new scroll host view reloading mechanism
+    self.hostCollectionVC.view.hidden = NO;
+    self.collectionView.hidden = YES;
     [self updateTitle];
-    self.navigationItem.rightBarButtonItems = @[helpButton, addHostButton];
-    [self->_upButton setTitle:nil];
+    self.navigationItem.rightBarButtonItems = @[_helpButton, _addHostButton];
     self.revealViewController.mainFrameIsInHostView = true;  // to allow orientation change only in app view, tell top view controller the mainframe is not in host view
 }
 
@@ -341,14 +361,19 @@ static NSMutableSet* hostList;
     //_appManager = [[AppAssetManager alloc] initWithCallback:self];
     [self.collectionView setCollectionViewLayout:self.collectionViewLayout];
     [self.collectionView reloadData]; //for new scroll host view reloading mechanism
-    [self.view addSubview:self.collectionView]; //for new scroll host view reloading mechanism
+    // [self.view bringSubviewToFront:self.collectionView];
+    self.hostCollectionVC.view.hidden = YES;
+    self.collectionView.hidden = NO;
+    self.collectionView.backgroundColor = [ThemeManager appBackgroundColor];
     [self attachWaterMark];
-    [self->_upButton setTitle: [LocalizationHelper localizedStringForKey: @"Select New Host"]];
     self.navigationItem.rightBarButtonItems = @[_upButton];
     self.revealViewController.mainFrameIsInHostView = false;
     // [self disableNavigation];
     [self updateTitle];
     [self alreadyPaired];
+    // self.navigationController.navigationBar.backgroundColor = [ThemeManager appBackgroundColor];
+    // self.navigationController.navigationBar.translucent = NO;
+    //[self applyNavBarAppearance:navBarAppearance];
 }
 
 - (void)appButtonTappedForHost:(TemporaryHost *)host {
@@ -1038,12 +1063,6 @@ static NSMutableSet* hostList;
 }
 
 #if !TARGET_OS_TV
-// this method is deprecated
-- (void)simulateSettingsButtonPressClose { //force expand settings view to update resolution table, and all setting includes current fullscreen resolution will be updated.
-    if (currentPosition == FrontViewPositionRight && _settingsButton.target && [_settingsButton.target respondsToSelector:_settingsButton.action]) {
-        [_settingsButton.target performSelector:_settingsButton.action withObject:_settingsButton];
-    }
-}
 
 - (void)simulateSettingsButtonPress { //simulate pressing the setting button, called from setting view controller.
     //if([self isIPhonePortrait]) return; // disable settings view expanding in iphone portrait mode since it's buggy.
@@ -1053,15 +1072,15 @@ static NSMutableSet* hostList;
 }
 
 - (void)handleOrientationChange {
-    UIDeviceOrientation targetOrientation = [[UIDevice currentDevice] orientation];
-    if([self isIPhone] && UIDeviceOrientationIsPortrait(targetOrientation)) [self simulateSettingsButtonPressClose]; // on iphone, force close settings views if target orietation is portrait.
+    // UIDeviceOrientation targetOrientation = [[UIDevice currentDevice] orientation];
+    // if([self isIPhone] && UIDeviceOrientationIsPortrait(targetOrientation)) [self simulateSettingsButtonPressClose]; // on iphone, force close settings views if target orietation is portrait.
     double delayInSeconds = 0.7;
     // Convert the delay into a dispatch_time_t value
     dispatch_time_t delayTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
     // Perform some task after the delay
     dispatch_after(delayTime, dispatch_get_main_queue(), ^{// Code to execute after the delay
         // [self updateResolutionAccordingly];
-        [self.settingsButton setEnabled:![self isIPhonePortrait]]; //make sure settings button is disabled in iphone portrait mode.
+        // [self.settingsButton setEnabled:![self isIPhonePortrait]]; //make sure settings button is disabled in iphone portrait mode.
     });
 }
 
@@ -1075,23 +1094,21 @@ static NSMutableSet* hostList;
 }
 
 - (void)revealController:(SWRevealViewController *)revealController willMoveToPosition:(FrontViewPosition)position {
-    
+    SettingsViewController* settingsViewController = (SettingsViewController*)[revealController rearViewController];
+
     if (position == FrontViewPositionLeft) {
         self.navigationItem.leftBarButtonItems = @[_settingsButton];
     }
     else {
         self.navigationItem.leftBarButtonItems = @[];
+        [settingsViewController updateTheme];
     }
 
-    SettingsViewController* settingsViewController = (SettingsViewController*)[revealController rearViewController];
     settingsViewController.mainFrameViewController = self;
     // enable / disable widgets acoordingly: in streamview, disable, outside of streamview, enable.
-    if (@available(iOS 16.0, *)) {
-        revealController.disconnectButton.hidden = !self.settingsExpandedInStreamView;
-    } else {
-        revealController.disconnectButton.enabled = self.settingsExpandedInStreamView;
-        // Fallback on earlier versions
-    }
+    if(self.settingsExpandedInStreamView) [revealController buttonsInStreaming];
+    else [revealController buttonsNotInStreaming];
+    
     [settingsViewController.resolutionSelector setEnabled:!self.settingsExpandedInStreamView];
     settingsViewController.resolutionStack.hidden = self.settingsExpandedInStreamView;
     [settingsViewController.framerateSelector setEnabled:!self.settingsExpandedInStreamView];
@@ -1351,19 +1368,47 @@ static NSMutableSet* hostList;
     ]];
 }
 
+- (void)applyNavBarAppearance API_AVAILABLE(ios(13.0)){
+    self.navigationController.navigationBar.standardAppearance = navBarAppearanceStandard;
+    self.navigationController.navigationBar.scrollEdgeAppearance = navBarAppearanceStandard;
+}
 
 - (void)setupNavBar{
-    
-    self->addHostButton = [self createAddHostButton];
-    self->helpButton = [self createHelpButton];
-    //[self setupHostViewTitle];
-    self.navigationItem.rightBarButtonItems = @[helpButton, addHostButton]; // 顺序：右边靠右的是第一个
+    if (@available(iOS 13.0, *)) {
+        navBarAppearanceStandard = [[UINavigationBarAppearance alloc] init];
+        [navBarAppearanceStandard configureWithOpaqueBackground]; // 不透明
+        navBarAppearanceStandard.backgroundColor =[ThemeManager appBackgroundColor];; // 设置你需要的背景色
+        navBarAppearanceStandard.shadowColor = nil; // 去掉底部分割线（可选）
+        navBarAppearanceStandard.titleTextAttributes = @{
+            NSForegroundColorAttributeName: [ThemeManager textColor]
+        };
+        navBarAppearanceStandard.shadowColor = [UIColor clearColor];
+        navBarAppearanceStandard.backgroundImage = nil;
+        
+        /*
+        navBarAppearanceScroll = [[UINavigationBarAppearance alloc] init];
+        [navBarAppearanceScroll configureWithTransparentBackground];
+        navBarAppearanceScroll.backgroundEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleRegular];
+        navBarAppearanceScroll.backgroundColor =[[ThemeManager appBackgroundColor] colorWithAlphaComponent:0.6]; // 设置你需要的背景色
+        //navBarAppearanceScroll.shadowColor = nil; // 去掉底部分割线（可选）
+        navBarAppearanceScroll.titleTextAttributes = @{
+            NSForegroundColorAttributeName: [ThemeManager textColor]
+        };
+        // navBarAppearanceScroll.shadowColor = [UIColor clearColor];
+        navBarAppearanceScroll.backgroundImage = nil;*/
 
-    self.navigationController.navigationBar.backgroundColor = [ThemeManager appBackgroundColor];
-    // self.navigationController.navigationBar
-    self.navigationController.navigationBar.titleTextAttributes = @{
-        NSForegroundColorAttributeName: [ThemeManager textColor]
-    };
+        //appearance.
+        [self applyNavBarAppearance];
+    }
+    
+    self->_addHostButton = [self createAddHostButton];
+    self->_helpButton = [self createHelpButton];
+    //[self setupHostViewTitle];
+    
+    
+    
+    self.navigationItem.rightBarButtonItems = @[_helpButton, _addHostButton]; // 顺序：右边靠右的是第一个
+
     // Set the side bar button action. When it's tapped, it'll show the sidebar.
     
     [_settingsButton setTarget:self.revealViewController];
@@ -1379,6 +1424,8 @@ static NSMutableSet* hostList;
     }
     
     // Set the host name button action. When it's tapped, it'll show the host selection view.
+    _upButton = [[UIBarButtonItem alloc] init];
+    [self->_upButton setTitle: [LocalizationHelper localizedStringForKey: @"Select New Host"]];
     [_upButton setTarget:self];
     [_upButton setAction:@selector(switchToHostView)];
 }
@@ -1387,8 +1434,12 @@ static NSMutableSet* hostList;
     [ThemeManager setUserInterfaceStyle:UIUserInterfaceStyleUnspecified];
     [super viewDidLoad];
     //[OrientationHelper updateOrientationToLandscape];
-    
-    
+    // self.navigationController.delegate = self;
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(deviceOrientationDidChange) // handle orientation change since i made portrait mode available
+                                                 name:UIDeviceOrientationDidChangeNotification
+                                               object:nil];
+
 #if !TARGET_OS_TV
     self.settingsExpandedInStreamView = false; // init this flag
     self.revealViewController.isStreaming = false; //init this flag for rvlVC
@@ -1484,7 +1535,6 @@ static NSMutableSet* hostList;
 
 -(void)viewDidLayoutSubviews{
     [super viewDidLayoutSubviews];
-    
     [self updateHosts];
 }
 
@@ -1653,16 +1703,16 @@ static NSMutableSet* hostList;
     
     [[self revealViewController] setPrimaryViewController:self];
     self.revealViewController.isStreaming = false; // tell the revealViewController streaming is finished
-    [self.settingsButton setEnabled:![self isIPhonePortrait]]; //make sure settings button is disabled in iphone portrait mode.
+    //[self.settingsButton setEnabled:![self isIPhonePortrait]]; //make sure settings button is disabled in iphone portrait mode.
     //recordedScreenWidth = CGRectGetWidth([[UIScreen mainScreen] bounds]); // Get the screen's bounds (in points), update recorded screen width
 #endif
     
-    [self.navigationController setNavigationBarHidden:NO animated:YES];
+    [self.navigationController setNavigationBarHidden:NO animated:NO];
     
     // Hide 1px border line
     UIImage* fakeImage = [[UIImage alloc] init];
-    [self.navigationController.navigationBar setShadowImage:fakeImage];
-    [self.navigationController.navigationBar setBackgroundImage:fakeImage forBarPosition:UIBarPositionAny barMetrics:UIBarMetricsDefault];
+    // [self.navigationController.navigationBar setShadowImage:fakeImage];
+    // [self.navigationController.navigationBar setBackgroundImage:fakeImage forBarPosition:UIBarPositionAny barMetrics:UIBarMetricsDefault];
     
     // Check for a pending shortcut action when appearing
     [self handlePendingShortcutAction];
@@ -1707,8 +1757,9 @@ static NSMutableSet* hostList;
     // for that which would normally fire beginForegroundRefresh.
     self.view.backgroundColor = [ThemeManager appBackgroundColor];
 
-    
+    [self.view addSubview:self.collectionView];
     [self initHostCollection];
+    [self switchToHostView];
     
     [self retrieveSavedHosts];
     
@@ -1799,7 +1850,6 @@ static NSMutableSet* hostList;
 
 - (void)updateHosts {
     Log(LOG_I, @"Updating hosts...");
-    float prevEdge = -1;
     @synchronized (hostList) {
         // Sort the host list in alphabetical order
         NSArray* sortedHostList = [[hostList allObjects] sortedArrayUsingSelector:@selector(compareName:)];
@@ -1844,6 +1894,18 @@ static NSMutableSet* hostList;
 
 // This function forces immediate decoding of the UIImage, rather
 // than the default lazy decoding that results in janky scrolling.
+-(void)deviceOrientationDidChange{
+    if(self.collectionView.superview == nil) return;
+    [NSLayoutConstraint activateConstraints:@[
+        [self.collectionView.topAnchor constraintEqualToAnchor:self.view.safeAreaLayoutGuide.topAnchor],
+        [self.collectionView.bottomAnchor constraintEqualToAnchor:self.view.safeAreaLayoutGuide.bottomAnchor],
+        [self.collectionView.leadingAnchor constraintEqualToAnchor:self.view.safeAreaLayoutGuide.leadingAnchor],
+        [self.collectionView.trailingAnchor constraintEqualToAnchor:self.view.safeAreaLayoutGuide.trailingAnchor],
+        //[self.collectionView.heightAnchor constraintEqualToConstant:_headerViewHeight]
+    ]];
+}
+
+
 + (UIImage*) loadBoxArtForCaching:(TemporaryApp*)app {
     UIImage* boxArt;
     
@@ -1925,7 +1987,7 @@ static NSMutableSet* hostList;
     
     [cell.subviews.firstObject removeFromSuperview]; // Remove a view that was previously added
     [cell addSubview:appView];
-    [self.settingsButton setEnabled:![self isIPhonePortrait]]; // update settings button after host is clicked & appview loaded
+    // [self.settingsButton setEnabled:![self isIPhonePortrait]]; // update settings button after host is clicked & appview loaded
     // Shadow opacity is controlled inside UIAppView based on whether the app
     // is hidden or not during the update cycle.
     UIBezierPath *shadowPath = [UIBezierPath bezierPathWithRect:cell.bounds];
@@ -2008,7 +2070,8 @@ static NSMutableSet* hostList;
 
 - (CGSize)getHostCardSize{
     CGSize cardSize;
-    cardSize.height = 0.25*MIN(CGRectGetHeight([[UIScreen mainScreen] bounds]),CGRectGetWidth([[UIScreen mainScreen] bounds]));
+    if([self isIPhone]) cardSize.height = 0.4*MIN(CGRectGetHeight([[UIScreen mainScreen] bounds]),CGRectGetWidth([[UIScreen mainScreen] bounds]));
+    else cardSize.height = 0.25*MIN(CGRectGetHeight([[UIScreen mainScreen] bounds]),CGRectGetWidth([[UIScreen mainScreen] bounds]));
     TemporaryHost* dummyHost = [[TemporaryHost alloc] init];
     HostCardView* dummyCard = [[HostCardView alloc] initWithHost:dummyHost];
     cardSize.width = cardSize.height * (dummyCard.size.width/dummyCard.size.height);
@@ -2027,12 +2090,12 @@ static NSMutableSet* hostList;
     [self.view addSubview:self.hostCollectionVC.view];
     
     // 设置其布局（Auto Layout 示例）
-    CGFloat hostCollectionViewPadding = 75;
+    // CGFloat hostCollectionViewPadding = 75;
     self.hostCollectionVC.view.translatesAutoresizingMaskIntoConstraints = NO;
     [NSLayoutConstraint activateConstraints:@[
         [self.hostCollectionVC.view.topAnchor constraintEqualToAnchor:self.view.safeAreaLayoutGuide.topAnchor constant:0],
-        [self.hostCollectionVC.view.leadingAnchor constraintEqualToAnchor:self.view.safeAreaLayoutGuide.leadingAnchor constant:hostCollectionViewPadding],
-        [self.hostCollectionVC.view.trailingAnchor constraintEqualToAnchor:self.view.safeAreaLayoutGuide.trailingAnchor constant:-hostCollectionViewPadding],
+        [self.hostCollectionVC.view.leadingAnchor constraintEqualToAnchor:self.view.safeAreaLayoutGuide.leadingAnchor constant:0],
+        [self.hostCollectionVC.view.trailingAnchor constraintEqualToAnchor:self.view.safeAreaLayoutGuide.trailingAnchor constant:0],
         // [self.hostCollectionVC.view.bottomAnchor constraintEqualToAnchor:self.view.safeAreaLayoutGuide.bottomAnchor constant:0] //?
     ]];
     
@@ -2040,6 +2103,5 @@ static NSMutableSet* hostList;
     [self.hostCollectionVC didMoveToParentViewController:self];
     
 }
-
 
 @end

@@ -13,6 +13,7 @@
 #import "TemporarySettings.h"
 #import "DataManager.h"
 #import "MenuSectionView.h"
+#import "ThemeManager.h"
 
 #import <UIKit/UIGestureRecognizerSubclass.h>
 #import <VideoToolbox/VideoToolbox.h>
@@ -181,13 +182,37 @@ CGSize resolutionTable[RESOLUTION_TABLE_SIZE];
     // Add a bit of padding so the view doesn't end right at the button of the display
     self.scrollView.contentSize = CGSizeMake(self.scrollView.contentSize.width,
                                              [self isIPhone] ? highestViewY + 20 : parentStack.frame.size.height + [self getStandardNavBarHeight] + 20);
+    /*
+    self.scrollView.translatesAutoresizingMaskIntoConstraints = NO;
+    [NSLayoutConstraint activateConstraints:@[
+        // [self.scrollView.topAnchor constraintEqualToAnchor:],
+        [self.scrollView.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor],
+        [self.scrollView.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor],
+        [self.scrollView.topAnchor constraintEqualToAnchor:self.view.topAnchor],
+        [self.scrollView.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor],
+    ]];
+    
+    NSLog(@"settingsViewWidth: %f", self.view.bounds.size.width);
+*/
+    
+    
+    
+    double delayInSeconds = 3;
+    // Convert the delay into a dispatch_time_t value
+    dispatch_time_t delayTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
+    // Perform some task after the delay
+    dispatch_after(delayTime, dispatch_get_main_queue(), ^{// Code to execute after the delay
+        // [self updateResolutionAccordingly];
+    });
+    
 }
 
 // Adjust the subviews for the safe area on the iPhone X.
 - (void)viewSafeAreaInsetsDidChange {
     [super viewSafeAreaInsetsDidChange];
     
-    if (@available(iOS 11.0, *)) {
+    //if (@available(iOS 11.0, *)) {
+    if (false) { // cancel this for portrait mode
         for (UIView* view in self.view.subviews) {
             // HACK: The official safe area is much too large for our purposes
             // so we'll just use the presence of any safe area to indicate we should
@@ -276,6 +301,7 @@ BOOL isCustomResolution(CGSize res) {
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
     [self updateResolutionTable];
+    //[self updateTheme];
     NSLog(@"Resolution table updated");
 }
 
@@ -346,6 +372,19 @@ BOOL isCustomResolution(CGSize res) {
     self.scrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentAutomatic;
     // 可选：确保 scrollView 开启垂直滚动
     self.scrollView.alwaysBounceVertical = YES;
+    self.scrollView.showsVerticalScrollIndicator = NO;
+
+    /*
+    self.scrollView.translatesAutoresizingMaskIntoConstraints = NO;
+    [NSLayoutConstraint activateConstraints:@[
+        // [self.scrollView.topAnchor constraintEqualToAnchor:],
+        [self.scrollView.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor],
+        [self.scrollView.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor],
+        [self.scrollView.topAnchor constraintEqualToAnchor:self.view.topAnchor],
+        [self.scrollView.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor],
+    ]];
+     */
+
     parentStack = [[UIStackView alloc] init];
     parentStack.axis = UILayoutConstraintAxisVertical;
     parentStack.spacing = 0;
@@ -366,23 +405,34 @@ BOOL isCustomResolution(CGSize res) {
     if (@available(iOS 13.0, *)) {
         [videoSection setSectionIcon:[UIImage systemImageNamed:@"airplayvideo"]];
     } else [videoSection setSectionIcon:nil];
+    self.resolutionStack.accessibilityIdentifier = @"resolutionStack";
+    self.fpsStack.accessibilityIdentifier = @"fpsStack";
+    self.codecStack.accessibilityIdentifier = @"codecStack";
     [videoSection addSubStackView:_resolutionStack];
     [videoSection addSubStackView:_fpsStack];
     [videoSection addSubStackView:_codecStack];
     [videoSection addToParentStack:parentStack];
     [videoSection setExpanded:YES];
+    //_fpsStack.userInteractionEnabled = NO;
     
     MenuSectionView *gesturesSection = [[MenuSectionView alloc] init];
     gesturesSection.sectionTitle = [LocalizationHelper localizedStringForKey:@"Gestures"];
     if (@available(iOS 13.0, *)) {
         [gesturesSection setSectionIcon:[UIImage systemImageNamed:@"hand.draw"]];
     } else [gesturesSection setSectionIcon:nil];
+    self.keyboardToggleFingerNumStack.accessibilityIdentifier = @"keyboardToggleFingerNumStack";
+    self.slideToSettingsScreenEdgeStack.accessibilityIdentifier = @"slideToSettingsScreenEdgeStack";
+    self.slideToCmdToolScreenEdgeStack.accessibilityIdentifier = @"slideToCmdToolScreenEdgeStack";
+    self.slideToSettingsDistanceStack.accessibilityIdentifier = @"slideToSettingsDistanceStack";
     [gesturesSection addSubStackView:_keyboardToggleFingerNumStack];
     [gesturesSection addSubStackView:_slideToSettingsScreenEdgeStack];
     [gesturesSection addSubStackView:_slideToCmdToolScreenEdgeStack];
     [gesturesSection addSubStackView:_slideToSettingsDistanceStack];
+   // [gesturesSection addSubStackView:_unlockDisplayOrientationStack];
     [gesturesSection addToParentStack:parentStack];
     [gesturesSection setExpanded:YES];
+    
+    
 }
 
 
@@ -445,14 +495,39 @@ BOOL isCustomResolution(CGSize res) {
     [parentStackTmp removeFromSuperview];
 }
 
+- (void)handleLongPress:(UILongPressGestureRecognizer *)gesture {
+    if (gesture.state == UIGestureRecognizerStateBegan) {
+        CGPoint point = [gesture locationInView:self.view];
+        UIView *touchedView = [self.view hitTest:point withEvent:nil];
+        UIStackView* capturedStack;
+        if([touchedView isKindOfClass:[UIStackView class]]){
+            if(touchedView.accessibilityIdentifier != nil) capturedStack = (UIStackView *)touchedView;
+        }
+        else if([touchedView.superview isKindOfClass:[UIStackView class]] && touchedView.superview.accessibilityIdentifier != nil) capturedStack = (UIStackView *)touchedView.superview;
+        else NSLog(@"hit test: not setting stack captured");
+        // NSLog(@"hit test obj: %@", touchedView);
+        NSLog(@"hit test name: %@", capturedStack.accessibilityIdentifier);
+    }
+}
+
 - (void)viewDidLoad {
+    //[self updateTheme];
+    
+    UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPress:)];
+    [self.view addGestureRecognizer:longPress];
+
+    
     // return;
     BOOL isIPad = ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad);
-    if(isIPad) [self layoutWidgetes]; // layout for ipad tmply
-    
-    [self initParentStack];
-    [self layoutSections];
-     
+    if(isIPad){
+        //[self layoutWidgetes]; // layout for ipad tmply
+        // [self.view ]
+        for(UIView* view in self.view.subviews){
+            [view removeFromSuperview];
+        }
+        [self initParentStack];
+        [self layoutSections];
+    }
     
     
     self->slideToCloseSettingsViewRecognizer = [[CustomEdgeSlideGestureRecognizer alloc] initWithTarget:self action:@selector(edgeSwiped)];
@@ -1172,6 +1247,80 @@ BOOL isCustomResolution(CGSize res) {
 
     return resolutionTable[[self.resolutionSelector selectedSegmentIndex]].width;
 }
+
+- (UIStackView *)findFlatStackViewFrom:(UIView *)view {
+    while (view != nil) {
+        if ([view isKindOfClass:[UIStackView class]]) {
+            UIStackView *stack = (UIStackView *)view;
+            BOOL hasNestedStack = NO;
+            for (UIView *sub in stack.arrangedSubviews) {
+                if ([sub isKindOfClass:[UIStackView class]]) {
+                    hasNestedStack = YES;
+                    break;
+                }
+            }
+            if (!hasNestedStack) {
+                return stack;
+            }
+        }
+        view = view.superview;
+    }
+    return nil;
+}
+
+
+- (void)updateThemeForLabels:(UIView *)view {
+    for (UIView *subview in view.subviews) {
+        if ([subview isKindOfClass:[UILabel class]]) {
+            UILabel *label = (UILabel *)subview;
+            if (@available(iOS 13.0, *)) {
+                label.layer.filters = nil;
+                label.textColor = [ThemeManager textColor];
+            } else {
+                // Fallback on earlier versions
+            }
+        }
+        [self updateThemeForLabels:subview];
+    }
+}
+
+- (void)updateThemeForSelectors:(UIView *)view {
+    for (UIView *subview in view.subviews) {
+        if ([subview isKindOfClass:[UISegmentedControl class]]) {
+            UISegmentedControl *selector = (UISegmentedControl *)subview;
+            if (@available(iOS 13.0, *)) {
+                selector.selectedSegmentTintColor = [ThemeManager appSecondaryColor];
+            } else {
+                // Fallback on earlier versions
+            }            
+        }
+        [self updateThemeForSelectors:subview];
+    }
+}
+
+- (void)updateThemeForSliders:(UIView *)view {
+    for (UIView *subview in view.subviews) {
+        if ([subview isKindOfClass:[UISlider class]]) {
+            UISlider *slider = (UISlider *)subview;
+            if (@available(iOS 13.0, *)) {
+            } else {
+                // Fallback on earlier versions
+            }
+            slider.tintColor = [ThemeManager appSecondaryColor];
+
+        }
+        [self updateThemeForSliders:subview];
+    }
+}
+
+
+- (void)updateTheme{
+    self.view.backgroundColor = [ThemeManager appBackgroundColor];
+    [self updateThemeForLabels:self.view];
+    [self updateThemeForSelectors:self.view];
+    [self updateThemeForSliders:self.view];
+}
+
 
 - (void) saveSettings {
     DataManager* dataMan = [[DataManager alloc] init];

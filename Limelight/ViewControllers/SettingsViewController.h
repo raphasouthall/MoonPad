@@ -104,9 +104,11 @@
 
 #pragma clang diagnostic pop
 
-- (void) saveSettings;
-+ (bool) isLandscapeNow;
+- (void)saveSettings;
++ (bool)isLandscapeNow;
 - (void)updateResolutionTable;
-- (void) widget:(UISlider*)widget setEnabled:(bool)enabled;
+- (void)widget:(UISlider*)widget setEnabled:(bool)enabled;
+- (void)updateTheme;
+
 
 @end

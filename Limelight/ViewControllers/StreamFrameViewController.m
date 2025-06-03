@@ -323,8 +323,6 @@
     
     dispatch_resume(timer);
     
-    // 防止循环引用（虽然这里用__block已经足够）
-    __weak typeof(alert) weakAlert = alert;
 }
 
 

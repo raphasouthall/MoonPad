@@ -73,11 +73,21 @@ static const CGFloat cellOffsetY = 20;
 
 @implementation HostCollectionViewController{
     UICollectionViewFlowLayout *layout;
+    CGFloat _horizontalPadding;
 }
 
 - (instancetype)init {
     layout = [[UICollectionViewFlowLayout alloc] init];
-    layout.sectionInset = UIEdgeInsetsMake(7, 0, 0, 0); // 上、左、下、右的间距
+    switch ([UIDevice currentDevice].userInterfaceIdiom) {
+        case UIUserInterfaceIdiomPhone:
+            _horizontalPadding = 5;
+            break;
+        case UIUserInterfaceIdiomPad:
+        default:
+            _horizontalPadding = 75;
+            break;
+    }
+    layout.sectionInset = UIEdgeInsetsMake(7, _horizontalPadding, 0, _horizontalPadding); // 上、左、下、右的间距
     if (self = [super initWithCollectionViewLayout:layout]) {
         _interItemMinimumSpacing = 10;
         _minimumLineSpacing = 10;
@@ -177,9 +187,9 @@ static const CGFloat cellOffsetY = 20;
         _collectionViewHeightConstraint.constant = contentHeight;
     }
     
-    if([self numberOfRowsInCollectionView]<=2 && !contentExceedsView) layout.sectionInset = UIEdgeInsetsMake(50, 0, 0, 0);
-    if([self numberOfRowsInCollectionView]>2 && !contentExceedsView) layout.sectionInset = UIEdgeInsetsMake(25, 0, 0, 0);
-    if(contentExceedsView) layout.sectionInset = UIEdgeInsetsMake(7, 0, 0, 0);
+    if([self numberOfRowsInCollectionView]<=2 && !contentExceedsView) layout.sectionInset = UIEdgeInsetsMake(50, _horizontalPadding, 0, _horizontalPadding);
+    if([self numberOfRowsInCollectionView]>2 && !contentExceedsView) layout.sectionInset = UIEdgeInsetsMake(25, _horizontalPadding, 0, _horizontalPadding);
+    if(contentExceedsView) layout.sectionInset = UIEdgeInsetsMake(7, _horizontalPadding, 0, _horizontalPadding);
 }
 
 #pragma mark - UICollectionView DataSource

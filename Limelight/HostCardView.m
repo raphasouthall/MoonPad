@@ -61,7 +61,6 @@ static const float REFRESH_CYCLE = 2.0f;
         defaultGreen = [UIColor colorWithRed:52.0/255.0 green:199.0/255.0 blue:89.0/255.0 alpha:1.0];
         // self.userIterfaceStyle = UIUserInterfaceStyleLight
         if (@available(iOS 13.0, *)) {
-            NSLog(@"ttesttttt");
             UIContextMenuInteraction* longPressInteraction = [[UIContextMenuInteraction alloc] initWithDelegate:self];
             [self addInteraction:longPressInteraction];
             self.userInteractionEnabled = YES;
@@ -154,7 +153,6 @@ static const float REFRESH_CYCLE = 2.0f;
 
 - (UIContextMenuConfiguration *)contextMenuInteraction:(UIContextMenuInteraction *)interaction
                         configurationForMenuAtLocation:(CGPoint)location  API_AVAILABLE(ios(13.0)){
-    NSLog(@"long tap test");
     longPressFired = true;
     if ([self.delegate respondsToSelector:@selector(hostCardLongPressed:view:)]) {
         [self.delegate hostCardLongPressed:_host view:self];

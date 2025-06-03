@@ -47,6 +47,7 @@ static UIUserInterfaceStyle _userInterfaceStyle;
         case UIUserInterfaceStyleDark:
         default:
             return [UIColor colorWithRed:28.0/255.0 green:28.0/255.0 blue:30.0/255.0 alpha:1.0];
+            //return [UIColor blackColor];
             break;
     }
 }
@@ -68,12 +69,10 @@ static UIUserInterfaceStyle _userInterfaceStyle;
     [ThemeManager getUIStyle];
         switch (self.userInterfaceStyle) {
             case UIUserInterfaceStyleLight:
-                NSLog(@"themeLightSP");
                 return [UIColor colorWithWhite:0.1 alpha:0.28];
                 break;
             case UIUserInterfaceStyleDark:
             default:
-                NSLog(@"themeDarkSP");
                 return [UIColor colorWithWhite:0.28 alpha:1.0];
                 break;
         }
@@ -84,12 +83,10 @@ static UIUserInterfaceStyle _userInterfaceStyle;
     [ThemeManager getUIStyle];
         switch (self.userInterfaceStyle) {
         case UIUserInterfaceStyleLight:
-                NSLog(@"themeLightTX");
             return [UIColor blackColor];
             break;
         case UIUserInterfaceStyleDark:
         default:
-                NSLog(@"themeDarkTX");
             return [UIColor whiteColor];
             break;
     }
@@ -100,7 +97,7 @@ static UIUserInterfaceStyle _userInterfaceStyle;
 }
 
 + (UIColor *)appSecondaryColor {
-    return [UIColor colorWithRed:0.0 green:0.48 blue:1.0 alpha:1.0]; // 可换其他常用色
+    return [UIColor colorWithRed:0.0 green:0.319 blue:0.64 alpha:1.0]; // 可换其他常用色
 }
 
 + (UIColor *)appPrimaryColorWithAlpha {
