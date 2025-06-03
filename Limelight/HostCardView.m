@@ -112,7 +112,6 @@ static const float REFRESH_CYCLE = 2.0f;
         longPressFired = false;
         return;
     }
-    NSLog(@"self.delegate: %lu", (uintptr_t)self.delegate);
     if ([self.delegate respondsToSelector:@selector(appButtonTappedForHost:)]) {
         [self.delegate appButtonTappedForHost:_host];
     } else NSLog(@"Delegate not set or does not respond to appButtonTappedForHost:");

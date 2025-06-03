@@ -73,6 +73,7 @@
     }
     self.onscreenControls = [NSNumber numberWithInteger:OnScreenControlsLevelOff];
 #else
+    self.settingsMenuMode = settings.settingsMenuMode;
     self.bitrate = settings.bitrate;
     self.framerate = settings.framerate;
     self.height = settings.height;

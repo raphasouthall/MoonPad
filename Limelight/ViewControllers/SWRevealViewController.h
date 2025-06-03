@@ -140,6 +140,7 @@
 
 @class SWRevealViewController;
 @protocol SWRevealViewControllerDelegate;
+@protocol RearNavigationBarMenuDelegate;
 
 #pragma mark - SWRevealViewController Class
 
@@ -318,6 +319,7 @@ typedef NS_ENUM(NSInteger, SWRevealToggleAnimationType)
 
 // Delegate
 @property (nonatomic,weak) id<SWRevealViewControllerDelegate> delegate;
+@property (nonatomic,weak) id<RearNavigationBarMenuDelegate> navBarMenuDelegate;
 
 @property (nonatomic,assign) bool isStreaming;
 @property (nonatomic,assign) bool mainFrameIsInHostView;
@@ -327,6 +329,7 @@ typedef NS_ENUM(NSInteger, SWRevealToggleAnimationType)
 
 
 @end
+
 
 
 #pragma mark - SWRevealViewControllerDelegate Protocol
@@ -339,6 +342,15 @@ typedef enum
     SWRevealControllerOperationReplaceRightController,
     
 } SWRevealControllerOperation;
+
+#pragma mark - RearNavigationBarMenuDelegate Protocol
+
+@protocol RearNavigationBarMenuDelegate<NSObject>
+@optional
+- (void)switchToFavoriteSettings;
+- (void)switchToAllSettings;
+@end
+
 
 
 @protocol SWRevealViewControllerDelegate<NSObject>

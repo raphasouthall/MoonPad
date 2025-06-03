@@ -45,14 +45,14 @@
 - (void)commonInit {
     // 默认值
     _leadingTrailingPadding = 0;
-    _separatorLinePadding = 26;
+    _separatorLinePadding = 9;
     _sectionTitle = @"Section";
     _expanded = YES;
     _backgroundColor = [UIColor clearColor];
-    _rootStackViewSpacing = 8.0;
+    _rootStackViewSpacing = 10;
     _subStackViews = [NSMutableArray array];
     _headerViewHeight = 37;
-    _headerViewVerticalSpacing = 26;
+    _headerViewVerticalSpacing = 20;
     
     // 设置视图
     self.layer.cornerRadius = 10.0;

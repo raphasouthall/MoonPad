@@ -28,9 +28,13 @@
     uint16_t oscLayoutFingers;
     CustomEdgeSlideGestureRecognizer *slideToCloseSettingsViewRecognizer;
     UIStackView *parentStack;
+    NSMutableDictionary *_settingStackDict;
+    NSMutableArray *_favoriteSettingStackIdentifiers;
+    uint8_t currentSettingsMenuMode;
 }
 
 @dynamic overrideUserInterfaceStyle;
+
 
 //static NSString* bitrateFormat;
 static const int bitrateTable[] = {
@@ -398,6 +402,12 @@ BOOL isCustomResolution(CGSize res) {
         [parentStack.widthAnchor constraintEqualToAnchor:self.scrollView.contentLayoutGuide.widthAnchor]
     ]];
 }
+
+- (void)addSetting:(UIStackView *)stack ofIdentifier:(NSString* )identifier to:(MenuSectionView* )menuSection{
+    stack.accessibilityIdentifier = identifier;
+    [_settingStackDict setObject:stack forKey:identifier];
+    [menuSection addSubStackView:stack];
+}
     
 - (void)layoutSections{
     MenuSectionView *videoSection = [[MenuSectionView alloc] init];
@@ -405,12 +415,10 @@ BOOL isCustomResolution(CGSize res) {
     if (@available(iOS 13.0, *)) {
         [videoSection setSectionIcon:[UIImage systemImageNamed:@"airplayvideo"]];
     } else [videoSection setSectionIcon:nil];
-    self.resolutionStack.accessibilityIdentifier = @"resolutionStack";
-    self.fpsStack.accessibilityIdentifier = @"fpsStack";
-    self.codecStack.accessibilityIdentifier = @"codecStack";
-    [videoSection addSubStackView:_resolutionStack];
-    [videoSection addSubStackView:_fpsStack];
-    [videoSection addSubStackView:_codecStack];
+    
+    [self addSetting:self.resolutionStack ofIdentifier:@"resolutionStack" to:videoSection];
+    [self addSetting:self.fpsStack ofIdentifier:@"fpsStack" to:videoSection];
+    [self addSetting:self.codecStack ofIdentifier:@"codecStack" to:videoSection];
     [videoSection addToParentStack:parentStack];
     [videoSection setExpanded:YES];
     //_fpsStack.userInteractionEnabled = NO;
@@ -420,19 +428,13 @@ BOOL isCustomResolution(CGSize res) {
     if (@available(iOS 13.0, *)) {
         [gesturesSection setSectionIcon:[UIImage systemImageNamed:@"hand.draw"]];
     } else [gesturesSection setSectionIcon:nil];
-    self.keyboardToggleFingerNumStack.accessibilityIdentifier = @"keyboardToggleFingerNumStack";
-    self.slideToSettingsScreenEdgeStack.accessibilityIdentifier = @"slideToSettingsScreenEdgeStack";
-    self.slideToCmdToolScreenEdgeStack.accessibilityIdentifier = @"slideToCmdToolScreenEdgeStack";
-    self.slideToSettingsDistanceStack.accessibilityIdentifier = @"slideToSettingsDistanceStack";
-    [gesturesSection addSubStackView:_keyboardToggleFingerNumStack];
-    [gesturesSection addSubStackView:_slideToSettingsScreenEdgeStack];
-    [gesturesSection addSubStackView:_slideToCmdToolScreenEdgeStack];
-    [gesturesSection addSubStackView:_slideToSettingsDistanceStack];
-   // [gesturesSection addSubStackView:_unlockDisplayOrientationStack];
+    
+    [self addSetting:self.keyboardToggleFingerNumStack ofIdentifier:@"keyboardToggleFingerNumStack" to:gesturesSection];
+    [self addSetting:self.slideToSettingsScreenEdgeStack ofIdentifier:@"slideToSettingsScreenEdgeStack" to:gesturesSection];
+    [self addSetting:self.slideToCmdToolScreenEdgeStack ofIdentifier:@"slideToCmdToolScreenEdgeStack" to:gesturesSection];
+    [self addSetting:self.slideToSettingsDistanceStack ofIdentifier:@"slideToSettingsDistanceStack" to:gesturesSection];
     [gesturesSection addToParentStack:parentStack];
     [gesturesSection setExpanded:YES];
-    
-    
 }
 
 
@@ -497,6 +499,7 @@ BOOL isCustomResolution(CGSize res) {
 
 - (void)handleLongPress:(UILongPressGestureRecognizer *)gesture {
     if (gesture.state == UIGestureRecognizerStateBegan) {
+        // capture setting stack
         CGPoint point = [gesture locationInView:self.view];
         UIView *touchedView = [self.view hitTest:point withEvent:nil];
         UIStackView* capturedStack;
@@ -507,7 +510,89 @@ BOOL isCustomResolution(CGSize res) {
         else NSLog(@"hit test: not setting stack captured");
         // NSLog(@"hit test obj: %@", touchedView);
         NSLog(@"hit test name: %@", capturedStack.accessibilityIdentifier);
+        if(capturedStack == nil) return;
+        
+        // actionsheet
+        UIAlertController *actionSheet = [UIAlertController alertControllerWithTitle:nil
+                                                                                     message:nil
+                                                                              preferredStyle:UIAlertControllerStyleActionSheet];
+
+                UIAlertAction *favoriteAction = [UIAlertAction actionWithTitle:[LocalizationHelper localizedStringForKey:@"Add to favorite"]
+                                                                         style:UIAlertActionStyleDefault
+                                                                       handler:^(UIAlertAction * _Nonnull action) {
+                    [self addSettingToFavorite:capturedStack];
+                    // 在这里执行收藏逻辑
+                }];
+        [actionSheet addAction:favoriteAction];
+        if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+            actionSheet.popoverPresentationController.sourceView = self.view;
+            actionSheet.popoverPresentationController.sourceRect = CGRectMake(point.x, point.y, 1, 1);
+        }
+
+        [self presentViewController:actionSheet animated:YES completion:nil];
     }
+}
+
+- (void)addSettingToFavorite:(UIStackView* )settingStack{
+    [_favoriteSettingStackIdentifiers addObject:settingStack.accessibilityIdentifier];
+    for(NSString *identifier in _favoriteSettingStackIdentifiers){
+        NSLog(@"favorite setting: %@", identifier);
+    }
+}
+
+- (void)switchToFavoriteSettings{
+    [self updateTheme];
+    
+    currentSettingsMenuMode = FavoriteSettings;
+    DataManager* dataMan = [[DataManager alloc] init];
+    Settings *currentSettings = [dataMan retrieveSettings];
+    currentSettings.settingsMenuMode = [NSNumber numberWithInteger:currentSettingsMenuMode];
+    [dataMan saveData];
+    
+    for(UIView* view in parentStack.subviews){
+        [view removeFromSuperview];
+    }
+    parentStack.spacing = 15;
+    for(NSString* settingIdentifier in _favoriteSettingStackIdentifiers){
+        [parentStack addArrangedSubview:_settingStackDict[settingIdentifier]];
+    }
+}
+
+- (void)switchToAllSettings{
+    [self updateTheme];
+    
+    currentSettingsMenuMode = AllSettings;
+    DataManager* dataMan = [[DataManager alloc] init];
+    Settings *currentSettings = [dataMan retrieveSettings];
+    currentSettings.settingsMenuMode = [NSNumber numberWithInteger:currentSettingsMenuMode];
+    [dataMan saveData];
+
+    
+    for(UIView* view in parentStack.subviews){
+        [view removeFromSuperview];
+    }
+    [self initParentStack];
+    [self layoutSections];
+}
+
+
+- (void)saveFavoriteSettingStackIdentifiers {
+    [[NSUserDefaults standardUserDefaults] setObject:_favoriteSettingStackIdentifiers forKey:@"FavoriteSettingStackIdentifiers"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
+- (void)loadFavoriteSettingStackIdentifiers {
+    NSArray *savedArray = [[NSUserDefaults standardUserDefaults] objectForKey:@"FavoriteSettingStackIdentifiers"];
+    if ([savedArray isKindOfClass:[NSArray class]]) {
+        _favoriteSettingStackIdentifiers = [savedArray mutableCopy];
+    } else {
+        _favoriteSettingStackIdentifiers = [NSMutableArray array];
+    }
+    /*
+    for(NSString* str in _favoriteSettingStackIdentifiers){
+        NSLog(@"favarite setting loaded: %@", str);
+    }
+     */
 }
 
 - (void)viewDidLoad {
@@ -515,8 +600,9 @@ BOOL isCustomResolution(CGSize res) {
     
     UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPress:)];
     [self.view addGestureRecognizer:longPress];
-
     
+    _settingStackDict = [[NSMutableDictionary alloc] init];
+
     // return;
     BOOL isIPad = ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad);
     if(isIPad){
@@ -529,6 +615,8 @@ BOOL isCustomResolution(CGSize res) {
         [self layoutSections];
     }
     
+    
+    // [self swi];
     
     self->slideToCloseSettingsViewRecognizer = [[CustomEdgeSlideGestureRecognizer alloc] initWithTarget:self action:@selector(edgeSwiped)];
     slideToCloseSettingsViewRecognizer.edges = UIRectEdgeLeft;
@@ -552,6 +640,21 @@ BOOL isCustomResolution(CGSize res) {
     
     DataManager* dataMan = [[DataManager alloc] init];
     TemporarySettings* currentSettings = [dataMan getSettings];
+    
+    currentSettingsMenuMode = currentSettings.settingsMenuMode.intValue;
+    [self loadFavoriteSettingStackIdentifiers];
+    switch (currentSettingsMenuMode) {
+        case FavoriteSettings:
+            [self switchToFavoriteSettings];
+            break;
+        case AllSettings:
+            [self switchToAllSettings];
+            break;
+        default:
+            break;
+    }
+
+    
     
     // Ensure we pick a bitrate that falls exactly onto a slider notch
     _bitrate = bitrateTable[[self getSliderValueForBitrate:[currentSettings.bitrate intValue]]];
@@ -1395,7 +1498,9 @@ BOOL isCustomResolution(CGSize res) {
                        unlockDisplayOrientation:unlockDisplayOrientation
                   resolutionSelected:resolutionSelected
                  externalDisplayMode:externalDisplayMode
-                           localMousePointerMode:localMousePointerMode];
+               localMousePointerMode:localMousePointerMode
+                     settinsMenuMode:currentSettingsMenuMode];
+    [self saveFavoriteSettingStackIdentifiers];
 }
 
 - (void)didReceiveMemoryWarning {

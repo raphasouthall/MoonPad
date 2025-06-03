@@ -62,7 +62,8 @@ typedef NS_ENUM(NSInteger, TouchEventPriorityEnum) {
                    unlockDisplayOrientation:(BOOL)unlockDisplayOrientation
               resolutionSelected:(NSInteger)resolutionSelected
              externalDisplayMode:(NSInteger)externalDisplayMode
-                       localMousePointerMode:(NSInteger)localMousePointerMode;
+                       localMousePointerMode:(NSInteger)localMousePointerMode
+                 settinsMenuMode:(NSInteger)settinsMenuMode;
 
 - (NSArray*) getHosts;
 - (void) updateHost:(TemporaryHost*)host;

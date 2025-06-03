@@ -1095,7 +1095,7 @@ static NSMutableSet* hostList;
 
 - (void)revealController:(SWRevealViewController *)revealController willMoveToPosition:(FrontViewPosition)position {
     SettingsViewController* settingsViewController = (SettingsViewController*)[revealController rearViewController];
-
+    revealController.navBarMenuDelegate = settingsViewController;
     if (position == FrontViewPositionLeft) {
         self.navigationItem.leftBarButtonItems = @[_settingsButton];
     }
@@ -1595,9 +1595,6 @@ static NSMutableSet* hostList;
             }
         }
     }
-    
-    
-    
     [dataMan saveData];
 }
 

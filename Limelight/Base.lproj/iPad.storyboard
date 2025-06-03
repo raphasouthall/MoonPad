@@ -85,12 +85,13 @@
                                             <segment title="Custom"/>
                                         </segments>
                                     </segmentedControl>
-                                    <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9cG-JD-glb" userLabel="Resolution Display View">
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9cG-JD-glb" userLabel="Resolution Display View">
                                         <rect key="frame" x="0.0" y="61.5" width="380" height="50"/>
                                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                     </view>
                                 </subviews>
                                 <constraints>
+                                    <constraint firstAttribute="height" constant="111.5" id="0nu-Oy-daj"/>
                                     <constraint firstAttribute="width" constant="380" id="bn6-xc-xEZ"/>
                                 </constraints>
                             </stackView>
@@ -167,7 +168,7 @@
                                 <rect key="frame" x="16" y="516" width="380" height="56.5"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Async Native Touch" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="2Bp-XZ-cCw">
-                                        <rect key="frame" x="0.0" y="0.0" width="390" height="20.5"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="380" height="20.5"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <color key="textColor" red="0.93902439019999995" green="0.9625305918" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -191,7 +192,7 @@
                                 <rect key="frame" x="15" y="382" width="380" height="56.5"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Touch Pointer Velocity: Scaled on 0% of Right Screen           " lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="DkI-w6-jku" userLabel="pointerVelocityModeDivider">
-                                        <rect key="frame" x="0.0" y="0.0" width="390" height="18.5"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="380" height="18.5"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <color key="tintColor" red="0.81533776120000001" green="0.85979419950000002" blue="0.91372549020000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -199,7 +200,7 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="100" minValue="0.0" maxValue="100" id="AcZ-2i-GI4" userLabel="pointerVelocityModeDivider">
-                                        <rect key="frame" x="-2" y="23.5" width="394" height="34"/>
+                                        <rect key="frame" x="-2" y="23.5" width="384" height="34"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <color key="tintColor" red="0.6716768742" green="0.61711704730000005" blue="0.99902987480000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     </slider>
@@ -212,7 +213,7 @@
                                 <rect key="frame" x="15" y="446" width="380" height="56.5"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Touch Pointer Velocity: 100%                                                    " lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="egA-7n-Dpe" userLabel="touchPointerVelocityFactor">
-                                        <rect key="frame" x="0.0" y="0.0" width="390" height="18.5"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="380" height="18.5"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <color key="tintColor" red="0.81533776120000001" green="0.85979419950000002" blue="0.91372549020000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -220,7 +221,7 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="100" minValue="0.0" maxValue="300" id="TVV-EU-Rw1" userLabel="touchPointerVelocityFactor">
-                                        <rect key="frame" x="-2" y="23.5" width="394" height="34"/>
+                                        <rect key="frame" x="-2" y="23.5" width="384" height="34"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <color key="tintColor" red="0.6716768742" green="0.61711704730000005" blue="0.99902987480000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     </slider>
@@ -233,7 +234,7 @@
                                 <rect key="frame" x="16" y="593" width="380" height="56.5"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Interval of Multi-Touch Move Events: 200 us                            " lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="FJv-HJ-UYJ" userLabel="touchMoveEventIntervalLabel">
-                                        <rect key="frame" x="0.0" y="0.0" width="390" height="18.5"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="380" height="18.5"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <color key="tintColor" red="0.81533776120000001" green="0.85979419950000002" blue="0.91372549020000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -241,7 +242,7 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="150" minValue="0.0" maxValue="3600" id="4gD-tc-95I" userLabel="touchMoveEventIntervalSlider">
-                                        <rect key="frame" x="-2" y="23.5" width="394" height="34"/>
+                                        <rect key="frame" x="-2" y="23.5" width="384" height="34"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <color key="tintColor" red="0.6716768742" green="0.61711704730000005" blue="0.99902987480000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     </slider>
@@ -254,7 +255,7 @@
                                 <rect key="frame" x="17" y="666" width="380" height="56.5"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Mouse Pointer Velocity: 100%                                                   " lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="oPM-G6-u5O" userLabel="mousePointerVelocityFactor">
-                                        <rect key="frame" x="0.0" y="0.0" width="390" height="18.5"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="380" height="18.5"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <color key="tintColor" red="0.81533776120000001" green="0.85979419950000002" blue="0.91372549020000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -262,7 +263,7 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="100" minValue="0.0" maxValue="300" id="Ei2-FJ-9oC" userLabel="mousePointerVelocityFactor">
-                                        <rect key="frame" x="-2" y="23.5" width="394" height="34"/>
+                                        <rect key="frame" x="-2" y="23.5" width="384" height="34"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <color key="tintColor" red="0.6716768742" green="0.61711704730000005" blue="0.99902987480000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     </slider>
@@ -301,7 +302,7 @@
                                 <rect key="frame" x="17" y="806" width="380" height="56.5"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="nh6-cn-z23">
-                                        <rect key="frame" x="0.0" y="0.0" width="390" height="18.5"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="380" height="18.5"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <color key="tintColor" red="0.81533776120000001" green="0.85979419950000002" blue="0.91372549020000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <string key="text" base64-UTF8="YES">
@@ -313,7 +314,7 @@ ICAgICAgICAgICAgICA
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="3" minValue="3" maxValue="13" id="4wJ-Gd-Dmp">
-                                        <rect key="frame" x="-2" y="23.5" width="394" height="34"/>
+                                        <rect key="frame" x="-2" y="23.5" width="384" height="34"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <color key="tintColor" red="0.6716768742" green="0.61711704730000005" blue="0.99902987480000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     </slider>
@@ -326,7 +327,7 @@ ICAgICAgICAgICAgICA
                                 <rect key="frame" x="17" y="880" width="380" height="56.5"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Lift Stream View for Local Keyboard                                          " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="QYJ-84-bvc">
-                                        <rect key="frame" x="0.0" y="0.0" width="390" height="20.5"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="380" height="20.5"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <color key="textColor" red="0.93902439019999995" green="0.9625305918" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -350,7 +351,7 @@ ICAgICAgICAgICAgICA
                                 <rect key="frame" x="15" y="959" width="380" height="56.5"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Show Local Keyboard Toolbar                                                      " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="aup-5k-z6P">
-                                        <rect key="frame" x="0.0" y="0.0" width="390" height="20.5"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="380" height="20.5"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <color key="textColor" red="0.93902439019999995" green="0.9625305918" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -405,7 +406,7 @@ ICAgICAgICAgICAgICA
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" id="yY7-Sf-Zes" userLabel="Command Sending Screen Edge Selector">
-                                        <rect key="frame" x="0.0" y="25.5" width="390" height="32"/>
+                                        <rect key="frame" x="0.0" y="25.5" width="380" height="32"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <segments>
                                             <segment title="Left Screen Edge"/>

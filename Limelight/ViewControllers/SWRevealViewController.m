@@ -618,7 +618,6 @@ static CGFloat scaledValue( CGFloat v1, CGFloat min2, CGFloat max2, CGFloat min1
 
 @end
 
-
 #pragma mark - SWRevealViewController Class
 
 @interface SWRevealViewController()<UIGestureRecognizerDelegate>
@@ -999,20 +998,16 @@ const int FrontViewPositionNone = 0xff;
     }
 
     if (@available(iOS 14.0, *)) {
-        UIAction *action1 = [UIAction actionWithTitle:@"操作1" image:[UIImage systemImageNamed:@"doc"] identifier:nil handler:^(__kindof UIAction * _Nonnull action) {
-            NSLog(@"执行操作1");
+        UIAction *favoriteSettingAction = [UIAction actionWithTitle:[LocalizationHelper localizedStringForKey:@"Favorite Settings"] image:[UIImage systemImageNamed:@"bookmark"] identifier:nil handler:^(__kindof UIAction * _Nonnull action) {
+            [self favoriteSettingSelected];
         }];
         
-        UIAction *action2 = [UIAction actionWithTitle:@"操作2" image:[UIImage systemImageNamed:@"folder"] identifier:nil handler:^(__kindof UIAction * _Nonnull action) {
-            NSLog(@"执行操作2");
+        UIAction *allSettingAction = [UIAction actionWithTitle:[LocalizationHelper localizedStringForKey:@"All Settings"] image:[UIImage systemImageNamed:@"circle.grid.3x3"] identifier:nil handler:^(__kindof UIAction * _Nonnull action) {
+            [self allSettingSelected];
         }];
         
-        UIAction *deleteAction = [UIAction actionWithTitle:@"删除" image:[UIImage systemImageNamed:@"trash"] identifier:nil handler:^(__kindof UIAction * _Nonnull action) {
-            NSLog(@"执行删除操作");
-        }];
-        deleteAction.attributes = UIMenuElementAttributesDestructive;
         // 创建菜单
-        UIMenu *menu = [UIMenu menuWithTitle:@"" children:@[action1, action2, deleteAction]];
+        UIMenu *menu = [UIMenu menuWithTitle:@"" children:@[favoriteSettingAction, allSettingAction]];
         _moreButton.menu = menu;
     }
     else{
@@ -1023,8 +1018,8 @@ const int FrontViewPositionNone = 0xff;
 }
 
 - (void)moreButtonTapped:(UIBarButtonItem *)sender {
-    UIMenuItem *item1 = [[UIMenuItem alloc] initWithTitle:@"操作1" action:@selector(action1)];
-    UIMenuItem *item2 = [[UIMenuItem alloc] initWithTitle:@"操作2" action:@selector(action2)];
+    UIMenuItem *item1 = [[UIMenuItem alloc] initWithTitle:@"操作1" action:@selector(favoriteSettingSelected)];
+    UIMenuItem *item2 = [[UIMenuItem alloc] initWithTitle:@"操作2" action:@selector(allSettingsSelected)];
     
     UIMenuController *menuController = [UIMenuController sharedMenuController];
     [menuController setMenuItems:@[item1, item2]];
@@ -1041,17 +1036,26 @@ const int FrontViewPositionNone = 0xff;
 }
 
 - (BOOL)canPerformAction:(SEL)action withSender:(id)sender {
-    if (action == @selector(action1) || action == @selector(action2)) {
+    if (action == @selector(favoriteSettingSelected) || action == @selector(allSettingsSelected)) {
         return YES;
     }
     return NO;
 }
 
-- (void)action1 {
-    NSLog(@"执行操作1");
+- (void)favoriteSettingSelected {
+    if ([self.navBarMenuDelegate respondsToSelector:@selector(switchToFavoriteSettings)]) {
+        [self.navBarMenuDelegate switchToFavoriteSettings];
+    } else NSLog(@"Delegate not set or does not respond to switchToFavoriteSettings:");
 }
 
-- (void)action2 {
+- (void)allSettingSelected {
+    if ([self.navBarMenuDelegate respondsToSelector:@selector(switchToAllSettings)]) {
+        [self.navBarMenuDelegate switchToAllSettings];
+    } else NSLog(@"Delegate not set or does not respond to switchToAllSettings:");
+}
+
+
+- (void)allSettingsSelected {
     NSLog(@"执行操作2");
 }
 

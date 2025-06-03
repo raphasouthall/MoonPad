@@ -15,7 +15,7 @@
 #import "MainFrameViewController.h"
 #import "CustomEdgeSlideGestureRecognizer.h"
 
-@interface SettingsViewController : UIViewController
+@interface SettingsViewController : UIViewController <RearNavigationBarMenuDelegate>
 @property (strong, nonatomic) IBOutlet UINavigationBar *navigationBar;
 @property (strong, nonatomic) IBOutlet UIStackView *resolutionStack;
 @property (strong, nonatomic) IBOutlet UIStackView *fpsStack;
@@ -103,6 +103,11 @@
 @property(nonatomic) UIUserInterfaceStyle overrideUserInterfaceStyle;
 
 #pragma clang diagnostic pop
+
+typedef NS_ENUM(NSInteger, SettingsMenuMode) {
+    AllSettings,
+    FavoriteSettings,
+};
 
 - (void)saveSettings;
 + (bool)isLandscapeNow;
