@@ -31,6 +31,11 @@
     NSMutableDictionary *_settingStackDict;
     NSMutableArray *_favoriteSettingStackIdentifiers;
     uint8_t currentSettingsMenuMode;
+    UIView *snapshot;
+    UIStackView* capturedStack;
+    CADisplayLink *_autoScrollDisplayLink;
+    CGFloat _scrollSpeed;
+    CGFloat _currentRefreshRate;
 }
 
 @dynamic overrideUserInterfaceStyle;
@@ -433,6 +438,22 @@ BOOL isCustomResolution(CGSize res) {
     [self addSetting:self.slideToSettingsScreenEdgeStack ofIdentifier:@"slideToSettingsScreenEdgeStack" to:gesturesSection];
     [self addSetting:self.slideToCmdToolScreenEdgeStack ofIdentifier:@"slideToCmdToolScreenEdgeStack" to:gesturesSection];
     [self addSetting:self.slideToSettingsDistanceStack ofIdentifier:@"slideToSettingsDistanceStack" to:gesturesSection];
+
+    [self addSetting:self.audioOnPcStack ofIdentifier:@"audioOnPcStack" to:gesturesSection];
+    // [self addSetting:self.codecStack ofIdentifier:@"codecStack" to:gesturesSection];
+    [self addSetting:self.yuv444Stack ofIdentifier:@"yuv444Stack" to:gesturesSection];
+    [self addSetting:self.HdrStack ofIdentifier:@"HdrStack" to:gesturesSection];
+    [self addSetting:self.self.optimizeSettingsStack ofIdentifier:@"self.optimizeSettingsStack" to:gesturesSection];
+    [self addSetting:self.self.multiControllerStack ofIdentifier:@"self.multiControllerStack" to:gesturesSection];
+    [self addSetting:self.self.optimizeSettingsStack ofIdentifier:@"self.optimizeSettingsStack" to:gesturesSection];
+    [self addSetting:self.liftStreamViewForKeyboardStack ofIdentifier:@"liftStreamViewForKeyboardStack" to:gesturesSection];
+    [self addSetting:self.self.framepacingStack ofIdentifier:@"self.framepacingStack" to:gesturesSection];
+    [self addSetting:self.self.reverseMouseWheelDirectionStack ofIdentifier:@"self.reverseMouseWheelDirectionStack" to:gesturesSection];
+    [self addSetting:self.self.statsOverlayStack ofIdentifier:@"self.statsOverlayStack" to:gesturesSection];
+    [self addSetting:self.self.externalDisplayModeStack ofIdentifier:@"self.externalDisplayModeStack" to:gesturesSection];
+    [self addSetting:self.self.localMousePointerModeStack ofIdentifier:@"self.localMousePointerModeStack" to:gesturesSection];
+
+        
     [gesturesSection addToParentStack:parentStack];
     [gesturesSection setExpanded:YES];
 }
@@ -497,47 +518,252 @@ BOOL isCustomResolution(CGSize res) {
     [parentStackTmp removeFromSuperview];
 }
 
-- (void)handleLongPress:(UILongPressGestureRecognizer *)gesture {
-    if (gesture.state == UIGestureRecognizerStateBegan) {
-        // capture setting stack
-        CGPoint point = [gesture locationInView:self.view];
-        UIView *touchedView = [self.view hitTest:point withEvent:nil];
-        UIStackView* capturedStack;
-        if([touchedView isKindOfClass:[UIStackView class]]){
-            if(touchedView.accessibilityIdentifier != nil) capturedStack = (UIStackView *)touchedView;
-        }
-        else if([touchedView.superview isKindOfClass:[UIStackView class]] && touchedView.superview.accessibilityIdentifier != nil) capturedStack = (UIStackView *)touchedView.superview;
-        else NSLog(@"hit test: not setting stack captured");
-        // NSLog(@"hit test obj: %@", touchedView);
-        NSLog(@"hit test name: %@", capturedStack.accessibilityIdentifier);
-        if(capturedStack == nil) return;
-        
-        // actionsheet
-        UIAlertController *actionSheet = [UIAlertController alertControllerWithTitle:nil
-                                                                                     message:nil
-                                                                              preferredStyle:UIAlertControllerStyleActionSheet];
+- (void)handleAutoScroll:(CGPoint)location{
+    bool scrollDown = location.y > self.view.bounds.size.height - 100;
+    bool scrollUp = location.y < 150;
+    
+    NSLog(@"%f flag: %d, %d, obj: %@, locY: %f", CACurrentMediaTime(), scrollUp, scrollDown, _autoScrollDisplayLink, location.y);
+    
+    if(!(scrollUp||scrollDown)) [self stopAutoScroll];
+    
+    if((scrollUp||scrollDown) && _autoScrollDisplayLink == nil ){
+    
+    // NSLog(@"_autoScrollDisplayLink: %@", _autoScrollDisplayLink);
+    //if (!_autoScrollDisplayLink) {
+        //[_autoScrollDisplayLink ]
+        _scrollSpeed = fabs(120/_currentRefreshRate);
+        // _scrollSpeed = 2;
+        CGFloat scrollDirection = 0;
+        if(scrollDown) scrollDirection = 1;
+        if(scrollUp) scrollDirection = -1;
+        _scrollSpeed = _scrollSpeed * scrollDirection;
+        NSLog(@"%f, scrollSpeed: %f", CACurrentMediaTime(), _scrollSpeed);
 
-                UIAlertAction *favoriteAction = [UIAlertAction actionWithTitle:[LocalizationHelper localizedStringForKey:@"Add to favorite"]
-                                                                         style:UIAlertActionStyleDefault
-                                                                       handler:^(UIAlertAction * _Nonnull action) {
-                    [self addSettingToFavorite:capturedStack];
-                    // 在这里执行收藏逻辑
-                }];
-        [actionSheet addAction:favoriteAction];
-        if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
-            actionSheet.popoverPresentationController.sourceView = self.view;
-            actionSheet.popoverPresentationController.sourceRect = CGRectMake(point.x, point.y, 1, 1);
+        _autoScrollDisplayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(startScroll)];
+        [_autoScrollDisplayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSRunLoopCommonModes];
+    }
+
+    //}
+}
+
+- (void)stopAutoScroll {
+    [_autoScrollDisplayLink invalidate];
+    _autoScrollDisplayLink = nil;
+}
+
+- (BOOL)scrolledToTop {
+    return self.scrollView.contentOffset.y <= 0;
+}
+
+- (BOOL)scrolledToBottom {
+    CGFloat maxOffsetY = self.scrollView.contentSize.height - self.scrollView.bounds.size.height;
+    return self.scrollView.contentOffset.y >= maxOffsetY;
+}
+
+
+- (void)startScroll {
+    
+    if(![self scrolledToTop] && ![self scrolledToBottom]){
+        CGPoint snapshotLocation = snapshot.center;
+        snapshotLocation = CGPointMake(snapshotLocation.x, snapshotLocation.y+_scrollSpeed);
+        snapshot.center = snapshotLocation;
+    }
+    
+    CGPoint offset = self.scrollView.contentOffset;
+    CGFloat newY = offset.y + _scrollSpeed;
+    
+    // 限制滚动范围
+    newY = MAX(0, MIN(newY, self.scrollView.contentSize.height - self.scrollView.bounds.size.height));
+
+    [self.scrollView setContentOffset:CGPointMake(offset.x, newY) animated:NO];
+}
+
+- (void)estimateFPSWithCompletion:(void (^)(CGFloat fps))completion {
+    CADisplayLink *link = [CADisplayLink displayLinkWithTarget:self selector:@selector(handleTick:)];
+
+    // 让系统决定刷新率
+    link.preferredFramesPerSecond = 0;
+
+    // 关联block和时间戳
+    objc_setAssociatedObject(link, @"fpsCompletion", completion, OBJC_ASSOCIATION_COPY_NONATOMIC);
+    objc_setAssociatedObject(link, @"lastTimestamp", @(0), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+
+    [link addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSRunLoopCommonModes];
+}
+
+- (void)handleTick:(CADisplayLink *)link {
+    NSTimeInterval lastTimestamp = [objc_getAssociatedObject(link, @"lastTimestamp") doubleValue];
+    void (^completion)(CGFloat fps) = objc_getAssociatedObject(link, @"fpsCompletion");
+
+    if (lastTimestamp > 0) {
+        NSTimeInterval delta = link.timestamp - lastTimestamp;
+        CGFloat fps = 1.0 / delta;
+
+        // 先停止CADisplayLink，避免继续调用
+        [link invalidate];
+        link = nil;
+
+        if (completion) {
+            completion(fps);
         }
 
-        [self presentViewController:actionSheet animated:YES completion:nil];
+        // 清理关联，防止内存泄漏
+        objc_setAssociatedObject(link, @"fpsCompletion", nil, OBJC_ASSOCIATION_COPY_NONATOMIC);
+        objc_setAssociatedObject(link, @"lastTimestamp", nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    } else {
+        objc_setAssociatedObject(link, @"lastTimestamp", @(link.timestamp), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
 }
+
+
+
+
+- (NSInteger)parentStackIndexForLocation:(CGPoint)location {
+    for (NSInteger i = parentStack.arrangedSubviews.count-1; i >=0; i--) {
+        UIView *subview = parentStack.arrangedSubviews[i];
+        // CGRect frame = [subview convertRect:subview.bounds toView:parentStack];
+        CGFloat stackMinY = CGRectGetMinY(subview.frame);
+        NSLog(@" index: %ld, stackY: %f, touchY: %f", (long)i, CGRectGetMidY(subview.frame), location.y);
+        if(stackMinY < location.y){
+            NSLog(@"index: %ld", i);
+            subview.backgroundColor = [ThemeManager appPrimaryColorWithAlpha];
+            return i;
+        }
+    }
+    return 0;
+}
+
+- (void)updateRelocationIndicator:(CGPoint)locationInParentStack{
+    uint16_t currentIndex = [self parentStackIndexForLocation:locationInParentStack];
+    UIStackView* currentStack;
+    for (NSInteger i = parentStack.arrangedSubviews.count-1; i >=0; i--) {
+        currentStack = parentStack.arrangedSubviews[i];
+        
+        if(currentIndex == i){
+            currentStack.layer.cornerRadius = 6;
+            currentStack.layer.masksToBounds = YES;
+            currentStack.clipsToBounds = YES;
+            currentStack.backgroundColor = [ThemeManager appPrimaryColorWithAlpha];
+        }
+        else{
+            currentStack.layer.cornerRadius = 0;
+            currentStack.backgroundColor = [UIColor clearColor];
+        }
+    }
+}
+
+- (void)clearRelocationIndicator{
+    for (UIView* view in parentStack.arrangedSubviews) {
+        view.layer.cornerRadius = 0;
+        view.backgroundColor = [UIColor clearColor];
+    }
+}
+
+- (void)findCapturedStackByTouchLocation:(CGPoint)point{
+    UIView *touchedView = [parentStack hitTest:point withEvent:nil];
+    if([touchedView isKindOfClass:[UIStackView class]]){
+        if(touchedView.accessibilityIdentifier != nil) capturedStack = (UIStackView *)touchedView;
+    }
+    else if([touchedView.superview isKindOfClass:[UIStackView class]] && touchedView.superview.accessibilityIdentifier != nil) capturedStack = (UIStackView *)touchedView.superview;
+    else NSLog(@"hit test: not setting stack captured");
+}
+
+- (void)handleLongPress:(UILongPressGestureRecognizer *)gesture {
+    CGPoint locationInParentStack = [gesture locationInView:parentStack];
+    CGPoint locationInRootView = [gesture locationInView:self.view.superview];
+    if(currentSettingsMenuMode == AllSettings){
+        if (gesture.state == UIGestureRecognizerStateBegan) {
+            [self findCapturedStackByTouchLocation:locationInParentStack];
+            if(capturedStack == nil) return;
+            // actionsheet
+            UIAlertController *actionSheet = [UIAlertController alertControllerWithTitle:nil
+                                                                                 message:nil
+                                                                          preferredStyle:UIAlertControllerStyleActionSheet];
+            UIAlertAction *addFavoriteAction = [UIAlertAction actionWithTitle:[LocalizationHelper localizedStringForKey:@"Add to favorite"]
+                                                                        style:UIAlertActionStyleDefault
+                                                                      handler:^(UIAlertAction * _Nonnull action) {
+                [self addSettingToFavorite:self->capturedStack];
+                // 在这里执行收藏逻辑
+            }];
+            [actionSheet addAction:addFavoriteAction];
+            if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+                actionSheet.popoverPresentationController.sourceView = self.view;
+                actionSheet.popoverPresentationController.sourceRect = CGRectMake(locationInParentStack.x, locationInParentStack.y, 1, 1);
+            }
+            [self presentViewController:actionSheet animated:YES completion:nil];
+        }
+    }
+    
+    static CGPoint originalCenter;
+    static NSInteger originalIndex;
+    if(gesture.state == UIGestureRecognizerStateBegan){
+        
+        [self estimateFPSWithCompletion:^(CGFloat fps) {
+            self->_currentRefreshRate = fps;
+        }];
+        _autoScrollDisplayLink = nil;
+    }
+
+    if(currentSettingsMenuMode == FavoriteSettings){
+        switch (gesture.state) {
+            case UIGestureRecognizerStateBegan:
+                // 创建快照视图
+                [self findCapturedStackByTouchLocation:locationInParentStack];
+                if(capturedStack == nil) return;
+
+                snapshot = [capturedStack snapshotViewAfterScreenUpdates:YES];
+                snapshot.center = capturedStack.center;
+                [parentStack addSubview:snapshot];
+                capturedStack.hidden = YES;
+                originalCenter = capturedStack.center;
+                originalIndex = [parentStack.arrangedSubviews indexOfObject:capturedStack];
+                break;
+                
+            case UIGestureRecognizerStateChanged:
+                snapshot.center = CGPointMake(locationInParentStack.x, locationInParentStack.y);
+                NSLog(@"coordY in rootView: %f", locationInRootView.y);
+                [self handleAutoScroll:locationInRootView];
+                [self updateRelocationIndicator:locationInParentStack];
+                
+                
+                break;
+            case UIGestureRecognizerStateEnded:
+                // 更新快照视图位置
+                // snapshot.center = CGPointMake(originalCenter.x, point.y);
+                [self stopAutoScroll];
+                [snapshot removeFromSuperview];
+                snapshot = nil;
+                // 计算新的插入位置
+                NSInteger newIndex = [self parentStackIndexForLocation:locationInParentStack];
+                [self clearRelocationIndicator];
+                NSInteger oldIndex = [parentStack.arrangedSubviews indexOfObject:capturedStack];
+                newIndex = newIndex > oldIndex ? newIndex - 1 : newIndex;
+                //NSInteger newIndex = 1;
+                
+                if (newIndex != NSNotFound) {
+                    [parentStack removeArrangedSubview:capturedStack];
+                    [parentStack insertArrangedSubview:capturedStack atIndex:newIndex];
+                    // [parentStack addSubview:capturedStack];
+                    originalIndex = newIndex;
+                    capturedStack.hidden = NO;
+                }
+                // 移除快照视图，显示原始视图
+                break;
+            case UIGestureRecognizerStateCancelled:
+                break;
+                
+            default:break;
+        }
+    }
+}
+    
 
 - (void)addSettingToFavorite:(UIStackView* )settingStack{
     [_favoriteSettingStackIdentifiers addObject:settingStack.accessibilityIdentifier];
     for(NSString *identifier in _favoriteSettingStackIdentifiers){
         NSLog(@"favorite setting: %@", identifier);
     }
+    [self saveFavoriteSettingStackIdentifiers];
 }
 
 - (void)switchToFavoriteSettings{
