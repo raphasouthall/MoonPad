@@ -823,7 +823,8 @@ BOOL isCustomResolution(CGSize res) {
 
 - (void)viewDidLoad {
     //[self updateTheme];
-    
+    [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"_UIConstraintBasedLayoutLogUnsatisfiable"];
+
     UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPress:)];
     [self.view addGestureRecognizer:longPress];
     
