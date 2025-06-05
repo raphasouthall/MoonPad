@@ -28,6 +28,11 @@ typedef NS_ENUM(NSInteger, TouchEventPriorityEnum) {
     TouchMovePriority// deprecated by GUI
 };
 
+typedef NS_ENUM(NSInteger, SettingsMenuMode) {
+    AllSettings,
+    FavoriteSettings,
+};
+
 - (void) saveSettingsWithBitrate:(NSInteger)bitrate
                        framerate:(NSInteger)framerate
                           height:(NSInteger)height

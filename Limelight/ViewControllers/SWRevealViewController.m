@@ -31,7 +31,6 @@
 
 #import "SWRevealViewController.h"
 #import "LocalizationHelper.h"
-#import "DataManager.h"
 #import "ThemeManager.h"
 
 
@@ -644,6 +643,7 @@ static CGFloat scaledValue( CGFloat v1, CGFloat min2, CGFloat max2, CGFloat min1
     NSMutableArray *_animationQueue;
     BOOL _userInteractionStore;
     UIViewController *_primaryViewController;
+    
 }
 
 const int FrontViewPositionNone = 0xff;
@@ -862,6 +862,7 @@ const int FrontViewPositionNone = 0xff;
 
 - (void)willMoveToPosition{
     _separatorLine.hidden = _frontViewPosition == FrontViewPositionLeft;
+    if(_frontViewPosition != FrontViewPositionLeft) [self setupMoreButtonMenu];
 }
 
 
@@ -985,7 +986,7 @@ const int FrontViewPositionNone = 0xff;
 }
 
 - (void)setupMoreButton{
-    _moreButton = [[UIBarButtonItem alloc] init];
+    if(!_moreButton) _moreButton = [[UIBarButtonItem alloc] init];
     
     //[moreButton setAction:@selector(moreButtonTapped:)];
     if (@available(iOS 13.0, *)) {
@@ -997,39 +998,60 @@ const int FrontViewPositionNone = 0xff;
     } else {
         [_moreButton setTitle:[LocalizationHelper localizedStringForKey:@"More"]];
     }
+    // more option button
+}
 
+- (UIAction* )getFavoriteMenuAction API_AVAILABLE(ios(13.0)){
+    return [UIAction actionWithTitle:[LocalizationHelper localizedStringForKey:@"Favorite Settings"] image:[UIImage systemImageNamed:@"bookmark"] identifier:nil handler:^(__kindof UIAction * _Nonnull action) {
+        [self favoriteSettingSelected];
+    }];
+}
+- (UIAction* )getAllSettingMenuAction API_AVAILABLE(ios(13.0)){
+    return [UIAction actionWithTitle:[LocalizationHelper localizedStringForKey:@"All Settings"] image:[UIImage systemImageNamed:@"circle.grid.3x3"] identifier:nil handler:^(__kindof UIAction * _Nonnull action) {
+        [self allSettingSelected];
+    }];
+}
+
+- (void)setupMoreButtonMenu{
     if (@available(iOS 14.0, *)) {
-        UIAction *favoriteSettingAction = [UIAction actionWithTitle:[LocalizationHelper localizedStringForKey:@"Favorite Settings"] image:[UIImage systemImageNamed:@"bookmark"] identifier:nil handler:^(__kindof UIAction * _Nonnull action) {
-            [self favoriteSettingSelected];
-        }];
-        
-        UIAction *allSettingAction = [UIAction actionWithTitle:[LocalizationHelper localizedStringForKey:@"All Settings"] image:[UIImage systemImageNamed:@"circle.grid.3x3"] identifier:nil handler:^(__kindof UIAction * _Nonnull action) {
-            [self allSettingSelected];
-        }];
+        UIMenu *menu;
         
         // 创建菜单
-        UIMenu *menu = [UIMenu menuWithTitle:@"" children:@[favoriteSettingAction, allSettingAction]];
+        switch ([self getSettingsMenuMode]) {
+            case AllSettings:
+                menu = [UIMenu menuWithTitle:@"" children:@[[self getFavoriteMenuAction]]];
+                break;
+            case FavoriteSettings:
+                menu = [UIMenu menuWithTitle:@"" children:@[[self getAllSettingMenuAction]]];
+                break;
+            default:
+                break;
+        }
         _moreButton.menu = menu;
     }
     else{
         [_moreButton setTarget:self];
         [_moreButton setAction:@selector(moreButtonTapped:)];
     }
-    // more option button
 }
 
 - (void)moreButtonTapped:(UIBarButtonItem *)sender {
-    UIMenuItem *item1 = [[UIMenuItem alloc] initWithTitle:@"操作1" action:@selector(favoriteSettingSelected)];
-    UIMenuItem *item2 = [[UIMenuItem alloc] initWithTitle:@"操作2" action:@selector(allSettingsSelected)];
-    
-    UIMenuController *menuController = [UIMenuController sharedMenuController];
-    [menuController setMenuItems:@[item1, item2]];
-    
-    UIView *targetView = [sender valueForKey:@"view"];
-    [menuController setTargetRect:targetView.bounds inView:targetView];
-    [menuController setMenuVisible:YES animated:YES];
-    
-    [self becomeFirstResponder];
+    if (@available(iOS 14.0, *)) {
+        
+        
+    } else {
+        UIMenuItem *item1 = [[UIMenuItem alloc] initWithTitle:@"操作1" action:@selector(favoriteSettingSelected)];
+        UIMenuItem *item2 = [[UIMenuItem alloc] initWithTitle:@"操作2" action:@selector(allSettingsSelected)];
+        
+        UIMenuController *menuController = [UIMenuController sharedMenuController];
+        [menuController setMenuItems:@[item1, item2]];
+        
+        UIView *targetView = [sender valueForKey:@"view"];
+        [menuController setTargetRect:targetView.bounds inView:targetView];
+        [menuController setMenuVisible:YES animated:YES];
+        
+        [self becomeFirstResponder];
+    }
 }
 
 - (BOOL)canBecomeFirstResponder {
@@ -1043,13 +1065,28 @@ const int FrontViewPositionNone = 0xff;
     return NO;
 }
 
+- (SettingsMenuMode)getSettingsMenuMode {
+    if ([self.navBarMenuDelegate respondsToSelector:@selector(getSettingsMenuMode)]) {
+        return [self.navBarMenuDelegate getSettingsMenuMode];
+
+    } else return AllSettings;
+}
+
 - (void)favoriteSettingSelected {
+    if (@available(iOS 13.0, *)) {
+        UIAction* allSettings = [self getAllSettingMenuAction];
+        if (@available(iOS 14.0, *)) _moreButton.menu = [UIMenu menuWithTitle:@"" children:@[allSettings]];
+    }
     if ([self.navBarMenuDelegate respondsToSelector:@selector(switchToFavoriteSettings)]) {
         [self.navBarMenuDelegate switchToFavoriteSettings];
     } else NSLog(@"Delegate not set or does not respond to switchToFavoriteSettings:");
 }
 
 - (void)allSettingSelected {
+    if (@available(iOS 13.0, *)) {
+        UIAction* favoriteSettings = [self getFavoriteMenuAction];
+        if (@available(iOS 14.0, *)) _moreButton.menu = [UIMenu menuWithTitle:@"" children:@[favoriteSettings]];
+    }
     if ([self.navBarMenuDelegate respondsToSelector:@selector(switchToAllSettings)]) {
         [self.navBarMenuDelegate switchToAllSettings];
     } else NSLog(@"Delegate not set or does not respond to switchToAllSettings:");

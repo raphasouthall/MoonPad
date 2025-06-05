@@ -104,11 +104,6 @@
 
 #pragma clang diagnostic pop
 
-typedef NS_ENUM(NSInteger, SettingsMenuMode) {
-    AllSettings,
-    FavoriteSettings,
-};
-
 - (void)saveSettings;
 + (bool)isLandscapeNow;
 - (void)updateResolutionTable;

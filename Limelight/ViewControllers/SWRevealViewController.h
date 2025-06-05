@@ -137,6 +137,8 @@
 
 
 #import <UIKit/UIKit.h>
+#import "DataManager.h"
+
 
 @class SWRevealViewController;
 @protocol SWRevealViewControllerDelegate;
@@ -349,6 +351,7 @@ typedef enum
 @optional
 - (void)switchToFavoriteSettings;
 - (void)switchToAllSettings;
+- (SettingsMenuMode)getSettingsMenuMode;
 @end
 
 

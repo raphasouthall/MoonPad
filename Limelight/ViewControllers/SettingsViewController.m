@@ -364,6 +364,10 @@ BOOL isCustomResolution(CGSize res) {
     exitButton.frame = CGRectMake(0, 20, 200, 50); // Adjust Y and height as needed
 }*/
 
+- (SettingsMenuMode)getSettingsMenuMode{
+    return currentSettingsMenuMode;
+}
+
 - (void)edgeSwiped {
     [self simulateSettingsButtonPress];
 }
@@ -747,6 +751,7 @@ BOOL isCustomResolution(CGSize res) {
                     // [parentStack addSubview:capturedStack];
                     originalIndex = newIndex;
                     capturedStack.hidden = NO;
+                    [self saveFavoriteSettingStackIdentifiers];
                 }
                 // 移除快照视图，显示原始视图
                 break;
@@ -804,6 +809,13 @@ BOOL isCustomResolution(CGSize res) {
 
 
 - (void)saveFavoriteSettingStackIdentifiers {
+    
+    [_favoriteSettingStackIdentifiers removeAllObjects];
+
+    for(NSInteger i = 0; i < parentStack.arrangedSubviews.count; i++){
+        [_favoriteSettingStackIdentifiers addObject:parentStack.arrangedSubviews[i].accessibilityIdentifier];
+    }
+
     [[NSUserDefaults standardUserDefaults] setObject:_favoriteSettingStackIdentifiers forKey:@"FavoriteSettingStackIdentifiers"];
     [[NSUserDefaults standardUserDefaults] synchronize];
 }
@@ -1734,7 +1746,6 @@ BOOL isCustomResolution(CGSize res) {
                  externalDisplayMode:externalDisplayMode
                localMousePointerMode:localMousePointerMode
                      settinsMenuMode:currentSettingsMenuMode];
-    [self saveFavoriteSettingStackIdentifiers];
 }
 
 - (void)didReceiveMemoryWarning {
