@@ -1531,6 +1531,14 @@ static NSMutableSet* hostList;
     
     // SettingsViewController* settingsViewController = (SettingsViewController*)[self.revealViewController rearViewController];
     // [settingsViewController updateResolutionTable];
+    
+    
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"iPad" bundle:nil];
+    SettingsViewController *viewController = [storyboard instantiateViewControllerWithIdentifier:@"settingsViewController"];
+    // 强制加载视图
+    __unused UIView *view = viewController.view;
+     
+
 }
 
 -(void)viewDidLayoutSubviews{

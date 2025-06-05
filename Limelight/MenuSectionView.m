@@ -231,12 +231,14 @@
 - (void)addSubStackView:(UIStackView *)stackView {
     [CATransaction begin];
     [CATransaction setDisableActions:YES];
-    if (![_subStackViews containsObject:stackView]) {
-        [_subStackViews addObject:stackView];
-        [_rootStackView addArrangedSubview:stackView];
-        [_rootStackView layoutIfNeeded];
-        [self updateLayout];
-    }
+    [UIView performWithoutAnimation:^{
+        if (![_subStackViews containsObject:stackView]) {
+            [_subStackViews addObject:stackView];
+            [_rootStackView addArrangedSubview:stackView];
+            //[_rootStackView layoutIfNeeded];
+            //[self updateLayout];
+        }
+    }];
     [CATransaction commit];
     // NSLog(@"rootStack height2: %f", _rootStackView.frame.size.height);
 }

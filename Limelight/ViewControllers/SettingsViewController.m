@@ -308,7 +308,7 @@ BOOL isCustomResolution(CGSize res) {
 }
 
 - (void)viewDidAppear:(BOOL)animated{
-    [super viewDidAppear:animated];
+    [super viewDidAppear:NO];
     [self updateResolutionTable];
     //[self updateTheme];
     NSLog(@"Resolution table updated");
@@ -334,7 +334,7 @@ BOOL isCustomResolution(CGSize res) {
 
 
 - (void)viewDidDisappear:(BOOL)animated{
-    [super viewDidDisappear:animated];
+    [super viewDidDisappear:NO];
     [[NSNotificationCenter defaultCenter] postNotificationName:@"SettingsViewClosedNotification" object:self]; // notify other view that settings view just closed
 }
 
@@ -415,6 +415,7 @@ BOOL isCustomResolution(CGSize res) {
 }
     
 - (void)layoutSections{
+    NSLog(@"preLoad Log test");
     MenuSectionView *videoSection = [[MenuSectionView alloc] init];
     videoSection.sectionTitle = [LocalizationHelper localizedStringForKey:@"Video"];
     if (@available(iOS 13.0, *)) {
@@ -823,280 +824,286 @@ BOOL isCustomResolution(CGSize res) {
 
 - (void)viewDidLoad {
     //[self updateTheme];
-    [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"_UIConstraintBasedLayoutLogUnsatisfiable"];
-
-    UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPress:)];
-    [self.view addGestureRecognizer:longPress];
-    
-    _settingStackDict = [[NSMutableDictionary alloc] init];
-
-    // return;
-    BOOL isIPad = ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad);
-    if(isIPad){
-        //[self layoutWidgetes]; // layout for ipad tmply
-        // [self.view ]
-        for(UIView* view in self.view.subviews){
-            [view removeFromSuperview];
+    [UIView performWithoutAnimation:^{
+        
+        
+        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"_UIConstraintBasedLayoutLogUnsatisfiable"];
+        
+        UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPress:)];
+        [self.view addGestureRecognizer:longPress];
+        
+        _settingStackDict = [[NSMutableDictionary alloc] init];
+        
+        // return;
+        BOOL isIPad = ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad);
+        if(isIPad){
+            //[self layoutWidgetes]; // layout for ipad tmply
+            // [self.view ]
+            for(UIView* view in self.view.subviews){
+                [view removeFromSuperview];
+            }
+            [self initParentStack];
+            [self layoutSections];
         }
-        [self initParentStack];
-        [self layoutSections];
-    }
-    
-    
-    // [self swi];
-    
-    self->slideToCloseSettingsViewRecognizer = [[CustomEdgeSlideGestureRecognizer alloc] initWithTarget:self action:@selector(edgeSwiped)];
-    slideToCloseSettingsViewRecognizer.edges = UIRectEdgeLeft;
-    slideToCloseSettingsViewRecognizer.normalizedThresholdDistance = 0.0;
-    slideToCloseSettingsViewRecognizer.EDGE_TOLERANCE = 10;
-    slideToCloseSettingsViewRecognizer.immediateTriggering = true;
-    slideToCloseSettingsViewRecognizer.delaysTouchesBegan = NO;
-    slideToCloseSettingsViewRecognizer.delaysTouchesEnded = NO;
-    [self.view addGestureRecognizer:slideToCloseSettingsViewRecognizer];
-    
-    justEnteredSettingsViewDoNotOpenOscLayoutTool = true;
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(deviceOrientationDidChange) // handle orientation change since i made portrait mode available
-                                                 name:UIDeviceOrientationDidChangeNotification
-                                               object:nil];
-    
-    // Always run settings in dark mode because we want the light fonts
-    if (@available(iOS 13.0, tvOS 13.0, *)) {
-        self.overrideUserInterfaceStyle = UIUserInterfaceStyleDark;
-    }
-    
-    DataManager* dataMan = [[DataManager alloc] init];
-    TemporarySettings* currentSettings = [dataMan getSettings];
-    
-    currentSettingsMenuMode = currentSettings.settingsMenuMode.intValue;
-    [self loadFavoriteSettingStackIdentifiers];
-    switch (currentSettingsMenuMode) {
-        case FavoriteSettings:
-            [self switchToFavoriteSettings];
-            break;
-        case AllSettings:
-            [self switchToAllSettings];
-            break;
-        default:
-            break;
-    }
-
-    
-    
-    // Ensure we pick a bitrate that falls exactly onto a slider notch
-    _bitrate = bitrateTable[[self getSliderValueForBitrate:[currentSettings.bitrate intValue]]];
-
-    // Get the size of the screen with and without safe area insets
-    UIWindow *window = UIApplication.sharedApplication.windows.firstObject;
-    CGFloat screenScale = window.screen.scale;
-    CGFloat safeAreaWidth = (window.frame.size.width - window.safeAreaInsets.left - window.safeAreaInsets.right) * screenScale;
-    CGFloat fullScreenWidth = window.frame.size.width * screenScale;
-    CGFloat fullScreenHeight = window.frame.size.height * screenScale;
-    
-    self.resolutionDisplayView.layer.cornerRadius = 10;
-    self.resolutionDisplayView.clipsToBounds = YES;
-    UITapGestureRecognizer *resolutionDisplayViewTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(resolutionDisplayViewTapped:)];
-    [self.resolutionDisplayView addGestureRecognizer:resolutionDisplayViewTap];
-    
-    resolutionTable[0] = CGSizeMake(640, 360);
-    resolutionTable[1] = CGSizeMake(1280, 720);
-    resolutionTable[2] = CGSizeMake(1920, 1080);
-    resolutionTable[3] = CGSizeMake(3840, 2160);
-    resolutionTable[4] = CGSizeMake(safeAreaWidth, fullScreenHeight);
-    resolutionTable[5] = CGSizeMake(fullScreenWidth, fullScreenHeight);
-    resolutionTable[6] = CGSizeMake([currentSettings.width integerValue], [currentSettings.height integerValue]); // custom initial value
-    [self updateResolutionTable];
-    
-    // Don't populate the custom entry unless we have a custom resolution
-    if (!isCustomResolution(resolutionTable[6])) {
-        resolutionTable[6] = CGSizeMake(0, 0);
-    }
-    
-    NSInteger framerate;
-    switch ([currentSettings.framerate integerValue]) {
-        case 30:
-            framerate = 0;
-            break;
-        default:
-        case 60:
-            framerate = 1;
-            break;
-        case 120:
-            framerate = 2;
-            break;
-    }
-
-    NSInteger resolution = currentSettings.resolutionSelected.integerValue;
-    if(resolution >= RESOLUTION_TABLE_SIZE){
-        resolution = 0;
-    }
-
-    // Only show the 120 FPS option if we have a > 60-ish Hz display
-    bool enable120Fps = false;
-    if (@available(iOS 10.3, tvOS 10.3, *)) {
-        if ([UIScreen mainScreen].maximumFramesPerSecond > 62) {
-            enable120Fps = true;
+        
+        
+        // [self swi];
+        
+        self->slideToCloseSettingsViewRecognizer = [[CustomEdgeSlideGestureRecognizer alloc] initWithTarget:self action:@selector(edgeSwiped)];
+        slideToCloseSettingsViewRecognizer.edges = UIRectEdgeLeft;
+        slideToCloseSettingsViewRecognizer.normalizedThresholdDistance = 0.0;
+        slideToCloseSettingsViewRecognizer.EDGE_TOLERANCE = 10;
+        slideToCloseSettingsViewRecognizer.immediateTriggering = true;
+        slideToCloseSettingsViewRecognizer.delaysTouchesBegan = NO;
+        slideToCloseSettingsViewRecognizer.delaysTouchesEnded = NO;
+        [self.view addGestureRecognizer:slideToCloseSettingsViewRecognizer];
+        
+        justEnteredSettingsViewDoNotOpenOscLayoutTool = true;
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(deviceOrientationDidChange) // handle orientation change since i made portrait mode available
+                                                     name:UIDeviceOrientationDidChangeNotification
+                                                   object:nil];
+        
+        // Always run settings in dark mode because we want the light fonts
+        if (@available(iOS 13.0, tvOS 13.0, *)) {
+            self.overrideUserInterfaceStyle = UIUserInterfaceStyleDark;
         }
-    }
-    if (!enable120Fps) {
-        [self.framerateSelector removeSegmentAtIndex:2 animated:NO];
-    }
-
-    // Disable codec selector segments for unsupported codecs
+        
+        DataManager* dataMan = [[DataManager alloc] init];
+        TemporarySettings* currentSettings = [dataMan getSettings];
+        
+        currentSettingsMenuMode = currentSettings.settingsMenuMode.intValue;
+        [self loadFavoriteSettingStackIdentifiers];
+        if(currentSettings.settingsMenuMode.intValue == FavoriteSettings) [self switchToFavoriteSettings];
+        /*
+        switch (currentSettingsMenuMode) {
+            case FavoriteSettings:
+                [self switchToFavoriteSettings];
+                break;
+            case AllSettings:
+                //[self switchToAllSettings];
+                break;
+            default:
+                break;
+        }
+        */
+        
+        
+        // Ensure we pick a bitrate that falls exactly onto a slider notch
+        _bitrate = bitrateTable[[self getSliderValueForBitrate:[currentSettings.bitrate intValue]]];
+        
+        // Get the size of the screen with and without safe area insets
+        UIWindow *window = UIApplication.sharedApplication.windows.firstObject;
+        CGFloat screenScale = window.screen.scale;
+        CGFloat safeAreaWidth = (window.frame.size.width - window.safeAreaInsets.left - window.safeAreaInsets.right) * screenScale;
+        CGFloat fullScreenWidth = window.frame.size.width * screenScale;
+        CGFloat fullScreenHeight = window.frame.size.height * screenScale;
+        
+        self.resolutionDisplayView.layer.cornerRadius = 10;
+        self.resolutionDisplayView.clipsToBounds = YES;
+        UITapGestureRecognizer *resolutionDisplayViewTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(resolutionDisplayViewTapped:)];
+        [self.resolutionDisplayView addGestureRecognizer:resolutionDisplayViewTap];
+        
+        resolutionTable[0] = CGSizeMake(640, 360);
+        resolutionTable[1] = CGSizeMake(1280, 720);
+        resolutionTable[2] = CGSizeMake(1920, 1080);
+        resolutionTable[3] = CGSizeMake(3840, 2160);
+        resolutionTable[4] = CGSizeMake(safeAreaWidth, fullScreenHeight);
+        resolutionTable[5] = CGSizeMake(fullScreenWidth, fullScreenHeight);
+        resolutionTable[6] = CGSizeMake([currentSettings.width integerValue], [currentSettings.height integerValue]); // custom initial value
+        [self updateResolutionTable];
+        
+        // Don't populate the custom entry unless we have a custom resolution
+        if (!isCustomResolution(resolutionTable[6])) {
+            resolutionTable[6] = CGSizeMake(0, 0);
+        }
+        
+        NSInteger framerate;
+        switch ([currentSettings.framerate integerValue]) {
+            case 30:
+                framerate = 0;
+                break;
+            default:
+            case 60:
+                framerate = 1;
+                break;
+            case 120:
+                framerate = 2;
+                break;
+        }
+        
+        NSInteger resolution = currentSettings.resolutionSelected.integerValue;
+        if(resolution >= RESOLUTION_TABLE_SIZE){
+            resolution = 0;
+        }
+        
+        // Only show the 120 FPS option if we have a > 60-ish Hz display
+        bool enable120Fps = false;
+        if (@available(iOS 10.3, tvOS 10.3, *)) {
+            if ([UIScreen mainScreen].maximumFramesPerSecond > 62) {
+                enable120Fps = true;
+            }
+        }
+        if (!enable120Fps) {
+            [self.framerateSelector removeSegmentAtIndex:2 animated:NO];
+        }
+        
+        // Disable codec selector segments for unsupported codecs
 #if defined(__IPHONE_16_0) || defined(__TVOS_16_0)
-    if (!VTIsHardwareDecodeSupported(kCMVideoCodecType_AV1))
+        if (!VTIsHardwareDecodeSupported(kCMVideoCodecType_AV1))
 #endif
-    {
-        [self.codecSelector removeSegmentAtIndex:2 animated:NO];
-    }
-    if (!VTIsHardwareDecodeSupported(kCMVideoCodecType_HEVC)) {
-        [self.codecSelector removeSegmentAtIndex:1 animated:NO];
-
-        // Only enable the 4K option for "recent" devices. We'll judge that by whether
-        // they support HEVC decoding (A9 or later).
-        [self.resolutionSelector setEnabled:NO forSegmentAtIndex:3];
-    }
-    switch (currentSettings.preferredCodec) {
-        case CODEC_PREF_AUTO:
-            [self.codecSelector setSelectedSegmentIndex:self.codecSelector.numberOfSegments - 1];
-            break;
+        {
+            [self.codecSelector removeSegmentAtIndex:2 animated:NO];
+        }
+        if (!VTIsHardwareDecodeSupported(kCMVideoCodecType_HEVC)) {
+            [self.codecSelector removeSegmentAtIndex:1 animated:NO];
             
-        case CODEC_PREF_AV1:
-            [self.codecSelector setSelectedSegmentIndex:2];
-            break;
-            
-        case CODEC_PREF_HEVC:
-            [self.codecSelector setSelectedSegmentIndex:1];
-            break;
-            
-        case CODEC_PREF_H264:
-            [self.codecSelector setSelectedSegmentIndex:0];
-            break;
-    }
-    
-    if (!VTIsHardwareDecodeSupported(kCMVideoCodecType_HEVC) || !(AVPlayer.availableHDRModes & AVPlayerHDRModeHDR10)) {
-        [self.hdrSelector removeAllSegments];
-        [self.hdrSelector insertSegmentWithTitle:[LocalizationHelper localizedStringForKey:@"Unsupported on this device"] atIndex:0 animated:NO];
-        [self.hdrSelector setEnabled:NO];
-    }
-    else {
-        [self.hdrSelector setSelectedSegmentIndex:currentSettings.enableHdr ? 1 : 0];
-    }
-    
-    [self.yuv444Selector setSelectedSegmentIndex:currentSettings.enableYUV444 ? 1 : 0];
-    [self.statsOverlaySelector setSelectedSegmentIndex:currentSettings.statsOverlayLevel.intValue];
-    [self.btMouseSelector setSelectedSegmentIndex:currentSettings.btMouseSupport ? 1 : 0];
-    [self.optimizeSettingsSelector setSelectedSegmentIndex:currentSettings.optimizeGames ? 1 : 0];
-    [self.framePacingSelector setSelectedSegmentIndex:currentSettings.useFramePacing ? 1 : 0];
-    [self.multiControllerSelector setSelectedSegmentIndex:currentSettings.multiController ? 1 : 0];
-    [self.swapABXYButtonsSelector setSelectedSegmentIndex:currentSettings.swapABXYButtons ? 1 : 0];
-    [self.audioOnPCSelector setSelectedSegmentIndex:currentSettings.playAudioOnPC ? 1 : 0];
-    _lastSelectedResolutionIndex = resolution;
-    [self.resolutionSelector setSelectedSegmentIndex:resolution];
-    [self.resolutionSelector addTarget:self action:@selector(newResolutionChosen) forControlEvents:UIControlEventValueChanged];
-    [self.framerateSelector setSelectedSegmentIndex:framerate];
-    [self.framerateSelector addTarget:self action:@selector(updateBitrate) forControlEvents:UIControlEventValueChanged];
-    [self.bitrateSlider setMinimumValue:0];
-    [self.bitrateSlider setMaximumValue:(sizeof(bitrateTable) / sizeof(*bitrateTable)) - 1];
-    [self.bitrateSlider setValue:[self getSliderValueForBitrate:_bitrate] animated:YES];
-    [self.bitrateSlider addTarget:self action:@selector(bitrateSliderMoved) forControlEvents:UIControlEventValueChanged];
-    [self updateBitrateText];
-    [self updateResolutionDisplayViewText];
-    
-    // Unlock Display Orientation setting
-    bool unlockDisplayOrientationSelectorEnabled = [self isFullScreenRequired];//need "requires fullscreen" enabled in the app bunddle to make runtime orientation limitation woring
-    if(unlockDisplayOrientationSelectorEnabled) [self.unlockDisplayOrientationSelector setSelectedSegmentIndex:currentSettings.unlockDisplayOrientation ? 1 : 0];
-    else [self.unlockDisplayOrientationSelector setSelectedSegmentIndex:1]; // can't lock screen orientation in this mode = Display Orientation always unlocked
-    [self.unlockDisplayOrientationSelector setEnabled:unlockDisplayOrientationSelectorEnabled];
-
-    
-    // lift streamview setting
-    [self.liftStreamViewForKeyboardSelector setSelectedSegmentIndex:currentSettings.liftStreamViewForKeyboard ? 1 : 0];// Load old setting
-    
-    // showkeyboard toolbar setting
-    [self.showKeyboardToolbarSelector setSelectedSegmentIndex:currentSettings.showKeyboardToolbar ? 1 : 0];// Load old setting
-    
-    // reverse mouse wheel direction setting
-    [self.reverseMouseWheelDirectionSelector setSelectedSegmentIndex:currentSettings.reverseMouseWheelDirection ? 1 : 0];// Load old setting
-
-    //  slide to menu settings
-    [self.slideToSettingsScreenEdgeSelector setSelectedSegmentIndex:[self getSelectorIndexFromScreenEdge:(uint32_t)currentSettings.slideToSettingsScreenEdge.integerValue]];
-    // Load old setting
-    [self.cmdToolScreenEdgeSelector setEnabled:false];
-    [self.slideToSettingsScreenEdgeSelector addTarget:self action:@selector(slideToSettingsScreenEdgeChanged) forControlEvents:UIControlEventValueChanged];
-    [self slideToSettingsScreenEdgeChanged];
-
-    [self.slideToMenuDistanceSlider setValue:currentSettings.slideToSettingsDistance.floatValue];
-    [self.slideToMenuDistanceSlider addTarget:self action:@selector(slideToMenuDistanceSliderMoved) forControlEvents:(UIControlEventValueChanged)]; // Update label display when slider is being moved.
-    [self slideToMenuDistanceSliderMoved];
-    
-
-    
-    //TouchMode & OSC Related Settings:
-    
-    // pointer veloc setting, will be enable/disabled by touchMode
-    [self.pointerVelocityModeDividerSlider setValue: (uint8_t)(currentSettings.pointerVelocityModeDivider.floatValue * 100) animated:YES]; // Load old setting.
-    [self.pointerVelocityModeDividerSlider addTarget:self action:@selector(pointerVelocityModeDividerSliderMoved) forControlEvents:(UIControlEventValueChanged)]; // Update label display when slider is being moved.
-    [self pointerVelocityModeDividerSliderMoved];
-
-    // init pointer veloc setting,  will be enable/disabled by touchMode
-    [self.touchPointerVelocityFactorSlider setValue: [self map_SliderValue_fromVelocFactor: currentSettings.touchPointerVelocityFactor.floatValue] animated:YES]; // Load old setting.
-    [self.touchPointerVelocityFactorSlider addTarget:self action:@selector(touchPointerVelocityFactorSliderMoved) forControlEvents:(UIControlEventValueChanged)]; // Update label display when slider is being moved.
-    [self touchPointerVelocityFactorSliderMoved];
-    
-    // async native touch event
-    [self.asyncNativeTouchPrioritySelector setSelectedSegmentIndex:currentSettings.asyncNativeTouchPriority.intValue]; // load old setting of asyncNativeTouchPriority
-    [self.asyncNativeTouchPrioritySelector addTarget:self action:@selector(asyncNativeTouchPriorityChanged) forControlEvents:UIControlEventValueChanged];
-    [self asyncNativeTouchPriorityChanged];
-    
-    // init relative touch mouse pointer veloc setting,  will be enable/disabled by touchMode
-    [self.mousePointerVelocityFactorSlider setValue:[self map_SliderValue_fromVelocFactor: currentSettings.mousePointerVelocityFactor.floatValue] animated:YES]; // Load old setting.
-    [self.mousePointerVelocityFactorSlider addTarget:self action:@selector(mousePointerVelocityFactorSliderMoved) forControlEvents:(UIControlEventValueChanged)]; // Update label display when slider is being moved.
-    [self mousePointerVelocityFactorSliderMoved];
-    
-    
-    // these settings will be affected by onscreenControl & touchMode, must be loaded before them.
-    // NSLog(@"osc tool fingers setting test: %d", currentSettings.oscLayoutToolFingers.intValue);
-    self->oscLayoutFingers = (uint16_t)currentSettings.oscLayoutToolFingers.intValue; // load old setting of oscLayoutFingers
-    [self.keyboardToggleFingerNumSlider setValue:(CGFloat)currentSettings.keyboardToggleFingers.intValue animated:YES]; // Load old setting. old setting was converted to uint16_t before saving.
-    [self.keyboardToggleFingerNumSlider addTarget:self action:@selector(keyboardToggleFingerNumSliderMoved) forControlEvents:(UIControlEventValueChanged)]; // Update label display when slider is being moved.
-    [self keyboardToggleFingerNumSliderMoved];
-
-    // this setting will be affected by touchMode, must be loaded before them.
-    NSInteger onscreenControlsLevel = [currentSettings.onscreenControls integerValue];
-    [self.onscreenControlSelector setSelectedSegmentIndex:onscreenControlsLevel];
-    [self.onscreenControlSelector addTarget:self action:@selector(onscreenControlChanged) forControlEvents:UIControlEventValueChanged];
-    [self onscreenControlChanged];
-    
-    // touch move event interval for native-touch.
-    [self.touchMoveEventIntervalSlider setValue:currentSettings.touchMoveEventInterval.intValue animated:YES]; // Load old setting.
-    [self.touchMoveEventIntervalSlider addTarget:self action:@selector(touchMoveEventIntervalSliderMoved) forControlEvents:(UIControlEventValueChanged)]; // Update label display when slider is being moved.
-    [self touchMoveEventIntervalSliderMoved];
-
-
-    // [self.touchModeSelector setSelectedSegmentIndex:currentSettings.absoluteTouchMode ? 1 : 0];
-    // this part will enable/disable oscSelector & the asyncNativeTouchPriority selector
-    [self.touchModeSelector setSelectedSegmentIndex:currentSettings.touchMode.intValue]; //Load old touchMode setting
-    [self.touchModeSelector addTarget:self action:@selector(touchModeChanged) forControlEvents:UIControlEventValueChanged];
-    [self touchModeChanged];
-
-    
-    // init CustomOSC stuff
-    /* sets a reference to the correct 'LayoutOnScreenControlsViewController' depending on whether the user is on an iPhone or iPad */
-    self.layoutOnScreenControlsVC = [[LayoutOnScreenControlsViewController alloc] init];
-    BOOL isIPhone = ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPhone);
-    if (isIPhone) {
-        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"iPhone" bundle:nil];
-        self.layoutOnScreenControlsVC = [storyboard instantiateViewControllerWithIdentifier:@"LayoutOnScreenControlsViewController"];
-    }
-    else {
-        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"iPad" bundle:nil];
-        self.layoutOnScreenControlsVC = [storyboard instantiateViewControllerWithIdentifier:@"LayoutOnScreenControlsViewController"];
-        self.layoutOnScreenControlsVC.modalPresentationStyle = UIModalPresentationFullScreen;
-    }
-
-    [self.externalDisplayModeSelector setSelectedSegmentIndex:currentSettings.externalDisplayMode.integerValue];
-    [self.localMousePointerModeSelector setSelectedSegmentIndex:currentSettings.localMousePointerMode.integerValue];
+            // Only enable the 4K option for "recent" devices. We'll judge that by whether
+            // they support HEVC decoding (A9 or later).
+            [self.resolutionSelector setEnabled:NO forSegmentAtIndex:3];
+        }
+        switch (currentSettings.preferredCodec) {
+            case CODEC_PREF_AUTO:
+                [self.codecSelector setSelectedSegmentIndex:self.codecSelector.numberOfSegments - 1];
+                break;
+                
+            case CODEC_PREF_AV1:
+                [self.codecSelector setSelectedSegmentIndex:2];
+                break;
+                
+            case CODEC_PREF_HEVC:
+                [self.codecSelector setSelectedSegmentIndex:1];
+                break;
+                
+            case CODEC_PREF_H264:
+                [self.codecSelector setSelectedSegmentIndex:0];
+                break;
+        }
+        
+        if (!VTIsHardwareDecodeSupported(kCMVideoCodecType_HEVC) || !(AVPlayer.availableHDRModes & AVPlayerHDRModeHDR10)) {
+            [self.hdrSelector removeAllSegments];
+            [self.hdrSelector insertSegmentWithTitle:[LocalizationHelper localizedStringForKey:@"Unsupported on this device"] atIndex:0 animated:NO];
+            [self.hdrSelector setEnabled:NO];
+        }
+        else {
+            [self.hdrSelector setSelectedSegmentIndex:currentSettings.enableHdr ? 1 : 0];
+        }
+        
+        [self.yuv444Selector setSelectedSegmentIndex:currentSettings.enableYUV444 ? 1 : 0];
+        [self.statsOverlaySelector setSelectedSegmentIndex:currentSettings.statsOverlayLevel.intValue];
+        [self.btMouseSelector setSelectedSegmentIndex:currentSettings.btMouseSupport ? 1 : 0];
+        [self.optimizeSettingsSelector setSelectedSegmentIndex:currentSettings.optimizeGames ? 1 : 0];
+        [self.framePacingSelector setSelectedSegmentIndex:currentSettings.useFramePacing ? 1 : 0];
+        [self.multiControllerSelector setSelectedSegmentIndex:currentSettings.multiController ? 1 : 0];
+        [self.swapABXYButtonsSelector setSelectedSegmentIndex:currentSettings.swapABXYButtons ? 1 : 0];
+        [self.audioOnPCSelector setSelectedSegmentIndex:currentSettings.playAudioOnPC ? 1 : 0];
+        _lastSelectedResolutionIndex = resolution;
+        [self.resolutionSelector setSelectedSegmentIndex:resolution];
+        [self.resolutionSelector addTarget:self action:@selector(newResolutionChosen) forControlEvents:UIControlEventValueChanged];
+        [self.framerateSelector setSelectedSegmentIndex:framerate];
+        [self.framerateSelector addTarget:self action:@selector(updateBitrate) forControlEvents:UIControlEventValueChanged];
+        [self.bitrateSlider setMinimumValue:0];
+        [self.bitrateSlider setMaximumValue:(sizeof(bitrateTable) / sizeof(*bitrateTable)) - 1];
+        [self.bitrateSlider setValue:[self getSliderValueForBitrate:_bitrate] animated:YES];
+        [self.bitrateSlider addTarget:self action:@selector(bitrateSliderMoved) forControlEvents:UIControlEventValueChanged];
+        [self updateBitrateText];
+        [self updateResolutionDisplayViewText];
+        
+        // Unlock Display Orientation setting
+        bool unlockDisplayOrientationSelectorEnabled = [self isFullScreenRequired];//need "requires fullscreen" enabled in the app bunddle to make runtime orientation limitation woring
+        if(unlockDisplayOrientationSelectorEnabled) [self.unlockDisplayOrientationSelector setSelectedSegmentIndex:currentSettings.unlockDisplayOrientation ? 1 : 0];
+        else [self.unlockDisplayOrientationSelector setSelectedSegmentIndex:1]; // can't lock screen orientation in this mode = Display Orientation always unlocked
+        [self.unlockDisplayOrientationSelector setEnabled:unlockDisplayOrientationSelectorEnabled];
+        
+        
+        // lift streamview setting
+        [self.liftStreamViewForKeyboardSelector setSelectedSegmentIndex:currentSettings.liftStreamViewForKeyboard ? 1 : 0];// Load old setting
+        
+        // showkeyboard toolbar setting
+        [self.showKeyboardToolbarSelector setSelectedSegmentIndex:currentSettings.showKeyboardToolbar ? 1 : 0];// Load old setting
+        
+        // reverse mouse wheel direction setting
+        [self.reverseMouseWheelDirectionSelector setSelectedSegmentIndex:currentSettings.reverseMouseWheelDirection ? 1 : 0];// Load old setting
+        
+        //  slide to menu settings
+        [self.slideToSettingsScreenEdgeSelector setSelectedSegmentIndex:[self getSelectorIndexFromScreenEdge:(uint32_t)currentSettings.slideToSettingsScreenEdge.integerValue]];
+        // Load old setting
+        [self.cmdToolScreenEdgeSelector setEnabled:false];
+        [self.slideToSettingsScreenEdgeSelector addTarget:self action:@selector(slideToSettingsScreenEdgeChanged) forControlEvents:UIControlEventValueChanged];
+        [self slideToSettingsScreenEdgeChanged];
+        
+        [self.slideToMenuDistanceSlider setValue:currentSettings.slideToSettingsDistance.floatValue];
+        [self.slideToMenuDistanceSlider addTarget:self action:@selector(slideToMenuDistanceSliderMoved) forControlEvents:(UIControlEventValueChanged)]; // Update label display when slider is being moved.
+        [self slideToMenuDistanceSliderMoved];
+        
+        
+        
+        //TouchMode & OSC Related Settings:
+        
+        // pointer veloc setting, will be enable/disabled by touchMode
+        [self.pointerVelocityModeDividerSlider setValue: (uint8_t)(currentSettings.pointerVelocityModeDivider.floatValue * 100) animated:YES]; // Load old setting.
+        [self.pointerVelocityModeDividerSlider addTarget:self action:@selector(pointerVelocityModeDividerSliderMoved) forControlEvents:(UIControlEventValueChanged)]; // Update label display when slider is being moved.
+        [self pointerVelocityModeDividerSliderMoved];
+        
+        // init pointer veloc setting,  will be enable/disabled by touchMode
+        [self.touchPointerVelocityFactorSlider setValue: [self map_SliderValue_fromVelocFactor: currentSettings.touchPointerVelocityFactor.floatValue] animated:YES]; // Load old setting.
+        [self.touchPointerVelocityFactorSlider addTarget:self action:@selector(touchPointerVelocityFactorSliderMoved) forControlEvents:(UIControlEventValueChanged)]; // Update label display when slider is being moved.
+        [self touchPointerVelocityFactorSliderMoved];
+        
+        // async native touch event
+        [self.asyncNativeTouchPrioritySelector setSelectedSegmentIndex:currentSettings.asyncNativeTouchPriority.intValue]; // load old setting of asyncNativeTouchPriority
+        [self.asyncNativeTouchPrioritySelector addTarget:self action:@selector(asyncNativeTouchPriorityChanged) forControlEvents:UIControlEventValueChanged];
+        [self asyncNativeTouchPriorityChanged];
+        
+        // init relative touch mouse pointer veloc setting,  will be enable/disabled by touchMode
+        [self.mousePointerVelocityFactorSlider setValue:[self map_SliderValue_fromVelocFactor: currentSettings.mousePointerVelocityFactor.floatValue] animated:YES]; // Load old setting.
+        [self.mousePointerVelocityFactorSlider addTarget:self action:@selector(mousePointerVelocityFactorSliderMoved) forControlEvents:(UIControlEventValueChanged)]; // Update label display when slider is being moved.
+        [self mousePointerVelocityFactorSliderMoved];
+        
+        
+        // these settings will be affected by onscreenControl & touchMode, must be loaded before them.
+        // NSLog(@"osc tool fingers setting test: %d", currentSettings.oscLayoutToolFingers.intValue);
+        self->oscLayoutFingers = (uint16_t)currentSettings.oscLayoutToolFingers.intValue; // load old setting of oscLayoutFingers
+        [self.keyboardToggleFingerNumSlider setValue:(CGFloat)currentSettings.keyboardToggleFingers.intValue animated:YES]; // Load old setting. old setting was converted to uint16_t before saving.
+        [self.keyboardToggleFingerNumSlider addTarget:self action:@selector(keyboardToggleFingerNumSliderMoved) forControlEvents:(UIControlEventValueChanged)]; // Update label display when slider is being moved.
+        [self keyboardToggleFingerNumSliderMoved];
+        
+        // this setting will be affected by touchMode, must be loaded before them.
+        NSInteger onscreenControlsLevel = [currentSettings.onscreenControls integerValue];
+        [self.onscreenControlSelector setSelectedSegmentIndex:onscreenControlsLevel];
+        [self.onscreenControlSelector addTarget:self action:@selector(onscreenControlChanged) forControlEvents:UIControlEventValueChanged];
+        [self onscreenControlChanged];
+        
+        // touch move event interval for native-touch.
+        [self.touchMoveEventIntervalSlider setValue:currentSettings.touchMoveEventInterval.intValue animated:YES]; // Load old setting.
+        [self.touchMoveEventIntervalSlider addTarget:self action:@selector(touchMoveEventIntervalSliderMoved) forControlEvents:(UIControlEventValueChanged)]; // Update label display when slider is being moved.
+        [self touchMoveEventIntervalSliderMoved];
+        
+        
+        // [self.touchModeSelector setSelectedSegmentIndex:currentSettings.absoluteTouchMode ? 1 : 0];
+        // this part will enable/disable oscSelector & the asyncNativeTouchPriority selector
+        [self.touchModeSelector setSelectedSegmentIndex:currentSettings.touchMode.intValue]; //Load old touchMode setting
+        [self.touchModeSelector addTarget:self action:@selector(touchModeChanged) forControlEvents:UIControlEventValueChanged];
+        [self touchModeChanged];
+        
+        
+        // init CustomOSC stuff
+        /* sets a reference to the correct 'LayoutOnScreenControlsViewController' depending on whether the user is on an iPhone or iPad */
+        self.layoutOnScreenControlsVC = [[LayoutOnScreenControlsViewController alloc] init];
+        BOOL isIPhone = ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPhone);
+        if (isIPhone) {
+            UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"iPhone" bundle:nil];
+            self.layoutOnScreenControlsVC = [storyboard instantiateViewControllerWithIdentifier:@"LayoutOnScreenControlsViewController"];
+        }
+        else {
+            UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"iPad" bundle:nil];
+            self.layoutOnScreenControlsVC = [storyboard instantiateViewControllerWithIdentifier:@"LayoutOnScreenControlsViewController"];
+            self.layoutOnScreenControlsVC.modalPresentationStyle = UIModalPresentationFullScreen;
+        }
+        
+        [self.externalDisplayModeSelector setSelectedSegmentIndex:currentSettings.externalDisplayMode.integerValue];
+        [self.localMousePointerModeSelector setSelectedSegmentIndex:currentSettings.localMousePointerMode.integerValue];
+    }];
 }
 
 - (void)slideToSettingsScreenEdgeChanged{

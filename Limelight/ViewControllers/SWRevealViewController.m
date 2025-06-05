@@ -631,6 +631,7 @@ static CGFloat scaledValue( CGFloat v1, CGFloat min2, CGFloat max2, CGFloat min1
     SWContextTransitionObject *_rearTransitioningController;
     SWContextTransitionObject *_frontTransitioningController;
     SWContextTransitionObject *_rightTransitioningController;
+    CGFloat timeStamp;
 }
 @end
 
@@ -1262,7 +1263,8 @@ const int FrontViewPositionNone = 0xff;
 #pragma mark - Provided acction methods
 
 - (IBAction)revealToggle:(id)sender
-{    
+{
+    timeStamp = CACurrentMediaTime();
     [self revealToggleAnimated:YES];
 }
 
@@ -1907,8 +1909,10 @@ const int FrontViewPositionNone = 0xff;
         deploymentCompletion();
         if ( positionIsChanging )
         {
-            if ( [self->_delegate respondsToSelector:@selector(revealController:didMoveToPosition:)] )
+            if ( [self->_delegate respondsToSelector:@selector(revealController:didMoveToPosition:)] ){
+                NSLog(@"expansion: %f", CACurrentMediaTime() - self->timeStamp);
                 [self->_delegate revealController:self didMoveToPosition:newPosition];
+            }
         }
     };
 
