@@ -30,6 +30,7 @@
     UIStackView *parentStack;
     NSMutableDictionary *_settingStackDict;
     NSMutableArray *_favoriteSettingStackIdentifiers;
+    bool settingStackWillBeRelocatedToLowestPosition;
     uint8_t currentSettingsMenuMode;
     UIView *snapshot;
     UIStackView* capturedStack;
@@ -631,7 +632,7 @@ BOOL isCustomResolution(CGSize res) {
         NSLog(@" index: %ld, stackY: %f, touchY: %f", (long)i, CGRectGetMidY(subview.frame), location.y);
         if(stackMinY < location.y){
             NSLog(@"index: %ld", i);
-            subview.backgroundColor = [ThemeManager appPrimaryColorWithAlpha];
+            //subview.backgroundColor = [ThemeManager appPrimaryColorWithAlpha];
             return i;
         }
     }
@@ -643,12 +644,24 @@ BOOL isCustomResolution(CGSize res) {
     UIStackView* currentStack;
     for (NSInteger i = parentStack.arrangedSubviews.count-1; i >=0; i--) {
         currentStack = parentStack.arrangedSubviews[i];
-        
+
         if(currentIndex == i){
-            currentStack.layer.cornerRadius = 6;
-            currentStack.layer.masksToBounds = YES;
-            currentStack.clipsToBounds = YES;
-            currentStack.backgroundColor = [ThemeManager appPrimaryColorWithAlpha];
+            settingStackWillBeRelocatedToLowestPosition = false;
+            if(i == parentStack.arrangedSubviews.count-1 && locationInParentStack.y > CGRectGetMaxY(currentStack.frame)){
+                snapshot.layer.cornerRadius = 6;
+                snapshot.layer.masksToBounds = YES;
+                snapshot.clipsToBounds = YES;
+                snapshot.backgroundColor = [UIColor colorWithRed:0.5 green:0.5 blue:1 alpha:0.35];
+                currentStack.backgroundColor = [UIColor clearColor];
+                settingStackWillBeRelocatedToLowestPosition = true;
+            }
+            else{
+                currentStack.layer.cornerRadius = 6;
+                currentStack.layer.masksToBounds = YES;
+                currentStack.clipsToBounds = YES;
+                currentStack.backgroundColor = [ThemeManager appPrimaryColorWithAlpha];
+                snapshot.backgroundColor = [UIColor clearColor];
+            }
         }
         else{
             currentStack.layer.cornerRadius = 0;
@@ -732,6 +745,7 @@ BOOL isCustomResolution(CGSize res) {
                 
                 
                 break;
+            case UIGestureRecognizerStateCancelled:
             case UIGestureRecognizerStateEnded:
                 // 更新快照视图位置
                 // snapshot.center = CGPointMake(originalCenter.x, point.y);
@@ -744,8 +758,14 @@ BOOL isCustomResolution(CGSize res) {
                 NSInteger oldIndex = [parentStack.arrangedSubviews indexOfObject:capturedStack];
                 newIndex = newIndex > oldIndex ? newIndex - 1 : newIndex;
                 //NSInteger newIndex = 1;
+                //NSLog(@"newidx %ld, oldidx %ld", newIndex, oldIndex);
+                if(settingStackWillBeRelocatedToLowestPosition){
+                    newIndex = newIndex + 1;
+                    settingStackWillBeRelocatedToLowestPosition = false;
+                }
                 
                 if (newIndex != NSNotFound) {
+                    if(newIndex >= parentStack.arrangedSubviews.count) newIndex = parentStack.arrangedSubviews.count-1;
                     [parentStack removeArrangedSubview:capturedStack];
                     [parentStack insertArrangedSubview:capturedStack atIndex:newIndex];
                     // [parentStack addSubview:capturedStack];
@@ -754,8 +774,6 @@ BOOL isCustomResolution(CGSize res) {
                     [self saveFavoriteSettingStackIdentifiers];
                 }
                 // 移除快照视图，显示原始视图
-                break;
-            case UIGestureRecognizerStateCancelled:
                 break;
                 
             default:break;
@@ -885,6 +903,7 @@ BOOL isCustomResolution(CGSize res) {
     //[self updateTheme];
     [UIView performWithoutAnimation:^{
         
+        settingStackWillBeRelocatedToLowestPosition = false;
         
         [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"_UIConstraintBasedLayoutLogUnsatisfiable"];
         
