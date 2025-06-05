@@ -31,6 +31,7 @@ typedef NS_ENUM(NSInteger, TouchEventPriorityEnum) {
 typedef NS_ENUM(NSInteger, SettingsMenuMode) {
     AllSettings,
     FavoriteSettings,
+    RemoveSettingItem,
 };
 
 - (void) saveSettingsWithBitrate:(NSInteger)bitrate

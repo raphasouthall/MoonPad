@@ -1012,17 +1012,58 @@ const int FrontViewPositionNone = 0xff;
     }];
 }
 
+- (UIAction* )getRemoveSettingItemAction API_AVAILABLE(ios(13.0)){
+    return [UIAction actionWithTitle:[LocalizationHelper localizedStringForKey:@"Remove Items"] image:[UIImage systemImageNamed:@"minus.circle"] identifier:nil handler:^(__kindof UIAction * _Nonnull action) {
+        [self removeSettingItemSelected];
+    }];
+}
+
+- (UIAction* )getDoneRemoveSettingAction API_AVAILABLE(ios(13.0)){
+    return [UIAction actionWithTitle:[LocalizationHelper localizedStringForKey:@"Done"] image:[UIImage systemImageNamed:@"checkmark.circle"] identifier:nil handler:^(__kindof UIAction * _Nonnull action) {
+        [self doneRemoveSettingItemSelected];
+    }];
+}
+
+
+- (void)removeSettingItemSelected{
+    if (@available(iOS 13.0, *)) {
+        // UIAction* action1 = [self getAllSettingMenuAction];
+        UIAction* action1 = [self getDoneRemoveSettingAction];
+        if (@available(iOS 14.0, *)) _moreButton.menu = [UIMenu menuWithTitle:@"" children:@[action1]];
+    }
+
+    if ([self.navBarMenuDelegate respondsToSelector:@selector(enterRemoveSettingItemMode)]) {
+        [self.navBarMenuDelegate enterRemoveSettingItemMode];
+    } else NSLog(@"Delegate not set or does not respond to switchToAllSettings:");
+}
+
+- (void)doneRemoveSettingItemSelected{
+    if (@available(iOS 13.0, *)) {
+        UIAction* action1 = [self getAllSettingMenuAction];
+        UIAction* action2 = [self getRemoveSettingItemAction];
+        if (@available(iOS 14.0, *)) _moreButton.menu = [UIMenu menuWithTitle:@"" children:@[action1, action2]];
+    }
+
+    if ([self.navBarMenuDelegate respondsToSelector:@selector(doneRemoveSettingItem)]) {
+        [self.navBarMenuDelegate doneRemoveSettingItem];
+    } else NSLog(@"Delegate not set or does not respond to switchToAllSettings:");
+}
+
+
+
 - (void)setupMoreButtonMenu{
     if (@available(iOS 14.0, *)) {
         UIMenu *menu;
-        
+        UIAction* action1 = [self getAllSettingMenuAction];
+        UIAction* action2 = [self getRemoveSettingItemAction];
+
         // 创建菜单
         switch ([self getSettingsMenuMode]) {
             case AllSettings:
                 menu = [UIMenu menuWithTitle:@"" children:@[[self getFavoriteMenuAction]]];
                 break;
             case FavoriteSettings:
-                menu = [UIMenu menuWithTitle:@"" children:@[[self getAllSettingMenuAction]]];
+                menu = [UIMenu menuWithTitle:@"" children:@[action1, action2]];
                 break;
             default:
                 break;
@@ -1074,8 +1115,9 @@ const int FrontViewPositionNone = 0xff;
 
 - (void)favoriteSettingSelected {
     if (@available(iOS 13.0, *)) {
-        UIAction* allSettings = [self getAllSettingMenuAction];
-        if (@available(iOS 14.0, *)) _moreButton.menu = [UIMenu menuWithTitle:@"" children:@[allSettings]];
+        UIAction* action1 = [self getAllSettingMenuAction];
+        UIAction* action2 = [self getRemoveSettingItemAction];
+        if (@available(iOS 14.0, *)) _moreButton.menu = [UIMenu menuWithTitle:@"" children:@[action1, action2]];
     }
     if ([self.navBarMenuDelegate respondsToSelector:@selector(switchToFavoriteSettings)]) {
         [self.navBarMenuDelegate switchToFavoriteSettings];
@@ -1084,8 +1126,8 @@ const int FrontViewPositionNone = 0xff;
 
 - (void)allSettingSelected {
     if (@available(iOS 13.0, *)) {
-        UIAction* favoriteSettings = [self getFavoriteMenuAction];
-        if (@available(iOS 14.0, *)) _moreButton.menu = [UIMenu menuWithTitle:@"" children:@[favoriteSettings]];
+        UIAction* action1 = [self getFavoriteMenuAction];
+        if (@available(iOS 14.0, *)) _moreButton.menu = [UIMenu menuWithTitle:@"" children:@[action1]];
     }
     if ([self.navBarMenuDelegate respondsToSelector:@selector(switchToAllSettings)]) {
         [self.navBarMenuDelegate switchToAllSettings];

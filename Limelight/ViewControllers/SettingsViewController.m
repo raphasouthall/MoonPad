@@ -772,9 +772,35 @@ BOOL isCustomResolution(CGSize res) {
     [self saveFavoriteSettingStackIdentifiers];
 }
 
+- (void)attachRemoveButtonForStack:(UIStackView* )stack{
+    UIButton* removeButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    if (@available(iOS 13.0, *)) {
+        UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithPointSize:16 weight:UIImageSymbolWeightMedium];
+        [removeButton setImage:[UIImage systemImageNamed:@"minus.circle" withConfiguration:config] forState:UIControlStateNormal];
+    } else {
+        [removeButton setTitle:@"Remove" forState:UIControlStateNormal];
+    }
+    removeButton.accessibilityIdentifier = @"removeButton";
+    removeButton.translatesAutoresizingMaskIntoConstraints = NO;
+    removeButton.tintColor = [UIColor redColor];
+    
+    [removeButton addTarget:self action:@selector(removeSettingStackFromFavorites:) forControlEvents:UIControlEventTouchUpInside];
+    
+    [stack addSubview:removeButton];
+    [NSLayoutConstraint activateConstraints:@[
+        [removeButton.trailingAnchor constraintEqualToAnchor:stack.trailingAnchor constant:-8],
+        [removeButton.topAnchor constraintEqualToAnchor:stack.topAnchor],
+    ]];
+}
+
+- (void)removeSettingStackFromFavorites:(UIButton* )sender{
+    [sender.superview removeFromSuperview];
+    [sender removeFromSuperview];
+    [self saveFavoriteSettingStackIdentifiers];
+}
+
 - (void)switchToFavoriteSettings{
     [self updateTheme];
-    
     currentSettingsMenuMode = FavoriteSettings;
     DataManager* dataMan = [[DataManager alloc] init];
     Settings *currentSettings = [dataMan retrieveSettings];
@@ -791,13 +817,6 @@ BOOL isCustomResolution(CGSize res) {
 }
 
 - (void)switchToAllSettings{
-    [self updateTheme];
-    
-    currentSettingsMenuMode = AllSettings;
-    DataManager* dataMan = [[DataManager alloc] init];
-    Settings *currentSettings = [dataMan retrieveSettings];
-    currentSettings.settingsMenuMode = [NSNumber numberWithInteger:currentSettingsMenuMode];
-    [dataMan saveData];
 
     
     for(UIView* view in parentStack.subviews){
@@ -805,17 +824,45 @@ BOOL isCustomResolution(CGSize res) {
     }
     [self initParentStack];
     [self layoutSections];
+    [self updateTheme];
+        //[self doneRemoveSettingItem];
+    currentSettingsMenuMode = AllSettings;
+    DataManager* dataMan = [[DataManager alloc] init];
+    Settings *currentSettings = [dataMan retrieveSettings];
+    currentSettings.settingsMenuMode = [NSNumber numberWithInteger:currentSettingsMenuMode];
+    [dataMan saveData];
+
 }
 
+- (void)enterRemoveSettingItemMode{
+    currentSettingsMenuMode = RemoveSettingItem;
+    for(UIStackView* stack in parentStack.arrangedSubviews){
+        for(UIView* view in stack.subviews) view.userInteractionEnabled = false;
+        [self attachRemoveButtonForStack:stack];
+        // stack.userInteractionEnabled = false;
+    }
+}
+
+- (void)doneRemoveSettingItem{
+    currentSettingsMenuMode = FavoriteSettings;
+    for(UIStackView* stack in parentStack.arrangedSubviews){
+        //stack.userInteractionEnabled = true;
+        for(UIView* view in stack.subviews){
+            if([view.accessibilityIdentifier isEqualToString:@"removeButton"]) [view removeFromSuperview];
+            else view.userInteractionEnabled = true;
+        }
+    }
+}
 
 - (void)saveFavoriteSettingStackIdentifiers {
     
-    [_favoriteSettingStackIdentifiers removeAllObjects];
-
-    for(NSInteger i = 0; i < parentStack.arrangedSubviews.count; i++){
-        [_favoriteSettingStackIdentifiers addObject:parentStack.arrangedSubviews[i].accessibilityIdentifier];
+    if(currentSettingsMenuMode == RemoveSettingItem){
+        [_favoriteSettingStackIdentifiers removeAllObjects];
+        for(NSInteger i = 0; i < parentStack.arrangedSubviews.count; i++){
+            [_favoriteSettingStackIdentifiers addObject:parentStack.arrangedSubviews[i].accessibilityIdentifier];
+        }
     }
-
+    
     [[NSUserDefaults standardUserDefaults] setObject:_favoriteSettingStackIdentifiers forKey:@"FavoriteSettingStackIdentifiers"];
     [[NSUserDefaults standardUserDefaults] synchronize];
 }

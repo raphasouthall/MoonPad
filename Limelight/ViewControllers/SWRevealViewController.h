@@ -352,6 +352,8 @@ typedef enum
 - (void)switchToFavoriteSettings;
 - (void)switchToAllSettings;
 - (SettingsMenuMode)getSettingsMenuMode;
+- (void)enterRemoveSettingItemMode;
+- (void)doneRemoveSettingItem;
 @end
 
 
