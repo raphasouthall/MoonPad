@@ -339,18 +339,6 @@ BOOL isCustomResolution(CGSize res) {
     [[NSNotificationCenter defaultCenter] postNotificationName:@"SettingsViewClosedNotification" object:self]; // notify other view that settings view just closed
 }
 
-//deprecated
-- (IBAction)exitButtonTapped:(id)sender {
-    [self->_mainFrameViewController simulateSettingsButtonPress];
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"SessionDisconnectedBySettingsMenuNotification" object:self];
-}
-
-//deprecated
-- (IBAction)backToStreamingButtonTapped:(id)sender {
-    [self simulateSettingsButtonPress];
-}
-
-
 /*
 - (void)addExitButtonOnTop{
     UIButton *exitButton = [UIButton buttonWithType:UIButtonTypeSystem];
@@ -817,6 +805,13 @@ BOOL isCustomResolution(CGSize res) {
     [self saveFavoriteSettingStackIdentifiers];
 }
 
+- (void)layoutSettingsView{
+    [self.view layoutSubviews];
+    if(currentSettingsMenuMode == AllSettings){
+        for(MenuSectionView* section in parentStack.arrangedSubviews) [section updateViewForFoldState];
+    }
+}
+
 - (void)switchToFavoriteSettings{
     [self updateTheme];
     currentSettingsMenuMode = FavoriteSettings;
@@ -829,6 +824,7 @@ BOOL isCustomResolution(CGSize res) {
         [view removeFromSuperview];
     }
     parentStack.spacing = 15;
+    [self loadFavoriteSettingStackIdentifiers];
     for(NSString* settingIdentifier in _favoriteSettingStackIdentifiers){
         [parentStack addArrangedSubview:_settingStackDict[settingIdentifier]];
     }

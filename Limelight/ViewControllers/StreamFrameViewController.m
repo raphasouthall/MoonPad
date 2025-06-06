@@ -279,6 +279,7 @@
 #endif
 
 - (void)popFirstLaunchTip {
+    return; // temp disable
     // 初始化倒计时秒数
     __block NSInteger remainingSeconds = 16;
     

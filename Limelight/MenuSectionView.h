@@ -29,5 +29,6 @@
 - (void)addToParentStack:(UIStackView *)parentStack;
 - (void)removeSubStackView:(UIStackView *)stackView;
 - (void)updateLayout;
+- (void)updateViewForFoldState;
 
 @end

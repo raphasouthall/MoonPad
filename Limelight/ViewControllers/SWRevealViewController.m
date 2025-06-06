@@ -861,8 +861,21 @@ const int FrontViewPositionNone = 0xff;
 #pragma mark - Public methods and property accessors
 
 - (void)willMoveToPosition{
+    
+    SettingsMenuMode currentMenuMode = [self getSettingsMenuMode];
+    
     _separatorLine.hidden = _frontViewPosition == FrontViewPositionLeft;
-    if(_frontViewPosition != FrontViewPositionLeft) [self setupMoreButtonMenu];
+    
+    if(_frontViewPosition == FrontViewPositionLeft && currentMenuMode == RemoveSettingItem){
+        [self doneRemoveSettingItemSelected];
+    }
+
+    if(_frontViewPosition != FrontViewPositionLeft){
+        [self setupMoreButtonMenu];
+        [self layoutSettingsView];
+        //if(currentMenuMode == AllSettings) [self allSettingSelected];
+        //if(currentMenuMode == FavoriteSettings) [self favoriteSettingSelected];
+    }
 }
 
 
@@ -1046,9 +1059,14 @@ const int FrontViewPositionNone = 0xff;
 
     if ([self.navBarMenuDelegate respondsToSelector:@selector(doneRemoveSettingItem)]) {
         [self.navBarMenuDelegate doneRemoveSettingItem];
-    } else NSLog(@"Delegate not set or does not respond to switchToAllSettings:");
+    } else NSLog(@"Delegate not set or does not respond to doneRemoveSettingItem:");
 }
 
+- (void)layoutSettingsView{
+    if ([self.navBarMenuDelegate respondsToSelector:@selector(layoutSettingsView)]) {
+        [self.navBarMenuDelegate layoutSettingsView];
+    } else NSLog(@"Delegate not set or does not respond to layoutSettingsView:");
+}
 
 
 - (void)setupMoreButtonMenu{
@@ -1140,7 +1158,7 @@ const int FrontViewPositionNone = 0xff;
 }
 
 - (void)buttonsInStreaming{
-    _navItem.rightBarButtonItems = @[_disconnectButton];
+    _navItem.rightBarButtonItems = @[_disconnectButton, _moreButton];
 }
 
 - (void)buttonsNotInStreaming{
@@ -1152,6 +1170,8 @@ const int FrontViewPositionNone = 0xff;
 }
 
 - (void)disconnectRemoteSession{
+    if([self getSettingsMenuMode] == RemoveSettingItem) [self doneRemoveSettingItemSelected];
+
     [[NSNotificationCenter defaultCenter] postNotificationName:@"SessionDisconnectedBySettingsMenuNotification" object:self];
     [self foldRearView];
 }

@@ -354,6 +354,7 @@ typedef enum
 - (SettingsMenuMode)getSettingsMenuMode;
 - (void)enterRemoveSettingItemMode;
 - (void)doneRemoveSettingItem;
+- (void)layoutSettingsView;
 @end
 
 
