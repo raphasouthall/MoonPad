@@ -687,8 +687,8 @@ const int FrontViewPositionNone = 0xff;
     _frontViewPosition = FrontViewPositionLeft;
     _rearViewPosition = FrontViewPositionLeft;
     _rightViewPosition = FrontViewPositionLeft;
-    _rearViewRevealWidth = 492.0f;
-    _rearViewRevealWidth = 400;
+    // _rearViewRevealWidth = 492.0f;
+    _rearViewRevealWidth = 350; //mark: settingMenuLayout
     // _rearViewRevealOverdraw = 60.0f;
     _rearViewRevealOverdraw = 0.0f;
     _rearViewRevealDisplacement = 40.0f;
@@ -899,8 +899,8 @@ const int FrontViewPositionNone = 0xff;
 
         [_separatorLine.bottomAnchor constraintEqualToAnchor:_contentView.bottomAnchor constant:0],
         //[_separatorLine.leadingAnchor constraintEqualToAnchor:self.leadingAnchor constant:self.bounds.size.width-60],
-        [_separatorLine.leadingAnchor constraintEqualToAnchor:_contentView.frontView.leadingAnchor constant:5],
-        [_separatorLine.trailingAnchor constraintEqualToAnchor:_contentView.frontView.leadingAnchor constant:6.5],
+        [_separatorLine.leadingAnchor constraintEqualToAnchor:_contentView.frontView.leadingAnchor constant:0],
+        [_separatorLine.trailingAnchor constraintEqualToAnchor:_contentView.frontView.leadingAnchor constant:2], //mark: settingMenuLayout
     ]];
 }
 

@@ -389,9 +389,8 @@ BOOL isCustomResolution(CGSize res) {
     [NSLayoutConstraint activateConstraints:@[
         [parentStack.topAnchor constraintEqualToAnchor:self.scrollView.contentLayoutGuide.topAnchor constant: [self getStandardNavBarHeight] + 13],
         [parentStack.bottomAnchor constraintEqualToAnchor:self.scrollView.contentLayoutGuide.bottomAnchor constant:-20],
-        [parentStack.leadingAnchor constraintEqualToAnchor:self.scrollView.contentLayoutGuide.leadingAnchor constant: 14],
-        [parentStack.trailingAnchor constraintEqualToAnchor:self.scrollView.contentLayoutGuide.trailingAnchor constant: -15],
-        [parentStack.widthAnchor constraintEqualToAnchor:self.scrollView.contentLayoutGuide.widthAnchor]
+        [parentStack.centerXAnchor constraintEqualToAnchor:self.view.centerXAnchor constant: 0], //mark: settingMenuLayout
+        [parentStack.widthAnchor constraintEqualToAnchor:self.view.widthAnchor constant:-20] // section width adjusted here //mark: settingMenuLayout
     ]];
 }
 
@@ -403,7 +402,6 @@ BOOL isCustomResolution(CGSize res) {
 }
     
 - (void)layoutSections{
-    NSLog(@"preLoad Log test");
     MenuSectionView *videoSection = [[MenuSectionView alloc] init];
     videoSection.sectionTitle = [LocalizationHelper localizedStringForKey:@"Video"];
     if (@available(iOS 13.0, *)) {

@@ -45,7 +45,7 @@
 - (void)commonInit {
     // 默认值
     _leadingTrailingPadding = 0;
-    _separatorLinePadding = 9;
+    _separatorLinePadding = 18;
     _sectionTitle = @"Section";
     _expanded = YES;
     _backgroundColor = [UIColor clearColor];
@@ -173,11 +173,14 @@
     ]];
     
     // 分隔线约束
+    self.clipsToBounds = false;//mark: settingMenuLayout
     [NSLayoutConstraint activateConstraints:@[
-        [_separatorLine.leadingAnchor constraintEqualToAnchor:self.leadingAnchor],
-        [_separatorLine.trailingAnchor constraintEqualToAnchor:self.trailingAnchor],
+        //[_separatorLine.leadingAnchor constraintEqualToAnchor:self.leadingAnchor],
+        //[_separatorLine.trailingAnchor constraintEqualToAnchor:self.trailingAnchor],
+        [_separatorLine.centerXAnchor constraintEqualToAnchor:self.centerXAnchor],
+        [_separatorLine.widthAnchor constraintEqualToConstant:1000], // //mark: settingMenuLayout
         [_separatorLine.bottomAnchor constraintEqualToAnchor:self.bottomAnchor],
-        [_separatorLine.heightAnchor constraintEqualToConstant:1.0]
+        [_separatorLine.heightAnchor constraintEqualToConstant:2]
     ]];
     
     [NSLayoutConstraint activateConstraints:@[
@@ -298,7 +301,7 @@
     [self setupConstraints];
     if (_expanded) {
         _rootStackView.hidden = NO;
-        _separatorLine.hidden = YES;
+        _separatorLine.hidden = NO;
         CGSize fittingSize = [self.rootStackView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize];
         CGFloat rootStackViewHeight = fittingSize.height;
         fittingSize = [self.headerView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize];
