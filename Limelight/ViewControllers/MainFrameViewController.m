@@ -382,13 +382,12 @@ static NSMutableSet* hostList;
     if (host.state == StateOnline && host.pairState == PairStatePaired && host.appList.count > 0) {
         [self switchToAppView];
     }
-    
 }
 
 - (void)launchButtonTappedForHost:(TemporaryHost *)host {
     _selectedHost = host;
     if (host.state == StateOnline && host.pairState == PairStatePaired && host.appList.count > 0) {
-        [[self revealViewController] revealToggleAnimated:NO];
+        [self closeSettingViewAnimated:NO];
         [self switchToAppView];
         [self updateAppsForHost:_selectedHost];
         [self prepareToStreamApp:_sortedAppList.firstObject];
@@ -1065,12 +1064,18 @@ static NSMutableSet* hostList;
 
 #if !TARGET_OS_TV
 
-- (void)simulateSettingsButtonPress { //simulate pressing the setting button, called from setting view controller.
-    //if([self isIPhonePortrait]) return; // disable settings view expanding in iphone portrait mode since it's buggy.
-    if (_settingsButton.target && [_settingsButton.target respondsToSelector:_settingsButton.action]) {
-        [_settingsButton.target performSelector:_settingsButton.action withObject:_settingsButton];
+- (void)expandSettingsView { //simulate pressing the setting button, called from setting view controller.
+    if (currentPosition == FrontViewPositionLeft) {
+        [[self revealViewController] revealToggleAnimated:YES];
     }
 }
+
+- (void)closeSettingViewAnimated:(BOOL)anaimated { //simulate pressing the setting button, called from setting view controller.
+    if (currentPosition != FrontViewPositionLeft) {
+        [[self revealViewController] revealToggleAnimated:anaimated];
+    }
+}
+
 
 - (void)handleOrientationChange {
     // UIDeviceOrientation targetOrientation = [[UIDevice currentDevice] orientation];

@@ -30,7 +30,8 @@
 @property (weak, nonatomic) IBOutlet UINavigationItem *navigationItem;
 
 
--(void)simulateSettingsButtonPress;
+-(void)expandSettingsView;
+- (void)closeSettingViewAnimated:(BOOL)anaimated;
 -(void)reloadStreamConfig;
 -(bool)isIPhonePortrait;
 #endif

@@ -328,12 +328,6 @@ BOOL isCustomResolution(CGSize res) {
     });
 }
 
-
-- (void)simulateSettingsButtonPress{
-    [self.mainFrameViewController simulateSettingsButtonPress];
-}
-
-
 - (void)viewDidDisappear:(BOOL)animated{
     [super viewDidDisappear:NO];
     [[NSNotificationCenter defaultCenter] postNotificationName:@"SettingsViewClosedNotification" object:self]; // notify other view that settings view just closed
@@ -358,7 +352,7 @@ BOOL isCustomResolution(CGSize res) {
 }
 
 - (void)edgeSwiped {
-    [self simulateSettingsButtonPress];
+    [self.mainFrameViewController closeSettingViewAnimated:YES];
 }
 
 - (BOOL)isIPhone {

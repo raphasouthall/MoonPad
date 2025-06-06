@@ -729,10 +729,11 @@
 
 - (void)expandSettingsView{
     self.mainFrameViewcontroller.settingsExpandedInStreamView = true; //notify mainFrameViewContorller that this is a setting expansion in stream view, some settings shall be disabled.
-    [self.mainFrameViewcontroller simulateSettingsButtonPress];
+    [self.mainFrameViewcontroller expandSettingsView];
 }
 
 - (void)edgeSwiped{
+    return; // disable this now.
     if([self->_mainFrameViewcontroller isIPhonePortrait]){ // disable backmenu for iphone portrait mode;
         [self returnToMainFrame]; //directly quit the session
         return;
