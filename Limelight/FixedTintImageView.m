@@ -1,9 +1,9 @@
 //
 //  FixedTintImageView.m
-//  Moonlight-ZWM
+//  Voidex
 //
-//  Created by Weimin on 2025/6/1.
-//  Copyright © 2025 Moonlight Game Streaming Project. All rights reserved.
+//  Created by True砖家 on 2025/6/1.
+//  Copyright © 2025 True砖家 @ Bilibili. All rights reserved.
 //
 
 #import "FixedTintImageView.h"

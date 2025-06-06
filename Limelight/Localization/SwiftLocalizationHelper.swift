@@ -1,6 +1,6 @@
 //
 //  SwiftLocalizationHelper.swift
-//  Moonlight-ZWM
+//  Voidex
 //
 //  Created by True砖家 on 2024/7/23.
 //  Copyright © True砖家 on Bilibili. All rights reserved.
