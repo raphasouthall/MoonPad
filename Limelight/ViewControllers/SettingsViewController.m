@@ -395,9 +395,10 @@ BOOL isCustomResolution(CGSize res) {
     ]];
 }
 
-- (void)addSetting:(UIStackView *)stack ofIdentifier:(NSString* )identifier to:(MenuSectionView* )menuSection{
+- (void)addSetting:(UIStackView *)stack ofId:(NSString* )identifier withInfoTag:(BOOL)attched to:(MenuSectionView* )menuSection{
     stack.accessibilityIdentifier = identifier;
     [_settingStackDict setObject:stack forKey:identifier];
+    if(attched) [self attachInfoTagForStack:stack];
     [menuSection addSubStackView:stack];
 }
     
@@ -409,9 +410,9 @@ BOOL isCustomResolution(CGSize res) {
         [videoSection setSectionIcon:[UIImage systemImageNamed:@"airplayvideo"]];
     } else [videoSection setSectionIcon:nil];
     
-    [self addSetting:self.resolutionStack ofIdentifier:@"resolutionStack" to:videoSection];
-    [self addSetting:self.fpsStack ofIdentifier:@"fpsStack" to:videoSection];
-    [self addSetting:self.codecStack ofIdentifier:@"codecStack" to:videoSection];
+    [self addSetting:self.resolutionStack ofId:@"resolutionStack" withInfoTag:YES to:videoSection];
+    [self addSetting:self.fpsStack ofId:@"fpsStack" withInfoTag:NO to:videoSection];
+    [self addSetting:self.codecStack ofId:@"codecStack" withInfoTag:NO to:videoSection];
     [videoSection addToParentStack:parentStack];
     [videoSection setExpanded:YES];
     //_fpsStack.userInteractionEnabled = NO;
@@ -422,24 +423,24 @@ BOOL isCustomResolution(CGSize res) {
         [gesturesSection setSectionIcon:[UIImage systemImageNamed:@"hand.draw"]];
     } else [gesturesSection setSectionIcon:nil];
     
-    [self addSetting:self.keyboardToggleFingerNumStack ofIdentifier:@"keyboardToggleFingerNumStack" to:gesturesSection];
-    [self addSetting:self.slideToSettingsScreenEdgeStack ofIdentifier:@"slideToSettingsScreenEdgeStack" to:gesturesSection];
-    [self addSetting:self.slideToCmdToolScreenEdgeStack ofIdentifier:@"slideToCmdToolScreenEdgeStack" to:gesturesSection];
-    [self addSetting:self.slideToSettingsDistanceStack ofIdentifier:@"slideToSettingsDistanceStack" to:gesturesSection];
+    [self addSetting:self.keyboardToggleFingerNumStack ofId:@"keyboardToggleFingerNumStack" withInfoTag:NO to:gesturesSection];
+    [self addSetting:self.slideToSettingsScreenEdgeStack ofId:@"slideToSettingsScreenEdgeStack" withInfoTag:NO to:gesturesSection];
+    [self addSetting:self.slideToCmdToolScreenEdgeStack ofId:@"slideToCmdToolScreenEdgeStack" withInfoTag:NO to:gesturesSection];
+    [self addSetting:self.slideToSettingsDistanceStack ofId:@"slideToSettingsDistanceStack" withInfoTag:NO to:gesturesSection];
 
-    [self addSetting:self.audioOnPcStack ofIdentifier:@"audioOnPcStack" to:gesturesSection];
+    [self addSetting:self.audioOnPcStack ofId:@"audioOnPcStack" withInfoTag:NO to:gesturesSection];
     // [self addSetting:self.codecStack ofIdentifier:@"codecStack" to:gesturesSection];
-    [self addSetting:self.yuv444Stack ofIdentifier:@"yuv444Stack" to:gesturesSection];
-    [self addSetting:self.HdrStack ofIdentifier:@"HdrStack" to:gesturesSection];
-    [self addSetting:self.self.optimizeSettingsStack ofIdentifier:@"self.optimizeSettingsStack" to:gesturesSection];
-    [self addSetting:self.self.multiControllerStack ofIdentifier:@"self.multiControllerStack" to:gesturesSection];
-    [self addSetting:self.self.optimizeSettingsStack ofIdentifier:@"self.optimizeSettingsStack" to:gesturesSection];
-    [self addSetting:self.liftStreamViewForKeyboardStack ofIdentifier:@"liftStreamViewForKeyboardStack" to:gesturesSection];
-    [self addSetting:self.self.framepacingStack ofIdentifier:@"self.framepacingStack" to:gesturesSection];
-    [self addSetting:self.self.reverseMouseWheelDirectionStack ofIdentifier:@"self.reverseMouseWheelDirectionStack" to:gesturesSection];
-    [self addSetting:self.self.statsOverlayStack ofIdentifier:@"self.statsOverlayStack" to:gesturesSection];
-    [self addSetting:self.self.externalDisplayModeStack ofIdentifier:@"self.externalDisplayModeStack" to:gesturesSection];
-    [self addSetting:self.self.localMousePointerModeStack ofIdentifier:@"self.localMousePointerModeStack" to:gesturesSection];
+    [self addSetting:self.yuv444Stack ofId:@"yuv444Stack" withInfoTag:NO to:gesturesSection];
+    [self addSetting:self.HdrStack ofId:@"HdrStack" withInfoTag:NO to:gesturesSection];
+    [self addSetting:self.self.optimizeSettingsStack ofId:@"self.optimizeSettingsStack" withInfoTag:NO to:gesturesSection];
+    [self addSetting:self.self.multiControllerStack ofId:@"self.multiControllerStack" withInfoTag:NO to:gesturesSection];
+    [self addSetting:self.self.optimizeSettingsStack ofId:@"self.optimizeSettingsStack" withInfoTag:NO to:gesturesSection];
+    [self addSetting:self.liftStreamViewForKeyboardStack ofId:@"liftStreamViewForKeyboardStack" withInfoTag:NO to:gesturesSection];
+    [self addSetting:self.self.framepacingStack ofId:@"self.framepacingStack" withInfoTag:NO to:gesturesSection];
+    [self addSetting:self.self.reverseMouseWheelDirectionStack ofId:@"self.reverseMouseWheelDirectionStack" withInfoTag:NO to:gesturesSection];
+    [self addSetting:self.self.statsOverlayStack ofId:@"self.statsOverlayStack" withInfoTag:NO to:gesturesSection];
+    [self addSetting:self.self.externalDisplayModeStack ofId:@"self.externalDisplayModeStack" withInfoTag:NO to:gesturesSection];
+    [self addSetting:self.self.localMousePointerModeStack ofId:@"self.localMousePointerModeStack" withInfoTag:NO to:gesturesSection];
 
         
     [gesturesSection addToParentStack:parentStack];
@@ -773,25 +774,71 @@ BOOL isCustomResolution(CGSize res) {
 }
 
 - (void)attachRemoveButtonForStack:(UIStackView* )stack{
-    UIButton* removeButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    UIButton* button = [UIButton buttonWithType:UIButtonTypeSystem];
     if (@available(iOS 13.0, *)) {
         UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithPointSize:16 weight:UIImageSymbolWeightMedium];
-        [removeButton setImage:[UIImage systemImageNamed:@"minus.circle" withConfiguration:config] forState:UIControlStateNormal];
+        [button setImage:[UIImage systemImageNamed:@"minus.circle" withConfiguration:config] forState:UIControlStateNormal];
     } else {
-        [removeButton setTitle:@"Remove" forState:UIControlStateNormal];
+        [button setTitle:@"Remove" forState:UIControlStateNormal];
     }
-    removeButton.accessibilityIdentifier = @"removeButton";
-    removeButton.translatesAutoresizingMaskIntoConstraints = NO;
-    removeButton.tintColor = [UIColor redColor];
+    button.accessibilityIdentifier = @"removeButton";
+    button.translatesAutoresizingMaskIntoConstraints = NO;
+    button.tintColor = [UIColor redColor];
     
-    [removeButton addTarget:self action:@selector(removeSettingStackFromFavorites:) forControlEvents:UIControlEventTouchUpInside];
+    [button addTarget:self action:@selector(removeSettingStackFromFavorites:) forControlEvents:UIControlEventTouchUpInside];
     
-    [stack addSubview:removeButton];
+    [stack addSubview:button];
     [NSLayoutConstraint activateConstraints:@[
-        [removeButton.trailingAnchor constraintEqualToAnchor:stack.trailingAnchor constant:-8],
-        [removeButton.topAnchor constraintEqualToAnchor:stack.topAnchor],
+        [button.trailingAnchor constraintEqualToAnchor:stack.trailingAnchor constant:-8],
+        [button.topAnchor constraintEqualToAnchor:stack.topAnchor],
     ]];
 }
+
+- (void)attachInfoTagForStack:(UIStackView* )stack{
+    UIButton* button = [UIButton buttonWithType:UIButtonTypeSystem];
+    if (@available(iOS 13.0, *)) {
+        UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithPointSize:13.5 weight:UIImageSymbolWeightBold];
+        [button setImage:[UIImage systemImageNamed:@"info.circle" withConfiguration:config] forState:UIControlStateNormal];
+    } else {
+        [button setTitle:@"i" forState:UIControlStateNormal];
+    }
+    button.accessibilityIdentifier = @"infoButton";
+    button.translatesAutoresizingMaskIntoConstraints = NO;
+    button.tintColor = [ThemeManager appPrimaryColor];
+    
+    [button addTarget:self action:@selector(infoButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+    
+    [stack addSubview:button];
+    [NSLayoutConstraint activateConstraints:@[
+        [button.trailingAnchor constraintEqualToAnchor:stack.trailingAnchor constant:-4],
+        [button.topAnchor constraintEqualToAnchor:stack.topAnchor],
+    ]];
+}
+
+-  (void)infoButtonTapped:(UIButton* )sender{
+    
+    NSString* tipText = [NSString stringWithFormat:@"dummy text for setting stack: %@", sender.superview.accessibilityIdentifier];
+    
+    UIAlertController *tipsAlertController = [UIAlertController alertControllerWithTitle: [LocalizationHelper localizedStringForKey:@"Tips"] message: [LocalizationHelper localizedStringForKey:@"%@", tipText] preferredStyle:UIAlertControllerStyleAlert];
+
+    UIAlertAction *readInstruction = [UIAlertAction actionWithTitle:[LocalizationHelper localizedStringForKey:@"Online Documentation"]
+                                                           style:UIAlertActionStyleDefault
+                                                         handler:^(UIAlertAction *action){
+        NSURL *url = [NSURL URLWithString:@"https://b23.tv/J8qEXOr"];
+        if ([[UIApplication sharedApplication] canOpenURL:url]) {
+            [[UIApplication sharedApplication] openURL:url options:@{} completionHandler:nil];
+        }
+    }];
+    
+    UIAlertAction *okAction = [UIAlertAction actionWithTitle:[LocalizationHelper localizedStringForKey:@"OK"]
+                                                           style:UIAlertActionStyleDefault
+                                                     handler:nil];
+    [tipsAlertController addAction:readInstruction];
+    [tipsAlertController addAction:okAction];
+    [self presentViewController:tipsAlertController animated:YES completion:nil];
+}
+
+
 
 - (void)removeSettingStackFromFavorites:(UIButton* )sender{
     [sender.superview removeFromSuperview];
@@ -845,7 +892,10 @@ BOOL isCustomResolution(CGSize res) {
 - (void)enterRemoveSettingItemMode{
     currentSettingsMenuMode = RemoveSettingItem;
     for(UIStackView* stack in parentStack.arrangedSubviews){
-        for(UIView* view in stack.subviews) view.userInteractionEnabled = false;
+        for(UIView* view in stack.subviews){
+            if([view.accessibilityIdentifier isEqualToString:@"infoButton"]) view.hidden = YES;
+            view.userInteractionEnabled = false;
+        }
         [self attachRemoveButtonForStack:stack];
         // stack.userInteractionEnabled = false;
     }
@@ -856,6 +906,7 @@ BOOL isCustomResolution(CGSize res) {
     for(UIStackView* stack in parentStack.arrangedSubviews){
         //stack.userInteractionEnabled = true;
         for(UIView* view in stack.subviews){
+            if([view.accessibilityIdentifier isEqualToString:@"infoButton"]) view.hidden = NO;
             if([view.accessibilityIdentifier isEqualToString:@"removeButton"]) [view removeFromSuperview];
             else view.userInteractionEnabled = true;
         }

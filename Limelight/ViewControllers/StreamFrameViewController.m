@@ -733,11 +733,11 @@
 }
 
 - (void)edgeSwiped{
-    return; // disable this now.
+    /*
     if([self->_mainFrameViewcontroller isIPhonePortrait]){ // disable backmenu for iphone portrait mode;
         [self returnToMainFrame]; //directly quit the session
         return;
-    }
+    } */
     [self expandSettingsView];  // expand settings view in other cases;
 }
 
