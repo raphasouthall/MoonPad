@@ -388,6 +388,7 @@ static NSMutableSet* hostList;
 - (void)launchButtonTappedForHost:(TemporaryHost *)host {
     _selectedHost = host;
     if (host.state == StateOnline && host.pairState == PairStatePaired && host.appList.count > 0) {
+        [[self revealViewController] revealToggleAnimated:NO];
         [self switchToAppView];
         [self updateAppsForHost:_selectedHost];
         [self prepareToStreamApp:_sortedAppList.firstObject];
