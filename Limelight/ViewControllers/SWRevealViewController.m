@@ -1070,7 +1070,7 @@ const int FrontViewPositionNone = 0xff;
 
 
 - (void)setupMoreButtonMenu{
-    if (@available(iOS 14.0, *)) {
+    if (@available(iOS 14.0, *) && @available(iOS 13.0, *)) {
         UIMenu *menu;
         UIAction* action1 = [self getAllSettingMenuAction];
         UIAction* action2 = [self getRemoveSettingItemAction];

@@ -430,15 +430,16 @@ BOOL isCustomResolution(CGSize res) {
     // [self addSetting:self.codecStack ofIdentifier:@"codecStack" to:gesturesSection];
     [self addSetting:self.yuv444Stack ofId:@"yuv444Stack" withInfoTag:NO to:gesturesSection];
     [self addSetting:self.HdrStack ofId:@"HdrStack" withInfoTag:NO to:gesturesSection];
-    [self addSetting:self.self.optimizeSettingsStack ofId:@"self.optimizeSettingsStack" withInfoTag:NO to:gesturesSection];
-    [self addSetting:self.self.multiControllerStack ofId:@"self.multiControllerStack" withInfoTag:NO to:gesturesSection];
-    [self addSetting:self.self.optimizeSettingsStack ofId:@"self.optimizeSettingsStack" withInfoTag:NO to:gesturesSection];
+    [self addSetting:self.optimizeSettingsStack ofId:@"optimizeSettingsStack" withInfoTag:NO to:gesturesSection];
+    [self addSetting:self.multiControllerStack ofId:@"multiControllerStack" withInfoTag:NO to:gesturesSection];
+    [self addSetting:self.optimizeSettingsStack ofId:@"optimizeSettingsStack" withInfoTag:NO to:gesturesSection];
     [self addSetting:self.liftStreamViewForKeyboardStack ofId:@"liftStreamViewForKeyboardStack" withInfoTag:NO to:gesturesSection];
-    [self addSetting:self.self.framepacingStack ofId:@"self.framepacingStack" withInfoTag:NO to:gesturesSection];
-    [self addSetting:self.self.reverseMouseWheelDirectionStack ofId:@"self.reverseMouseWheelDirectionStack" withInfoTag:NO to:gesturesSection];
-    [self addSetting:self.self.statsOverlayStack ofId:@"self.statsOverlayStack" withInfoTag:NO to:gesturesSection];
-    [self addSetting:self.self.externalDisplayModeStack ofId:@"self.externalDisplayModeStack" withInfoTag:NO to:gesturesSection];
-    [self addSetting:self.self.localMousePointerModeStack ofId:@"self.localMousePointerModeStack" withInfoTag:NO to:gesturesSection];
+    [self addSetting:self.framepacingStack ofId:@"framepacingStack" withInfoTag:NO to:gesturesSection];
+    [self addSetting:self.reverseMouseWheelDirectionStack ofId:@"reverseMouseWheelDirectionStack" withInfoTag:NO to:gesturesSection];
+    [self addSetting:self.statsOverlayStack ofId:@"statsOverlayStack" withInfoTag:NO to:gesturesSection];
+    [self addSetting:self.externalDisplayModeStack ofId:@"externalDisplayModeStack" withInfoTag:NO to:gesturesSection];
+    [self addSetting:self.localMousePointerModeStack ofId:@"localMousePointerModeStack" withInfoTag:NO to:gesturesSection];
+    [self addSetting:self.onScreenWidgetStack ofId:@"onScreenWidgetStack" withInfoTag:NO to:gesturesSection];
 
         
     [gesturesSection addToParentStack:parentStack];
