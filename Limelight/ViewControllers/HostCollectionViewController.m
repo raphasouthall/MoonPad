@@ -103,11 +103,6 @@ static const CGFloat cellOffsetY = 20;
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self.collectionView registerClass:[HostCell class] forCellWithReuseIdentifier:@"HostCell"];
-    if (@available(iOS 13.0, *)) {
-        self.collectionView.backgroundColor = UIColor.systemBackgroundColor;
-    } else {
-        // Fallback on earlier versions
-    }
     self.collectionView.alwaysBounceVertical = NO;
     self.collectionView.showsVerticalScrollIndicator = NO;
     self.collectionView.backgroundColor = [ThemeManager appBackgroundColor];

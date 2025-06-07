@@ -19,7 +19,7 @@
 @end
 
 
-@interface HostCardView : UIView <UIContextMenuInteractionDelegate>
+@interface HostCardView : UIView
 @property (nonatomic, assign) CGFloat sizeFactor;
 @property (nonatomic, readonly) CGSize size;
 @property (nonatomic, weak) id<HostCardActionDelegate> delegate; // Delegate property

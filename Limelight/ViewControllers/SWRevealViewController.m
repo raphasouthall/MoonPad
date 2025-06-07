@@ -1009,7 +1009,7 @@ const int FrontViewPositionNone = 0xff;
         [_moreButton setImage:image];
         _moreButton.imageInsets = UIEdgeInsetsMake(20, 0, 0, -10);
     } else {
-        [_moreButton setTitle:[LocalizationHelper localizedStringForKey:@"More"]];
+        [_moreButton setTitle:[LocalizationHelper localizedStringForKey:@"Options"]];
     }
     // more option button
 }
@@ -1095,33 +1095,48 @@ const int FrontViewPositionNone = 0xff;
 }
 
 - (void)moreButtonTapped:(UIBarButtonItem *)sender {
-    if (@available(iOS 14.0, *)) {
-        
-        
-    } else {
-        UIMenuItem *item1 = [[UIMenuItem alloc] initWithTitle:@"操作1" action:@selector(favoriteSettingSelected)];
-        UIMenuItem *item2 = [[UIMenuItem alloc] initWithTitle:@"操作2" action:@selector(allSettingsSelected)];
-        
-        UIMenuController *menuController = [UIMenuController sharedMenuController];
-        [menuController setMenuItems:@[item1, item2]];
-        
-        UIView *targetView = [sender valueForKey:@"view"];
-        [menuController showMenuFromView:targetView rect:targetView.bounds];
-        
-        [self becomeFirstResponder];
+    UIAlertController *actionSheet = [UIAlertController alertControllerWithTitle:nil
+                                                                         message:nil
+                                                                  preferredStyle:UIAlertControllerStyleActionSheet];
+    UIAlertAction *favoritesAction = [UIAlertAction actionWithTitle:[LocalizationHelper localizedStringForKey:@"Favorite Settings"]
+                                                                style:UIAlertActionStyleDefault
+                                                              handler:^(UIAlertAction * _Nonnull action) {
+        [self favoriteSettingSelected];
+    }];
+    UIAlertAction *allSettingsAction = [UIAlertAction actionWithTitle:[LocalizationHelper localizedStringForKey:@"All Settings"]
+                                                                style:UIAlertActionStyleDefault
+                                                              handler:^(UIAlertAction * _Nonnull action) {
+        [self allSettingSelected];
+    }];
+    UIAlertAction *enterRemoveItemsAction = [UIAlertAction actionWithTitle:[LocalizationHelper localizedStringForKey:@"Remove Items"]
+                                                                style:UIAlertActionStyleDefault
+                                                              handler:^(UIAlertAction * _Nonnull action) {
+        [self removeSettingItemSelected];
+    }];
+    UIAlertAction *doneRemoveItemsAction = [UIAlertAction actionWithTitle:[LocalizationHelper localizedStringForKey:@"Done"]
+                                                                style:UIAlertActionStyleDefault
+                                                              handler:^(UIAlertAction * _Nonnull action) {
+        [self doneRemoveSettingItemSelected];
+    }];
+    
+    switch ([self getSettingsMenuMode]) {
+        case AllSettings:
+            [actionSheet addAction:favoritesAction];break;
+        case FavoriteSettings:
+            [actionSheet addAction:allSettingsAction];
+            [actionSheet addAction:enterRemoveItemsAction];break;
+        case RemoveSettingItem:
+            [actionSheet addAction:doneRemoveItemsAction];break;
+        default:
+            break;
     }
+    actionSheet.popoverPresentationController.sourceView = _contentView.rearNavView; // center of the view;
+    actionSheet.popoverPresentationController.sourceRect = CGRectMake(_rearViewRevealWidth + _moreButton.imageInsets.right - _moreButton.image.size.width/2, _contentView.rearNavView.bounds.size.height+_contentView.safeAreaInsets.top, 1.0, 1.0);
+    [self presentViewController:actionSheet animated:NO completion:nil];
 }
 
-- (BOOL)canBecomeFirstResponder {
-    return YES;
-}
 
-- (BOOL)canPerformAction:(SEL)action withSender:(id)sender {
-    if (action == @selector(favoriteSettingSelected) || action == @selector(allSettingsSelected)) {
-        return YES;
-    }
-    return NO;
-}
+
 
 - (SettingsMenuMode)getSettingsMenuMode {
     if ([self.navBarMenuDelegate respondsToSelector:@selector(getSettingsMenuMode)]) {
@@ -1149,11 +1164,6 @@ const int FrontViewPositionNone = 0xff;
     if ([self.navBarMenuDelegate respondsToSelector:@selector(switchToAllSettings)]) {
         [self.navBarMenuDelegate switchToAllSettings];
     } else NSLog(@"Delegate not set or does not respond to switchToAllSettings:");
-}
-
-
-- (void)allSettingsSelected {
-    NSLog(@"执行操作2");
 }
 
 - (void)buttonsInStreaming{

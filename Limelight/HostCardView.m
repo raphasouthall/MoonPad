@@ -60,17 +60,10 @@ static const float REFRESH_CYCLE = 2.0f;
         defaultBlue = [ThemeManager appPrimaryColor];
         defaultGreen = [UIColor colorWithRed:52.0/255.0 green:199.0/255.0 blue:89.0/255.0 alpha:1.0];
         // self.userIterfaceStyle = UIUserInterfaceStyleLight
-        if (@available(iOS 13.0, *)) {
-            UIContextMenuInteraction* longPressInteraction = [[UIContextMenuInteraction alloc] initWithDelegate:self];
-            [self addInteraction:longPressInteraction];
-            self.userInteractionEnabled = YES;
-        }
-        else
-        {
-            UILongPressGestureRecognizer* longPressRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(hostCardLongPressed:view:)];
-            [self addGestureRecognizer:longPressRecognizer];
-        }
 
+        UILongPressGestureRecognizer* longPressRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(hostCardLongPressed:)];
+            [self addGestureRecognizer:longPressRecognizer];
+        
         [self createBackgroundLayer];
         [self setupUI];
     }
@@ -149,17 +142,13 @@ static const float REFRESH_CYCLE = 2.0f;
     
 }
 
-
-- (UIContextMenuConfiguration *)contextMenuInteraction:(UIContextMenuInteraction *)interaction
-                        configurationForMenuAtLocation:(CGPoint)location  API_AVAILABLE(ios(13.0)){
+- (void)hostCardLongPressed:(UILongPressGestureRecognizer* )gesture{
+    if(gesture.state != UIGestureRecognizerStateBegan) return;
     longPressFired = true;
     if ([self.delegate respondsToSelector:@selector(hostCardLongPressed:view:)]) {
         [self.delegate hostCardLongPressed:_host view:self];
-    } else NSLog(@"Delegate not set or does not respond to pairButtonTappedForHost:");
-    return nil;
+    } else NSLog(@"Delegate not set or does not respond");
 }
-
-
 
 - (void)resizeBySizeFactor:(CGFloat)factor{
     [self.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];

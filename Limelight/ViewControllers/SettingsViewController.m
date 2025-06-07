@@ -1758,10 +1758,6 @@ BOOL isCustomResolution(CGSize res) {
     for (UIView *subview in view.subviews) {
         if ([subview isKindOfClass:[UISlider class]]) {
             UISlider *slider = (UISlider *)subview;
-            if (@available(iOS 13.0, *)) {
-            } else {
-                // Fallback on earlier versions
-            }
             slider.tintColor = [ThemeManager appSecondaryColor];
 
         }
