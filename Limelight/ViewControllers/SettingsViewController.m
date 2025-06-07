@@ -892,7 +892,7 @@ BOOL isCustomResolution(CGSize res) {
     for(UIStackView* stack in parentStack.arrangedSubviews){
         for(UIView* view in stack.subviews){
             if([view.accessibilityIdentifier isEqualToString:@"infoButton"]) view.hidden = YES;
-            view.userInteractionEnabled = false;
+            // view.userInteractionEnabled = false;
         }
         [self attachRemoveButtonForStack:stack];
         // stack.userInteractionEnabled = false;
@@ -904,9 +904,9 @@ BOOL isCustomResolution(CGSize res) {
     for(UIStackView* stack in parentStack.arrangedSubviews){
         //stack.userInteractionEnabled = true;
         for(UIView* view in stack.subviews){
+            //view.
             if([view.accessibilityIdentifier isEqualToString:@"infoButton"]) view.hidden = NO;
             if([view.accessibilityIdentifier isEqualToString:@"removeButton"]) [view removeFromSuperview];
-            else view.userInteractionEnabled = true;
         }
     }
 }
