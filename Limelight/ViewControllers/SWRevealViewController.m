@@ -911,7 +911,7 @@ const int FrontViewPositionNone = 0xff;
     _dockedNavBar.translatesAutoresizingMaskIntoConstraints = NO;
     _dockedNavBar.userInteractionEnabled = YES;
     
-    if (@available(iOS 13.0, *)) {
+    if (@available(iOS 13.0, *) && false) {
         UINavigationBarAppearance *navBarAppearanceStandard = [[UINavigationBarAppearance alloc] init];
         [navBarAppearanceStandard configureWithOpaqueBackground]; // 不透明
         navBarAppearanceStandard.backgroundColor =[ThemeManager appBackgroundColor];; // 设置你需要的背景色
@@ -961,7 +961,7 @@ const int FrontViewPositionNone = 0xff;
     UIBarButtonItem *backButton = [[UIBarButtonItem alloc] init];
     [backButton setTarget:self];
     [backButton setAction:@selector(foldRearView)];
-    if (@available(iOS 13.0, *)) {
+    if (@available(iOS 13.0, *) && false) {
         [backButton setTitle:nil];
         UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithPointSize:23 weight:UIImageSymbolWeightMedium ];
         UIImage *image = [[UIImage systemImageNamed:@"sidebar.left" withConfiguration:config] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
@@ -979,7 +979,7 @@ const int FrontViewPositionNone = 0xff;
     _disconnectButton = [[UIBarButtonItem alloc] init];
     [_disconnectButton setTarget:self];
     [_disconnectButton setAction:@selector(disconnectRemoteSession)];
-    if (@available(iOS 13.0, *)) {
+    if (@available(iOS 13.0, *) && false) {
         [_disconnectButton setTitle:nil];
         UIImage *image = [[UIImage imageNamed:@"disconnect.svg" ]  imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
         
@@ -1002,7 +1002,7 @@ const int FrontViewPositionNone = 0xff;
     if(!_moreButton) _moreButton = [[UIBarButtonItem alloc] init];
     
     //[moreButton setAction:@selector(moreButtonTapped:)];
-    if (@available(iOS 13.0, *)) {
+    if (@available(iOS 13.0, *) && false) {
         [_moreButton setTitle:nil];
         UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithPointSize:23 weight:UIImageSymbolWeightMedium ];
         UIImage *image = [[UIImage systemImageNamed:@"ellipsis.circle" withConfiguration:config] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
@@ -1039,7 +1039,7 @@ const int FrontViewPositionNone = 0xff;
 
 
 - (void)removeSettingItemSelected{
-    if (@available(iOS 13.0, *)) {
+    if (@available(iOS 13.0, *) && false) {
         // UIAction* action1 = [self getAllSettingMenuAction];
         UIAction* action1 = [self getDoneRemoveSettingAction];
         if (@available(iOS 14.0, *)) _moreButton.menu = [UIMenu menuWithTitle:@"" children:@[action1]];
@@ -1051,7 +1051,7 @@ const int FrontViewPositionNone = 0xff;
 }
 
 - (void)doneRemoveSettingItemSelected{
-    if (@available(iOS 13.0, *)) {
+    if (@available(iOS 13.0, *) && false) {
         UIAction* action1 = [self getAllSettingMenuAction];
         UIAction* action2 = [self getRemoveSettingItemAction];
         if (@available(iOS 14.0, *)) _moreButton.menu = [UIMenu menuWithTitle:@"" children:@[action1, action2]];
@@ -1146,7 +1146,7 @@ const int FrontViewPositionNone = 0xff;
 }
 
 - (void)favoriteSettingSelected {
-    if (@available(iOS 13.0, *)) {
+    if (@available(iOS 13.0, *) && false) {
         UIAction* action1 = [self getAllSettingMenuAction];
         UIAction* action2 = [self getRemoveSettingItemAction];
         if (@available(iOS 14.0, *)) _moreButton.menu = [UIMenu menuWithTitle:@"" children:@[action1, action2]];
@@ -1157,7 +1157,7 @@ const int FrontViewPositionNone = 0xff;
 }
 
 - (void)allSettingSelected {
-    if (@available(iOS 13.0, *)) {
+    if (@available(iOS 13.0, *) && false) {
         UIAction* action1 = [self getFavoriteMenuAction];
         if (@available(iOS 14.0, *)) _moreButton.menu = [UIMenu menuWithTitle:@"" children:@[action1]];
     }

@@ -136,7 +136,7 @@ static NSMutableSet* hostList;
 
 - (void)updateTitle {
 
-    if (@available(iOS 13.0, *)) {
+    if (@available(iOS 13.0, *) && false) {
         navBarAppearanceScroll.titleTextAttributes = navBarAppearanceStandard.titleTextAttributes = @{
             NSFontAttributeName: [UIFont systemFontOfSize:20 weight:UIFontWeightMedium],
             NSForegroundColorAttributeName: [ThemeManager textColor] // 可选，设置标题颜色
@@ -151,7 +151,7 @@ static NSMutableSet* hostList;
         self.title = [LocalizationHelper localizedStringForKey: @"Searching for PCs on your network..."] ;
     }
     else {
-        if (@available(iOS 13.0, *)) {
+        if (@available(iOS 13.0, *) && false) {
             navBarAppearanceScroll.titleTextAttributes = navBarAppearanceStandard.titleTextAttributes = @{
                 NSFontAttributeName: [UIFont systemFontOfSize:24 weight:UIFontWeightSemibold],
                 NSForegroundColorAttributeName: [ThemeManager textColor] // 可选，设置标题颜色
@@ -165,7 +165,7 @@ static NSMutableSet* hostList;
         self.title = [LocalizationHelper localizedStringForKey: @"Hosts" ];
         //self.title = nil;
     }
-    if (@available(iOS 13.0, *)) {
+    if (@available(iOS 13.0, *) && false) {
         [self applyNavBarAppearance];
     } else {
         // Fallback on earlier versions
@@ -1280,7 +1280,7 @@ static NSMutableSet* hostList;
 
     // 设置图标（SF Symbol）
     
-    if (@available(iOS 13.0, *)) {
+    if (@available(iOS 13.0, *) && false) {
         UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithPointSize:17 weight:UIImageSymbolWeightMedium];
         UIImage *image = [UIImage systemImageNamed:@"plus.circle" withConfiguration:config];
         [button setImage:image forState:UIControlStateNormal];
@@ -1320,7 +1320,7 @@ static NSMutableSet* hostList;
     button.clipsToBounds = YES;
 
     // 设置图标（SF Symbol）
-    if (@available(iOS 13.0, *)) {
+    if (@available(iOS 13.0, *) && false) {
         UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithPointSize:buttonHeight*0.85 weight:UIImageSymbolWeightRegular];
         UIImage *image = [UIImage systemImageNamed:@"questionmark.circle" withConfiguration:config];
         [button setImage:image forState:UIControlStateNormal];
@@ -1380,7 +1380,7 @@ static NSMutableSet* hostList;
 }
 
 - (void)setupNavBar{
-    if (@available(iOS 13.0, *)) {
+    if (@available(iOS 13.0, *) && false) {
         navBarAppearanceStandard = [[UINavigationBarAppearance alloc] init];
         [navBarAppearanceStandard configureWithOpaqueBackground]; // 不透明
         navBarAppearanceStandard.backgroundColor =[ThemeManager appBackgroundColor];; // 设置你需要的背景色
@@ -1419,7 +1419,7 @@ static NSMutableSet* hostList;
     
     [_settingsButton setTarget:self.revealViewController];
     [_settingsButton setAction:@selector(revealToggle:)];
-    if (@available(iOS 13.0, *)) {
+    if (@available(iOS 13.0, *) && false) {
         [_settingsButton setTitle:nil];
         UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithPointSize:23 weight:UIImageSymbolWeightMedium ];
         UIImage *image = [[UIImage systemImageNamed:@"sidebar.left" withConfiguration:config] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];

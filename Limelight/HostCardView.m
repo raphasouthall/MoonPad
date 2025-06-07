@@ -187,7 +187,7 @@ static const float REFRESH_CYCLE = 2.0f;
     self.hostIconView = [[UIImageView alloc] init];
     self.hostIconView.translatesAutoresizingMaskIntoConstraints = NO;
     self.hostIconView.contentMode = UIViewContentModeScaleAspectFit;
-    if (@available(iOS 13.0, *)) {
+    if (@available(iOS 13.0, *) && false) {
         self.hostIconView.image = [UIImage systemImageNamed:@"display"];
     } else {
         self.hostIconView.image = [UIImage imageNamed:@"Computer"];
@@ -225,7 +225,7 @@ static const float REFRESH_CYCLE = 2.0f;
     // lockIcon
     lockIconView =[[UIImageView alloc] init];
     lockIconView.translatesAutoresizingMaskIntoConstraints = NO;
-    if (@available(iOS 13.0, *)) {
+    if (@available(iOS 13.0, *) && false) {
         lockIconView.image = [UIImage systemImageNamed:@"lock.fill"];
     } else {
         // lockIconView.image = [UIImage imageNamed:@"Computer"];
@@ -308,7 +308,7 @@ static const float REFRESH_CYCLE = 2.0f;
     self.launchButton.tintColor = [UIColor whiteColor];
     [self.launchButton addTarget:self action:@selector(launchButtonTapped) forControlEvents:UIControlEventPrimaryActionTriggered];
     [self addSubview:self.launchButton];
-    if (@available(iOS 13.0, *)) {
+    if (@available(iOS 13.0, *) && false) {
         UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithPointSize:self.launchButton.frame.size.height*_sizeFactor];
         [self.launchButton setImage:[UIImage systemImageNamed:@"play.fill" withConfiguration:config] forState:UIControlStateNormal];
         
@@ -334,7 +334,7 @@ static const float REFRESH_CYCLE = 2.0f;
     [self.pairButton setTitle:[LocalizationHelper localizedStringForKey:@"  Pair with PIN"] forState:UIControlStateNormal];
     [self.pairButton setTitleColor:defaultBlue forState:UIControlStateNormal]; // theme
     self.pairButton.titleLabel.font = [UIFont boldSystemFontOfSize:16*_sizeFactor];
-    if (@available(iOS 13.0, *)) {
+    if (@available(iOS 13.0, *) && false) {
         UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithPointSize:self.pairButton.frame.size.height/3.5*_sizeFactor weight:UIImageSymbolWeightBold];
         UIImage *templateImage = [UIImage systemImageNamed:@"lock.open.fill" withConfiguration:config];
         UIImage *coloredImage = [templateImage imageWithTintColor:defaultBlue renderingMode:UIImageRenderingModeAlwaysOriginal];
@@ -475,7 +475,7 @@ static const float REFRESH_CYCLE = 2.0f;
 - (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection {
     [super traitCollectionDidChange:previousTraitCollection];
     
-    if (@available(iOS 13.0, *)) {
+    if (@available(iOS 13.0, *) && false) {
         if ([self.traitCollection hasDifferentColorAppearanceComparedToTraitCollection:previousTraitCollection]) {
             [self updateTheme:self.traitCollection.userInterfaceStyle];
         }
@@ -522,7 +522,7 @@ static const float REFRESH_CYCLE = 2.0f;
                 _wakeupButton.hidden = YES;
                 
                 [_appButton setTitleColor:defaultBlue forState:UIControlStateNormal]; // theme
-                if (@available(iOS 13.0, *)) {
+                if (@available(iOS 13.0, *) && false) {
                     UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithPointSize:self.launchButton.frame.size.height/4*_sizeFactor];
                     [self.launchButton setImage:[UIImage systemImageNamed:@"play.fill" withConfiguration:config] forState:UIControlStateNormal];
                 } else {
@@ -547,7 +547,7 @@ static const float REFRESH_CYCLE = 2.0f;
             _statusLabel.textColor = [ThemeManager textColorGray];
             _statusLabel.text = @"Offline";
             _statusIcon.tintColor = [ThemeManager textColorGray];
-            if (@available(iOS 13.0, *)) {
+            if (@available(iOS 13.0, *) && false) {
                 _statusIcon.image = [UIImage systemImageNamed:@"exclamationmark.triangle.fill"];
             } else {
                 // Fallback on earlier versions
@@ -559,7 +559,7 @@ static const float REFRESH_CYCLE = 2.0f;
             _pairButton.hidden = YES;
             _wakeupButton.hidden = NO;
             
-            if (@available(iOS 13.0, *)) {
+            if (@available(iOS 13.0, *) && false) {
                 UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithPointSize:self.wakeupButton.frame.size.height/3.2*_sizeFactor weight:UIImageSymbolWeightBold];
                 UIImage *templateImage = [UIImage systemImageNamed:@"power" withConfiguration:config];
                 UIImage *coloredImage = [templateImage imageWithTintColor:defaultBlue renderingMode:UIImageRenderingModeAlwaysOriginal];
@@ -579,7 +579,7 @@ static const float REFRESH_CYCLE = 2.0f;
             _statusLabel.textColor = [ThemeManager textColorGray];
             _statusLabel.text = @"Detecting...";
             _statusIcon.tintColor = [ThemeManager textColorGray];
-            if (@available(iOS 13.0, *)) {
+            if (@available(iOS 13.0, *) && false) {
                 _statusIcon.image = [UIImage systemImageNamed:@"antenna.radiowaves.left.and.right"];
             } else {
                 // Fallback on earlier versions
@@ -593,7 +593,7 @@ static const float REFRESH_CYCLE = 2.0f;
             _wakeupButton.hidden = NO;
             
             [_wakeupButton setTitleColor:[ThemeManager textColorGray] forState:UIControlStateNormal]; // theme
-            if (@available(iOS 13.0, *)) {
+            if (@available(iOS 13.0, *) && false) {
                 UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithPointSize:self.wakeupButton.frame.size.height/3.2*_sizeFactor weight:UIImageSymbolWeightBold];
                 UIImage *templateImage = [UIImage systemImageNamed:@"power" withConfiguration:config];
                 UIImage *coloredImage = [templateImage imageWithTintColor:[ThemeManager textColorGray] renderingMode:UIImageRenderingModeAlwaysOriginal];

@@ -14,7 +14,7 @@ static UIUserInterfaceStyle _privateUserInterfaceStyle = UIUserInterfaceStyleUns
 static UIUserInterfaceStyle _userInterfaceStyle;
 
 + (UIColor *)getUIStyle{
-    if (@available(iOS 13.0, *)) {
+    if (@available(iOS 13.0, *) && false) {
         UITraitCollection *traitCollection = [UIScreen mainScreen].traitCollection;
             if(_privateUserInterfaceStyle == UIUserInterfaceStyleUnspecified) {
                 _userInterfaceStyle = traitCollection.userInterfaceStyle;

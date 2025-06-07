@@ -738,7 +738,7 @@
     // Set the label's frame with the calculated x-position
     self.currentProfileLabel.frame = CGRectMake(profileLabelXPosition, self.currentProfileLabel.frame.origin.y, self.currentProfileLabel.frame.size.width, self.currentProfileLabel.frame.size.height);
     self.currentProfileLabel.hidden = NO; // Show Current Profile display
-    if (@available(iOS 13.0, *)) {
+    if (@available(iOS 13.0, *) && false) {
         self.currentProfileLabel.textAlignment = NSTextAlignmentNatural;
         self.currentProfileLabel.numberOfLines = 2;
     } else {

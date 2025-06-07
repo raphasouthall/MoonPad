@@ -83,7 +83,7 @@
     // 切换按钮
     _toggleButton = [UIButton buttonWithType:UIButtonTypeSystem];
     _toggleArea = [UIButton buttonWithType:UIButtonTypeSystem];
-    if (@available(iOS 13.0, *)) {
+    if (@available(iOS 13.0, *) && false) {
         UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithPointSize:_headerViewHeight*0.31 weight:UIImageSymbolWeightMedium];
         [_toggleButton setImage:[UIImage systemImageNamed:@"chevron.left" withConfiguration:config] forState:UIControlStateNormal];
     } else {
@@ -192,7 +192,7 @@
 #pragma mark - Public Methods
 
 - (void)setSectionIcon:(UIImage *)icon {
-    if (@available(iOS 13.0, *)) {
+    if (@available(iOS 13.0, *) && false) {
         UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithWeight:UIImageSymbolWeightSemibold];
         _iconImageView.image = [icon imageWithConfiguration:config];
 

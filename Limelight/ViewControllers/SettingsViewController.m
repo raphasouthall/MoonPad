@@ -404,7 +404,7 @@ BOOL isCustomResolution(CGSize res) {
 - (void)layoutSections{
     MenuSectionView *videoSection = [[MenuSectionView alloc] init];
     videoSection.sectionTitle = [LocalizationHelper localizedStringForKey:@"Video"];
-    if (@available(iOS 13.0, *)) {
+    if (@available(iOS 13.0, *) && false) {
         [videoSection setSectionIcon:[UIImage systemImageNamed:@"airplayvideo"]];
     } else [videoSection setSectionIcon:nil];
     
@@ -417,7 +417,7 @@ BOOL isCustomResolution(CGSize res) {
     
     MenuSectionView *gesturesSection = [[MenuSectionView alloc] init];
     gesturesSection.sectionTitle = [LocalizationHelper localizedStringForKey:@"Gestures"];
-    if (@available(iOS 13.0, *)) {
+    if (@available(iOS 13.0, *) && false) {
         [gesturesSection setSectionIcon:[UIImage systemImageNamed:@"hand.draw"]];
     } else [gesturesSection setSectionIcon:nil];
     
@@ -775,7 +775,7 @@ BOOL isCustomResolution(CGSize res) {
 
 - (void)attachRemoveButtonForStack:(UIStackView* )stack{
     UIButton* button = [UIButton buttonWithType:UIButtonTypeSystem];
-    if (@available(iOS 13.0, *)) {
+    if (@available(iOS 13.0, *) && false) {
         UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithPointSize:16 weight:UIImageSymbolWeightMedium];
         [button setImage:[UIImage systemImageNamed:@"minus.circle" withConfiguration:config] forState:UIControlStateNormal];
     } else {
@@ -796,7 +796,7 @@ BOOL isCustomResolution(CGSize res) {
 
 - (void)attachInfoTagForStack:(UIStackView* )stack{
     UIButton* button = [UIButton buttonWithType:UIButtonTypeSystem];
-    if (@available(iOS 13.0, *)) {
+    if (@available(iOS 13.0, *) && false) {
         UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithPointSize:13.5 weight:UIImageSymbolWeightBold];
         [button setImage:[UIImage systemImageNamed:@"info.circle" withConfiguration:config] forState:UIControlStateNormal];
     } else {
@@ -1729,7 +1729,7 @@ BOOL isCustomResolution(CGSize res) {
     for (UIView *subview in view.subviews) {
         if ([subview isKindOfClass:[UILabel class]]) {
             UILabel *label = (UILabel *)subview;
-            if (@available(iOS 13.0, *)) {
+            if (@available(iOS 13.0, *) && false) {
                 label.layer.filters = nil;
                 label.textColor = [ThemeManager textColor];
             } else {
@@ -1744,7 +1744,7 @@ BOOL isCustomResolution(CGSize res) {
     for (UIView *subview in view.subviews) {
         if ([subview isKindOfClass:[UISegmentedControl class]]) {
             UISegmentedControl *selector = (UISegmentedControl *)subview;
-            if (@available(iOS 13.0, *)) {
+            if (@available(iOS 13.0, *) && false) {
                 selector.selectedSegmentTintColor = [ThemeManager appSecondaryColor];
             } else {
                 // Fallback on earlier versions
