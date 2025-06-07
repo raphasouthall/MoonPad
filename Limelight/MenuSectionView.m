@@ -83,11 +83,11 @@
     // 切换按钮
     _toggleButton = [UIButton buttonWithType:UIButtonTypeSystem];
     _toggleArea = [UIButton buttonWithType:UIButtonTypeSystem];
-    if (@available(iOS 13.0, *) && false) {
-        UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithPointSize:_headerViewHeight*0.31 weight:UIImageSymbolWeightMedium];
+    if (@available(iOS 13.0, *)) {
+        UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithPointSize:_headerViewHeight*0.31 weight:UIImageSymbolWeightBold];
         [_toggleButton setImage:[UIImage systemImageNamed:@"chevron.left" withConfiguration:config] forState:UIControlStateNormal];
     } else {
-        [_toggleButton setTitle:@"<" forState:UIControlStateNormal];
+        // [_toggleButton setTitle:@"<" forState:UIControlStateNormal];
     }
     [_toggleButton addTarget:self action:@selector(toggleFold) forControlEvents:UIControlEventTouchUpInside];
     [_toggleArea addTarget:self action:@selector(toggleFold) forControlEvents:UIControlEventTouchUpInside];
@@ -140,11 +140,18 @@
     ]];
     
     // 标题约束
-    [NSLayoutConstraint activateConstraints:@[
-        [_titleLabel.leadingAnchor constraintEqualToAnchor:_iconImageView.trailingAnchor constant:8],
-        [_titleLabel.centerYAnchor constraintEqualToAnchor:_headerView.centerYAnchor],
-        [_titleLabel.trailingAnchor constraintEqualToAnchor:_toggleButton.leadingAnchor constant:-8]
-    ]];
+    if(@available(iOS 13.0, *)){
+        [NSLayoutConstraint activateConstraints:@[
+            [_titleLabel.leadingAnchor constraintEqualToAnchor:_iconImageView.trailingAnchor constant:8],
+            [_titleLabel.centerYAnchor constraintEqualToAnchor:_headerView.centerYAnchor],
+            [_titleLabel.trailingAnchor constraintEqualToAnchor:_toggleButton.leadingAnchor constant:-8]
+        ]];
+    }
+    else [NSLayoutConstraint activateConstraints:@[
+            [_titleLabel.leadingAnchor constraintEqualToAnchor:_headerView.leadingAnchor constant:0],
+            [_titleLabel.centerYAnchor constraintEqualToAnchor:_headerView.centerYAnchor],
+            [_titleLabel.trailingAnchor constraintEqualToAnchor:_toggleButton.leadingAnchor constant:-8]
+        ]];
     
     // 切换按钮约束
     [NSLayoutConstraint activateConstraints:@[
@@ -192,7 +199,7 @@
 #pragma mark - Public Methods
 
 - (void)setSectionIcon:(UIImage *)icon {
-    if (@available(iOS 13.0, *) && false) {
+    if (@available(iOS 13.0, *)) {
         UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithWeight:UIImageSymbolWeightSemibold];
         _iconImageView.image = [icon imageWithConfiguration:config];
 

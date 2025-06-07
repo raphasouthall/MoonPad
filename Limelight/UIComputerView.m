@@ -127,7 +127,7 @@ static const int LABEL_DY = 20;
     // Use UIContextMenuInteraction on iOS 13.0+ and a standard UILongPressGestureRecognizer
     // for tvOS devices and iOS prior to 13.0.
 #if !TARGET_OS_TV
-    if (@available(iOS 13.0, *) && false) {
+    if (@available(iOS 13.0, *)) {
         UIContextMenuInteraction* rightClickInteraction = [[UIContextMenuInteraction alloc] initWithDelegate:self];
         [self addInteraction:rightClickInteraction];
     }

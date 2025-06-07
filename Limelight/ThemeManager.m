@@ -14,7 +14,7 @@ static UIUserInterfaceStyle _privateUserInterfaceStyle = UIUserInterfaceStyleUns
 static UIUserInterfaceStyle _userInterfaceStyle;
 
 + (UIColor *)getUIStyle{
-    if (@available(iOS 13.0, *) && false) {
+    if (@available(iOS 13.0, *)) {
         UITraitCollection *traitCollection = [UIScreen mainScreen].traitCollection;
             if(_privateUserInterfaceStyle == UIUserInterfaceStyleUnspecified) {
                 _userInterfaceStyle = traitCollection.userInterfaceStyle;
@@ -97,11 +97,43 @@ static UIUserInterfaceStyle _userInterfaceStyle;
 }
 
 + (UIColor *)appSecondaryColor {
-    return [UIColor colorWithRed:0.0 green:0.319 blue:0.64 alpha:1.0]; // 可换其他常用色
+    // return [UIColor colorWithRed:0.0 green:0.319 blue:0.64 alpha:1.0]; // 可换其他常用色
+    UIColor* originalColor = [ThemeManager appPrimaryColor];
+    
+    UIColor *grayColor = [UIColor grayColor];
+    CGFloat mixRatio = 0.3; // 混合比例，0.0 到 1.0
+
+    CGFloat r1, g1, b1, a1;
+    CGFloat r2, g2, b2, a2;
+
+    [originalColor getRed:&r1 green:&g1 blue:&b1 alpha:&a1];
+    [grayColor getRed:&r2 green:&g2 blue:&b2 alpha:&a2];
+
+    CGFloat r = r1 * (1 - mixRatio) + r2 * mixRatio;
+    CGFloat g = g1 * (1 - mixRatio) + g2 * mixRatio;
+    CGFloat b = b1 * (1 - mixRatio) + b2 * mixRatio;
+    CGFloat a = a1 * (1 - mixRatio) + a2 * mixRatio;
+
+    UIColor *tonedColor = [UIColor colorWithRed:r green:g blue:b alpha:a];
+    
+    return tonedColor; // 可换其他常用色
 }
 
 + (UIColor *)appPrimaryColorWithAlpha {
-    return [[ThemeManager appPrimaryColor] colorWithAlphaComponent:0.24]; // #0A84FF
+    [ThemeManager getUIStyle];
+    switch (self.userInterfaceStyle) {
+        case UIUserInterfaceStyleLight:
+            return [[ThemeManager appPrimaryColor] colorWithAlphaComponent:0.24]; // #0A84FF
+            break;
+        case UIUserInterfaceStyleDark:
+        default:
+            return [[ThemeManager appPrimaryColor] colorWithAlphaComponent:0.5];
+            break;
+    }
+}
+
++ (UIColor *)textTintColorWithAlpha{
+    return [[ThemeManager appPrimaryColor] colorWithAlphaComponent:0.24];
 }
 
 + (UIColor *)textColorGray{

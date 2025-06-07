@@ -136,7 +136,7 @@ static NSMutableSet* hostList;
 
 - (void)updateTitle {
 
-    if (@available(iOS 13.0, *) && false) {
+    if (@available(iOS 13.0, *)) {
         navBarAppearanceScroll.titleTextAttributes = navBarAppearanceStandard.titleTextAttributes = @{
             NSFontAttributeName: [UIFont systemFontOfSize:20 weight:UIFontWeightMedium],
             NSForegroundColorAttributeName: [ThemeManager textColor] // 可选，设置标题颜色
@@ -151,7 +151,7 @@ static NSMutableSet* hostList;
         self.title = [LocalizationHelper localizedStringForKey: @"Searching for PCs on your network..."] ;
     }
     else {
-        if (@available(iOS 13.0, *) && false) {
+        if (@available(iOS 13.0, *)) {
             navBarAppearanceScroll.titleTextAttributes = navBarAppearanceStandard.titleTextAttributes = @{
                 NSFontAttributeName: [UIFont systemFontOfSize:24 weight:UIFontWeightSemibold],
                 NSForegroundColorAttributeName: [ThemeManager textColor] // 可选，设置标题颜色
@@ -165,10 +165,10 @@ static NSMutableSet* hostList;
         self.title = [LocalizationHelper localizedStringForKey: @"Hosts" ];
         //self.title = nil;
     }
-    if (@available(iOS 13.0, *) && false) {
+    if (@available(iOS 13.0, *)) {
         [self applyNavBarAppearance];
     } else {
-        // Fallback on earlier versions
+        self.navigationController.navigationBar.backgroundColor = [ThemeManager appBackgroundColor];
     }
 }
 
@@ -365,6 +365,8 @@ static NSMutableSet* hostList;
     self.hostCollectionVC.view.hidden = YES;
     self.collectionView.hidden = NO;
     self.collectionView.backgroundColor = [ThemeManager appBackgroundColor];
+    //self.view.backgroundColor = [ThemeManager appBackgroundColor];
+
     [self attachWaterMark];
     self.navigationItem.rightBarButtonItems = @[_upButton];
     self.revealViewController.mainFrameIsInHostView = false;
@@ -1280,7 +1282,7 @@ static NSMutableSet* hostList;
 
     // 设置图标（SF Symbol）
     
-    if (@available(iOS 13.0, *) && false) {
+    if (@available(iOS 13.0, *)) {
         UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithPointSize:17 weight:UIImageSymbolWeightMedium];
         UIImage *image = [UIImage systemImageNamed:@"plus.circle" withConfiguration:config];
         [button setImage:image forState:UIControlStateNormal];
@@ -1320,7 +1322,7 @@ static NSMutableSet* hostList;
     button.clipsToBounds = YES;
 
     // 设置图标（SF Symbol）
-    if (@available(iOS 13.0, *) && false) {
+    if (@available(iOS 13.0, *)) {
         UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithPointSize:buttonHeight*0.85 weight:UIImageSymbolWeightRegular];
         UIImage *image = [UIImage systemImageNamed:@"questionmark.circle" withConfiguration:config];
         [button setImage:image forState:UIControlStateNormal];
@@ -1380,7 +1382,7 @@ static NSMutableSet* hostList;
 }
 
 - (void)setupNavBar{
-    if (@available(iOS 13.0, *) && false) {
+    if (@available(iOS 13.0, *)) {
         navBarAppearanceStandard = [[UINavigationBarAppearance alloc] init];
         [navBarAppearanceStandard configureWithOpaqueBackground]; // 不透明
         navBarAppearanceStandard.backgroundColor =[ThemeManager appBackgroundColor];; // 设置你需要的背景色
@@ -1406,6 +1408,9 @@ static NSMutableSet* hostList;
         //appearance.
         [self applyNavBarAppearance];
     }
+    else {
+        self.navigationController.navigationBar.backgroundColor = [ThemeManager appBackgroundColor];
+    }
     
     self->_addHostButton = [self createAddHostButton];
     self->_helpButton = [self createHelpButton];
@@ -1419,7 +1424,7 @@ static NSMutableSet* hostList;
     
     [_settingsButton setTarget:self.revealViewController];
     [_settingsButton setAction:@selector(revealToggle:)];
-    if (@available(iOS 13.0, *) && false) {
+    if (@available(iOS 13.0, *)) {
         [_settingsButton setTitle:nil];
         UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithPointSize:23 weight:UIImageSymbolWeightMedium ];
         UIImage *image = [[UIImage systemImageNamed:@"sidebar.left" withConfiguration:config] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
@@ -1767,6 +1772,8 @@ static NSMutableSet* hostList;
     // view, so we won't get a return to active notification
     // for that which would normally fire beginForegroundRefresh.
     self.view.backgroundColor = [ThemeManager appBackgroundColor];
+    self.hostCollectionVC.view.backgroundColor = [ThemeManager appBackgroundColor];
+    self.collectionView.backgroundColor = [ThemeManager appBackgroundColor];
 
     [self.view addSubview:self.collectionView];
     [self initHostCollection];

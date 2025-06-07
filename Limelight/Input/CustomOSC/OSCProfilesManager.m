@@ -161,7 +161,7 @@ static CGRect streamViewBounds;
         if (fileData && !error) {
             // 3. 成功读取
             NSSet *classes = [NSSet setWithObjects: [NSMutableData class], [NSMutableArray class], nil];
-            if (@available(iOS 13.0, *) && false) {
+            if (@available(iOS 13.0, *)) {
                 // 在 iOS 13 及以上使用 unarchivedObjectOfClasses
                 profilesEncoded = [NSKeyedUnarchiver unarchivedObjectOfClasses:classes fromData:fileData error:&error];
             } else {
@@ -402,7 +402,7 @@ static CGRect streamViewBounds;
 
 - (OnScreenButtonState *)unarchiveButtonStateEncoded:(NSData *)data {
     OnScreenButtonState* buttonState;
-    if (@available(iOS 13.0, *) && false) {
+    if (@available(iOS 13.0, *)) {
         // 在 iOS 13 及以上使用 unarchivedObjectOfClasses
         buttonState = [NSKeyedUnarchiver unarchivedObjectOfClasses:[NSSet setWithObjects:[NSString class], [OnScreenButtonState class], nil]
                                                         fromData:data

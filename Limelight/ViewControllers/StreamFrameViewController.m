@@ -555,7 +555,7 @@
 #if TARGET_OS_TV
         [_overlayView setFont:[UIFont systemFontOfSize:24]];
 #else
-        if (@available(iOS 13.0, *) && false) {
+        if (@available(iOS 13.0, *)) {
             [_overlayView setFont:[UIFont monospacedSystemFontOfSize:12 weight:UIFontWeightRegular]];
         } else {
             [_overlayView setFont:[UIFont systemFontOfSize:12]];// Fallback on earlier versions

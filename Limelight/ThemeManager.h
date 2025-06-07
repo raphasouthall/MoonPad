@@ -20,6 +20,7 @@
 + (UIColor *)textColor;
 + (UIColor *)textColorGray;
 + (UIColor *)lowProfileGray;
++ (UIColor *)textTintColorWithAlpha;
 
 @end
 

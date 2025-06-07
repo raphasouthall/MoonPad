@@ -268,7 +268,7 @@ didPickDocumentsAtURLs:(NSArray<NSURL *> *)urls {
     NSMutableArray *profilesEncoded;
     // 解码原始的NSArray对象，得到包含编码对象的数组
     error = nil;
-    if (@available(iOS 13.0, *) && false) {
+    if (@available(iOS 13.0, *)) {
         // 在 iOS 13 及以上使用 unarchivedObjectOfClasses
         profilesEncoded = [NSKeyedUnarchiver unarchivedObjectOfClasses:classes fromData:fileData error:&error];
     } else {

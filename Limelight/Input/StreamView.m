@@ -1032,7 +1032,7 @@ static const double X1_MOUSE_SPEED_DIVISOR = 2.5;
 #endif
 
 - (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer {
-    if (@available(iOS 13.0, *) && false) {
+    if (@available(iOS 13.0, *)) {
         // Disable the 3 finger tap gestures that trigger the copy/paste/undo toolbar on iOS 13+
         return gestureRecognizer.name == nil || ![gestureRecognizer.name hasPrefix:@"kbProductivity."];
     }
