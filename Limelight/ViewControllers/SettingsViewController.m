@@ -667,6 +667,21 @@ BOOL isCustomResolution(CGSize res) {
     else NSLog(@"hit test: not setting stack captured");
 }
 
+- (UIAlertController* )prepareAddToFavoriteActionSheet{
+    // actionsheet
+    UIAlertController *actionSheet = [UIAlertController alertControllerWithTitle:nil
+                                                                         message:nil
+                                                                  preferredStyle:UIAlertControllerStyleActionSheet];
+    UIAlertAction *addFavoriteAction = [UIAlertAction actionWithTitle:[LocalizationHelper localizedStringForKey:@"Add to favorite"]
+                                                                style:UIAlertActionStyleDefault
+                                                              handler:^(UIAlertAction * _Nonnull action) {
+        [self addSettingToFavorite:self->capturedStack];
+        // 在这里执行收藏逻辑
+    }];
+    [actionSheet addAction:addFavoriteAction];
+    return actionSheet;
+}
+
 - (void)handleLongPress:(UILongPressGestureRecognizer *)gesture {
     CGPoint locationInParentStack = [gesture locationInView:parentStack];
     CGPoint locationInRootView = [gesture locationInView:self.view.superview];
@@ -674,21 +689,8 @@ BOOL isCustomResolution(CGSize res) {
         if (gesture.state == UIGestureRecognizerStateBegan) {
             [self findCapturedStackByTouchLocation:locationInParentStack];
             if(capturedStack == nil) return;
-            // actionsheet
-            UIAlertController *actionSheet = [UIAlertController alertControllerWithTitle:nil
-                                                                                 message:nil
-                                                                          preferredStyle:UIAlertControllerStyleActionSheet];
-            UIAlertAction *addFavoriteAction = [UIAlertAction actionWithTitle:[LocalizationHelper localizedStringForKey:@"Add to favorite"]
-                                                                        style:UIAlertActionStyleDefault
-                                                                      handler:^(UIAlertAction * _Nonnull action) {
-                [self addSettingToFavorite:self->capturedStack];
-                // 在这里执行收藏逻辑
-            }];
-            [actionSheet addAction:addFavoriteAction];
-            if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
-                actionSheet.popoverPresentationController.sourceView = self.view;
-                actionSheet.popoverPresentationController.sourceRect = CGRectMake(locationInParentStack.x, locationInParentStack.y, 1, 1);
-            }
+            UIAlertController* actionSheet = [self prepareAddToFavoriteActionSheet];
+            actionSheet.popoverPresentationController.sourceView = capturedStack;
             [self presentViewController:actionSheet animated:YES completion:nil];
         }
     }

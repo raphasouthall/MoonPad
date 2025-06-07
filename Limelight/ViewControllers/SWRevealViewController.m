@@ -1106,8 +1106,7 @@ const int FrontViewPositionNone = 0xff;
         [menuController setMenuItems:@[item1, item2]];
         
         UIView *targetView = [sender valueForKey:@"view"];
-        [menuController setTargetRect:targetView.bounds inView:targetView];
-        [menuController setMenuVisible:YES animated:YES];
+        [menuController showMenuFromView:targetView rect:targetView.bounds];
         
         [self becomeFirstResponder];
     }
