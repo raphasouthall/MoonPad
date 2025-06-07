@@ -32,7 +32,7 @@
 		847D2FDB2DDA015F00937A62 /* MenuSectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 847D2FDA2DDA015F00937A62 /* MenuSectionView.m */; };
 		848F456A2DDCD12500581E36 /* HostCardView.m in Sources */ = {isa = PBXBuildFile; fileRef = 848F45692DDCD12500581E36 /* HostCardView.m */; };
 		84E1CDEC2C4F67D300547904 /* CommandManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84E1CDEB2C4F67D300547904 /* CommandManager.swift */; };
-		84E1CDEF2C4F688E00547904 /* CommandManagerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84E1CDEE2C4F688E00547904 /* CommandManagerViewController.swift */; };
+		84E1CDEF2C4F688E00547904 /* ToolBoxViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84E1CDEE2C4F688E00547904 /* ToolBoxViewController.swift */; };
 		84E1CDFA2C4FE83400547904 /* SwiftLocalizationHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84E1CDF92C4FE83400547904 /* SwiftLocalizationHelper.swift */; };
 		84FD0B512C31338D006B5BE5 /* LocalizationHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 84FD0B502C31338D006B5BE5 /* LocalizationHelper.m */; };
 		84FD0B542C3134A6006B5BE5 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 84FD0B532C3134A6006B5BE5 /* Localizable.xcstrings */; };
@@ -177,7 +177,7 @@
 		848F45692DDCD12500581E36 /* HostCardView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HostCardView.m; sourceTree = "<group>"; };
 		84D8EB932C5146AD00FC10A9 /* Moonlight-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Moonlight-Bridging-Header.h"; sourceTree = "<group>"; };
 		84E1CDEB2C4F67D300547904 /* CommandManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommandManager.swift; sourceTree = "<group>"; };
-		84E1CDEE2C4F688E00547904 /* CommandManagerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommandManagerViewController.swift; sourceTree = "<group>"; };
+		84E1CDEE2C4F688E00547904 /* ToolBoxViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolBoxViewController.swift; sourceTree = "<group>"; };
 		84E1CDF92C4FE83400547904 /* SwiftLocalizationHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftLocalizationHelper.swift; sourceTree = "<group>"; };
 		84FD0B4F2C313343006B5BE5 /* LocalizationHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LocalizationHelper.h; sourceTree = "<group>"; };
 		84FD0B502C31338D006B5BE5 /* LocalizationHelper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LocalizationHelper.m; sourceTree = "<group>"; };
@@ -638,7 +638,7 @@
 				FBD3494F19FF2174002D2A60 /* SettingsViewController.m */,
 				FB4A23B61A9D3637004D2EF2 /* LoadingFrameViewController.h */,
 				FB4A23B71A9D3637004D2EF2 /* LoadingFrameViewController.m */,
-				84E1CDEE2C4F688E00547904 /* CommandManagerViewController.swift */,
+				84E1CDEE2C4F688E00547904 /* ToolBoxViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -897,7 +897,7 @@
 				FB89463619F646E200339C8A /* StreamFrameViewController.m in Sources */,
 				9827E7A32514366900F25707 /* HapticContext.m in Sources */,
 				9832D1361BBCD5C50036EF48 /* TemporaryApp.m in Sources */,
-				84E1CDEF2C4F688E00547904 /* CommandManagerViewController.swift in Sources */,
+				84E1CDEF2C4F688E00547904 /* ToolBoxViewController.swift in Sources */,
 				844CD0EB2C7F8500004861A7 /* PureNativeTouchHandler.m in Sources */,
 				84351B102C29ACCB00A77989 /* OSCProfile.m in Sources */,
 				84351B2C2C29AD6100A77989 /* OSCProfilesTableViewController.m in Sources */,

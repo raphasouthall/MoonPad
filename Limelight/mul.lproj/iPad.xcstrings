@@ -3068,31 +3068,31 @@
       }
     },
     "Q2V-XF-4jq.title" : {
-      "comment" : "Class = \"UINavigationItem\"; title = \"Controller & Widget Profiles\"; ObjectID = \"Q2V-XF-4jq\";",
+      "comment" : "Class = \"UINavigationItem\"; title = \"Widget Profiles\"; ObjectID = \"Q2V-XF-4jq\";",
       "extractionState" : "extracted_with_value",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "Controller & Widget Profiles"
+            "value" : "Widget Profiles"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "屏显手柄与控件布局"
+            "value" : "屏显控件布局"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "屏显手柄与控件布局"
+            "state" : "translated",
+            "value" : "屏显控件布局"
           }
         },
         "zh-HK" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "屏显手柄与控件布局"
+            "state" : "translated",
+            "value" : "屏显控件布局"
           }
         }
       }

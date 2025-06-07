@@ -73,7 +73,7 @@
     CustomEdgeSlideGestureRecognizer *_slideToCmdToolRecognizer;
     CustomTapGestureRecognizer *_oscLayoutTapRecoginizer;
     LayoutOnScreenControlsViewController *_layoutOnScreenControlsVC;
-    CommandManagerViewController* cmdManViewController;
+    ToolBoxViewController* toolBoxViewController;
 #endif
 }
 
@@ -96,7 +96,8 @@
 
 - (void)configOscLayoutTool{
     if([self isOscLayoutToolEnabled]){
-        if(![cmdManViewController.specialEntries containsObject:@"widgetTool"]) [cmdManViewController.specialEntries insertObject:@"widgetTool" atIndex:0];
+        if(![toolBoxViewController.specialEntries containsObject:@"widgetLayoutTool"]) [toolBoxViewController.specialEntries insertObject:@"widgetLayoutTool" atIndex:0];
+        if(![toolBoxViewController.specialEntries containsObject:@"widgetSwitchTool"]) [toolBoxViewController.specialEntries insertObject:@"widgetSwitchTool" atIndex:1];
         _oscLayoutTapRecoginizer = [[CustomTapGestureRecognizer alloc] initWithTarget:self action:@selector(layoutOSC)];
         _oscLayoutTapRecoginizer.numberOfTouchesRequired = _settings.oscLayoutToolFingers.intValue; //tap a predefined number of fingers to open osc layout tool
         _oscLayoutTapRecoginizer.tapDownTimeThreshold = 0.2;
@@ -120,11 +121,14 @@
         _layoutOnScreenControlsVC.view.backgroundColor = UIColor.clearColor;
         _layoutOnScreenControlsVC.modalPresentationStyle = UIModalPresentationOverCurrentContext;
     }
-    else [cmdManViewController.specialEntries removeObject:@"widgetTool"];
+    else{
+        [toolBoxViewController.specialEntries removeObject:@"widgetLayoutTool"];
+        [toolBoxViewController.specialEntries removeObject:@"widgetSwitchTool"];
+    }
 }
 
 - (void)presentCommandManagerViewController{
-    [self presentViewController:cmdManViewController animated:YES completion:nil];
+    [self presentViewController:toolBoxViewController animated:YES completion:nil];
 }
 
 - (void)configSwipeGestures{
@@ -258,12 +262,7 @@
                                              selector:@selector(expandSettingsView) // //force expand settings view to update resolution table, and all setting includes current fullscreen resolution will be updated.
                                                  name:@"SettingsOverlayButtonPressedNotification"
                                                object:nil];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(layoutOSC) // //force expand settings view to update resolution table, and all setting includes current fullscreen resolution will be updated.
-                                                 name:@"OscLayoutToolOpenedFromCmdToolNotification"
-                                               object:nil];
-#endif
+    #endif
 }
 
 #if TARGET_OS_TV
@@ -361,7 +360,8 @@
     
     _streamView = [[StreamView alloc] initWithFrame:self.view.frame];
     
-    cmdManViewController = [[CommandManagerViewController alloc] init];
+    toolBoxViewController = [[ToolBoxViewController alloc] init];
+    toolBoxViewController.specialEntryDelegate = self;
     
     /*
      _settings.externalDisplayMode.intValue:
@@ -464,10 +464,24 @@
     [self.view addSubview:_tipLabel];
 }
 
-- (void)layoutOSC{
+- (void)openWidgetLayoutTool{
     [self->_streamView disableOnScreenControls];
     [self->_streamView clearOnScreenKeyboardButtons]; // clear all onScreenKeyboardButtons before entering edit mode
+    _layoutOnScreenControlsVC.quickSwitchEnabled = false;
+    _layoutOnScreenControlsVC.toolbarStackView.hidden = false;
+    _layoutOnScreenControlsVC.toolbarRootView.hidden = false;
     [self presentViewController:_layoutOnScreenControlsVC animated:YES completion:nil];
+}
+
+- (void)switchWidgetProfile{
+    [self->_streamView disableOnScreenControls];
+    [self->_streamView clearOnScreenKeyboardButtons]; // clear all onScreenKeyboardButtons before entering edit mode
+    _layoutOnScreenControlsVC.quickSwitchEnabled = true;
+    _layoutOnScreenControlsVC.toolbarStackView.hidden = true;
+    _layoutOnScreenControlsVC.toolbarRootView.hidden = true;
+    [self presentViewController:_layoutOnScreenControlsVC animated:NO completion:^{
+        [self->_layoutOnScreenControlsVC presentProfilesTableView];
+    }];
 }
 
 - (void)oscLayoutClosed{

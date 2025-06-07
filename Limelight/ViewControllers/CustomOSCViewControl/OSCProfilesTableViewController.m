@@ -42,7 +42,7 @@ const double NAV_BAR_HEIGHT = 50;
     return [self getCurrentOrientation]; // 90 Degree rotation not allowed in streaming or app view
 }
 
-- (void) viewWillDisappear:(BOOL)animated{
+- (void) viewDidDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
     [[NSNotificationCenter defaultCenter] postNotificationName:@"OscLayoutTableViewCloseNotification" object:self]; // notify other view that oscLayoutManager is closing
 }
@@ -268,14 +268,7 @@ didPickDocumentsAtURLs:(NSArray<NSURL *> *)urls {
     NSMutableArray *profilesEncoded;
     // 解码原始的NSArray对象，得到包含编码对象的数组
     error = nil;
-    if (@available(iOS 13.0, *)) {
-        // 在 iOS 13 及以上使用 unarchivedObjectOfClasses
-        profilesEncoded = [NSKeyedUnarchiver unarchivedObjectOfClasses:classes fromData:fileData error:&error];
-    } else {
-        // 在 iOS 12 及以下使用 unarchiveObjectWithData（旧方法）
-        profilesEncoded = [NSKeyedUnarchiver unarchivedObjectOfClass:[NSMutableArray class] fromData:fileData error:&error];
-    }
-    
+    profilesEncoded = [NSKeyedUnarchiver unarchivedObjectOfClasses:classes fromData:fileData error:&error];
     restoreFailed = error != nil;
 
     UIAlertController *restoredAlertController = [UIAlertController alertControllerWithTitle: [LocalizationHelper localizedStringForKey:@""] message: [LocalizationHelper localizedStringForKey:@"Pofiles imported"] preferredStyle:UIAlertControllerStyleAlert];

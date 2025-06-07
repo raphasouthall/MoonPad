@@ -8,8 +8,13 @@
 
 import UIKit
 
-@objc public class CommandManagerViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+@objc public class ToolBoxViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
+    @objc protocol ToolBoxSpecialEntryDelegate: NSObjectProtocol {
+        @objc optional func openWidgetLayoutTool()
+        @objc optional func switchWidgetProfile()
+    }
+    @objc weak var specialEntryDelegate: ToolBoxSpecialEntryDelegate?
     public let tableView = UITableView()
     private let addButton = UIButton(type: .system)
     private let deleteButton = UIButton(type: .system)
@@ -19,9 +24,10 @@ import UIKit
     private let viewBackgroundColor = UIColor(white: 0.2, alpha: 0.8);
     private let highlightColor = UIColor(white: 0.39, alpha: 0.8);
     private let titleLabel = UILabel()
-    @objc public var specialEntries : NSMutableArray = ["widgetTool"]
+    @objc public var specialEntries : NSMutableArray = ["widgetLayoutTool"]
     private let specialEntryAliasDic : [String:String] = [
-        "widgetTool":SwiftLocalizationHelper.localizedString(forKey: "[ Open On-Screen Widget Tool ]")
+        "widgetSwitchTool":SwiftLocalizationHelper.localizedString(forKey: "[ Switch among on-screen widget profiles ]"),
+        "widgetLayoutTool":SwiftLocalizationHelper.localizedString(forKey: "[ Open on-screen widget tool ]")
     ]
 
     private var viewPinned: Bool = false
@@ -333,14 +339,17 @@ import UIKit
     }
     
     private func handleSpecialEntries(index:Int){
+        usleep(1000*100)
+        dismiss(animated: true, completion: nil)
         switch specialEntries[index] as? String {
-        case "widgetTool":
-            usleep(1000*150)
-            dismiss(animated: true, completion: nil)
-            NotificationCenter.default.post(name: Notification.Name("OscLayoutToolOpenedFromCmdToolNotification"),object: nil) // inform streamFrameViewController to open osc tool
+        case "widgetLayoutTool":
+            specialEntryDelegate?.openWidgetLayoutTool!()
+        case "widgetSwitchTool":
+            specialEntryDelegate?.switchWidgetProfile?()
         default: break
         }
     }
+    
     
     private func sendKeyboardCommand(_ cmd: RemoteCommand) {
         print("Sending key-value")

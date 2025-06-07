@@ -1102,31 +1102,31 @@ ICAgICAgICAgICAgICA
                                     <constraint firstItem="YLK-IE-ajS" firstAttribute="centerX" secondItem="fZU-G0-fgM" secondAttribute="centerX" id="xm7-a0-8G7"/>
                                 </constraints>
                             </view>
-                            <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="1" minValue="0.59999999999999998" maxValue="6" id="Efn-Si-TPp" userLabel="Widget Size Slider">
+                            <slider hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="1" minValue="0.59999999999999998" maxValue="6" id="Efn-Si-TPp" userLabel="Widget Size Slider">
                                 <rect key="frame" x="205" y="87" width="420" height="31"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" systemColor="secondaryLabelColor"/>
                                 <color key="tintColor" red="0.6716768742" green="0.61711704730000005" blue="0.99902987480000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </slider>
-                            <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="1" minValue="0.59999999999999998" maxValue="6" id="ZOF-sL-e7p" userLabel="Widget Height Slider">
+                            <slider hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="1" minValue="0.59999999999999998" maxValue="6" id="ZOF-sL-e7p" userLabel="Widget Height Slider">
                                 <rect key="frame" x="205" y="122" width="420" height="31"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" systemColor="secondaryLabelColor"/>
                                 <color key="tintColor" red="0.6716768742" green="0.61711704730000005" blue="0.99902987480000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </slider>
-                            <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.83299999999999996" minValue="0.001" maxValue="0.999" id="ZLL-pE-iZh" userLabel="Widget Alpha Slider">
+                            <slider hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.83299999999999996" minValue="0.001" maxValue="0.999" id="ZLL-pE-iZh" userLabel="Widget Alpha Slider">
                                 <rect key="frame" x="205" y="157" width="217" height="31"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" systemColor="secondaryLabelColor"/>
                                 <color key="tintColor" red="0.6716768742" green="0.61711704730000005" blue="0.99902987480000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </slider>
-                            <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="1" minValue="0.0" maxValue="8" id="FRZ-xP-x2r">
+                            <slider hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="1" minValue="0.0" maxValue="8" id="FRZ-xP-x2r">
                                 <rect key="frame" x="205" y="192" width="591" height="31"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" systemColor="secondaryLabelColor"/>
                                 <color key="tintColor" red="0.6716768742" green="0.61711704730000005" blue="0.99902987480000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </slider>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Profile:" textAlignment="center" lineBreakMode="tailTruncation" adjustsFontSizeToFit="NO" id="cRV-Xw-CVi">
+                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Profile:" textAlignment="center" lineBreakMode="tailTruncation" adjustsFontSizeToFit="NO" id="cRV-Xw-CVi">
                                 <rect key="frame" x="631" y="87" width="163" height="67"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" red="0.38551661729999998" green="0.28289704380000003" blue="0.61853601300000005" alpha="0.28999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
@@ -1135,13 +1135,13 @@ ICAgICAgICAgICAgICA
                                 <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="120" minValue="0.0" maxValue="350" id="oc7-kh-RVH">
+                            <slider hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="120" minValue="0.0" maxValue="350" id="oc7-kh-RVH">
                                 <rect key="frame" x="205" y="227" width="591" height="31"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" systemColor="secondaryLabelColor"/>
                                 <color key="tintColor" red="0.6716768742" green="0.61711704730000005" blue="0.99902987480000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </slider>
-                            <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" minValue="0.0" maxValue="8" id="CCy-fw-7og" userLabel="Widget Border Width Slider">
+                            <slider hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" minValue="0.0" maxValue="8" id="CCy-fw-7og" userLabel="Widget Border Width Slider">
                                 <rect key="frame" x="590" y="157" width="206" height="31"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" systemColor="secondaryLabelColor"/>
@@ -1201,8 +1201,7 @@ ICAgICAgICAgICAgICA
                                     <constraint firstAttribute="height" constant="44" id="lQr-5u-g05"/>
                                 </constraints>
                                 <items>
-                                    <navigationItem title="Controller &amp; Widget Profiles" id="Q2V-XF-4jq">
-
+                                    <navigationItem title="Widget Profiles" id="Q2V-XF-4jq">
                                         <leftBarButtonItems>
                                             <barButtonItem title="Exit" width="45" style="plain" id="czn-mj-8d1">
                                                 <connections>

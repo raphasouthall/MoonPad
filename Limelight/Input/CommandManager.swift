@@ -366,7 +366,7 @@ import UIKit
     
     private var commands: [RemoteCommand] = []
     
-    public weak var viewController: CommandManagerViewController?
+    public weak var viewController: ToolBoxViewController?
     
     private override init() {
         super.init()

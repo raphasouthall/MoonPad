@@ -24,11 +24,13 @@ NS_ASSUME_NONNULL_BEGIN
 @interface LayoutOnScreenControlsViewController : UIViewController 
 - (void)profileRefresh;
 - (void)reloadOnScreenWidgetViews;
+- (void)presentProfilesTableView;
 
 @property LayoutOnScreenControls *layoutOSC;    // object that contains a view which contains the on screen controller buttons that allows the user to drag and positions each button on the screen using touch
 @property (nonatomic) NSMutableSet* OnScreenWidgetViews;
 
 @property int OSCSegmentSelected;
+@property (nonatomic, assign) bool quickSwitchEnabled;
 
 @property (weak, nonatomic) IBOutlet UIButton *trashCanButton;
 @property (weak, nonatomic) IBOutlet UIButton *undoButton;

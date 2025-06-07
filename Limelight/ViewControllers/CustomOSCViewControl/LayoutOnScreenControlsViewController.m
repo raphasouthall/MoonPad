@@ -129,6 +129,7 @@
     [OSCProfilesManager setOnScreenWidgetViewsSet:self.OnScreenWidgetViews];   // pass the keyboard button dict to profiles manager
 
     isToolbarHidden = NO;   // keeps track if the toolbar is hidden up above the screen so that we know whether to hide or show it when the user taps the toolbar's hide/show button
+    _quickSwitchEnabled = false;
             
     widgetSizeSliderLabel = [[UILabel alloc] init];
     widgetHeightSliderLabel = [[UILabel alloc] init];
@@ -182,7 +183,7 @@
                                                object:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(profileRefresh)
+                                             selector:@selector(handleProfileTablViewDismiss)
                                                  name:@"OscLayoutTableViewCloseNotification"
                                                object:nil];
     
@@ -225,7 +226,6 @@
             }];
         }];
     });
-    [self profileRefresh];
 }
 
 
@@ -233,10 +233,13 @@
 - (void) viewDidAppear:(BOOL)animated {
     OnScreenWidgetView.editMode = true;
     selectedWidgetView = nil;
-    [super viewWillAppear:animated];
-    [self profileRefresh];
+    [super viewDidAppear:animated];
 }
 
+- (void) viewWillAppear:(BOOL)animated{
+    self.navigationController.navigationBar.hidden = _quickSwitchEnabled;
+    [self profileRefresh];
+}
 
 #pragma mark - Class Helper Functions
 
@@ -730,6 +733,7 @@
 }
 
 - (void)setupProfileLableAndSliders{
+    //if(_quickSwitchEnabled) return;
     // self.currentProfileLabel.frame = CGRectMake(0, 0, 180, 35);
     // CGFloat profileLabelXPosition = self.view.bounds.size.width - self.currentProfileLabel.frame.size.width - 20;
     CGFloat sliderXPosition = (self.view.bounds.size.width - self.widgetSizeSlider.frame.size.width)/2 ;
@@ -737,7 +741,7 @@
 
     // Set the label's frame with the calculated x-position
     self.currentProfileLabel.frame = CGRectMake(profileLabelXPosition, self.currentProfileLabel.frame.origin.y, self.currentProfileLabel.frame.size.width, self.currentProfileLabel.frame.size.height);
-    self.currentProfileLabel.hidden = NO; // Show Current Profile display
+    self.currentProfileLabel.hidden = _quickSwitchEnabled; // Show Current Profile display
     if (@available(iOS 13.0, *)) {
         self.currentProfileLabel.textAlignment = NSTextAlignmentNatural;
         self.currentProfileLabel.numberOfLines = 2;
@@ -747,7 +751,7 @@
     [self.currentProfileLabel setText:[LocalizationHelper localizedStringForKey:@"Profile: %@",[profilesManager getSelectedProfile].name]]; // display current profile name when profile is being refreshed.
     
     // button size sliders
-    self.widgetSizeSlider.hidden = NO;
+    self.widgetSizeSlider.hidden = _quickSwitchEnabled;
     self.widgetSizeSlider.frame = CGRectMake(sliderXPosition, self.widgetSizeSlider.frame.origin.y, self.widgetSizeSlider.frame.size.width, self.widgetSizeSlider.frame.size.height);
     [self.widgetSizeSlider addTarget:self action:@selector(widgetSizeSliderMoved) forControlEvents:(UIControlEventValueChanged)];
     widgetSizeSliderLabel.text = [LocalizationHelper localizedStringForKey:@"Widget Size"];
@@ -764,10 +768,10 @@
         // Align vertically with the slider
         [widgetSizeSliderLabel.centerYAnchor constraintEqualToAnchor:self.widgetSizeSlider.centerYAnchor]
     ]];
-    widgetSizeSliderLabel.hidden = NO;
+    widgetSizeSliderLabel.hidden = _quickSwitchEnabled;
 
     // button height sliders
-    self.widgetHeightSlider.hidden = NO;
+    self.widgetHeightSlider.hidden = _quickSwitchEnabled;
     self.widgetHeightSlider.frame = CGRectMake(sliderXPosition, self.widgetHeightSlider.frame.origin.y, self.widgetHeightSlider.frame.size.width, self.widgetHeightSlider.frame.size.height);
     [self.widgetHeightSlider addTarget:self action:@selector(widgetHeightSliderMoved) forControlEvents:(UIControlEventValueChanged)];
     // button height label
@@ -785,10 +789,10 @@
         // Align vertically with the slider
         [widgetHeightSliderLabel.centerYAnchor constraintEqualToAnchor:self.widgetHeightSlider.centerYAnchor]
     ]];
-    widgetHeightSliderLabel.hidden = NO;
+    widgetHeightSliderLabel.hidden = _quickSwitchEnabled;
 
     // button alpha label
-    self.widgetAlphaSlider.hidden = NO;
+    self.widgetAlphaSlider.hidden = _quickSwitchEnabled;
     self.widgetAlphaSlider.frame = CGRectMake(sliderXPosition, self.widgetAlphaSlider.frame.origin.y, self.widgetAlphaSlider.frame.size.width, self.widgetAlphaSlider.frame.size.height);
     [self.widgetAlphaSlider addTarget:self action:@selector(widgetAlphaSliderMoved) forControlEvents:(UIControlEventValueChanged)];
     widgetAlphaSliderLabel.text = [LocalizationHelper localizedStringForKey:@"Widget Alpha"];
@@ -805,11 +809,11 @@
         // Align vertically with the slider
         [widgetAlphaSliderLabel.centerYAnchor constraintEqualToAnchor:self.widgetAlphaSlider.centerYAnchor]
     ]];
-    widgetAlphaSliderLabel.hidden = NO;
+    widgetAlphaSliderLabel.hidden = _quickSwitchEnabled;
     
     
     // border Width slider
-    self.widgetBorderWidthSlider.hidden = NO;
+    self.widgetBorderWidthSlider.hidden = _quickSwitchEnabled;
     self.widgetBorderWidthSlider.frame = CGRectMake(CGRectGetMaxX(self.currentProfileLabel.frame)-self.widgetBorderWidthSlider.frame.size.width, self.widgetBorderWidthSlider.frame.origin.y, self.widgetBorderWidthSlider.frame.size.width, self.widgetBorderWidthSlider.frame.size.height);
 
     [self.widgetBorderWidthSlider addTarget:self action:@selector(widgetBorderWidthSliderMoved) forControlEvents:(UIControlEventValueChanged)];
@@ -825,7 +829,7 @@
         // Align vertically with the slider
         [widgetBorderWidthSliderLabel.centerYAnchor constraintEqualToAnchor:self.widgetBorderWidthSlider.centerYAnchor]
     ]];
-    widgetBorderWidthSliderLabel.hidden = NO;
+    widgetBorderWidthSliderLabel.hidden = _quickSwitchEnabled;
 
     
     
@@ -882,6 +886,10 @@
     stickIndicatorOffsetSliderLabel.hidden = stickIndicatorOffsetExplain.hidden = self.stickIndicatorOffsetSlider.hidden;
 }
 
+- (void)handleProfileTablViewDismiss{
+    [self profileRefresh];
+    if(_quickSwitchEnabled) [self dismissViewControllerAnimated:NO completion:nil];
+}
 
 /* Basically the same method as loadTapped, without parameter*/
 // Make sure whenever self view controller load the selected profile and layout its buttons.
@@ -917,9 +925,7 @@
     // [self presentViewController:vc animated:YES completion:nil];
 }
 
-
-/* Presents the view controller that lists all OSC profiles the user can choose from */
-- (IBAction) loadTapped:(id)sender {
+- (void) presentProfilesTableView{
     UIStoryboard *storyboard;
     BOOL isIPhone = ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPhone);
     if (isIPhone) {
@@ -959,7 +965,13 @@
     [self->selectedWidgetView.stickBallLayer removeFromSuperlayer];
     [self->selectedWidgetView.crossMarkLayer removeFromSuperlayer];
     _oscProfilesTableViewController.currentOSCButtonLayers = self.layoutOSC.OSCButtonLayers;
+    
     [self presentViewController:_oscProfilesTableViewController animated:YES completion:nil];
+}
+
+/* Presents the view controller that lists all OSC profiles the user can choose from */
+- (IBAction) loadTapped:(id)sender {
+    [self presentProfilesTableView];
 }
 
 
