@@ -402,48 +402,79 @@ BOOL isCustomResolution(CGSize res) {
 }
     
 - (void)layoutSections{
+    
     MenuSectionView *videoSection = [[MenuSectionView alloc] init];
     videoSection.sectionTitle = [LocalizationHelper localizedStringForKey:@"Video"];
     if (@available(iOS 13.0, *)) {
-        [videoSection setSectionIcon:[UIImage systemImageNamed:@"airplayvideo"]];
-    } else [videoSection setSectionIcon:nil];
-    
+        [videoSection setSectionWithIcon:[UIImage systemImageNamed:@"video.and.waveform"] andSize:20.5];
+    }
     [self addSetting:self.resolutionStack ofId:@"resolutionStack" withInfoTag:YES to:videoSection];
     [self addSetting:self.fpsStack ofId:@"fpsStack" withInfoTag:NO to:videoSection];
+    [self addSetting:self.bitrateStack ofId:@"bitrateStack" withInfoTag:NO to:videoSection];
     [self addSetting:self.codecStack ofId:@"codecStack" withInfoTag:NO to:videoSection];
+    [self addSetting:self.HdrStack ofId:@"HdrStack" withInfoTag:NO to:videoSection];
+    [self addSetting:self.framepacingStack ofId:@"framepacingStack" withInfoTag:NO to:videoSection];
     [videoSection addToParentStack:parentStack];
-    [videoSection setExpanded:YES];
-    //_fpsStack.userInteractionEnabled = NO;
+    [videoSection setExpanded:NO];
+
+    MenuSectionView *touchInputSection = [[MenuSectionView alloc] init];
+    touchInputSection.sectionTitle = [LocalizationHelper localizedStringForKey:@"Touch Input"];
+    if (@available(iOS 13.0, *)) {
+        [touchInputSection setSectionWithIcon:[UIImage systemImageNamed:@"viewfinder.circle"] andSize:21.5];
+    }
+    [self addSetting:self.touchModeStack ofId:@"touchModeStack" withInfoTag:YES to:touchInputSection];
+    [self addSetting:self.pointerVelocityDividerStack ofId:@"pointerVelocityDividerStack" withInfoTag:YES to:touchInputSection];
+    [self addSetting:self.pointerVelocityFactorStack ofId:@"pointerVelocityFactorStack" withInfoTag:YES to:touchInputSection];
+    [self addSetting:self.mousePointerVelocityStack ofId:@"mousePointerVelocityStack" withInfoTag:YES to:touchInputSection];
+    [self addSetting:self.onScreenWidgetStack ofId:@"onScreenWidgetStack" withInfoTag:YES to:touchInputSection];
+    [self addSetting:self.swapAbaxyStack ofId:@"swapAbaxyStack" withInfoTag:NO to:touchInputSection];
+    [touchInputSection addToParentStack:parentStack];
+    [touchInputSection setExpanded:NO];
+
+    
+    
+    
+    
     
     MenuSectionView *gesturesSection = [[MenuSectionView alloc] init];
     gesturesSection.sectionTitle = [LocalizationHelper localizedStringForKey:@"Gestures"];
     if (@available(iOS 13.0, *)) {
-        [gesturesSection setSectionIcon:[UIImage systemImageNamed:@"hand.draw"]];
-    } else [gesturesSection setSectionIcon:nil];
+        [gesturesSection setSectionWithIcon:[UIImage systemImageNamed:@"hand.draw"] andSize:23];
+    }
     
     [self addSetting:self.keyboardToggleFingerNumStack ofId:@"keyboardToggleFingerNumStack" withInfoTag:NO to:gesturesSection];
     [self addSetting:self.slideToSettingsScreenEdgeStack ofId:@"slideToSettingsScreenEdgeStack" withInfoTag:NO to:gesturesSection];
     [self addSetting:self.slideToCmdToolScreenEdgeStack ofId:@"slideToCmdToolScreenEdgeStack" withInfoTag:NO to:gesturesSection];
     [self addSetting:self.slideToSettingsDistanceStack ofId:@"slideToSettingsDistanceStack" withInfoTag:NO to:gesturesSection];
-
-    [self addSetting:self.audioOnPcStack ofId:@"audioOnPcStack" withInfoTag:NO to:gesturesSection];
-    // [self addSetting:self.codecStack ofIdentifier:@"codecStack" to:gesturesSection];
-    [self addSetting:self.yuv444Stack ofId:@"yuv444Stack" withInfoTag:NO to:gesturesSection];
-    [self addSetting:self.HdrStack ofId:@"HdrStack" withInfoTag:NO to:gesturesSection];
-    [self addSetting:self.optimizeSettingsStack ofId:@"optimizeSettingsStack" withInfoTag:NO to:gesturesSection];
-    [self addSetting:self.multiControllerStack ofId:@"multiControllerStack" withInfoTag:NO to:gesturesSection];
-    [self addSetting:self.optimizeSettingsStack ofId:@"optimizeSettingsStack" withInfoTag:NO to:gesturesSection];
-    [self addSetting:self.liftStreamViewForKeyboardStack ofId:@"liftStreamViewForKeyboardStack" withInfoTag:NO to:gesturesSection];
-    [self addSetting:self.framepacingStack ofId:@"framepacingStack" withInfoTag:NO to:gesturesSection];
-    [self addSetting:self.reverseMouseWheelDirectionStack ofId:@"reverseMouseWheelDirectionStack" withInfoTag:NO to:gesturesSection];
-    [self addSetting:self.statsOverlayStack ofId:@"statsOverlayStack" withInfoTag:NO to:gesturesSection];
-    [self addSetting:self.externalDisplayModeStack ofId:@"externalDisplayModeStack" withInfoTag:NO to:gesturesSection];
-    [self addSetting:self.localMousePointerModeStack ofId:@"localMousePointerModeStack" withInfoTag:NO to:gesturesSection];
-    [self addSetting:self.onScreenWidgetStack ofId:@"onScreenWidgetStack" withInfoTag:NO to:gesturesSection];
-
-        
     [gesturesSection addToParentStack:parentStack];
-    [gesturesSection setExpanded:YES];
+    [gesturesSection setExpanded:NO];
+
+    MenuSectionView *peripheralSection = [[MenuSectionView alloc] init];
+    peripheralSection.sectionTitle = [LocalizationHelper localizedStringForKey:@"Peripherals"];
+    if (@available(iOS 13.0, *)) {
+        [peripheralSection setSectionWithIcon:[UIImage systemImageNamed:@"airplayvideo"] andSize:20.5];
+    }
+    [self addSetting:self.externalDisplayModeStack ofId:@"externalDisplayModeStack" withInfoTag:NO to:peripheralSection];
+    [self addSetting:self.localMousePointerModeStack ofId:@"localMousePointerModeStack" withInfoTag:NO to:peripheralSection];
+    [self addSetting:self.reverseMouseWheelDirectionStack ofId:@"reverseMouseWheelDirectionStack" withInfoTag:NO to:peripheralSection];
+    [self addSetting:self.citrixX1MouseStack ofId:@"citrixX1MouseStack" withInfoTag:NO to:peripheralSection];
+    [peripheralSection addToParentStack:parentStack];
+    [peripheralSection setExpanded:NO];
+
+    
+    
+    
+    MenuSectionView *experimentalSection = [[MenuSectionView alloc] init];
+    experimentalSection.sectionTitle = [LocalizationHelper localizedStringForKey:@"Experimental"];
+    if (@available(iOS 13.0, *)) {
+        [experimentalSection setSectionWithIcon:[UIImage systemImageNamed:@"flask"] andSize:20];
+    }
+    [self addSetting:self.asyncTouchStack ofId:@"asyncTouchStack" withInfoTag:YES to:experimentalSection];
+    [self addSetting:self.touchMoveEventIntervalStack ofId:@"touchMoveEventIntervalStack" withInfoTag:YES to:experimentalSection];
+    [experimentalSection addToParentStack:parentStack];
+    [experimentalSection setExpanded:NO];
+
+
 }
 
 
@@ -1800,7 +1831,8 @@ BOOL isCustomResolution(CGSize res) {
 
     BOOL reverseMouseWheelDirection = [self.reverseMouseWheelDirectionSelector selectedSegmentIndex] == 1;
     NSInteger asyncNativeTouchPriority = [self.asyncNativeTouchPrioritySelector selectedSegmentIndex];
-    BOOL liftStreamViewForKeyboard = [self.liftStreamViewForKeyboardSelector selectedSegmentIndex] == 1;
+    //BOOL liftStreamViewForKeyboard = [self.liftStreamViewForKeyboardSelector selectedSegmentIndex] == 1;
+    BOOL liftStreamViewForKeyboard = YES; // enable and hide this option
     BOOL showKeyboardToolbar = [self.showKeyboardToolbarSelector selectedSegmentIndex] == 1;
     BOOL optimizeGames = [self.optimizeSettingsSelector selectedSegmentIndex] == 1;
     BOOL multiController = [self.multiControllerSelector selectedSegmentIndex] == 1;

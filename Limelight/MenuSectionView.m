@@ -45,14 +45,14 @@
 - (void)commonInit {
     // 默认值
     _leadingTrailingPadding = 0;
-    _separatorLinePadding = 18;
+    _separatorLinePadding = 40;
     _sectionTitle = @"Section";
     _expanded = YES;
     _backgroundColor = [UIColor clearColor];
-    _rootStackViewSpacing = 10;
+    _rootStackViewSpacing = 15;
     _subStackViews = [NSMutableArray array];
     _headerViewHeight = 37;
-    _headerViewVerticalSpacing = 20;
+    _headerViewVerticalSpacing = 25;
     
     // 设置视图
     self.layer.cornerRadius = 10.0;
@@ -74,7 +74,7 @@
     // 标题标签
     _titleLabel = [[UILabel alloc] init];
     _titleLabel.text = _sectionTitle;
-    _titleLabel.font = [UIFont systemFontOfSize:27 weight:UIFontWeightMedium];
+    _titleLabel.font = [UIFont systemFontOfSize:23 weight:UIFontWeightMedium];
     _titleLabel.textColor = [ThemeManager textColor];
     _titleLabel.textAlignment = NSTextAlignmentLeft;
     _titleLabel.translatesAutoresizingMaskIntoConstraints = NO;
@@ -132,11 +132,11 @@
     
     // 图标约束
     [NSLayoutConstraint activateConstraints:@[
-        [_iconImageView.leadingAnchor constraintEqualToAnchor:_headerView.leadingAnchor constant:_leadingTrailingPadding],
+        [_iconImageView.centerXAnchor constraintEqualToAnchor:_headerView.leadingAnchor constant:_leadingTrailingPadding+_headerViewHeight/2-3],
         [_iconImageView.centerYAnchor constraintEqualToAnchor:_headerView.centerYAnchor],
         // [_iconImageView.topAnchor constraintEqualToAnchor:_headerView.topAnchor],
-        [_iconImageView.widthAnchor constraintEqualToConstant:_headerViewHeight],
-        [_iconImageView.heightAnchor constraintEqualToConstant:_headerViewHeight]
+        [_iconImageView.widthAnchor constraintEqualToConstant:_headerViewHeight-6],
+        //[_iconImageView.heightAnchor constraintEqualToConstant:_headerViewHeight-6]
     ]];
     
     // 标题约束
@@ -198,9 +198,9 @@
 
 #pragma mark - Public Methods
 
-- (void)setSectionIcon:(UIImage *)icon {
+- (void)setSectionWithIcon:(UIImage *)icon andSize:(CGFloat)size{
     if (@available(iOS 13.0, *)) {
-        UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithWeight:UIImageSymbolWeightSemibold];
+        UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithPointSize:size weight:UIImageSymbolWeightBold];
         _iconImageView.image = [icon imageWithConfiguration:config];
 
     } else {
@@ -254,7 +254,8 @@
 }
 
 - (void)addToParentStack:(UIStackView *)parentStack {
-    [parentStack addArrangedSubview:self];
+    [parentStack insertArrangedSubview:self atIndex:parentStack.arrangedSubviews.count];
+    NSLog(@"title: %@, count: %ld", self.sectionTitle, parentStack.arrangedSubviews.count);
     self.translatesAutoresizingMaskIntoConstraints = NO;
     [NSLayoutConstraint activateConstraints:@[
         [self.leadingAnchor constraintEqualToAnchor:parentStack.leadingAnchor constant:0],

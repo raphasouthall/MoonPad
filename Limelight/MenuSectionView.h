@@ -24,7 +24,7 @@
 @property (nonatomic, strong) NSMutableArray<UIStackView *> *subStackViews;
 
 // 方法
-- (void)setSectionIcon:(UIImage *)icon;
+- (void)setSectionWithIcon:(UIImage *)icon andSize:(CGFloat)size;
 - (void)addSubStackView:(UIStackView *)stackView;
 - (void)addToParentStack:(UIStackView *)parentStack;
 - (void)removeSubStackView:(UIStackView *)stackView;
