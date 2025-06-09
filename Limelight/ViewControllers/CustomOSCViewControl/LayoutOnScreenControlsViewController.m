@@ -16,6 +16,7 @@
 #import "OSCProfilesManager.h"
 #import "LocalizationHelper.h"
 #import "Moonlight-Swift.h"
+#import "ThemeManager.h"
 
 @interface LayoutOnScreenControlsViewController ()
 
@@ -32,13 +33,10 @@
     bool controllerLayerSelected;
     __weak IBOutlet NSLayoutConstraint *toolbarTopConstraintiPhone;
     __weak IBOutlet NSLayoutConstraint *toolbarTopConstraintiPad;
-    UILabel *widgetSizeSliderLabel;
-    UILabel *widgetHeightSliderLabel;
-    UILabel *widgetAlphaSliderLabel;
-    UILabel *widgetBorderWidthSliderLabel;
-    UILabel *sensitivitySliderLabel;
-    UILabel *stickIndicatorOffsetSliderLabel;
-    UILabel *stickIndicatorOffsetExplain;
+    UIColor* trashCanStoryBoardColor;
+    BOOL widgetPanelMovedByTouch;
+    CGPoint widgetPanelStoredCenter;
+    CGPoint latestTouchLocation;
 }
 
 @synthesize trashCanButton;
@@ -80,13 +78,12 @@
 }
 
 - (void) reloadOnScreenWidgetViews {
+    OnScreenWidgetView.editMode = true;
     [self->selectedWidgetView.stickBallLayer removeFromSuperlayer];
     [self->selectedWidgetView.crossMarkLayer removeFromSuperlayer];
     
     for (UIView *subview in self.view.subviews) {
-        // 检查子视图是否是特定类型的实例
         if ([subview isKindOfClass:[OnScreenWidgetView class]]) {
-            // 如果是，就添加到将要被移除的数组中
             [subview removeFromSuperview];
         }
     }
@@ -111,7 +108,7 @@
             widgetView.stickIndicatorOffset = buttonState.stickIndicatorOffset;
             widgetView.minStickOffset = buttonState.minStickOffset;
             // Add the widgetView to the view controller's view
-            [self.view addSubview:widgetView];
+            [self.view insertSubview:widgetView belowSubview:self.widgetSizeStack];
             buttonState.position = [self denormalizeWidgetPosition:buttonState.position];
             [widgetView setLocationWithPosition:buttonState.position];
             [widgetView resizeWidgetView]; // resize must be called after relocation
@@ -128,17 +125,9 @@
     self.OnScreenWidgetViews = [[NSMutableSet alloc] init]; // will be revised to read persisted data , somewhere else
     [OSCProfilesManager setOnScreenWidgetViewsSet:self.OnScreenWidgetViews];   // pass the keyboard button dict to profiles manager
 
-    isToolbarHidden = NO;   // keeps track if the toolbar is hidden up above the screen so that we know whether to hide or show it when the user taps the toolbar's hide/show button
+    //isToolbarHidden = NO;   // keeps track if the toolbar is hidden up above the screen so that we know whether to hide or show it when the user taps the toolbar's hide/show button
     _quickSwitchEnabled = false;
             
-    widgetSizeSliderLabel = [[UILabel alloc] init];
-    widgetHeightSliderLabel = [[UILabel alloc] init];
-    widgetAlphaSliderLabel = [[UILabel alloc] init];
-    widgetBorderWidthSliderLabel = [[UILabel alloc] init];
-    sensitivitySliderLabel = [[UILabel alloc] init];
-    stickIndicatorOffsetSliderLabel = [[UILabel alloc] init];
-    stickIndicatorOffsetExplain = [[UILabel alloc] init];
-
     /* add curve to bottom of chevron tab view */
     UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:self.chevronView.bounds byRoundingCorners:(UIRectCornerBottomLeft | UIRectCornerBottomRight) cornerRadii:CGSizeMake(10.0, 10.0)];
     CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
@@ -197,7 +186,11 @@
                                              selector:@selector(widgetViewTapped:)
                                                  name:@"OnScreenWidgetViewSelected"
                                                object:nil];
-
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(handleMovingOnScreenWidgetNotification:)
+                                                 name:@"OnScreenWidgetMovedByTouch"
+                                               object:nil];
 
 
     
@@ -226,6 +219,7 @@
             }];
         }];
     });
+    trashCanStoryBoardColor = trashCanButton.tintColor;
 }
 
 
@@ -233,11 +227,13 @@
 - (void) viewDidAppear:(BOOL)animated {
     OnScreenWidgetView.editMode = true;
     selectedWidgetView = nil;
+    widgetPanelStoredCenter = self.widgetPanelStack.center;
     [super viewDidAppear:animated];
 }
 
 - (void) viewWillAppear:(BOOL)animated{
-    self.navigationController.navigationBar.hidden = _quickSwitchEnabled;
+    OnScreenWidgetView.editMode = true;
+    [self handleMissingToolBarIcon:toolbarRootView];
     [self profileRefresh];
 }
 
@@ -261,7 +257,6 @@
         [UIView animateWithDuration:0.2 animations:^{   // animates toolbar up and off screen
             toolbarTopConstraint.constant -= self.toolbarRootView.frame.size.height;
             [self.view layoutIfNeeded];
-
         }
         completion:^(BOOL finished) {
             if (finished) {
@@ -553,16 +548,19 @@
     newWidget.stickIndicatorOffset = widget.stickIndicatorOffset;
     newWidget.minStickOffset = [widgetInitParams[@"minStickOffsetString"] floatValue];
     // Add the widgetView to the view controller's view
-    [self.view addSubview:newWidget];
-    if(createNew) [newWidget setLocationWithPosition:CGPointMake(50, 50)];
+    [self.view insertSubview:newWidget belowSubview:self.widgetSizeStack];
+
+    if(createNew) [newWidget setLocationWithPosition:CGPointMake(90, 130)];
     else [newWidget setLocationWithPosition:widget.center];
     [newWidget resizeWidgetView]; // resize must be called after relocation
     [newWidget adjustTransparencyWithAlpha:widget.backgroundAlpha];
     [newWidget adjustBorderWithWidth:widget.borderWidth];
-    if(!createNew) [self.OnScreenWidgetViews removeObject:widget];
     [self.OnScreenWidgetViews addObject:newWidget];
-    if(!createNew) [widget removeFromSuperview];
     self->selectedWidgetView = newWidget;
+    if(!createNew){
+        [self.OnScreenWidgetViews removeObject:widget];
+        [widget removeFromSuperview];
+    }
 }
 
 
@@ -574,8 +572,8 @@
     widgetView.minStickOffset = [widgetInitParams[@"minStickOffsetString"] floatValue];
     [self.OnScreenWidgetViews addObject:widgetView];
     // Add the widgetView to the view controller's view
-    [self.view addSubview:widgetView];
-    [widgetView setLocationWithPosition:CGPointMake(50, 50)];
+    [self.view insertSubview:widgetView belowSubview:self.widgetSizeStack];
+    [widgetView setLocationWithPosition:CGPointMake(90, 130)];
     [widgetView resizeWidgetView];
 }
 
@@ -598,6 +596,13 @@
     }
 }
 
+- (void)autoFitView:(UIView* )view{
+    CGSize fittingSize = [view systemLayoutSizeFittingSize:UILayoutFittingCompressedSize];
+    CGRect newFrame = view.frame;
+    newFrame.size = fittingSize;
+    view.frame = newFrame;
+}
+
 - (void)widgetViewTapped: (NSNotification *)notification{
     // receive the selected widgetView obj passed from the notification
     OnScreenWidgetView* widgetView = (OnScreenWidgetView* )notification.object;
@@ -615,11 +620,14 @@
     
     bool showSensitivityFactorSlider = selectedWidgetView.hasSensitivityTweak;
     bool showStickIndicatorOffsetSlider = selectedWidgetView.hasStickIndicator;
-    self.sensitivityFactorSlider.hidden = self->sensitivitySliderLabel.hidden = !showSensitivityFactorSlider;
-    self.stickIndicatorOffsetSlider.hidden = self->stickIndicatorOffsetExplain.hidden = self->stickIndicatorOffsetSliderLabel.hidden = !showStickIndicatorOffsetSlider;
+        
+    self.sensitivityStack.hidden = !showSensitivityFactorSlider;
+    self.stickIndicatorOffsetStack.hidden = !showStickIndicatorOffsetSlider;
+    [self autoFitView:self.widgetPanelStack];
+
     if(showSensitivityFactorSlider){
-        [self.sensitivityFactorSlider setValue:self->selectedWidgetView.sensitivityFactor];
-        [sensitivitySliderLabel setText:[LocalizationHelper localizedStringForKey:@"Sensitivity: %.2f", self->selectedWidgetView.sensitivityFactor]];
+        [self.sensitivitySlider setValue:self->selectedWidgetView.sensitivityFactor];
+        [self.sensitivityLabel setText:[LocalizationHelper localizedStringForKey:@"Sensitivity: %.2f", self->selectedWidgetView.sensitivityFactor]];
     }
     if(showStickIndicatorOffsetSlider){
         // illustrating the indicator offset,
@@ -628,13 +636,13 @@
         selectedWidgetView.touchBeganLocation = CGPointMake(CGRectGetWidth(selectedWidgetView.frame)/2, CGRectGetHeight(selectedWidgetView.frame)/4);
         [selectedWidgetView showStickIndicator];// this will create the indicator CAShapeLayers
         [self.stickIndicatorOffsetSlider setValue:self->selectedWidgetView.stickIndicatorOffset];
-        [stickIndicatorOffsetSliderLabel setText:[LocalizationHelper localizedStringForKey:@"Indicator Offset: %.2f", self->selectedWidgetView.stickIndicatorOffset]];
+        [self.stickIndicatorOffsetLabel setText:[LocalizationHelper localizedStringForKey:@"Indicator Offset: %.0f", self->selectedWidgetView.stickIndicatorOffset]];
         [self->selectedWidgetView updateStickIndicator];
     }
-    [widgetSizeSliderLabel setText:[LocalizationHelper localizedStringForKey:@"Widget Size: %.2f", self->selectedWidgetView.widthFactor]];
-    [widgetHeightSliderLabel setText:[LocalizationHelper localizedStringForKey:@"Widget Height: %.2f", self->selectedWidgetView.heightFactor]];
-    [widgetAlphaSliderLabel setText:[LocalizationHelper localizedStringForKey:@"Widget Alpha: %.2f", self->selectedWidgetView.backgroundAlpha]];
-    [widgetBorderWidthSliderLabel setText:[LocalizationHelper localizedStringForKey:@"Border Width: %.2f", self->selectedWidgetView.borderWidth]];
+    [self.widgetSizeLabel setText:[LocalizationHelper localizedStringForKey:@"Size: %.2f", self->selectedWidgetView.widthFactor]];
+    [self.widgetHeightLabel setText:[LocalizationHelper localizedStringForKey:@"Height: %.2f", self->selectedWidgetView.heightFactor]];
+    [self.widgetAlphaLabel setText:[LocalizationHelper localizedStringForKey:@"Alpha: %.2f", self->selectedWidgetView.backgroundAlpha]];
+    [self.widgetBorderWidthLabel setText:[LocalizationHelper localizedStringForKey:@"Border Width: %.2f", self->selectedWidgetView.borderWidth]];
 }
 
 - (void)setControllerCALayerSliderValues: (NSNotification *)notification{
@@ -644,11 +652,9 @@
     [self->selectedWidgetView.crossMarkLayer removeFromSuperlayer];
     self->widgetViewSelected = false;
     self->selectedWidgetView = nil;
-    self->stickIndicatorOffsetExplain.hidden = true;
-    self->stickIndicatorOffsetSliderLabel.hidden = true;
-    self.stickIndicatorOffsetSlider.hidden = true;
-    self->sensitivitySliderLabel.hidden = true;
-    self.sensitivityFactorSlider.hidden = true;
+    
+    self.stickIndicatorOffsetStack.hidden = true;
+    self.sensitivityStack.hidden = true;
     
     self->controllerLayerSelected = true;
     self->selectedControllerLayer = controllerLayer;
@@ -661,14 +667,14 @@
     CGFloat alpha = [self.layoutOSC getControllerLayerOpacity:controllerLayer];
     [self.widgetAlphaSlider setValue:alpha];
     
-    [widgetSizeSliderLabel setText:[LocalizationHelper localizedStringForKey:@"Widget Size: %.2f", sizeFactor]];
-    [widgetHeightSliderLabel setText:[LocalizationHelper localizedStringForKey:@"Widget Height: %.2f", sizeFactor]];
-    [widgetAlphaSliderLabel setText:[LocalizationHelper localizedStringForKey:@"Widget Alpha: %.2f", alpha]];
+    [self.widgetSizeLabel setText:[LocalizationHelper localizedStringForKey:@"Size: %.2f", sizeFactor]];
+    [self.widgetHeightLabel setText:[LocalizationHelper localizedStringForKey:@"Height: %.2f", sizeFactor]];
+    [self.widgetAlphaLabel setText:[LocalizationHelper localizedStringForKey:@"Alpha: %.2f", alpha]];
 }
 
 - (void)widgetSizeSliderMoved{
-    [widgetSizeSliderLabel setText:[LocalizationHelper localizedStringForKey:@"Widget Size: %.2f", self.widgetSizeSlider.value]];
-    [widgetHeightSliderLabel setText:[LocalizationHelper localizedStringForKey:@"Widget Height: %.2f", self.widgetSizeSlider.value]]; // resizing the whole button
+    [self.widgetSizeLabel setText:[LocalizationHelper localizedStringForKey:@"Size: %.2f", self.widgetSizeSlider.value]];
+    [self.widgetHeightLabel setText:[LocalizationHelper localizedStringForKey:@"Height: %.2f", self.widgetSizeSlider.value]]; // resizing the whole button
     [self.widgetHeightSlider setValue: self.widgetSizeSlider.value];
     
     if(self->selectedWidgetView != nil && self->widgetViewSelected){
@@ -683,7 +689,7 @@
 }
 
 - (void)widgetHeightSliderMoved{
-    [widgetHeightSliderLabel setText:[LocalizationHelper localizedStringForKey:@"Widget Height: %.2f", self.widgetHeightSlider.value]];
+    [self.widgetHeightLabel setText:[LocalizationHelper localizedStringForKey:@"Height: %.2f", self.widgetHeightSlider.value]];
     if(self->selectedWidgetView != nil && self->widgetViewSelected){
         self->selectedWidgetView.translatesAutoresizingMaskIntoConstraints = true; // this is mandatory to prevent unexpected key view location change
         if([self->selectedWidgetView.shape isEqualToString:@"round"]) return; // don't change height for round buttons, except for dPad buttons which are in rectangle shape
@@ -693,7 +699,7 @@
 }
 
 - (void)widgetAlphaSliderMoved{
-    [widgetAlphaSliderLabel setText:[LocalizationHelper localizedStringForKey:@"Widget Alpha: %.2f", self.widgetAlphaSlider.value]];
+    [self.widgetAlphaLabel setText:[LocalizationHelper localizedStringForKey:@"Alpha: %.2f", self.widgetAlphaSlider.value]];
     if(self->selectedWidgetView != nil && self->widgetViewSelected){
         [self->selectedWidgetView adjustTransparencyWithAlpha:self.widgetAlphaSlider.value];
     }
@@ -705,7 +711,7 @@
 }
 
 - (void)widgetBorderWidthSliderMoved{
-    [widgetBorderWidthSliderLabel setText:[LocalizationHelper localizedStringForKey:@"Border Width: %.2f", self.widgetBorderWidthSlider.value]];
+    [self.widgetBorderWidthLabel setText:[LocalizationHelper localizedStringForKey:@"Border Width: %.2f", self.widgetBorderWidthSlider.value]];
     if(self->selectedWidgetView != nil && self->widgetViewSelected){
         [self->selectedWidgetView adjustBorderWithWidth:self.widgetBorderWidthSlider.value];
     }
@@ -713,13 +719,13 @@
 }
 
 - (void)sensitivitySliderMoved{
-    [sensitivitySliderLabel setText:[LocalizationHelper localizedStringForKey:@"Sensitivity: %.2f", self.sensitivityFactorSlider.value]];
-    if(self->selectedWidgetView != nil && self->widgetViewSelected) self->selectedWidgetView.sensitivityFactor = self.sensitivityFactorSlider.value;
+    [self.sensitivityLabel setText:[LocalizationHelper localizedStringForKey:@"Sensitivity: %.2f", self.sensitivitySlider.value]];
+    if(self->selectedWidgetView != nil && self->widgetViewSelected) self->selectedWidgetView.sensitivityFactor = self.sensitivitySlider.value;
     return;
 }
 
 - (void)stickIndicatorOffsetSliderMoved{
-    [stickIndicatorOffsetSliderLabel setText:[LocalizationHelper localizedStringForKey:@"Indicator Offset: %.2f", self.stickIndicatorOffsetSlider.value]];
+    [self.stickIndicatorOffsetLabel setText:[LocalizationHelper localizedStringForKey:@"Indicator Offset: %.0f", self.stickIndicatorOffsetSlider.value]];
     if(self->selectedWidgetView != nil && self->widgetViewSelected){
         self->selectedWidgetView.stickIndicatorOffset = self.stickIndicatorOffsetSlider.value;
         [self->selectedWidgetView updateStickIndicator];
@@ -732,158 +738,93 @@
     [selectedWidgetView showStickIndicator];
 }
 
-- (void)setupProfileLableAndSliders{
-    //if(_quickSwitchEnabled) return;
-    // self.currentProfileLabel.frame = CGRectMake(0, 0, 180, 35);
-    // CGFloat profileLabelXPosition = self.view.bounds.size.width - self.currentProfileLabel.frame.size.width - 20;
-    CGFloat sliderXPosition = (self.view.bounds.size.width - self.widgetSizeSlider.frame.size.width)/2 ;
-    CGFloat profileLabelXPosition = self.view.bounds.size.width/2 + (self.widgetSizeSlider.frame.size.width)/2 + 8;
 
-    // Set the label's frame with the calculated x-position
-    self.currentProfileLabel.frame = CGRectMake(profileLabelXPosition, self.currentProfileLabel.frame.origin.y, self.currentProfileLabel.frame.size.width, self.currentProfileLabel.frame.size.height);
-    self.currentProfileLabel.hidden = _quickSwitchEnabled; // Show Current Profile display
-    if (@available(iOS 13.0, *)) {
-        self.currentProfileLabel.textAlignment = NSTextAlignmentNatural;
-        self.currentProfileLabel.numberOfLines = 2;
-    } else {
-        // Fallback on earlier versions
+- (void)handleMissingToolBarIcon:(UIView *)view {
+    for (UIView *subview in view.subviews) {
+        if ([subview isKindOfClass:[UIButton class]]) {
+            UIButton *button = (UIButton *)subview;
+            if(!button.imageView.image){
+                NSLog(@"missing image %d", button==_saveButton);
+                button.titleLabel.font = [UIFont systemFontOfSize:18 weight:UIFontWeightMedium];
+                if(button==_exitButton) [button setTitle:[LocalizationHelper localizedStringForKey:@"Exit"] forState:UIControlStateNormal];
+                if(button==trashCanButton) [button setTitle:[LocalizationHelper localizedStringForKey:@"Del"] forState:UIControlStateNormal];
+                if(button==undoButton) [button setTitle:[LocalizationHelper localizedStringForKey:@"Undo"] forState:UIControlStateNormal];
+                if(button==_saveButton) [button setTitle:[LocalizationHelper localizedStringForKey:@"Save"] forState:UIControlStateNormal];
+                if(button==_loadButton) [button setTitle:[LocalizationHelper localizedStringForKey:@"Load"] forState:UIControlStateNormal];
+                if(button==_addButton) [button setTitle:[LocalizationHelper localizedStringForKey:@"Add"] forState:UIControlStateNormal];
+                if(button==_editButton) [button setTitle:[LocalizationHelper localizedStringForKey:@"Edit"] forState:UIControlStateNormal];
+            }
+        }
+        [self handleMissingToolBarIcon:subview];
     }
-    [self.currentProfileLabel setText:[LocalizationHelper localizedStringForKey:@"Profile: %@",[profilesManager getSelectedProfile].name]]; // display current profile name when profile is being refreshed.
+}
+
+
+- (void)setupWidgetPanel{
+    //[self handleMissingToolBarIcon];
+    self.widgetPanelStack.hidden = NO;
+    self.widgetPanelStack.layoutMargins = UIEdgeInsetsMake(10, 10, 10, 10);
+    self.widgetPanelStack.layoutMarginsRelativeArrangement = YES;
+    self.widgetPanelStack.layer.cornerRadius = 16;
+    self.widgetPanelStack.clipsToBounds = YES;
     
-    // button size sliders
-    self.widgetSizeSlider.hidden = _quickSwitchEnabled;
-    self.widgetSizeSlider.frame = CGRectMake(sliderXPosition, self.widgetSizeSlider.frame.origin.y, self.widgetSizeSlider.frame.size.width, self.widgetSizeSlider.frame.size.height);
+    /*
+    [NSLayoutConstraint activateConstraints:@[
+        [self.widgetPanelStack.centerXAnchor constraintEqualToAnchor:self.view.centerXAnchor constant:0],
+        [self.widgetPanelStack.topAnchor constraintEqualToAnchor:self.view.topAnchor constant:120],
+    ]];
+    */
+    
+    self.widgetPanelStack.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.5];
+    
+    [self.currentProfileLabel setText:[LocalizationHelper localizedStringForKey:@"Profile: %@",[profilesManager getSelectedProfile].name]];
+    self.currentProfileLabel.layer.cornerRadius = 12;
+    self.currentProfileLabel.clipsToBounds = YES;
+    
+    self.widgetSizeStack.userInteractionEnabled = YES;
+    for(UIView* view in _widgetPanelStack.subviews){
+        view.userInteractionEnabled = YES;
+        if([view isKindOfClass:[UILabel class]]){
+            UILabel* label = (UILabel* )view;
+            label.font = [UIFont systemFontOfSize:18];
+            label.textColor = [UIColor whiteColor];
+        }
+    }
+    
     [self.widgetSizeSlider addTarget:self action:@selector(widgetSizeSliderMoved) forControlEvents:(UIControlEventValueChanged)];
-    widgetSizeSliderLabel.text = [LocalizationHelper localizedStringForKey:@"Widget Size"];
-    widgetSizeSliderLabel.font = [UIFont systemFontOfSize:18];
-    widgetSizeSliderLabel.textColor = [UIColor whiteColor];
-    widgetSizeSliderLabel.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.5];
-    widgetSizeSliderLabel.translatesAutoresizingMaskIntoConstraints = NO; // Disable autoresizing mask for Auto Layout
-    // Add slider and label to the view
-    [self.view addSubview:widgetSizeSliderLabel];
-    // Use Auto Layout to position the label relative to the slider
-    [NSLayoutConstraint activateConstraints:@[
-        // Position the label to the left of the slider
-        [widgetSizeSliderLabel.trailingAnchor constraintEqualToAnchor:self.widgetSizeSlider.leadingAnchor constant:-10],
-        // Align vertically with the slider
-        [widgetSizeSliderLabel.centerYAnchor constraintEqualToAnchor:self.widgetSizeSlider.centerYAnchor]
-    ]];
-    widgetSizeSliderLabel.hidden = _quickSwitchEnabled;
+    self.widgetSizeLabel.text = [LocalizationHelper localizedStringForKey:@"Size"];
+    self.widgetSizeStack.hidden = _quickSwitchEnabled;
 
-    // button height sliders
-    self.widgetHeightSlider.hidden = _quickSwitchEnabled;
-    self.widgetHeightSlider.frame = CGRectMake(sliderXPosition, self.widgetHeightSlider.frame.origin.y, self.widgetHeightSlider.frame.size.width, self.widgetHeightSlider.frame.size.height);
     [self.widgetHeightSlider addTarget:self action:@selector(widgetHeightSliderMoved) forControlEvents:(UIControlEventValueChanged)];
-    // button height label
-    widgetHeightSliderLabel.text = [LocalizationHelper localizedStringForKey:@"Widget Height"];
-    widgetHeightSliderLabel.font = [UIFont systemFontOfSize:18];
-    widgetHeightSliderLabel.textColor = [UIColor whiteColor];
-    widgetHeightSliderLabel.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.5];
-    widgetHeightSliderLabel.translatesAutoresizingMaskIntoConstraints = NO; // Disable autoresizing mask for Auto Layout
-    // Add slider and label to the view
-    [self.view addSubview:widgetHeightSliderLabel];
-    // Use Auto Layout to position the label relative to the slider
-    [NSLayoutConstraint activateConstraints:@[
-        // Position the label to the left of the slider
-        [widgetHeightSliderLabel.trailingAnchor constraintEqualToAnchor:self.widgetHeightSlider.leadingAnchor constant:-10],
-        // Align vertically with the slider
-        [widgetHeightSliderLabel.centerYAnchor constraintEqualToAnchor:self.widgetHeightSlider.centerYAnchor]
-    ]];
-    widgetHeightSliderLabel.hidden = _quickSwitchEnabled;
 
-    // button alpha label
-    self.widgetAlphaSlider.hidden = _quickSwitchEnabled;
-    self.widgetAlphaSlider.frame = CGRectMake(sliderXPosition, self.widgetAlphaSlider.frame.origin.y, self.widgetAlphaSlider.frame.size.width, self.widgetAlphaSlider.frame.size.height);
+    self.widgetHeightLabel.text = [LocalizationHelper localizedStringForKey:@"Height"];
+    self.widgetHeightStack.hidden = _quickSwitchEnabled;
+
     [self.widgetAlphaSlider addTarget:self action:@selector(widgetAlphaSliderMoved) forControlEvents:(UIControlEventValueChanged)];
-    widgetAlphaSliderLabel.text = [LocalizationHelper localizedStringForKey:@"Widget Alpha"];
-    widgetAlphaSliderLabel.font = [UIFont systemFontOfSize:18];
-    widgetAlphaSliderLabel.textColor = [UIColor whiteColor];
-    widgetAlphaSliderLabel.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.5];
-    widgetAlphaSliderLabel.translatesAutoresizingMaskIntoConstraints = NO; // Disable autoresizing mask for Auto Layout
-    // Add slider and label to the view
-    [self.view addSubview:widgetAlphaSliderLabel];
-    // Use Auto Layout to position the label relative to the slider
-    [NSLayoutConstraint activateConstraints:@[
-        // Position the label to the left of the slider
-        [widgetAlphaSliderLabel.trailingAnchor constraintEqualToAnchor:self.widgetAlphaSlider.leadingAnchor constant:-10],
-        // Align vertically with the slider
-        [widgetAlphaSliderLabel.centerYAnchor constraintEqualToAnchor:self.widgetAlphaSlider.centerYAnchor]
-    ]];
-    widgetAlphaSliderLabel.hidden = _quickSwitchEnabled;
-    
-    
-    // border Width slider
-    self.widgetBorderWidthSlider.hidden = _quickSwitchEnabled;
-    self.widgetBorderWidthSlider.frame = CGRectMake(CGRectGetMaxX(self.currentProfileLabel.frame)-self.widgetBorderWidthSlider.frame.size.width, self.widgetBorderWidthSlider.frame.origin.y, self.widgetBorderWidthSlider.frame.size.width, self.widgetBorderWidthSlider.frame.size.height);
-
+    self.widgetAlphaLabel.text = [LocalizationHelper localizedStringForKey:@"Alpha"];
+   
     [self.widgetBorderWidthSlider addTarget:self action:@selector(widgetBorderWidthSliderMoved) forControlEvents:(UIControlEventValueChanged)];
-    widgetBorderWidthSliderLabel.text = [LocalizationHelper localizedStringForKey:@"Border Width"];
-    widgetBorderWidthSliderLabel.font = [UIFont systemFontOfSize:18];
-    widgetBorderWidthSliderLabel.textColor = [UIColor whiteColor];
-    widgetBorderWidthSliderLabel.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.5];
-    widgetBorderWidthSliderLabel.translatesAutoresizingMaskIntoConstraints = NO; // Disable autoresizing mask for Auto Layout
-    [self.view addSubview:widgetBorderWidthSliderLabel];
-    [NSLayoutConstraint activateConstraints:@[
-        // Position the label to the left of the slider
-        [widgetBorderWidthSliderLabel.trailingAnchor constraintEqualToAnchor:self.widgetBorderWidthSlider.leadingAnchor constant:-10],
-        // Align vertically with the slider
-        [widgetBorderWidthSliderLabel.centerYAnchor constraintEqualToAnchor:self.widgetBorderWidthSlider.centerYAnchor]
-    ]];
-    widgetBorderWidthSliderLabel.hidden = _quickSwitchEnabled;
-
-    
-    
-    // sensitivity slider
-    self.sensitivityFactorSlider.hidden = YES;
-    self.sensitivityFactorSlider.frame = CGRectMake(sliderXPosition, self.sensitivityFactorSlider.frame.origin.y, self.sensitivityFactorSlider.frame.size.width, self.sensitivityFactorSlider.frame.size.height);
-    [self.sensitivityFactorSlider addTarget:self action:@selector(sensitivitySliderMoved) forControlEvents:(UIControlEventValueChanged)];
-    sensitivitySliderLabel.text = [LocalizationHelper localizedStringForKey:@"Sensitivity"];
-    sensitivitySliderLabel.font = [UIFont systemFontOfSize:18];
-    sensitivitySliderLabel.textColor = [UIColor whiteColor];
-    sensitivitySliderLabel.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.5];
-    sensitivitySliderLabel.translatesAutoresizingMaskIntoConstraints = NO; // Disable autoresizing mask for Auto Layout
-    // Add slider and label to the view
-    [self.view addSubview:sensitivitySliderLabel];
-    // Use Auto Layout to position the label relative to the slider
-    [NSLayoutConstraint activateConstraints:@[
-        // Position the label to the left of the slider
-        [sensitivitySliderLabel.trailingAnchor constraintEqualToAnchor:self.sensitivityFactorSlider.leadingAnchor constant:-10],
-        // Align vertically with the slider
-        [sensitivitySliderLabel.centerYAnchor constraintEqualToAnchor:self.sensitivityFactorSlider.centerYAnchor]
-    ]];
-    sensitivitySliderLabel.hidden = self.sensitivityFactorSlider.hidden;
-    
+    self.widgetBorderWidthLabel.text = [LocalizationHelper localizedStringForKey:@"Border Width"];
+    self.borderWidthAlphaStack.hidden = _quickSwitchEnabled;
+  
+    [self.sensitivitySlider addTarget:self action:@selector(sensitivitySliderMoved) forControlEvents:(UIControlEventValueChanged)];
+    self.sensitivityLabel.text = [LocalizationHelper localizedStringForKey:@"Sensitivity"];
+    self.sensitivityStack.hidden = YES;
     
     // stick indicator offset slider
-    self.stickIndicatorOffsetSlider.hidden = YES;
-    self.stickIndicatorOffsetSlider.frame = CGRectMake(sliderXPosition, self.stickIndicatorOffsetSlider.frame.origin.y, self.stickIndicatorOffsetSlider.frame.size.width, self.stickIndicatorOffsetSlider.frame.size.height); // make this label bigger to show some tips
+    //self.stickIndicatorOffsetSlider.hidden = YES;
     [self.stickIndicatorOffsetSlider addTarget:self action:@selector(stickIndicatorOffsetSliderMoved) forControlEvents:(UIControlEventValueChanged)];
-    stickIndicatorOffsetSliderLabel.text = [LocalizationHelper localizedStringForKey:@"Indicator Offset"];
-    stickIndicatorOffsetSliderLabel.font = [UIFont systemFontOfSize:18];
-    stickIndicatorOffsetSliderLabel.textColor = [UIColor whiteColor];
-    stickIndicatorOffsetSliderLabel.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.5];
-    stickIndicatorOffsetSliderLabel.translatesAutoresizingMaskIntoConstraints = NO; // Disable autoresizing mask for Auto Layout
-    // tips for stick indicator
-    stickIndicatorOffsetExplain.text = [LocalizationHelper localizedStringForKey:@"Ball: assumed touch point.   Cross: indicator location"];
-    //stickIndicatorOffsetExplain.frame = CGRectMake(sliderXPosition, self.stickIndicatorOffsetSlider.frame.origin.y + self.stickIndicatorOffsetSlider.frame.size.height, self.stickIndicatorOffsetSlider.frame.size.width, self.stickIndicatorOffsetSlider.frame.size.height); //  label bigger show some tips
-    stickIndicatorOffsetExplain.font = [UIFont systemFontOfSize:18];
-    stickIndicatorOffsetExplain.textColor = [UIColor whiteColor];
-    stickIndicatorOffsetExplain.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.5];
-    stickIndicatorOffsetExplain.translatesAutoresizingMaskIntoConstraints = NO; // Disable autoresizing mask for Auto Layout
-    // Add slider and label to the view
-    [self.view addSubview:stickIndicatorOffsetSliderLabel];
-    [self.view addSubview:stickIndicatorOffsetExplain];
-    // Use Auto Layout to position the label relative to the slider
-    [NSLayoutConstraint activateConstraints:@[
-        // Position the label to the left of the slider
-        [stickIndicatorOffsetSliderLabel.trailingAnchor constraintEqualToAnchor:self.stickIndicatorOffsetSlider.leadingAnchor constant:-10],
-        // Align vertically with the slider
-        [stickIndicatorOffsetSliderLabel.centerYAnchor constraintEqualToAnchor:self.stickIndicatorOffsetSlider.centerYAnchor],
-        // Position the explain label
-        [stickIndicatorOffsetExplain.centerXAnchor constraintEqualToAnchor:self.stickIndicatorOffsetSlider.leadingAnchor constant:-10],
-        [stickIndicatorOffsetExplain.topAnchor constraintEqualToAnchor:self.stickIndicatorOffsetSlider.bottomAnchor]
-    ]];
-    stickIndicatorOffsetSliderLabel.hidden = stickIndicatorOffsetExplain.hidden = self.stickIndicatorOffsetSlider.hidden;
+    self.stickIndicatorOffsetLabel.text = [LocalizationHelper localizedStringForKey:@"Indicator Offset"];
+    self.stickIndicatorOffsetStack.hidden = YES;
+    
+    [self.view bringSubviewToFront:self.toolbarRootView];
+    [self.view insertSubview:self.widgetSizeStack belowSubview:self.toolbarRootView];
+    self.widgetSizeStack.translatesAutoresizingMaskIntoConstraints = YES;
+    CGRect frame = CGRectMake(0, 0, self.widgetSizeStack.frame.size.width, self.widgetSizeStack.frame.size.height);
+    //frame.origin = CGPointMake(self.view.bounds.size.width/2, 100);
+    frame.origin = CGPointMake(self.view.bounds.size.width/2-self.widgetSizeStack.frame.size.width/2, 100);
+    self.widgetSizeStack.frame = frame;
+    [self autoFitView:self.widgetPanelStack];
 }
 
 - (void)handleProfileTablViewDismiss{
@@ -904,7 +845,7 @@
     }
     
     // setup: current profile lable, button width slider, button height slider & button alpha slider
-    [self setupProfileLableAndSliders];
+    [self setupWidgetPanel];
     
     //initialiaze _oscProfilesTableViewController
     self->_oscProfilesTableViewController = [storyboard instantiateViewControllerWithIdentifier:@"OSCProfilesTableViewController"];
@@ -947,20 +888,8 @@
         
         [self OSCLayoutChanged];    // fades the 'Undo Button' out
     };
-    self.currentProfileLabel.hidden = YES; // Hide Current Profile display before entering the profile table view
-    self.widgetSizeSlider.hidden = YES;
-    self.widgetHeightSlider.hidden = YES;
-    self.widgetAlphaSlider.hidden = YES;
-    self.widgetBorderWidthSlider.hidden = YES;
-    self.sensitivityFactorSlider.hidden = YES;
-    self.stickIndicatorOffsetSlider.hidden = YES;
-    widgetSizeSliderLabel.hidden = YES;
-    widgetHeightSliderLabel.hidden = YES;
-    widgetAlphaSliderLabel.hidden = YES;
-    widgetBorderWidthSliderLabel.hidden = YES;
-    sensitivitySliderLabel.hidden = YES;
-    stickIndicatorOffsetSliderLabel.hidden = YES;
-    stickIndicatorOffsetExplain.hidden = YES;
+
+    self.widgetPanelStack.hidden = YES;
     
     [self->selectedWidgetView.stickBallLayer removeFromSuperlayer];
     [self->selectedWidgetView.crossMarkLayer removeFromSuperlayer];
@@ -977,7 +906,37 @@
 
 #pragma mark - Touch
 
+- (void) handleMovingOnScreenWidgetNotification: (NSNotification *)notification{
+    OnScreenWidgetView* widget = notification.object;
+    [self.view bringSubviewToFront:widget];
+    trashCanButton.tintColor = [self layerOverlapWithTrashcanButton:widget.layer] ? [UIColor redColor] : trashCanStoryBoardColor;
+}
+
+
+- (BOOL) widgetPanelTouched:(UITouch *)touch{
+    CGPoint touchPoint = [touch locationInView:_widgetPanelStack];
+    UIView *touchedView = [_widgetPanelStack hitTest:touchPoint withEvent:nil];
+    return touchedView != nil;
+}
+
+- (void) handleWidgetPanelMove:(UITouch *)touch{
+    if(!widgetPanelMovedByTouch) return;
+    CGPoint currentLocation = [touch locationInView:self.view];
+    CGFloat offsetX = currentLocation.x - latestTouchLocation.x;
+    CGFloat offsetY = currentLocation.y - latestTouchLocation.y;
+    _widgetPanelStack.center = CGPointMake(_widgetPanelStack.center.x+offsetX, _widgetPanelStack.center.y+offsetY);
+    latestTouchLocation = currentLocation;
+    widgetPanelStoredCenter = _widgetPanelStack.center;
+}
+
 - (void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+    
+    UITouch* touch = touches.anyObject;
+    widgetPanelMovedByTouch = [self widgetPanelTouched:touch];
+    if(widgetPanelMovedByTouch){
+        latestTouchLocation = [touch locationInView:self.view];
+    }
+
     for (UITouch* touch in touches) {
         
         CGPoint touchLocation = [touch locationInView:self.view];
@@ -996,25 +955,16 @@
 }
 
 - (void) touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
-    // for OnScreenWidgets:
     
-    
+    [self handleWidgetPanelMove:touches.anyObject];
+
     // -------- for OSC buttons
     [self.layoutOSC touchesMoved:touches withEvent:event];
     if ([self.layoutOSC isLayer:self.layoutOSC.layerBeingDragged
                         hoveringOverButton:trashCanButton]) { // check if user is dragging around a button and hovering it over the trash can button
         trashCanButton.tintColor = [UIColor redColor];
     }
-    else {
-        trashCanButton.tintColor = [UIColor colorWithRed:171.0/255.0 green:157.0/255.0 blue:255.0/255.0 alpha:1];
-    }
-    
-    // -------- for keyboard Buttons
-    UITouch *touch = [touches anyObject]; // Get the first touch in the set
-    if([self touchWithinTashcanButton:touch]){
-        trashCanButton.tintColor = [UIColor redColor];
-    }
-    else trashCanButton.tintColor = [UIColor colorWithRed:171.0/255.0 green:157.0/255.0 blue:255.0/255.0 alpha:1];
+    else trashCanButton.tintColor = trashCanStoryBoardColor;
 }
 
 - (bool)touchWithinTashcanButton:(UITouch* )touch {
@@ -1028,24 +978,34 @@
     return ret;
 }
 
+- (bool)layerOverlapWithTrashcanButton:(CALayer* )layer{
+    CALayer *commonLayer = self.view.layer; // 假设它们在同一个 superview 下
+
+    CGRect rect1 = [layer convertRect:layer.bounds toLayer:commonLayer];
+    CGRect rect2 = [trashCanButton.layer convertRect:trashCanButton.layer.bounds toLayer:commonLayer];
+    return CGRectIntersectsRect(rect1, rect2);
+}
+
 
 - (void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
     
     // removing keyboard buttons objs
     UITouch *touch = [touches anyObject]; // Get the first touch in the set
-    if([self touchWithinTashcanButton:touch]){
-        if(self->selectedWidgetView != nil){
-            [self->selectedWidgetView removeFromSuperview];
-            [self.OnScreenWidgetViews removeObject:self->selectedWidgetView];
-            [selectedWidgetView.stickBallLayer removeFromSuperlayer];
-            [selectedWidgetView.crossMarkLayer removeFromSuperlayer];
-            [selectedWidgetView.buttonDownVisualEffectLayer removeFromSuperlayer];
-        }
+    
+    if(selectedWidgetView) [self.view insertSubview:selectedWidgetView belowSubview:_widgetPanelStack];
+
+    
+    if(!isToolbarHidden && self->selectedWidgetView != nil && [self layerOverlapWithTrashcanButton:selectedWidgetView.layer]){
+        [self->selectedWidgetView removeFromSuperview];
+        [self.OnScreenWidgetViews removeObject:self->selectedWidgetView];
+        [selectedWidgetView.stickBallLayer removeFromSuperlayer];
+        [selectedWidgetView.crossMarkLayer removeFromSuperlayer];
+        [selectedWidgetView.buttonDownVisualEffectLayer removeFromSuperlayer];
     }
     
     
     //removing OSC buttons
-    if (self.layoutOSC.layerBeingDragged != nil &&
+    if (!isToolbarHidden && self.layoutOSC.layerBeingDragged != nil &&
         [self.layoutOSC isLayer:self.layoutOSC.layerBeingDragged hoveringOverButton:trashCanButton]) { // check if user wants to throw OSC button into the trash can
         // here we're going to delete something
         
@@ -1078,7 +1038,8 @@
     }
     
     
-    trashCanButton.tintColor = [UIColor colorWithRed:171.0/255.0 green:157.0/255.0 blue:255.0/255.0 alpha:1];
+    trashCanButton.tintColor = trashCanStoryBoardColor;
+    widgetPanelMovedByTouch = false;
 }
 
 

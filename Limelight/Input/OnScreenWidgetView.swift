@@ -151,8 +151,11 @@ import UIKit
                 
                //  let stickAndMouseTouchpads = ["LSPAD", "RSPAD", "LSVPAD", "RSVPAD", "MOUSEPAD"]
                 let nonVectorStickPads = ["LSPAD", "RSPAD"]
-                if CommandManager.touchPadCmds.contains(self.touchPadString) {self.hasSensitivityTweak = true}
-                if nonVectorStickPads.contains(self.touchPadString) && widgetType == WidgetTypeEnum.touchPad {self.hasStickIndicator = true}
+               // if CommandManager.touchPadCmds.contains(self.touchPadString) {self.hasSensitivityTweak = true}
+                self.hasSensitivityTweak = CommandManager.touchPadCmds.contains(self.touchPadString)
+                
+                // if nonVectorStickPads.contains(self.touchPadString) && widgetType == WidgetTypeEnum.touchPad {self.hasStickIndicator = true}
+                self.hasStickIndicator = nonVectorStickPads.contains(self.touchPadString) && widgetType == WidgetTypeEnum.touchPad
                 
                 switch self.cmdString {
                 case "LSPAD", "LSVPAD":

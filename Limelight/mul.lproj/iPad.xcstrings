@@ -1131,7 +1131,7 @@
     },
     "cRV-Xw-CVi.text" : {
       "comment" : "Class = \"UILabel\"; text = \"Profile:\"; ObjectID = \"cRV-Xw-CVi\";",
-      "extractionState" : "extracted_with_value",
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1533,18 +1533,6 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Interval of Multi-Touch Move Events: 200 us                            "
-          }
-        }
-      }
-    },
-    "fKN-ja-TRi.normalTitle" : {
-      "comment" : "Class = \"UIButton\"; normalTitle = \"Add\"; ObjectID = \"fKN-ja-TRi\";",
-      "extractionState" : "extracted_with_value",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "Add"
           }
         }
       }
@@ -1965,6 +1953,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "启用"
+          }
+        }
+      }
+    },
+    "iel-xl-xd9.text" : {
+      "comment" : "Class = \"UILabel\"; text = \"Profile:\"; ObjectID = \"iel-xl-xd9\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Profile:"
           }
         }
       }
@@ -3037,6 +3037,18 @@
         }
       }
     },
+    "Pwa-YK-6Q2.text" : {
+      "comment" : "Class = \"UILabel\"; text = \"test\"; ObjectID = \"Pwa-YK-6Q2\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "test"
+          }
+        }
+      }
+    },
     "pYZ-GR-EwO.text" : {
       "comment" : "Class = \"UILabel\"; text = \"Resolution                                                                                    \"; ObjectID = \"pYZ-GR-EwO\";",
       "extractionState" : "extracted_with_value",
@@ -3277,14 +3289,14 @@
         }
       }
     },
-    "R45-lM-YPl.normalTitle" : {
-      "comment" : "Class = \"UIButton\"; normalTitle = \"Edit\"; ObjectID = \"R45-lM-YPl\";",
+    "r8L-dl-yLZ.text" : {
+      "comment" : "Class = \"UILabel\"; text = \"test\"; ObjectID = \"r8L-dl-yLZ\";",
       "extractionState" : "extracted_with_value",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "Edit"
+            "value" : "test"
           }
         }
       }
@@ -3375,6 +3387,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "性能数据叠加显示"
+          }
+        }
+      }
+    },
+    "sbd-0j-KWS.text" : {
+      "comment" : "Class = \"UILabel\"; text = \"test\"; ObjectID = \"sbd-0j-KWS\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "test"
           }
         }
       }
@@ -3499,6 +3523,18 @@
         }
       }
     },
+    "tG7-oX-P9b.text" : {
+      "comment" : "Class = \"UILabel\"; text = \"test\"; ObjectID = \"tG7-oX-P9b\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "test"
+          }
+        }
+      }
+    },
     "uSS-ev-IFe.configuration.title" : {
       "comment" : "Class = \"UIButton\"; configuration.title = \"Back to Streaming\"; ObjectID = \"uSS-ev-IFe\";",
       "extractionState" : "stale",
@@ -3555,6 +3591,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "返回串流"
+          }
+        }
+      }
+    },
+    "vJs-pg-hHe.text" : {
+      "comment" : "Class = \"UILabel\"; text = \"test\"; ObjectID = \"vJs-pg-hHe\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "test"
           }
         }
       }
@@ -3885,6 +3933,18 @@
           "stringUnit" : {
             "state" : "needs_review",
             "value" : "串流中从以下屏幕边缘滑动打开命令工具"
+          }
+        }
+      }
+    },
+    "ZuV-4A-0Zb.text" : {
+      "comment" : "Class = \"UILabel\"; text = \"test\"; ObjectID = \"ZuV-4A-0Zb\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "test"
           }
         }
       }

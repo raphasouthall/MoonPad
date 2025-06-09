@@ -1387,7 +1387,6 @@ static float L3_Y;
             [_deadTouches addObject:touch];
             updated = true;
             touchEventCapturedByOsc = true;
-            // NSLog(@"blablablab updated true");
         }
         // additionally, populate the touchesCapturedByOSButton set, for native/relative touch handler to deal with.
         if(touchEventCapturedByOsc) [touchAddrsCapturedByOnScreenControls addObject:@((uintptr_t)touch)];

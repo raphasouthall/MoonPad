@@ -40,14 +40,47 @@ NS_ASSUME_NONNULL_BEGIN
 @property (weak, nonatomic) IBOutlet UIImageView *chevronImageView;
 @property (weak, nonatomic) IBOutlet UIStackView *toolbarStackView;
 @property (strong, nonatomic) OSCProfilesTableViewController *oscProfilesTableViewController;
+
 @property (nonatomic, assign) NSString *currentProfileName;
 @property (strong, nonatomic) IBOutlet UILabel *currentProfileLabel;
-@property (strong, nonatomic) IBOutlet UISlider *widgetSizeSlider;
-@property (strong, nonatomic) IBOutlet UISlider *widgetHeightSlider;
-@property (strong, nonatomic) IBOutlet UISlider *widgetAlphaSlider;
-@property (strong, nonatomic) IBOutlet UISlider *sensitivityFactorSlider;
-@property (strong, nonatomic) IBOutlet UISlider *stickIndicatorOffsetSlider;
-@property (strong, nonatomic) IBOutlet UISlider *widgetBorderWidthSlider;
+
+@property (weak, nonatomic) IBOutlet UILabel *widgetSizeLabel;
+@property (weak, nonatomic) IBOutlet UISlider *widgetSizeSlider;
+@property (weak, nonatomic) IBOutlet UIStackView *widgetSizeStack;
+
+@property (weak, nonatomic) IBOutlet UILabel *widgetHeightLabel;
+@property (weak, nonatomic) IBOutlet UISlider *widgetHeightSlider;
+
+@property (weak, nonatomic) IBOutlet UIStackView *widgetHeightStack;
+
+@property (weak, nonatomic) IBOutlet UILabel *widgetBorderWidthLabel;
+@property (weak, nonatomic) IBOutlet UISlider *widgetBorderWidthSlider;
+@property (weak, nonatomic) IBOutlet UILabel *widgetAlphaLabel;
+@property (weak, nonatomic) IBOutlet UISlider *widgetAlphaSlider;
+@property (weak, nonatomic) IBOutlet UIStackView *borderWidthAlphaStack;
+@property (weak, nonatomic) IBOutlet UIButton *saveButton;
+@property (weak, nonatomic) IBOutlet UIButton *exitButton;
+@property (weak, nonatomic) IBOutlet UIButton *loadButton;
+@property (weak, nonatomic) IBOutlet UIButton *addButton;
+@property (weak, nonatomic) IBOutlet UIButton *editButton;
+
+
+
+
+@property (weak, nonatomic) IBOutlet UILabel *stickIndicatorOffsetLabel;
+@property (weak, nonatomic) IBOutlet UISlider *stickIndicatorOffsetSlider;
+@property (weak, nonatomic) IBOutlet UIStackView *stickIndicatorOffsetStack;
+
+@property (weak, nonatomic) IBOutlet UILabel *sensitivityLabel;
+@property (weak, nonatomic) IBOutlet UISlider *sensitivitySlider;
+@property (weak, nonatomic) IBOutlet UIStackView *sensitivityStack;
+
+
+
+
+
+
+@property (weak, nonatomic) IBOutlet UIStackView *widgetPanelStack;
 
 
 @end

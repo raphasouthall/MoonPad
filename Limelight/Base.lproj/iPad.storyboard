@@ -3,6 +3,7 @@
     <device id="ipad11_0rounded" orientation="portrait" layout="fullscreen" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23721"/>
+        <capability name="Image references" minToolsVersion="12.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -954,25 +955,28 @@ ICAgICAgICAgICAgICA
                         <viewControllerLayoutGuide type="top" id="O1f-cu-KVo"/>
                         <viewControllerLayoutGuide type="bottom" id="eaS-aj-VtA"/>
                     </layoutGuides>
-                    <view key="view" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="Acw-S4-f8a">
+                    <view key="view" contentMode="scaleToFill" id="Acw-S4-f8a">
                         <rect key="frame" x="0.0" y="0.0" width="1300" height="1194"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view alpha="0.75" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fZU-G0-fgM" userLabel="Toolbar Root View" customClass="ToolBarContainerView">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fZU-G0-fgM" userLabel="Toolbar Root View" customClass="ToolBarContainerView">
                                 <rect key="frame" x="0.0" y="24" width="1300" height="50"/>
                                 <subviews>
-                                    <stackView autoresizesSubviews="NO" opaque="NO" contentMode="scaleToFill" spacing="70" translatesAutoresizingMaskIntoConstraints="NO" id="YLK-IE-ajS">
+                                    <stackView autoresizesSubviews="NO" contentMode="scaleToFill" spacing="70" translatesAutoresizingMaskIntoConstraints="NO" id="YLK-IE-ajS">
                                         <rect key="frame" x="235" y="0.0" width="830" height="50"/>
                                         <subviews>
-                                            <button opaque="NO" tag="20" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qJs-n8-eV7" userLabel="Trash">
+                                            <button opaque="NO" tag="20" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qJs-n8-eV7" userLabel="Trash">
                                                 <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="50" id="0UR-Tv-X69"/>
                                                     <constraint firstAttribute="width" constant="50" id="MyN-Qt-jL7"/>
                                                 </constraints>
-                                                <color key="tintColor" red="0.6705882353" green="0.61568627450000002" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <color key="tintColor" systemColor="systemTealColor"/>
                                                 <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                                <state key="normal" image="Trash"/>
+                                                <state key="normal">
+                                                    <color key="titleColor" red="0.34534250659999999" green="0.68327885720000003" blue="0.76859849690000004" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                                    <imageReference key="image" image="trash.fill" catalog="system" symbolScale="large"/>
+                                                </state>
                                                 <connections>
                                                     <action selector="trashCanTapped:" destination="xSZ-i2-Jts" eventType="touchUpInside" id="6s3-Wc-6us"/>
                                                 </connections>
@@ -983,22 +987,31 @@ ICAgICAgICAgICAgICA
                                                     <constraint firstAttribute="width" constant="50" id="9OY-7z-dfc"/>
                                                     <constraint firstAttribute="height" constant="50" id="AIZ-4k-ob1"/>
                                                 </constraints>
-                                                <color key="tintColor" red="0.6705882353" green="0.61568627450000002" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <color key="tintColor" systemColor="systemTealColor"/>
                                                 <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                                <state key="normal" image="ArrowBackward"/>
+                                                <state key="normal">
+                                                    <color key="titleColor" red="0.34534250659999999" green="0.68327885720000003" blue="0.76859849690000004" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                                    <color key="titleShadowColor" systemColor="systemTealColor"/>
+                                                    <imageReference key="image" image="arrow.uturn.backward" catalog="system" symbolScale="large"/>
+                                                </state>
                                                 <connections>
                                                     <action selector="undoTapped:" destination="xSZ-i2-Jts" eventType="touchUpInside" id="54z-kO-oCo"/>
                                                 </connections>
                                             </button>
                                             <button autoresizesSubviews="NO" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uda-zt-xrG" userLabel="Save">
                                                 <rect key="frame" x="240" y="0.0" width="50" height="50"/>
+                                                <accessibility key="accessibilityConfiguration" identifier="saveButton"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="50" id="TEB-dw-YGo"/>
                                                     <constraint firstAttribute="height" constant="50" id="z50-CE-W0m"/>
                                                 </constraints>
-                                                <color key="tintColor" red="0.6705882353" green="0.61568627450000002" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <color key="tintColor" systemColor="systemTealColor"/>
                                                 <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                                <state key="normal" image="SquareAndArrowDown"/>
+                                                <state key="normal">
+                                                    <color key="titleColor" red="0.34534250659999999" green="0.68327885720000003" blue="0.76859849690000004" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                                    <color key="titleShadowColor" systemColor="systemTealColor"/>
+                                                    <imageReference key="image" image="square.and.arrow.down.fill" catalog="system" symbolScale="large"/>
+                                                </state>
                                                 <connections>
                                                     <action selector="saveTapped:" destination="xSZ-i2-Jts" eventType="touchUpInside" id="bUV-Ja-Htd"/>
                                                 </connections>
@@ -1012,9 +1025,12 @@ ICAgICAgICAgICAgICA
                                                             <constraint firstAttribute="width" constant="50" id="XlA-qH-mSO"/>
                                                             <constraint firstAttribute="height" constant="50" id="xSe-dW-zjg"/>
                                                         </constraints>
-                                                        <color key="tintColor" red="0.6705882353" green="0.61568627450000002" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <color key="tintColor" systemColor="systemTealColor"/>
                                                         <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                                        <state key="normal" image="SquaresArrowUp"/>
+                                                        <state key="normal">
+                                                            <color key="titleColor" red="0.34534250659999999" green="0.68327885720000003" blue="0.76859849690000004" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                                            <imageReference key="image" image="tray.full.fill" catalog="system" symbolScale="large"/>
+                                                        </state>
                                                         <connections>
                                                             <action selector="loadTapped:" destination="xSZ-i2-Jts" eventType="touchUpInside" id="ZCn-S3-8em"/>
                                                         </connections>
@@ -1024,30 +1040,35 @@ ICAgICAgICAgICAgICA
                                                     <constraint firstAttribute="width" constant="50" id="G6V-W8-Ech"/>
                                                 </constraints>
                                             </stackView>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fKN-ja-TRi" userLabel="Add">
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fKN-ja-TRi" userLabel="Add">
                                                 <rect key="frame" x="480" y="0.0" width="50" height="50"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="50" id="g75-DA-uPz"/>
                                                     <constraint firstAttribute="height" constant="50" id="nJF-Od-j7Y"/>
                                                 </constraints>
-                                                <fontDescription key="fontDescription" type="boldSystem" pointSize="23"/>
-                                                <color key="tintColor" red="0.6705882353" green="0.61568627450000002" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <color key="tintColor" systemColor="systemTealColor"/>
                                                 <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                                <state key="normal" title="Add"/>
+                                                <state key="normal">
+                                                    <color key="titleColor" red="0.34534250659404359" green="0.68327885717542713" blue="0.76859849691390991" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                                    <imageReference key="image" image="plus.rectangle.fill.on.rectangle.fill" catalog="system" symbolScale="large"/>
+                                                </state>
                                                 <connections>
                                                     <action selector="addTapped:" destination="xSZ-i2-Jts" eventType="touchUpInside" id="y4c-PU-rbS"/>
                                                 </connections>
                                             </button>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="R45-lM-YPl">
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="R45-lM-YPl" userLabel="Edit">
                                                 <rect key="frame" x="600" y="0.0" width="230" height="50"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="50" id="SpF-xI-pOI"/>
                                                     <constraint firstAttribute="width" constant="50" id="p01-nF-Ee8"/>
                                                 </constraints>
-                                                <fontDescription key="fontDescription" type="boldSystem" pointSize="23"/>
-                                                <color key="tintColor" red="0.6705882353" green="0.61568627450000002" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <color key="tintColor" systemColor="systemTealColor"/>
                                                 <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                                <state key="normal" title="Edit"/>
+                                                <state key="normal">
+                                                    <color key="titleColor" red="0.34534250659999999" green="0.68327885720000003" blue="0.76859849690000004" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                                    <imageReference key="image" image="pencil.and.ellipsis.rectangle" catalog="system" symbolScale="large"/>
+                                                    <preferredSymbolConfiguration key="preferredSymbolConfiguration" weight="heavy"/>
+                                                </state>
                                                 <connections>
                                                     <action selector="editTapped:" destination="xSZ-i2-Jts" eventType="touchUpInside" id="hfu-ay-iKZ"/>
                                                 </connections>
@@ -1059,15 +1080,15 @@ ICAgICAgICAgICAgICA
                                             <constraint firstAttribute="width" constant="830" id="zzS-yc-O4H"/>
                                         </constraints>
                                     </stackView>
-                                    <view alpha="0.89999997615814209" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hKp-ds-86I" userLabel="Chevron View">
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hKp-ds-86I" userLabel="Chevron View">
                                         <rect key="frame" x="624" y="50" width="52" height="30"/>
                                         <subviews>
                                             <imageView clipsSubviews="YES" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ChevronCompactUp" translatesAutoresizingMaskIntoConstraints="NO" id="iVZ-Fd-dY7">
                                                 <rect key="frame" x="0.0" y="0.0" width="52" height="30"/>
-                                                <color key="tintColor" red="0.6705882353" green="0.61568627450000002" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <color key="tintColor" systemColor="systemTealColor"/>
                                             </imageView>
                                         </subviews>
-                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <color key="backgroundColor" red="0.94936420777121278" green="0.95374688698857357" blue="0.96689492464065552" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                         <constraints>
                                             <constraint firstItem="iVZ-Fd-dY7" firstAttribute="leading" secondItem="hKp-ds-86I" secondAttribute="leading" id="2Qy-bj-bTl"/>
                                             <constraint firstAttribute="trailing" secondItem="iVZ-Fd-dY7" secondAttribute="trailing" id="2tP-Fu-4h8"/>
@@ -1083,16 +1104,19 @@ ICAgICAgICAgICAgICA
                                             <constraint firstAttribute="width" constant="50" id="qtH-gP-Fjj"/>
                                             <constraint firstAttribute="height" constant="50" id="tqU-Lh-NQA"/>
                                         </constraints>
-                                        <color key="tintColor" red="0.6705882353" green="0.61568627450000002" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <color key="tintColor" systemColor="systemTealColor"/>
                                         <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                        <state key="normal" image="OSCLayoutExit"/>
+                                        <state key="normal">
+                                            <color key="titleColor" red="0.34534250659999999" green="0.68327885720000003" blue="0.76859849690000004" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                            <imageReference key="image" image="arrow.left.square.fill" catalog="system" symbolScale="large"/>
+                                        </state>
                                         <connections>
                                             <action selector="closeTapped:" destination="xSZ-i2-Jts" eventType="touchUpInside" id="sc6-Mq-rbQ"/>
                                             <action selector="undoTapped:" destination="xSZ-i2-Jts" eventType="touchUpInside" id="d4b-0R-vJU"/>
                                         </connections>
                                     </button>
                                 </subviews>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="backgroundColor" red="0.94936420777121278" green="0.95374688698857357" blue="0.96689492464065552" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <constraints>
                                     <constraint firstItem="YLK-IE-ajS" firstAttribute="top" secondItem="fZU-G0-fgM" secondAttribute="top" id="OYa-IQ-RFJ"/>
                                     <constraint firstItem="hKp-ds-86I" firstAttribute="top" secondItem="YLK-IE-ajS" secondAttribute="bottom" id="RRf-mC-xx8"/>
@@ -1102,53 +1126,140 @@ ICAgICAgICAgICAgICA
                                     <constraint firstItem="YLK-IE-ajS" firstAttribute="centerX" secondItem="fZU-G0-fgM" secondAttribute="centerX" id="xm7-a0-8G7"/>
                                 </constraints>
                             </view>
-                            <slider hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="1" minValue="0.59999999999999998" maxValue="6" id="Efn-Si-TPp" userLabel="Widget Size Slider">
-                                <rect key="frame" x="205" y="87" width="420" height="31"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" systemColor="secondaryLabelColor"/>
-                                <color key="tintColor" red="0.6716768742" green="0.61711704730000005" blue="0.99902987480000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                            </slider>
-                            <slider hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="1" minValue="0.59999999999999998" maxValue="6" id="ZOF-sL-e7p" userLabel="Widget Height Slider">
-                                <rect key="frame" x="205" y="122" width="420" height="31"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" systemColor="secondaryLabelColor"/>
-                                <color key="tintColor" red="0.6716768742" green="0.61711704730000005" blue="0.99902987480000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                            </slider>
-                            <slider hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.83299999999999996" minValue="0.001" maxValue="0.999" id="ZLL-pE-iZh" userLabel="Widget Alpha Slider">
-                                <rect key="frame" x="205" y="157" width="217" height="31"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" systemColor="secondaryLabelColor"/>
-                                <color key="tintColor" red="0.6716768742" green="0.61711704730000005" blue="0.99902987480000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                            </slider>
-                            <slider hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="1" minValue="0.0" maxValue="8" id="FRZ-xP-x2r">
-                                <rect key="frame" x="205" y="192" width="591" height="31"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" systemColor="secondaryLabelColor"/>
-                                <color key="tintColor" red="0.6716768742" green="0.61711704730000005" blue="0.99902987480000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                            </slider>
-                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Profile:" textAlignment="center" lineBreakMode="tailTruncation" adjustsFontSizeToFit="NO" id="cRV-Xw-CVi">
-                                <rect key="frame" x="631" y="87" width="163" height="67"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" red="0.38551661729999998" green="0.28289704380000003" blue="0.61853601300000005" alpha="0.28999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
-                                <color key="tintColor" red="0.81533776120000001" green="0.85979419950000002" blue="0.91372549020000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="28"/>
-                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <slider hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="120" minValue="0.0" maxValue="350" id="oc7-kh-RVH">
-                                <rect key="frame" x="205" y="227" width="591" height="31"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" systemColor="secondaryLabelColor"/>
-                                <color key="tintColor" red="0.6716768742" green="0.61711704730000005" blue="0.99902987480000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                            </slider>
-                            <slider hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" minValue="0.0" maxValue="8" id="CCy-fw-7og" userLabel="Widget Border Width Slider">
-                                <rect key="frame" x="590" y="157" width="206" height="31"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" systemColor="secondaryLabelColor"/>
-                                <color key="tintColor" red="0.6716768742" green="0.61711704730000005" blue="0.99902987480000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                            </slider>
+                            <stackView opaque="NO" contentMode="scaleToFill" ambiguous="YES" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="z5Q-bW-WQ8" userLabel="widgetPanelStack">
+                                <rect key="frame" x="325" y="156" width="650" height="237"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Profile:" textAlignment="center" lineBreakMode="tailTruncation" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iel-xl-xd9">
+                                        <rect key="frame" x="0.0" y="0.0" width="650" height="37"/>
+                                        <color key="backgroundColor" red="0.18823529410000001" green="0.69019607839999997" blue="0.78039215689999997" alpha="0.5" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <color key="tintColor" red="0.81533776120000001" green="0.85979419950000002" blue="0.91372549020000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="37" id="I1r-yi-gMR"/>
+                                            <constraint firstAttribute="width" constant="650" id="mng-D1-wS3"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                        <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GOp-1e-oUF" userLabel="widgetSizeStack">
+                                        <rect key="frame" x="0.0" y="47" width="650" height="30"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="test" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZuV-4A-0Zb" userLabel="widgetSizeLabel">
+                                                <rect key="frame" x="0.0" y="0.0" width="170" height="30"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" constant="170" id="vaE-Tf-vep"/>
+                                                </constraints>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <slider clearsContextBeforeDrawing="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="1" minValue="0.60000002384185791" maxValue="6" translatesAutoresizingMaskIntoConstraints="NO" id="Xzq-VC-hP3" userLabel="Size Slider">
+                                                <rect key="frame" x="168" y="0.0" width="484" height="31"/>
+                                                <color key="tintColor" red="0.18823529410000001" green="0.69019607839999997" blue="0.78039215689999997" alpha="0.5" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <color key="maximumTrackTintColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            </slider>
+                                        </subviews>
+                                    </stackView>
+                                    <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9Zz-kb-7Ej" userLabel="widgetHeightStack">
+                                        <rect key="frame" x="0.0" y="87" width="650" height="30"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="test" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sbd-0j-KWS" userLabel="widgetHeightLabel">
+                                                <rect key="frame" x="0.0" y="0.0" width="170" height="30"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" constant="170" id="0Ce-y1-K5s"/>
+                                                </constraints>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <slider clearsContextBeforeDrawing="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="1" minValue="0.60000002384185791" maxValue="6" translatesAutoresizingMaskIntoConstraints="NO" id="aZp-Dq-RTr" userLabel="Height Slider">
+                                                <rect key="frame" x="168" y="0.0" width="484" height="31"/>
+                                                <color key="tintColor" red="0.18823529410000001" green="0.69019607839999997" blue="0.78039215689999997" alpha="0.5" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <color key="maximumTrackTintColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            </slider>
+                                        </subviews>
+                                    </stackView>
+                                    <stackView opaque="NO" contentMode="scaleToFill" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="9ZS-28-txW" userLabel="borderWidthAlphaStack">
+                                        <rect key="frame" x="0.0" y="127" width="650" height="30"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="test" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Pwa-YK-6Q2" userLabel="widgetAlphaLabel">
+                                                <rect key="frame" x="0.0" y="0.0" width="170" height="30"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" constant="170" id="1ru-Nd-cf4"/>
+                                                </constraints>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <slider clearsContextBeforeDrawing="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.83300000429153442" minValue="0.0010000000474974513" maxValue="0.99900001287460327" translatesAutoresizingMaskIntoConstraints="NO" id="ii1-Iq-jI4" userLabel="Alpha Slider">
+                                                <rect key="frame" x="173" y="0.0" width="169" height="31"/>
+                                                <color key="tintColor" red="0.18823529410000001" green="0.69019607839999997" blue="0.78039215689999997" alpha="0.5" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" constant="165" id="tRM-SO-nlr"/>
+                                                </constraints>
+                                                <color key="maximumTrackTintColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            </slider>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="test" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="r8L-dl-yLZ" userLabel="widgetBorderLabel">
+                                                <rect key="frame" x="345" y="0.0" width="170" height="30"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" constant="170" id="ZWS-S0-FRB"/>
+                                                </constraints>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <slider clearsContextBeforeDrawing="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" minValue="0.0" maxValue="8" translatesAutoresizingMaskIntoConstraints="NO" id="aOV-38-CQt" userLabel="Widget Border Width Slider">
+                                                <rect key="frame" x="518" y="0.0" width="134" height="31"/>
+                                                <color key="tintColor" red="0.18823529410000001" green="0.69019607839999997" blue="0.78039215689999997" alpha="0.5" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <color key="maximumTrackTintColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            </slider>
+                                        </subviews>
+                                    </stackView>
+                                    <stackView contentMode="scaleToFill" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="zfD-bd-GEN" userLabel="stickIndicatorOffsetStack">
+                                        <rect key="frame" x="0.0" y="167" width="650" height="30"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="test" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tG7-oX-P9b" userLabel="stickIndicatorOffsetLabel">
+                                                <rect key="frame" x="0.0" y="0.0" width="170" height="30"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" constant="170" id="Am2-6L-a26"/>
+                                                </constraints>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <slider clearsContextBeforeDrawing="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="120" minValue="0.0" maxValue="350" translatesAutoresizingMaskIntoConstraints="NO" id="aPX-7o-N3l">
+                                                <rect key="frame" x="173" y="0.0" width="479" height="31"/>
+                                                <color key="tintColor" red="0.18823529410000001" green="0.69019607839999997" blue="0.78039215689999997" alpha="0.5" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <color key="maximumTrackTintColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            </slider>
+                                        </subviews>
+                                    </stackView>
+                                    <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="80D-qe-E5D" userLabel="sensitivityFactorStack">
+                                        <rect key="frame" x="0.0" y="207" width="650" height="30"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="test" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vJs-pg-hHe" userLabel="sensitivityFactorLabel">
+                                                <rect key="frame" x="0.0" y="0.0" width="170" height="30"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" constant="170" id="pI1-IG-YhP"/>
+                                                </constraints>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <slider clearsContextBeforeDrawing="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="1" minValue="0.0" maxValue="8" translatesAutoresizingMaskIntoConstraints="NO" id="DiG-XX-r8c">
+                                                <rect key="frame" x="168" y="0.0" width="484" height="31"/>
+                                                <color key="tintColor" red="0.18823529410000001" green="0.69019607839999997" blue="0.78039215689999997" alpha="0.5" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <color key="maximumTrackTintColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            </slider>
+                                        </subviews>
+                                    </stackView>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="650" id="Rav-Dp-9pI"/>
+                                </constraints>
+                            </stackView>
                         </subviews>
-                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="fZU-G0-fgM" secondAttribute="trailing" id="6wU-vF-mZw"/>
                             <constraint firstItem="fZU-G0-fgM" firstAttribute="leading" secondItem="Acw-S4-f8a" secondAttribute="leading" id="DVc-cD-qO0"/>
@@ -1159,25 +1270,42 @@ ICAgICAgICAgICAgICA
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <size key="freeformSize" width="1300" height="1194"/>
                     <connections>
+                        <outlet property="addButton" destination="fKN-ja-TRi" id="R2n-QF-aSj"/>
+                        <outlet property="borderWidthAlphaStack" destination="9ZS-28-txW" id="qxV-2E-g8m"/>
                         <outlet property="chevronImageView" destination="iVZ-Fd-dY7" id="403-Nj-wRx"/>
                         <outlet property="chevronView" destination="hKp-ds-86I" id="Og9-aT-zNH"/>
-                        <outlet property="currentProfileLabel" destination="cRV-Xw-CVi" id="Zrb-zn-ptp"/>
-                        <outlet property="sensitivityFactorSlider" destination="FRZ-xP-x2r" id="Vah-oh-eMp"/>
-                        <outlet property="stickIndicatorOffsetSlider" destination="oc7-kh-RVH" id="f5k-n0-7DM"/>
+                        <outlet property="currentProfileLabel" destination="iel-xl-xd9" id="PJ0-FX-z6w"/>
+                        <outlet property="editButton" destination="R45-lM-YPl" id="DNS-7N-3Kh"/>
+                        <outlet property="exitButton" destination="7bp-Wn-j9n" id="Kku-3T-RSO"/>
+                        <outlet property="loadButton" destination="OId-gk-Wkg" id="adP-54-1ir"/>
+                        <outlet property="saveButton" destination="uda-zt-xrG" id="FyB-WY-rri"/>
+                        <outlet property="sensitivityLabel" destination="vJs-pg-hHe" id="RRw-Zq-LUa"/>
+                        <outlet property="sensitivitySlider" destination="DiG-XX-r8c" id="fz5-Et-1WV"/>
+                        <outlet property="sensitivityStack" destination="80D-qe-E5D" id="Qx6-UY-Hhj"/>
+                        <outlet property="stickIndicatorOffsetLabel" destination="tG7-oX-P9b" id="jBx-ii-091"/>
+                        <outlet property="stickIndicatorOffsetSlider" destination="aPX-7o-N3l" id="gLv-c3-3JG"/>
+                        <outlet property="stickIndicatorOffsetStack" destination="zfD-bd-GEN" id="oeb-Vk-2mw"/>
                         <outlet property="toolbarRootView" destination="fZU-G0-fgM" id="txP-M2-GKi"/>
                         <outlet property="toolbarStackView" destination="YLK-IE-ajS" id="j4o-Kp-7Z8"/>
                         <outlet property="toolbarTopConstraintiPad" destination="Ppb-J1-lXg" id="laN-Zh-lHm"/>
                         <outlet property="trashCanButton" destination="qJs-n8-eV7" id="ubK-qm-Cox"/>
                         <outlet property="undoButton" destination="F7X-l4-cl3" id="vAI-XQ-hZw"/>
-                        <outlet property="widgetAlphaSlider" destination="ZLL-pE-iZh" id="5OX-P6-YKt"/>
-                        <outlet property="widgetBorderWidthSlider" destination="CCy-fw-7og" id="wio-Ly-MMR"/>
-                        <outlet property="widgetHeightSlider" destination="ZOF-sL-e7p" id="OHK-5i-3RY"/>
-                        <outlet property="widgetSizeSlider" destination="Efn-Si-TPp" id="CgK-cC-Yo0"/>
+                        <outlet property="widgetAlphaLabel" destination="Pwa-YK-6Q2" id="IPF-Es-yTr"/>
+                        <outlet property="widgetAlphaSlider" destination="ii1-Iq-jI4" id="Rev-dn-n3F"/>
+                        <outlet property="widgetBorderWidthLabel" destination="r8L-dl-yLZ" id="gmo-Fh-btQ"/>
+                        <outlet property="widgetBorderWidthSlider" destination="aOV-38-CQt" id="Azt-Da-IN6"/>
+                        <outlet property="widgetHeightLabel" destination="sbd-0j-KWS" id="Wxu-LV-GrE"/>
+                        <outlet property="widgetHeightSlider" destination="aZp-Dq-RTr" id="7Nk-BH-kWR"/>
+                        <outlet property="widgetHeightStack" destination="9Zz-kb-7Ej" id="ivF-gI-Ljw"/>
+                        <outlet property="widgetPanelStack" destination="z5Q-bW-WQ8" id="AMp-OC-LsJ"/>
+                        <outlet property="widgetSizeLabel" destination="ZuV-4A-0Zb" id="Nr8-Wg-POM"/>
+                        <outlet property="widgetSizeSlider" destination="Xzq-VC-hP3" id="lW5-0R-s5U"/>
+                        <outlet property="widgetSizeStack" destination="z5Q-bW-WQ8" id="pc5-Cm-OYY"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dev-Ck-vTF" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2699.2805755395684" y="1067.8391959798996"/>
+            <point key="canvasLocation" x="2699.2805755395684" y="1067.6033057851239"/>
         </scene>
         <!--Profiles Table View Controller-->
         <scene sceneID="W0E-wz-n2b">
@@ -1260,23 +1388,25 @@ ICAgICAgICAgICAgICA
         </scene>
     </scenes>
     <resources>
-        <image name="ArrowBackward" width="40" height="40"/>
         <image name="ChevronCompactUp" width="35" height="10"/>
-        <image name="OSCLayoutExit" width="40" height="40"/>
-        <image name="SquareAndArrowDown" width="40" height="40"/>
-        <image name="SquaresArrowUp" width="40" height="40"/>
-        <image name="Trash" width="40" height="40"/>
+        <image name="arrow.left.square.fill" catalog="system" width="128" height="114"/>
+        <image name="arrow.uturn.backward" catalog="system" width="128" height="113"/>
+        <image name="pencil.and.ellipsis.rectangle" catalog="system" width="128" height="85"/>
+        <image name="plus.rectangle.fill.on.rectangle.fill" catalog="system" width="128" height="102"/>
+        <image name="square.and.arrow.down.fill" catalog="system" width="121" height="128"/>
+        <image name="trash.fill" catalog="system" width="117" height="128"/>
+        <image name="tray.full.fill" catalog="system" width="128" height="88"/>
         <systemColor name="linkColor">
             <color red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </systemColor>
-        <systemColor name="secondaryLabelColor">
-            <color red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="systemBrownColor">
             <color red="0.63529411759999999" green="0.51764705879999995" blue="0.36862745099999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="systemTealColor">
+            <color red="0.18823529410000001" green="0.69019607839999997" blue="0.78039215689999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

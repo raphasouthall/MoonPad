@@ -337,7 +337,7 @@ static CGRect streamViewBounds;
         buttonState.isHidden = oscButtonLayer.isHidden;
         buttonState.oscLayerSizeFactor = [OnScreenControls getControllerLayerSizeFactor:oscButtonLayer];
         buttonState.backgroundAlpha = oscButtonLayer.opacity;
-        NSLog(@"oscLayerName: %@, opacity: %f, ", oscButtonLayer.name, buttonState.backgroundAlpha);
+        // NSLog(@"oscLayerName: %@, opacity: %f, ", oscButtonLayer.name, buttonState.backgroundAlpha);
 
         
         // buttonState.oscLayerSizeFactor = oscButtonLayer.bounds;

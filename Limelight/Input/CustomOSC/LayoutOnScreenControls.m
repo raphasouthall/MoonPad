@@ -34,7 +34,7 @@
 - (id) initWithView:(UIView*)view controllerSup:(ControllerSupport*)controllerSupport streamConfig:(StreamConfiguration*)streamConfig oscLevel:(int)oscLevel {
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(handleMovingOnScreenWidgetNotification:)
-                                                 name:@"OnScreenWidgetMovedByTouch"   // This is a special notification for reloading the on screen keyboard buttons. which can't be executed by _oscProfilesTableViewController.needToUpdateOscLayoutTVC code block, and has to be triggered by a notification
+                                                 name:@"OnScreenWidgetMovedByTouch"
                                                object:nil];
 
     
@@ -247,7 +247,6 @@
 - (void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
     /* Reset variables related to on screen controller button drag and drop routine. These variables should be reset in 'touchesCancelled' or 'touchesEnded' but these may not be called in unaccounted-for edge cases such as when the user opens various OS-level control center related views by dragging down from the top of the screen, or dragging up from the bottom of the screen. Since Apple likes to add new control centers and new ways of opening them (i.e. Dynamic Island on iPhone 14 Pro) it's best to reset these variables here when the user is beginning a new on screen controller button drag routine  */
     
-    // [[NSNotificationCenter defaultCenter] postNotificationName:@"LegacyOscCALayerSelectedNotification" object:self];
     layerBeingDragged = nil;
     horizontalGuideline.backgroundColor = [UIColor blueColor];
     verticalGuideline.backgroundColor = [UIColor blueColor];
@@ -292,6 +291,8 @@
                 layer == self._startButton){    // we must iterates all the controller button layers manually here, to prevent other widgets being dragged accidently
             layerBeingDragged = layer;
         }
+        
+        if(!layerBeingDragged) return;
         
         [[NSNotificationCenter defaultCenter] postNotificationName:@"LegacyOscCALayerSelectedNotification" object:layerBeingDragged]; // inform that a CALayer of onScreen controller has being selected
         
