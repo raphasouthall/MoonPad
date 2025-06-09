@@ -403,6 +403,7 @@ BOOL isCustomResolution(CGSize res) {
     
 - (void)layoutSections{
     
+    
     MenuSectionView *videoSection = [[MenuSectionView alloc] init];
     videoSection.sectionTitle = [LocalizationHelper localizedStringForKey:@"Video"];
     if (@available(iOS 13.0, *)) {
@@ -413,6 +414,7 @@ BOOL isCustomResolution(CGSize res) {
     [self addSetting:self.bitrateStack ofId:@"bitrateStack" withInfoTag:NO to:videoSection];
     [self addSetting:self.codecStack ofId:@"codecStack" withInfoTag:NO to:videoSection];
     [self addSetting:self.HdrStack ofId:@"HdrStack" withInfoTag:NO to:videoSection];
+    [self addSetting:self.yuv444Stack ofId:@"yuv444Stack" withInfoTag:NO to:videoSection];
     [self addSetting:self.framepacingStack ofId:@"framepacingStack" withInfoTag:NO to:videoSection];
     [videoSection addToParentStack:parentStack];
     [videoSection setExpanded:NO];
@@ -462,6 +464,19 @@ BOOL isCustomResolution(CGSize res) {
     [peripheralSection setExpanded:NO];
 
     
+    MenuSectionView *otherSection = [[MenuSectionView alloc] init];
+    otherSection.sectionTitle = [LocalizationHelper localizedStringForKey:@"Others"];
+    if (@available(iOS 13.0, *)) {
+        [otherSection setSectionWithIcon:[UIImage systemImageNamed:@"cube"] andSize:20.5];
+    }
+    [self addSetting:self.statsOverlayStack ofId:@"statsOverlayStack" withInfoTag:NO to:otherSection];
+    [self addSetting:self.optimizeSettingsStack ofId:@"optimizeSettingsStack" withInfoTag:YES to:otherSection];
+    [self addSetting:self.audioOnPcStack ofId:@"audioOnPcStack" withInfoTag:NO to:otherSection];
+    [self addSetting:self.multiControllerStack ofId:@"multiControllerStack" withInfoTag:YES to:otherSection];
+    [self addSetting:self.showKeyboardToolbarStack ofId:@"showKeyboardToolbarStack" withInfoTag:YES to:otherSection];
+    [self addSetting:self.unlockDisplayOrientationStack ofId:@"unlockDisplayOrientationStack" withInfoTag:YES to:otherSection];
+    [otherSection addToParentStack:parentStack];
+    [otherSection setExpanded:NO];
     
     
     MenuSectionView *experimentalSection = [[MenuSectionView alloc] init];
