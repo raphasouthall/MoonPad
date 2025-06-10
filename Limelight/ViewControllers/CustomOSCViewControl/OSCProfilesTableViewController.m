@@ -83,8 +83,9 @@ const double NAV_BAR_HEIGHT = 50;
     
     [self.tableView registerNib:[UINib nibWithNibName:@"ProfileTableViewCell" bundle:nil]
          forCellReuseIdentifier:@"Cell"]; // Register the custom cell nib file with the table view
-    self.tableView.alpha = 0.5;
-    self.tableView.backgroundColor = [[UIColor colorWithRed:0.5 green:0.7 blue:1.0 alpha:1.0] colorWithAlphaComponent:0.2]; // set background color & transparency
+    self.tableView.alpha = 0.7;
+    //self.tableView.backgroundColor = [[UIColor colorWithRed:0.5 green:0.7 blue:1.0 alpha:1.0] colorWithAlphaComponent:0.2]; // set background color & transparency
+    self.tableView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.1]; // set background color & transparency
     // self.tableView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.2]; // set background color & transparency
 
 }
@@ -311,6 +312,7 @@ didPickDocumentsAtURLs:(NSArray<NSURL *> *)urls {
     cell.name.backgroundColor = [UIColor clearColor];
     cell.name.alpha = 1.0;
     cell.name.textColor = [UIColor whiteColor];  // Opaque white text
+    cell.name.font =[UIFont systemFontOfSize:20 weight:UIFontWeightMedium];
     cell.name.shadowColor = [UIColor blackColor];  // Black shadow
     // Set the shadow offset
     cell.name.shadowOffset = CGSizeMake(1.0, 1.5);

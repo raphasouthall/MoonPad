@@ -1402,7 +1402,7 @@ ICAgICAgICAgICAgICA
         <image name="arrow.left.square.fill" catalog="system" width="128" height="114"/>
         <image name="arrow.uturn.backward" width="19.06089973449707" height="18.594499588012695"/>
         <image name="plus.rectangle.fill.on.rectangle.fill" catalog="system" width="128" height="102"/>
-        <image name="rectangle.and.pencil.and.ellipsis" width="34.681900024414062" height="24.316600799560547"/>
+        <image name="rectangle.and.pencil.and.ellipsis" width="36.005599975585938" height="24.95680046081543"/>
         <image name="square.and.arrow.down.fill" catalog="system" width="121" height="128"/>
         <image name="trash.fill" catalog="system" width="117" height="128"/>
         <image name="tray.full.fill" catalog="system" width="128" height="88"/>

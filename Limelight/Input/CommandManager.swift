@@ -458,12 +458,11 @@ import UIKit
                                 CommandManager.mouseButtonMappings.keys.map { $0 as String },
                                 CommandManager.touchPadCmds.map { $0 as String }
                                 ]
-                                .lazy            // 零内存开销
+                                .lazy
                                 .flatMap { $0 }  // 三维展开
                                 .map(String.init(describing:)) // 安全类型转换
         
         let keys = combinedStrings.joined(separator: "|")
-        print(keys)
         let pattern = "^(?:\(keys))(?:-(?:\(keys)))*(?:-\\d+MS)?$"
 
         

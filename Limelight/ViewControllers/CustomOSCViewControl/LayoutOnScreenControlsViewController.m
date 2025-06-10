@@ -124,10 +124,10 @@
     profilesManager = [OSCProfilesManager sharedManager:self.view.bounds];
     self.OnScreenWidgetViews = [[NSMutableSet alloc] init]; // will be revised to read persisted data , somewhere else
     [OSCProfilesManager setOnScreenWidgetViewsSet:self.OnScreenWidgetViews];   // pass the keyboard button dict to profiles manager
-
+    
     //isToolbarHidden = NO;   // keeps track if the toolbar is hidden up above the screen so that we know whether to hide or show it when the user taps the toolbar's hide/show button
     _quickSwitchEnabled = false;
-            
+    
     /* add curve to bottom of chevron tab view */
     UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:self.chevronView.bounds byRoundingCorners:(UIRectCornerBottomLeft | UIRectCornerBottomRight) cornerRadii:CGSizeMake(10.0, 10.0)];
     CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
@@ -139,28 +139,28 @@
     UISwipeGestureRecognizer *swipeUp = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(moveToolbar:)];
     swipeUp.direction = UISwipeGestureRecognizerDirectionUp;
     [self.toolbarRootView addGestureRecognizer:swipeUp];
-
+    
     /* Add tap gesture to toolbar's chevron to allow user to tap it in order to move the toolbar on and off screen */
     UITapGestureRecognizer *singleFingerTap =
-      [[UITapGestureRecognizer alloc] initWithTarget:self
-                                              action:@selector(moveToolbar:)];
+    [[UITapGestureRecognizer alloc] initWithTarget:self
+                                            action:@selector(moveToolbar:)];
     [self.chevronView addGestureRecognizer:singleFingerTap];
-
+    
     self.layoutOSC = [[LayoutOnScreenControls alloc] initWithView:self.view controllerSup:nil streamConfig:nil oscLevel:OSCSegmentSelected];
     self.layoutOSC._level = OnScreenControlsLevelCustom;
     self.layoutOSC.layoutToolVC = self;
     [self.layoutOSC show];  // draw on screen controls
     
     [self addInnerAnalogSticksToOuterAnalogLayers]; // allows inner and analog sticks to be dragged together around the screen together as one unit which is the expected behavior
-
+    
     self.undoButton.alpha = 0.3;    // no changes to undo yet, so fade out the undo button a bit
-        
+    
     NSMutableArray* allProfiles = [profilesManager getAllProfiles];
     /*
-    if ([allProfiles count] == 0) { // if no saved OSC profiles exist yet then create one called 'Default' and associate it with Moonlight's legacy 'Full' OSC layout that's already been laid out on the screen at this point
-        [profilesManager saveProfileWithName:@"Default" andButtonLayers:self.layoutOSC.OSCButtonLayers];
-        [profilesManager importDefaultTemplates];
-    }*/
+     if ([allProfiles count] == 0) { // if no saved OSC profiles exist yet then create one called 'Default' and associate it with Moonlight's legacy 'Full' OSC layout that's already been laid out on the screen at this point
+     [profilesManager saveProfileWithName:@"Default" andButtonLayers:self.layoutOSC.OSCButtonLayers];
+     [profilesManager importDefaultTemplates];
+     }*/
     if (![profilesManager profileName:DEFAULT_TEMPLATE_NAME alreadyExistIn:allProfiles]){
         [profilesManager importDefaultTemplates];
     }
@@ -181,7 +181,7 @@
                                              selector:@selector(reloadOnScreenWidgetViews)
                                                  name:@"OscLayoutProfileSelctedInTableView"   // This is a special notification for reloading the on screen keyboard buttons. which can't be executed by _oscProfilesTableViewController.needToUpdateOscLayoutTVC code block, and has to be triggered by a notification
                                                object:nil];
-
+    
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(widgetViewTapped:)
                                                  name:@"OnScreenWidgetViewSelected"
@@ -191,8 +191,8 @@
                                              selector:@selector(handleMovingOnScreenWidgetNotification:)
                                                  name:@"OnScreenWidgetMovedByTouch"
                                                object:nil];
-
-
+    
+    
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(OSCLayoutChanged) name:@"OSCLayoutChanged" object:nil];    // used to notifiy this view controller that the user made a change to the OSC layout so that the VC can either fade in or out its 'Undo button' which will signify to the user whether there are any OSC layout changes to undo
     
@@ -200,28 +200,31 @@
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         
         [UIView animateWithDuration:0.3
-          delay:0.25
-          usingSpringWithDamping:0.8
-          initialSpringVelocity:0.5
-          options:UIViewAnimationOptionCurveEaseInOut animations:^{ // Animate toolbar up a a very small distance. Note the 0.35 time delay is necessary to avoid a bug that keeps animations from playing if the animation is presented immediately on a modally presented VC
+                              delay:0.25
+             usingSpringWithDamping:0.8
+              initialSpringVelocity:0.5
+                            options:UIViewAnimationOptionCurveEaseInOut animations:^{ // Animate toolbar up a a very small distance. Note the 0.35 time delay is necessary to avoid a bug that keeps animations from playing if the animation is presented immediately on a modally presented VC
             self.toolbarRootView.frame = CGRectMake(self.toolbarRootView.frame.origin.x, self.toolbarRootView.frame.origin.y - 25, self.toolbarRootView.frame.size.width, self.toolbarRootView.frame.size.height);
-            }
-          completion:^(BOOL finished) {
+        }
+                         completion:^(BOOL finished) {
             [UIView animateWithDuration:0.3
-              delay:0
-              usingSpringWithDamping:0.7
-              initialSpringVelocity:1.0
-              options:UIViewAnimationOptionCurveEaseIn animations:^{ // Animate the toolbar back down that same distance
+                                  delay:0
+                 usingSpringWithDamping:0.7
+                  initialSpringVelocity:1.0
+                                options:UIViewAnimationOptionCurveEaseIn animations:^{ // Animate the toolbar back down that same distance
                 self.toolbarRootView.frame = CGRectMake(self.toolbarRootView.frame.origin.x, self.toolbarRootView.frame.origin.y + 25, self.toolbarRootView.frame.size.width, self.toolbarRootView.frame.size.height);
-                }
-              completion:^(BOOL finished) {
+            }
+                             completion:^(BOOL finished) {
                 NSLog (@"done");
             }];
         }];
     });
     trashCanStoryBoardColor = trashCanButton.tintColor;
+    self.toolbarRootView.layer.shadowColor = [UIColor blackColor].CGColor;
+    self.toolbarRootView.layer.shadowOffset = CGSizeMake(0, 0);
+    self.toolbarRootView.layer.shadowOpacity = 0.5;
+    self.toolbarRootView.layer.shadowRadius = 7;
 }
-
 
 
 - (void) viewDidAppear:(BOOL)animated {

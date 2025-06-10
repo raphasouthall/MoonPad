@@ -104,11 +104,19 @@
     horizontalGuideline = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self._view.frame.size.width * 2, 2)];
     horizontalGuideline.backgroundColor = [UIColor blueColor];
     horizontalGuideline.hidden = YES;
+    horizontalGuideline.layer.shadowColor = [UIColor blackColor].CGColor;
+    horizontalGuideline.layer.shadowOffset = CGSizeMake(0, 0);
+    horizontalGuideline.layer.shadowOpacity = 0.5;
+    horizontalGuideline.layer.shadowRadius = 2;
     [self._view addSubview: horizontalGuideline];
     
     verticalGuideline = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 2, self._view.frame.size.height * 2)];
     verticalGuideline.backgroundColor = [UIColor blueColor];
     verticalGuideline.hidden = YES;
+    verticalGuideline.layer.shadowColor = [UIColor blackColor].CGColor;
+    verticalGuideline.layer.shadowOffset = CGSizeMake(0, 0);
+    verticalGuideline.layer.shadowOpacity = 0.5;
+    verticalGuideline.layer.shadowRadius = 2;
     [self._view addSubview: verticalGuideline];
 }
 
