@@ -591,7 +591,7 @@ BOOL isCustomResolution(CGSize res) {
 
 - (BOOL)scrolledToBottom {
     CGFloat maxOffsetY = self.scrollView.contentSize.height - self.scrollView.bounds.size.height;
-    return self.scrollView.contentOffset.y >= maxOffsetY;
+    return self.scrollView.contentOffset.y >= maxOffsetY + snapshot.bounds.size.height+50;
 }
 
 
@@ -607,9 +607,10 @@ BOOL isCustomResolution(CGSize res) {
     CGFloat newY = offset.y + _scrollSpeed;
     
     // 限制滚动范围
-    newY = MAX(0, MIN(newY, self.scrollView.contentSize.height - self.scrollView.bounds.size.height));
+    newY = MAX(0, MIN(newY, self.scrollView.contentSize.height - self.scrollView.bounds.size.height+snapshot.bounds.size.height+50));
 
     [self.scrollView setContentOffset:CGPointMake(offset.x, newY) animated:NO];
+    [self updateRelocationIndicatorFor:snapshot.center];
 }
 
 - (void)estimateFPSWithCompletion:(void (^)(CGFloat fps))completion {
@@ -667,7 +668,7 @@ BOOL isCustomResolution(CGSize res) {
     return 0;
 }
 
-- (void)updateRelocationIndicator:(CGPoint)locationInParentStack{
+- (void)updateRelocationIndicatorFor:(CGPoint)locationInParentStack{
     uint16_t currentIndex = [self parentStackIndexForLocation:locationInParentStack];
     UIStackView* currentStack;
     for (NSInteger i = parentStack.arrangedSubviews.count-1; i >=0; i--) {
@@ -771,7 +772,7 @@ BOOL isCustomResolution(CGSize res) {
                 snapshot.center = CGPointMake(locationInParentStack.x, locationInParentStack.y);
                 NSLog(@"coordY in rootView: %f", locationInRootView.y);
                 [self handleAutoScroll:locationInRootView];
-                [self updateRelocationIndicator:locationInParentStack];
+                [self updateRelocationIndicatorFor:locationInParentStack];
                 
                 
                 break;
