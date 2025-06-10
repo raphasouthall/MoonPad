@@ -44,8 +44,11 @@ import UIKit
     @objc public var latestTouchLocation: CGPoint
     @objc public var selfViewOnTheRight: Bool = false
     @objc public var shape: String = "default"
-    private var storedCenter: CGPoint = .zero // location from persisted data
+    @objc public var storedCenter: CGPoint = .zero // location from persisted data
+    @objc public var initialCenter: CGPoint = .zero // location from persisted data
+    @objc public var layoutChanges: [CGPoint] = []
 
+    
     private let appWindow: UIView
 
     
@@ -235,12 +238,23 @@ import UIKit
          */
         storedCenter = position
         center = storedCenter
+        initialCenter = storedCenter;
+        layoutChanges.append(initialCenter)
     }
     
     @objc public func enableRelocationMode(enabled: Bool){
         OnScreenWidgetView.editMode = enabled
     }
     
+    @objc public func undoRelocation(){
+        guard layoutChanges.count>1 else {return}
+        UIView.animate(withDuration: 0.2) {
+            self.center = self.layoutChanges[self.layoutChanges.count-2]
+        }
+        storedCenter = center
+        layoutChanges.removeLast()
+    }
+
     @objc public func adjustTransparency(alpha: CGFloat){
         if alpha != 0 {
             self.backgroundAlpha = alpha
@@ -924,7 +938,6 @@ import UIKit
     // Touch event handling
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         
-        
         self.touchBegan = true
         super.touchesBegan(touches, with: event)
         self.isMultipleTouchEnabled = self.touchPadString == "MOUSEPAD" // only enable multi-touch in mousePad mode
@@ -1037,7 +1050,6 @@ import UIKit
         latestTouchLocation = currentLocation
         // center = currentLocation;
         //NSLog("x coord: %f, y coord: %f", self.frame.origin.x, self.frame.origin.y)
-        storedCenter = center // Update initial center for next movement
         if OnScreenWidgetView.editMode {
             NotificationCenter.default.post(name: Notification.Name("OnScreenWidgetMovedByTouch"), object:self) // inform the layoutOnScreenControl to update guideLines for this widget view
         }
@@ -1201,6 +1213,11 @@ import UIKit
         }
         
         if OnScreenWidgetView.editMode {
+            storedCenter = center // Update initial center for next movement
+            if center != layoutChanges.last {
+                layoutChanges.append(center)
+            }
+
             guard let superview = superview else { return }
             
             // Deactivate existing constraints if necessary

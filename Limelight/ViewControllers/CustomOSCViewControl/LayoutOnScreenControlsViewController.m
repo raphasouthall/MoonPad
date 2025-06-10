@@ -308,41 +308,51 @@
 }
 
 - (IBAction) undoTapped:(id)sender {
-    if ([self.layoutOSC.layoutChanges count] > 0) { // check if there are layout changes to roll back to
-        OnScreenButtonState *buttonState = [self.layoutOSC.layoutChanges lastObject];   //  Get the 'OnScreenButtonState' object that contains the name, position, and visiblity state of the button the user last moved
-        
-        CALayer *buttonLayer = [self.layoutOSC controllerLayerFromName:buttonState.name];   // get the on screen button layer that corresponds with the 'OnScreenButtonState' object that we retrieved above
-        
-        /* Set the button's position and visiblity to what it was before the user last moved it */
-        buttonLayer.position = buttonState.position;
-        buttonLayer.hidden = buttonState.isHidden;
-        
-        /* if user is showing or hiding dPad, then show or hide all four dPad button child layers as well since setting the 'hidden' property on the parent CALayer is not automatically setting the individual dPad child CALayers */
-        if ([buttonLayer.name isEqualToString:@"dPad"]) {
-            self.layoutOSC._upButton.hidden = buttonState.isHidden;
-            self.layoutOSC._rightButton.hidden = buttonState.isHidden;
-            self.layoutOSC._downButton.hidden = buttonState.isHidden;
-            self.layoutOSC._leftButton.hidden = buttonState.isHidden;
+    UIAlertController * nothingToUndoAlertController = [UIAlertController alertControllerWithTitle: [LocalizationHelper localizedStringForKey:@"Nothing to Undo"] message: [LocalizationHelper localizedStringForKey: @"There are no changes to undo"] preferredStyle:UIAlertControllerStyleAlert];
+    [nothingToUndoAlertController addAction:[UIAlertAction actionWithTitle:[LocalizationHelper localizedStringForKey:@"Ok"] style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+        [nothingToUndoAlertController dismissViewControllerAnimated:NO completion:nil];
+    }]];
+
+    
+    if(!widgetViewSelected){
+        if([self.layoutOSC.layoutChanges count] > 0) { // check if there are layout changes to roll back to
+            OnScreenButtonState *buttonState = [self.layoutOSC.layoutChanges lastObject];   //  Get the 'OnScreenButtonState' object that contains the name, position, and visiblity state of the button the user last moved
+            
+            CALayer *buttonLayer = [self.layoutOSC controllerLayerFromName:buttonState.name];   // get the on screen button layer that corresponds with the 'OnScreenButtonState' object that we retrieved above
+            
+            /* Set the button's position and visiblity to what it was before the user last moved it */
+            buttonLayer.position = buttonState.position;
+            buttonLayer.hidden = buttonState.isHidden;
+            
+            /* if user is showing or hiding dPad, then show or hide all four dPad button child layers as well since setting the 'hidden' property on the parent CALayer is not automatically setting the individual dPad child CALayers */
+            if ([buttonLayer.name isEqualToString:@"dPad"]) {
+                self.layoutOSC._upButton.hidden = buttonState.isHidden;
+                self.layoutOSC._rightButton.hidden = buttonState.isHidden;
+                self.layoutOSC._downButton.hidden = buttonState.isHidden;
+                self.layoutOSC._leftButton.hidden = buttonState.isHidden;
+            }
+            
+            /* if user is showing or hiding the left or right analog sticks, then show or hide their corresponding inner analog stick child layers as well since setting the 'hidden' property on the parent analog stick doesn't automatically hide its child inner analog stick CALayer */
+            if ([buttonLayer.name isEqualToString:@"leftStickBackground"]) {
+                self.layoutOSC._leftStick.hidden = buttonState.isHidden;
+            }
+            if ([buttonLayer.name isEqualToString:@"rightStickBackground"]) {
+                self.layoutOSC._rightStick.hidden = buttonState.isHidden;
+            }
+            
+            [self.layoutOSC.layoutChanges removeLastObject];
+            
+            [self OSCLayoutChanged]; // will fade the undo button in or out depending on whether there are any further changes to undo
         }
-        
-        /* if user is showing or hiding the left or right analog sticks, then show or hide their corresponding inner analog stick child layers as well since setting the 'hidden' property on the parent analog stick doesn't automatically hide its child inner analog stick CALayer */
-        if ([buttonLayer.name isEqualToString:@"leftStickBackground"]) {
-            self.layoutOSC._leftStick.hidden = buttonState.isHidden;
+        else {  // there are no changes to undo. let user know there are no changes to undo
+            [self presentViewController:nothingToUndoAlertController animated:YES completion:nil];
         }
-        if ([buttonLayer.name isEqualToString:@"rightStickBackground"]) {
-            self.layoutOSC._rightStick.hidden = buttonState.isHidden;
-        }
-        
-        [self.layoutOSC.layoutChanges removeLastObject];
-        
-        [self OSCLayoutChanged]; // will fade the undo button in or out depending on whether there are any further changes to undo
     }
-    else {  // there are no changes to undo. let user know there are no changes to undo
-        UIAlertController * savedAlertController = [UIAlertController alertControllerWithTitle: [LocalizationHelper localizedStringForKey:@"Nothing to Undo"] message: [LocalizationHelper localizedStringForKey: @"There are no changes to undo"] preferredStyle:UIAlertControllerStyleAlert];
-        [savedAlertController addAction:[UIAlertAction actionWithTitle:[LocalizationHelper localizedStringForKey:@"Ok"] style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-            [savedAlertController dismissViewControllerAnimated:NO completion:nil];
-        }]];
-        [self presentViewController:savedAlertController animated:YES completion:nil];
+    else{
+        NSInteger recordChangesCount = selectedWidgetView.layoutChanges.count;
+        if(recordChangesCount>1) [selectedWidgetView undoRelocation];
+        else [self presentViewController:nothingToUndoAlertController animated:YES completion:nil];
+        self.undoButton.alpha = selectedWidgetView.layoutChanges.count>1 ? 1.0 : 0.3;
     }
 }
 
@@ -604,13 +614,20 @@
 }
 
 - (void)widgetViewTapped: (NSNotification *)notification{
+    //self.undoButton.alpha = selectedWidgetView.layoutChanges.count>1 && !CGPointEqualToPoint(selectedWidgetView.layoutChanges.lastObject.CGPointValue, selectedWidgetView.initialCenter)? 1.0 : 0.3;
+
     // receive the selected widgetView obj passed from the notification
     OnScreenWidgetView* widgetView = (OnScreenWidgetView* )notification.object;
+    
+    
     [self->selectedWidgetView.stickBallLayer removeFromSuperlayer];
     [self->selectedWidgetView.crossMarkLayer removeFromSuperlayer];
     self->widgetViewSelected = true;
     self->controllerLayerSelected = false;
     self->selectedWidgetView = widgetView;
+    
+    self.undoButton.alpha = selectedWidgetView.layoutChanges.count>1 ? 1.0 : 0.3;
+    
     [self.layoutOSC updateGuidelinesForOnScreenWidget:self->selectedWidgetView]; // shows guideline immediately when widget is tapped
     // setup slider values
     [self.widgetSizeSlider setValue: self->selectedWidgetView.widthFactor];
@@ -743,6 +760,8 @@
     for (UIView *subview in view.subviews) {
         if ([subview isKindOfClass:[UIButton class]]) {
             UIButton *button = (UIButton *)subview;
+            button.imageView.image = [button.imageView.image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+            button.tintColor = [UIColor systemTealColor];
             if(!button.imageView.image){
                 NSLog(@"missing image %d", button==_saveButton);
                 button.titleLabel.font = [UIFont systemFontOfSize:18 weight:UIFontWeightMedium];
@@ -910,6 +929,7 @@
     OnScreenWidgetView* widget = notification.object;
     [self.view bringSubviewToFront:widget];
     trashCanButton.tintColor = [self layerOverlapWithTrashcanButton:widget.layer] ? [UIColor redColor] : trashCanStoryBoardColor;
+    self.undoButton.alpha = 1.0;
 }
 
 
