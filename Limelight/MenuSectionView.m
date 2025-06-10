@@ -200,13 +200,17 @@
 
 - (void)setSectionWithIcon:(UIImage *)icon andSize:(CGFloat)size{
     if (@available(iOS 13.0, *)) {
-        UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithPointSize:size weight:UIImageSymbolWeightBold];
+        UIImageSymbolConfiguration *config;
+        if(icon.isSymbolImage) config = [UIImageSymbolConfiguration configurationWithPointSize:size weight:UIImageSymbolWeightBold];
+        else{
+            config = [UIImageSymbolConfiguration configurationWithPointSize:size];
+            icon = [icon imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+        }
         _iconImageView.image = [icon imageWithConfiguration:config];
-
     } else {
         _iconImageView.image = icon;
     }
-
+    _iconImageView.tintColor = [ThemeManager textColor];
     _iconImageView.hidden = (icon == nil);
     [self updateLayout];
 }

@@ -407,7 +407,7 @@ BOOL isCustomResolution(CGSize res) {
     MenuSectionView *videoSection = [[MenuSectionView alloc] init];
     videoSection.sectionTitle = [LocalizationHelper localizedStringForKey:@"Video"];
     if (@available(iOS 13.0, *)) {
-        [videoSection setSectionWithIcon:[UIImage systemImageNamed:@"video.and.waveform"] andSize:20.5];
+        [videoSection setSectionWithIcon:[UIImage systemImageNamed:@"waveform"] andSize:20];
     }
     [self addSetting:self.resolutionStack ofId:@"resolutionStack" withInfoTag:YES to:videoSection];
     [self addSetting:self.fpsStack ofId:@"fpsStack" withInfoTag:NO to:videoSection];
@@ -419,19 +419,19 @@ BOOL isCustomResolution(CGSize res) {
     [videoSection addToParentStack:parentStack];
     [videoSection setExpanded:NO];
 
-    MenuSectionView *touchInputSection = [[MenuSectionView alloc] init];
-    touchInputSection.sectionTitle = [LocalizationHelper localizedStringForKey:@"Touch Input"];
+    MenuSectionView *touchControlSection = [[MenuSectionView alloc] init];
+    touchControlSection.sectionTitle = [LocalizationHelper localizedStringForKey:@"Touch Control"];
     if (@available(iOS 13.0, *)) {
-        [touchInputSection setSectionWithIcon:[UIImage systemImageNamed:@"viewfinder.circle"] andSize:21.5];
+        [touchControlSection setSectionWithIcon:[UIImage imageNamed:@"arcade.stick.console"] andSize:20.5];
     }
-    [self addSetting:self.touchModeStack ofId:@"touchModeStack" withInfoTag:YES to:touchInputSection];
-    [self addSetting:self.pointerVelocityDividerStack ofId:@"pointerVelocityDividerStack" withInfoTag:YES to:touchInputSection];
-    [self addSetting:self.pointerVelocityFactorStack ofId:@"pointerVelocityFactorStack" withInfoTag:YES to:touchInputSection];
-    [self addSetting:self.mousePointerVelocityStack ofId:@"mousePointerVelocityStack" withInfoTag:YES to:touchInputSection];
-    [self addSetting:self.onScreenWidgetStack ofId:@"onScreenWidgetStack" withInfoTag:YES to:touchInputSection];
-    [self addSetting:self.swapAbaxyStack ofId:@"swapAbaxyStack" withInfoTag:NO to:touchInputSection];
-    [touchInputSection addToParentStack:parentStack];
-    [touchInputSection setExpanded:NO];
+    [self addSetting:self.touchModeStack ofId:@"touchModeStack" withInfoTag:YES to:touchControlSection];
+    [self addSetting:self.pointerVelocityDividerStack ofId:@"pointerVelocityDividerStack" withInfoTag:YES to:touchControlSection];
+    [self addSetting:self.pointerVelocityFactorStack ofId:@"pointerVelocityFactorStack" withInfoTag:YES to:touchControlSection];
+    [self addSetting:self.mousePointerVelocityStack ofId:@"mousePointerVelocityStack" withInfoTag:YES to:touchControlSection];
+    [self addSetting:self.onScreenWidgetStack ofId:@"onScreenWidgetStack" withInfoTag:YES to:touchControlSection];
+    [self addSetting:self.swapAbaxyStack ofId:@"swapAbaxyStack" withInfoTag:NO to:touchControlSection];
+    [touchControlSection addToParentStack:parentStack];
+    [touchControlSection setExpanded:NO];
 
     
     
@@ -454,7 +454,7 @@ BOOL isCustomResolution(CGSize res) {
     MenuSectionView *peripheralSection = [[MenuSectionView alloc] init];
     peripheralSection.sectionTitle = [LocalizationHelper localizedStringForKey:@"Peripherals"];
     if (@available(iOS 13.0, *)) {
-        [peripheralSection setSectionWithIcon:[UIImage systemImageNamed:@"airplayvideo"] andSize:20.5];
+        [peripheralSection setSectionWithIcon:[UIImage imageNamed:@"cable.connector.video"] andSize:20];
     }
     [self addSetting:self.externalDisplayModeStack ofId:@"externalDisplayModeStack" withInfoTag:NO to:peripheralSection];
     [self addSetting:self.localMousePointerModeStack ofId:@"localMousePointerModeStack" withInfoTag:NO to:peripheralSection];
@@ -482,7 +482,7 @@ BOOL isCustomResolution(CGSize res) {
     MenuSectionView *experimentalSection = [[MenuSectionView alloc] init];
     experimentalSection.sectionTitle = [LocalizationHelper localizedStringForKey:@"Experimental"];
     if (@available(iOS 13.0, *)) {
-        [experimentalSection setSectionWithIcon:[UIImage systemImageNamed:@"flask"] andSize:20];
+        [experimentalSection setSectionWithIcon:[UIImage imageNamed:@"flask"] andSize:20];
     }
     [self addSetting:self.asyncTouchStack ofId:@"asyncTouchStack" withInfoTag:YES to:experimentalSection];
     [self addSetting:self.touchMoveEventIntervalStack ofId:@"touchMoveEventIntervalStack" withInfoTag:YES to:experimentalSection];
