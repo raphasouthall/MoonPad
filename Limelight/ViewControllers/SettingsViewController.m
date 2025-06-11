@@ -919,7 +919,7 @@ BOOL isCustomResolution(CGSize res) {
     [stack addSubview:button];
     [NSLayoutConstraint activateConstraints:@[
         [button.trailingAnchor constraintEqualToAnchor:stack.trailingAnchor constant:-4],
-        [button.bottomAnchor constraintEqualToAnchor:        stack.arrangedSubviews[0].bottomAnchor constant:-1],
+        [button.bottomAnchor constraintEqualToAnchor:        stack.arrangedSubviews[0].bottomAnchor constant:-2],
     ]];
 }
 
@@ -1023,8 +1023,9 @@ BOOL isCustomResolution(CGSize res) {
 
 - (void)saveFavoriteSettingStackIdentifiers {
     
-    if(currentSettingsMenuMode == RemoveSettingItem){
+    if(currentSettingsMenuMode != AllSettings){
         [_favoriteSettingStackIdentifiers removeAllObjects];
+        //for(NSInteger i = 0; i < parentStack.arrangedSubviews.count; i++){
         for(NSInteger i = 0; i < parentStack.arrangedSubviews.count; i++){
             [_favoriteSettingStackIdentifiers addObject:parentStack.arrangedSubviews[i].accessibilityIdentifier];
         }
