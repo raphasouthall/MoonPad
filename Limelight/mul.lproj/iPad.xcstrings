@@ -1,6 +1,18 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "1ri-Kt-gSf.text" : {
+      "comment" : "Class = \"UILabel\"; text = \"Custom Resolution\"; ObjectID = \"1ri-Kt-gSf\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Custom Resolution"
+          }
+        }
+      }
+    },
     "2Bp-XZ-cCw.text" : {
       "comment" : "Class = \"UILabel\"; text = \"Async Native Touch\"; ObjectID = \"2Bp-XZ-cCw\";",
       "extractionState" : "extracted_with_value",

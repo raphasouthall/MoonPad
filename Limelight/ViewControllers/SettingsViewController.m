@@ -708,11 +708,13 @@ BOOL isCustomResolution(CGSize res) {
 
 - (void)findCapturedStackByTouchLocation:(CGPoint)point{
     UIView *touchedView = [parentStack hitTest:point withEvent:nil];
-    if([touchedView isKindOfClass:[UIStackView class]]){
-        if(touchedView.accessibilityIdentifier != nil) capturedStack = (UIStackView *)touchedView;
+    while(touchedView){
+        if([touchedView isKindOfClass:[UIStackView class]] && touchedView.accessibilityIdentifier != nil){
+            capturedStack = (UIStackView *)touchedView;
+            break;
+        }
+        touchedView = touchedView.superview;
     }
-    else if([touchedView.superview isKindOfClass:[UIStackView class]] && touchedView.superview.accessibilityIdentifier != nil) capturedStack = (UIStackView *)touchedView.superview;
-    else NSLog(@"hit test: not setting stack captured");
 }
 
 - (UIAlertController* )prepareAddToFavoriteActionSheet{
@@ -1069,6 +1071,8 @@ BOOL isCustomResolution(CGSize res) {
         CGFloat fullScreenWidth = window.frame.size.width * screenScale;
         CGFloat fullScreenHeight = window.frame.size.height * screenScale;
         
+        [self.resolutionSelector removeSegmentAtIndex:0 animated:NO]; // remove 360p
+        [self.resolutionSelector removeSegmentAtIndex:5 animated:NO]; // remove custom segment
         self.resolutionDisplayView.layer.cornerRadius = 10;
         self.resolutionDisplayView.clipsToBounds = YES;
         UITapGestureRecognizer *resolutionDisplayViewTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(resolutionDisplayViewTapped:)];

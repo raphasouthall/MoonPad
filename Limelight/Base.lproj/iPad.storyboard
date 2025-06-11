@@ -63,37 +63,62 @@
                         <rect key="frame" x="0.0" y="0.0" width="682" height="2500"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <stackView opaque="NO" contentMode="scaleToFill" ambiguous="YES" axis="vertical" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="zpX-lo-MLA" userLabel="ResolutionStack">
-                                <rect key="frame" x="16" y="57" width="380" height="111.5"/>
+                            <stackView opaque="NO" contentMode="scaleToFill" ambiguous="YES" axis="vertical" spacing="15" translatesAutoresizingMaskIntoConstraints="NO" id="zpX-lo-MLA" userLabel="Resolutionstak">
+                                <rect key="frame" x="16" y="57" width="380" height="102.5"/>
                                 <subviews>
-                                    <label opaque="NO" clearsContextBeforeDrawing="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Resolution                                                                                    " lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pYZ-GR-EwO">
-                                        <rect key="frame" x="0.0" y="0.0" width="380" height="20.5"/>
-                                        <fontDescription key="fontDescription" name=".AppleSystemUIFont" family=".AppleSystemUIFont" pointSize="17"/>
-                                        <nil key="textColor"/>
-                                        <nil key="highlightedColor"/>
-                                        <size key="shadowOffset" width="0.0" height="0.0"/>
-                                    </label>
-                                    <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" apportionsSegmentWidthsByContent="YES" segmentControlStyle="plain" selectedSegmentIndex="5" translatesAutoresizingMaskIntoConstraints="NO" id="ckc-Dm-8ex">
-                                        <rect key="frame" x="0.0" y="25.5" width="380" height="32"/>
-                                        <segments>
-                                            <segment title="360p"/>
-                                            <segment title="720p"/>
-                                            <segment title="1080p"/>
-                                            <segment title="4K"/>
-                                            <segment title="Safe Area"/>
-                                            <segment title="FullScr/Window"/>
-                                            <segment title="Custom"/>
-                                        </segments>
-                                        <color key="tintColor" systemColor="linkColor"/>
-                                        <color key="selectedSegmentTintColor" systemColor="linkColor"/>
-                                    </segmentedControl>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9cG-JD-glb" userLabel="Resolution Display View">
-                                        <rect key="frame" x="0.0" y="61.5" width="380" height="50"/>
-                                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                                    </view>
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="R3v-Wj-0rX" userLabel="ResolutionInnerStack1">
+                                        <rect key="frame" x="0.0" y="0.0" width="380" height="56.5"/>
+                                        <subviews>
+                                            <label opaque="NO" clearsContextBeforeDrawing="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Resolution                                                                                    " lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pYZ-GR-EwO">
+                                                <rect key="frame" x="0.0" y="0.0" width="380" height="20.5"/>
+                                                <fontDescription key="fontDescription" name=".AppleSystemUIFont" family=".AppleSystemUIFont" pointSize="17"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                                <size key="shadowOffset" width="0.0" height="0.0"/>
+                                            </label>
+                                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" apportionsSegmentWidthsByContent="YES" segmentControlStyle="plain" selectedSegmentIndex="5" translatesAutoresizingMaskIntoConstraints="NO" id="ckc-Dm-8ex">
+                                                <rect key="frame" x="0.0" y="25.5" width="380" height="32"/>
+                                                <segments>
+                                                    <segment title="360p" enabled="NO"/>
+                                                    <segment title="720p"/>
+                                                    <segment title="1080p"/>
+                                                    <segment title="4K"/>
+                                                    <segment title="Safe Area"/>
+                                                    <segment title="FullScr/Window"/>
+                                                    <segment title="Custom"/>
+                                                </segments>
+                                                <color key="tintColor" systemColor="linkColor"/>
+                                                <color key="selectedSegmentTintColor" systemColor="linkColor"/>
+                                            </segmentedControl>
+                                        </subviews>
+                                    </stackView>
+                                    <stackView opaque="NO" contentMode="scaleToFill" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="dH7-Sy-EdJ" userLabel="ResolutionInnerStack2">
+                                        <rect key="frame" x="0.0" y="71.5" width="380" height="31"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Custom Resolution" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1ri-Kt-gSf">
+                                                <rect key="frame" x="0.0" y="0.0" width="150" height="31"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" constant="150" id="wgu-KB-nC0"/>
+                                                </constraints>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wIq-fF-X8l">
+                                                <rect key="frame" x="170" y="0.0" width="92" height="31"/>
+                                            </switch>
+                                            <view contentMode="right" translatesAutoresizingMaskIntoConstraints="NO" id="9cG-JD-glb" userLabel="Resolution Display View">
+                                                <rect key="frame" x="280" y="0.0" width="100" height="31"/>
+                                                <color key="backgroundColor" red="0.13553617388112518" green="0.51330748785477198" blue="0.5771430415951514" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="100" id="6Ck-NR-Jje"/>
+                                                    <constraint firstAttribute="width" constant="100" id="o1e-qd-rfH"/>
+                                                </constraints>
+                                            </view>
+                                        </subviews>
+                                    </stackView>
                                 </subviews>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="111.5" id="0nu-Oy-daj"/>
                                     <constraint firstAttribute="width" constant="380" id="bn6-xc-xEZ"/>
                                 </constraints>
                             </stackView>
@@ -850,7 +875,7 @@ ICAgICAgICAgICAgICA
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="01j-TU-OoL" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="video.and.waveform" catalog="system" id="20f-ao-iK1">
-                    <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
+                    <rect key="frame" x="0.0" y="-4" width="240" height="128"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                 </imageView>
                 <navigationBar contentMode="scaleToFill" id="3qa-QW-sSl">
