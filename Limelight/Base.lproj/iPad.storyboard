@@ -63,11 +63,11 @@
                         <rect key="frame" x="0.0" y="0.0" width="682" height="2500"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <stackView opaque="NO" contentMode="scaleToFill" ambiguous="YES" axis="vertical" spacing="15" translatesAutoresizingMaskIntoConstraints="NO" id="zpX-lo-MLA" userLabel="Resolutionstak">
+                            <stackView opaque="NO" contentMode="scaleToFill" ambiguous="YES" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="zpX-lo-MLA" userLabel="Resolutionstak">
                                 <rect key="frame" x="16" y="57" width="380" height="102.5"/>
                                 <subviews>
-                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="R3v-Wj-0rX" userLabel="ResolutionInnerStack1">
-                                        <rect key="frame" x="0.0" y="0.0" width="380" height="56.5"/>
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="DHx-tX-bNw" userLabel="ResolutionInnerStack0">
+                                        <rect key="frame" x="0.0" y="0.0" width="380" height="20.5"/>
                                         <subviews>
                                             <label opaque="NO" clearsContextBeforeDrawing="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Resolution                                                                                    " lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pYZ-GR-EwO">
                                                 <rect key="frame" x="0.0" y="0.0" width="380" height="20.5"/>
@@ -76,45 +76,37 @@
                                                 <nil key="highlightedColor"/>
                                                 <size key="shadowOffset" width="0.0" height="0.0"/>
                                             </label>
-                                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" apportionsSegmentWidthsByContent="YES" segmentControlStyle="plain" selectedSegmentIndex="5" translatesAutoresizingMaskIntoConstraints="NO" id="ckc-Dm-8ex">
-                                                <rect key="frame" x="0.0" y="25.5" width="380" height="32"/>
-                                                <segments>
-                                                    <segment title="360p" enabled="NO"/>
-                                                    <segment title="720p"/>
-                                                    <segment title="1080p"/>
-                                                    <segment title="4K"/>
-                                                    <segment title="Safe Area"/>
-                                                    <segment title="FullScr/Window"/>
-                                                    <segment title="Custom"/>
-                                                </segments>
-                                                <color key="tintColor" systemColor="linkColor"/>
-                                                <color key="selectedSegmentTintColor" systemColor="linkColor"/>
-                                            </segmentedControl>
                                         </subviews>
                                     </stackView>
+                                    <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" apportionsSegmentWidthsByContent="YES" segmentControlStyle="plain" selectedSegmentIndex="5" translatesAutoresizingMaskIntoConstraints="NO" id="ckc-Dm-8ex">
+                                        <rect key="frame" x="0.0" y="30.5" width="380" height="32"/>
+                                        <segments>
+                                            <segment title="360p" enabled="NO"/>
+                                            <segment title="720p"/>
+                                            <segment title="1080p"/>
+                                            <segment title="4K"/>
+                                            <segment title="Safe Area"/>
+                                            <segment title="FullScr/Window"/>
+                                            <segment title="Custom"/>
+                                        </segments>
+                                        <color key="tintColor" systemColor="linkColor"/>
+                                        <color key="selectedSegmentTintColor" systemColor="linkColor"/>
+                                    </segmentedControl>
                                     <stackView opaque="NO" contentMode="scaleToFill" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="dH7-Sy-EdJ" userLabel="ResolutionInnerStack2">
                                         <rect key="frame" x="0.0" y="71.5" width="380" height="31"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Custom Resolution" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1ri-Kt-gSf">
-                                                <rect key="frame" x="0.0" y="0.0" width="150" height="31"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="130" height="31"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="width" constant="150" id="wgu-KB-nC0"/>
+                                                    <constraint firstAttribute="width" constant="130" id="wgu-KB-nC0"/>
                                                 </constraints>
-                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="11"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wIq-fF-X8l">
-                                                <rect key="frame" x="170" y="0.0" width="92" height="31"/>
+                                                <rect key="frame" x="150" y="0.0" width="232" height="31"/>
                                             </switch>
-                                            <view contentMode="right" translatesAutoresizingMaskIntoConstraints="NO" id="9cG-JD-glb" userLabel="Resolution Display View">
-                                                <rect key="frame" x="280" y="0.0" width="100" height="31"/>
-                                                <color key="backgroundColor" red="0.13553617388112518" green="0.51330748785477198" blue="0.5771430415951514" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="100" id="6Ck-NR-Jje"/>
-                                                    <constraint firstAttribute="width" constant="100" id="o1e-qd-rfH"/>
-                                                </constraints>
-                                            </view>
                                         </subviews>
                                     </stackView>
                                 </subviews>
@@ -150,7 +142,7 @@
                             <stackView opaque="NO" contentMode="scaleToFill" ambiguous="YES" axis="vertical" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="2cV-yC-0QL" userLabel="Bitrate Stack">
                                 <rect key="frame" x="16" y="246" width="380" height="55.5"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Bitrate: 10 Mbps                                                                            " lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="459" translatesAutoresizingMaskIntoConstraints="NO" id="lMt-4H-fkV">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Bitrate                                                                  " lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="459" translatesAutoresizingMaskIntoConstraints="NO" id="lMt-4H-fkV">
                                         <rect key="frame" x="0.0" y="0.0" width="380" height="20.5"/>
                                         <color key="tintColor" red="0.81533776120000001" green="0.85979419950000002" blue="0.91372549020000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -811,6 +803,7 @@ ICAgICAgICAgICAgICA
                         <outlet property="cmdToolScreenEdgeSelector" destination="yY7-Sf-Zes" id="fgL-xr-obH"/>
                         <outlet property="codecSelector" destination="aFy-0w-YPe" id="DlU-0l-gwz"/>
                         <outlet property="codecStack" destination="gWg-BF-yDI" id="GGc-JQ-N8y"/>
+                        <outlet property="customResolutionSwitch" destination="wIq-fF-X8l" id="xzM-7N-Ljq"/>
                         <outlet property="externalDisplayModeSelector" destination="VWB-YB-Ptj" id="0ak-pc-evb"/>
                         <outlet property="externalDisplayModeStack" destination="YBu-VX-wpN" id="72y-R6-fF7"/>
                         <outlet property="fpsStack" destination="TuR-H8-e2H" id="zGQ-gR-P1i"/>
@@ -840,7 +833,6 @@ ICAgICAgICAgICAgICA
                         <outlet property="pointerVelocityFactorStack" destination="vdk-mK-ztu" id="Cik-Rh-pGS"/>
                         <outlet property="pointerVelocityModeDividerSlider" destination="AcZ-2i-GI4" id="dGf-ZU-w3S"/>
                         <outlet property="pointerVelocityModeDividerUILabel" destination="DkI-w6-jku" id="edY-gX-2Cw"/>
-                        <outlet property="resolutionDisplayView" destination="9cG-JD-glb" id="TT1-hy-MUC"/>
                         <outlet property="resolutionSelector" destination="ckc-Dm-8ex" id="rl6-rx-wd3"/>
                         <outlet property="resolutionStack" destination="zpX-lo-MLA" id="9Hu-I9-hjH"/>
                         <outlet property="reverseMouseWheelDirectionSelector" destination="mTM-NL-CcF" id="EYZ-Qg-OLu"/>

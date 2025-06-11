@@ -10,6 +10,24 @@
             "state" : "new",
             "value" : "Custom Resolution"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "自定义分辨率"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "自定义分辨率"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "自定义分辨率"
+          }
         }
       }
     },
@@ -2342,31 +2360,31 @@
       }
     },
     "lMt-4H-fkV.text" : {
-      "comment" : "Class = \"UILabel\"; text = \"Bitrate: 10 Mbps                                                                            \"; ObjectID = \"lMt-4H-fkV\";",
+      "comment" : "Class = \"UILabel\"; text = \"Bitrate                                                                  \"; ObjectID = \"lMt-4H-fkV\";",
       "extractionState" : "extracted_with_value",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "Bitrate: 10 Mbps                                                                            "
+            "value" : "Bitrate                                                                  "
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "码率: 10Mbps"
+            "value" : "串流码率"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "码率: 10Mbps"
+            "state" : "needs_review",
+            "value" : "串流码率"
           }
         },
         "zh-HK" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "码率: 10Mbps"
+            "state" : "needs_review",
+            "value" : "串流码率"
           }
         }
       }

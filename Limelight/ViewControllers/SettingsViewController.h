@@ -52,6 +52,8 @@
 @property (strong, nonatomic) IBOutlet UISlider *bitrateSlider;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *framerateSelector;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *resolutionSelector;
+@property (weak, nonatomic) IBOutlet UISwitch *customResolutionSwitch;
+@property (weak, nonatomic) IBOutlet UILabel *resolutionDisplayLabel;
 @property (strong, nonatomic) IBOutlet UIView *resolutionDisplayView;
 @property (strong, nonatomic) IBOutlet UILabel *touchModeLabel;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *touchModeSelector;

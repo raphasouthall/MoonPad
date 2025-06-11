@@ -1117,7 +1117,7 @@ static NSMutableSet* hostList;
     if(self.settingsExpandedInStreamView) [revealController buttonsInStreaming];
     else [revealController buttonsNotInStreaming];
     
-    [settingsViewController.resolutionSelector setEnabled:!self.settingsExpandedInStreamView];
+    //[settingsViewController.resolutionSelector setEnabled:!self.settingsExpandedInStreamView];
     settingsViewController.resolutionStack.hidden = self.settingsExpandedInStreamView;
     [settingsViewController.framerateSelector setEnabled:!self.settingsExpandedInStreamView];
     settingsViewController.fpsStack.hidden = self.settingsExpandedInStreamView;

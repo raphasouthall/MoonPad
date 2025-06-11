@@ -147,7 +147,7 @@ static const int bitrateTable[] = {
     500000,
 };
 
-const int RESOLUTION_TABLE_SIZE = 7;
+const int RESOLUTION_TABLE_SIZE = 6;
 const int RESOLUTION_TABLE_CUSTOM_INDEX = RESOLUTION_TABLE_SIZE - 1;
 CGSize resolutionTable[RESOLUTION_TABLE_SIZE];
 
@@ -282,18 +282,18 @@ BOOL isCustomResolution(CGSize res) {
     }
     bool needSwapWidthAndHeight = appWindowWidth > appWindowHeight;
     
-    resolutionTable[4] = CGSizeMake(safeAreaWidth, appWindowHeight);
+    resolutionTable[3] = CGSizeMake(safeAreaWidth, appWindowHeight);
 
-    for(uint8_t i=0;i<7;i++){
+    for(uint8_t i=0;i<RESOLUTION_TABLE_SIZE;i++){
         CGFloat longSideLen = resolutionTable[i].height > resolutionTable[i].width ? resolutionTable[i].height : resolutionTable[i].width;
         CGFloat shortSideLen = resolutionTable[i].height < resolutionTable[i].width ? resolutionTable[i].height : resolutionTable[i].width;
         if(needSwapWidthAndHeight) resolutionTable[i] = CGSizeMake(longSideLen, shortSideLen);
         else resolutionTable[i] = CGSizeMake(shortSideLen, longSideLen);
     }
 
-    resolutionTable[5] = CGSizeMake(appWindowWidth, appWindowHeight);
+    resolutionTable[4] = CGSizeMake(appWindowWidth, appWindowHeight);
 
-    [self updateResolutionDisplayViewText];
+    [self updateResolutionDisplayLabel];
 }
 
 // this will also be called back when device orientation changes
@@ -308,11 +308,16 @@ BOOL isCustomResolution(CGSize res) {
     });
 }
 
+- (void)viewWillAppear:(BOOL)animated{
+    
+    [self.resolutionSelector setEnabled:!self.customResolutionSwitch.isOn];
+}
+
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:NO];
     [self updateResolutionTable];
-    //[self updateTheme];
     NSLog(@"Resolution table updated");
+    [self.resolutionSelector setEnabled:!self.customResolutionSwitch.isOn];
 }
 
 
@@ -394,10 +399,60 @@ BOOL isCustomResolution(CGSize res) {
     ]];
 }
 
-- (void)addSetting:(UIStackView *)stack ofId:(NSString* )identifier withInfoTag:(BOOL)attched to:(MenuSectionView* )menuSection{
+- (UIButton* )findInfoButtonFromStack:(UIStackView* )stack{
+    UIButton* button;
+    for(UIView *view in stack.subviews){
+        if([view isKindOfClass:[UIButton class]] && [view.accessibilityIdentifier isEqualToString:@"infoButton"]) button = (UIButton* )view;
+    }
+    return button;
+}
+
+- (UILabel* )findDynamicLabelFromStack:(UIStackView* )stack{
+    UILabel* label;
+    for(UIView *view in stack.subviews){
+        if([view isKindOfClass:[UILabel class]] && [view.accessibilityIdentifier isEqualToString:@"dynamicLabel"]) label = (UILabel* )view;
+    }
+    return label;
+}
+
+
+- (void)addDynamicLabelForStack:(UIStackView* )stack{
+    UILabel* label = [self findDynamicLabelFromStack:stack];
+    if(label) return;
+    
+    UIButton* button = [self findInfoButtonFromStack:stack];
+    label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 20, 50)];
+    label.textAlignment = NSTextAlignmentCenter;
+    // label.adjustsFontSizeToFitWidth = YES;
+    label.accessibilityIdentifier = @"dynamicLabel";
+    label.textColor = [ThemeManager appPrimaryColor];
+    label.font = [UIFont systemFontOfSize:16 weight:UIFontWeightMedium];
+    label.translatesAutoresizingMaskIntoConstraints = NO;
+    [stack addSubview:label];
+    if(button){
+        [NSLayoutConstraint activateConstraints:@[
+            [label.trailingAnchor constraintEqualToAnchor:button.leadingAnchor constant:-5],
+            //[label.centerYAnchor constraintEqualToAnchor:stack.arrangedSubviews[0].centerYAnchor],
+            [label.bottomAnchor constraintEqualToAnchor:stack.arrangedSubviews[0].bottomAnchor],
+            [label.heightAnchor constraintEqualToAnchor:stack.arrangedSubviews[0].heightAnchor],
+            [label.widthAnchor constraintEqualToConstant:150],
+        ]];
+    }
+    else{
+        [NSLayoutConstraint activateConstraints:@[
+            [label.trailingAnchor constraintEqualToAnchor:stack.trailingAnchor constant:-5],
+            [label.heightAnchor constraintEqualToAnchor:stack.arrangedSubviews[0].heightAnchor],
+            [label.widthAnchor constraintEqualToConstant:150],
+        ]];
+
+    }
+}
+
+- (void)addSetting:(UIStackView *)stack ofId:(NSString* )identifier withInfoTag:(BOOL)attched withDynamicLabel:(BOOL)added to:(MenuSectionView* )menuSection{
     stack.accessibilityIdentifier = identifier;
     [_settingStackDict setObject:stack forKey:identifier];
     if(attched) [self attachInfoTagForStack:stack];
+    if(added) [self addDynamicLabelForStack:stack];
     [menuSection addSubStackView:stack];
 }
     
@@ -409,29 +464,31 @@ BOOL isCustomResolution(CGSize res) {
     if (@available(iOS 13.0, *)) {
         [videoSection setSectionWithIcon:[UIImage systemImageNamed:@"waveform"] andSize:20];
     }
-    [self addSetting:self.resolutionStack ofId:@"resolutionStack" withInfoTag:YES to:videoSection];
-    [self addSetting:self.fpsStack ofId:@"fpsStack" withInfoTag:NO to:videoSection];
-    [self addSetting:self.bitrateStack ofId:@"bitrateStack" withInfoTag:NO to:videoSection];
-    [self addSetting:self.codecStack ofId:@"codecStack" withInfoTag:NO to:videoSection];
-    [self addSetting:self.HdrStack ofId:@"HdrStack" withInfoTag:NO to:videoSection];
-    [self addSetting:self.yuv444Stack ofId:@"yuv444Stack" withInfoTag:NO to:videoSection];
-    [self addSetting:self.framepacingStack ofId:@"framepacingStack" withInfoTag:NO to:videoSection];
+    [self addSetting:self.resolutionStack ofId:@"resolutionStack" withInfoTag:YES withDynamicLabel:YES to:videoSection];
+    [self addSetting:self.fpsStack ofId:@"fpsStack" withInfoTag:NO withDynamicLabel:NO to:videoSection];
+    [self addSetting:self.bitrateStack ofId:@"bitrateStack" withInfoTag:YES withDynamicLabel:YES to:videoSection];
+    //[self addDynamicLabelForStack:self.bitrateStack];
+    
+    [self addSetting:self.codecStack ofId:@"codecStack" withInfoTag:NO withDynamicLabel:NO to:videoSection];
+    [self addSetting:self.HdrStack ofId:@"HdrStack" withInfoTag:NO withDynamicLabel:NO to:videoSection];
+    [self addSetting:self.yuv444Stack ofId:@"yuv444Stack" withInfoTag:NO withDynamicLabel:NO to:videoSection];
+    [self addSetting:self.framepacingStack ofId:@"framepacingStack" withInfoTag:NO withDynamicLabel:NO to:videoSection];
     [videoSection addToParentStack:parentStack];
-    [videoSection setExpanded:NO];
+    [videoSection setExpanded:YES];
 
     MenuSectionView *touchControlSection = [[MenuSectionView alloc] init];
     touchControlSection.sectionTitle = [LocalizationHelper localizedStringForKey:@"Touch Control"];
     if (@available(iOS 13.0, *)) {
         [touchControlSection setSectionWithIcon:[UIImage imageNamed:@"arcade.stick.console"] andSize:20.5];
     }
-    [self addSetting:self.touchModeStack ofId:@"touchModeStack" withInfoTag:YES to:touchControlSection];
-    [self addSetting:self.pointerVelocityDividerStack ofId:@"pointerVelocityDividerStack" withInfoTag:YES to:touchControlSection];
-    [self addSetting:self.pointerVelocityFactorStack ofId:@"pointerVelocityFactorStack" withInfoTag:YES to:touchControlSection];
-    [self addSetting:self.mousePointerVelocityStack ofId:@"mousePointerVelocityStack" withInfoTag:YES to:touchControlSection];
-    [self addSetting:self.onScreenWidgetStack ofId:@"onScreenWidgetStack" withInfoTag:YES to:touchControlSection];
-    [self addSetting:self.swapAbaxyStack ofId:@"swapAbaxyStack" withInfoTag:NO to:touchControlSection];
+    [self addSetting:self.touchModeStack ofId:@"touchModeStack" withInfoTag:YES withDynamicLabel:NO to:touchControlSection];
+    [self addSetting:self.pointerVelocityDividerStack ofId:@"pointerVelocityDividerStack" withInfoTag:YES withDynamicLabel:NO to:touchControlSection];
+    [self addSetting:self.pointerVelocityFactorStack ofId:@"pointerVelocityFactorStack" withInfoTag:YES withDynamicLabel:NO to:touchControlSection];
+    [self addSetting:self.mousePointerVelocityStack ofId:@"mousePointerVelocityStack" withInfoTag:YES withDynamicLabel:NO to:touchControlSection];
+    [self addSetting:self.onScreenWidgetStack ofId:@"onScreenWidgetStack" withInfoTag:YES withDynamicLabel:NO to:touchControlSection];
+    [self addSetting:self.swapAbaxyStack ofId:@"swapAbaxyStack" withInfoTag:NO withDynamicLabel:NO to:touchControlSection];
     [touchControlSection addToParentStack:parentStack];
-    [touchControlSection setExpanded:NO];
+    [touchControlSection setExpanded:YES];
 
     
     
@@ -444,24 +501,24 @@ BOOL isCustomResolution(CGSize res) {
         [gesturesSection setSectionWithIcon:[UIImage systemImageNamed:@"hand.draw"] andSize:23];
     }
     
-    [self addSetting:self.keyboardToggleFingerNumStack ofId:@"keyboardToggleFingerNumStack" withInfoTag:NO to:gesturesSection];
-    [self addSetting:self.slideToSettingsScreenEdgeStack ofId:@"slideToSettingsScreenEdgeStack" withInfoTag:NO to:gesturesSection];
-    [self addSetting:self.slideToCmdToolScreenEdgeStack ofId:@"slideToCmdToolScreenEdgeStack" withInfoTag:NO to:gesturesSection];
-    [self addSetting:self.slideToSettingsDistanceStack ofId:@"slideToSettingsDistanceStack" withInfoTag:NO to:gesturesSection];
+    [self addSetting:self.keyboardToggleFingerNumStack ofId:@"keyboardToggleFingerNumStack" withInfoTag:NO withDynamicLabel:NO to:gesturesSection];
+    [self addSetting:self.slideToSettingsScreenEdgeStack ofId:@"slideToSettingsScreenEdgeStack" withInfoTag:NO withDynamicLabel:NO to:gesturesSection];
+    [self addSetting:self.slideToCmdToolScreenEdgeStack ofId:@"slideToCmdToolScreenEdgeStack" withInfoTag:NO withDynamicLabel:NO to:gesturesSection];
+    [self addSetting:self.slideToSettingsDistanceStack ofId:@"slideToSettingsDistanceStack" withInfoTag:NO withDynamicLabel:NO to:gesturesSection];
     [gesturesSection addToParentStack:parentStack];
-    [gesturesSection setExpanded:NO];
+    [gesturesSection setExpanded:YES];
 
     MenuSectionView *peripheralSection = [[MenuSectionView alloc] init];
     peripheralSection.sectionTitle = [LocalizationHelper localizedStringForKey:@"Peripherals"];
     if (@available(iOS 13.0, *)) {
         [peripheralSection setSectionWithIcon:[UIImage imageNamed:@"cable.connector.video"] andSize:20];
     }
-    [self addSetting:self.externalDisplayModeStack ofId:@"externalDisplayModeStack" withInfoTag:NO to:peripheralSection];
-    [self addSetting:self.localMousePointerModeStack ofId:@"localMousePointerModeStack" withInfoTag:NO to:peripheralSection];
-    [self addSetting:self.reverseMouseWheelDirectionStack ofId:@"reverseMouseWheelDirectionStack" withInfoTag:NO to:peripheralSection];
-    [self addSetting:self.citrixX1MouseStack ofId:@"citrixX1MouseStack" withInfoTag:NO to:peripheralSection];
+    [self addSetting:self.externalDisplayModeStack ofId:@"externalDisplayModeStack" withInfoTag:NO withDynamicLabel:NO to:peripheralSection];
+    [self addSetting:self.localMousePointerModeStack ofId:@"localMousePointerModeStack" withInfoTag:NO withDynamicLabel:NO to:peripheralSection];
+    [self addSetting:self.reverseMouseWheelDirectionStack ofId:@"reverseMouseWheelDirectionStack" withInfoTag:NO withDynamicLabel:NO to:peripheralSection];
+    [self addSetting:self.citrixX1MouseStack ofId:@"citrixX1MouseStack" withInfoTag:NO withDynamicLabel:NO to:peripheralSection];
     [peripheralSection addToParentStack:parentStack];
-    [peripheralSection setExpanded:NO];
+    [peripheralSection setExpanded:YES];
 
     
     MenuSectionView *otherSection = [[MenuSectionView alloc] init];
@@ -469,14 +526,14 @@ BOOL isCustomResolution(CGSize res) {
     if (@available(iOS 13.0, *)) {
         [otherSection setSectionWithIcon:[UIImage systemImageNamed:@"cube"] andSize:20.5];
     }
-    [self addSetting:self.statsOverlayStack ofId:@"statsOverlayStack" withInfoTag:NO to:otherSection];
-    [self addSetting:self.optimizeSettingsStack ofId:@"optimizeSettingsStack" withInfoTag:YES to:otherSection];
-    [self addSetting:self.audioOnPcStack ofId:@"audioOnPcStack" withInfoTag:NO to:otherSection];
-    [self addSetting:self.multiControllerStack ofId:@"multiControllerStack" withInfoTag:YES to:otherSection];
-    [self addSetting:self.showKeyboardToolbarStack ofId:@"showKeyboardToolbarStack" withInfoTag:YES to:otherSection];
-    [self addSetting:self.unlockDisplayOrientationStack ofId:@"unlockDisplayOrientationStack" withInfoTag:YES to:otherSection];
+    [self addSetting:self.statsOverlayStack ofId:@"statsOverlayStack" withInfoTag:NO withDynamicLabel:NO to:otherSection];
+    [self addSetting:self.optimizeSettingsStack ofId:@"optimizeSettingsStack" withInfoTag:YES withDynamicLabel:NO to:otherSection];
+    [self addSetting:self.audioOnPcStack ofId:@"audioOnPcStack" withInfoTag:NO withDynamicLabel:NO to:otherSection];
+    [self addSetting:self.multiControllerStack ofId:@"multiControllerStack" withInfoTag:YES withDynamicLabel:NO to:otherSection];
+    [self addSetting:self.showKeyboardToolbarStack ofId:@"showKeyboardToolbarStack" withInfoTag:YES withDynamicLabel:NO to:otherSection];
+    [self addSetting:self.unlockDisplayOrientationStack ofId:@"unlockDisplayOrientationStack" withInfoTag:YES withDynamicLabel:NO to:otherSection];
     [otherSection addToParentStack:parentStack];
-    [otherSection setExpanded:NO];
+    [otherSection setExpanded:YES];
     
     
     MenuSectionView *experimentalSection = [[MenuSectionView alloc] init];
@@ -484,12 +541,10 @@ BOOL isCustomResolution(CGSize res) {
     if (@available(iOS 13.0, *)) {
         [experimentalSection setSectionWithIcon:[UIImage imageNamed:@"flask"] andSize:20];
     }
-    [self addSetting:self.asyncTouchStack ofId:@"asyncTouchStack" withInfoTag:YES to:experimentalSection];
-    [self addSetting:self.touchMoveEventIntervalStack ofId:@"touchMoveEventIntervalStack" withInfoTag:YES to:experimentalSection];
+    [self addSetting:self.asyncTouchStack ofId:@"asyncTouchStack" withInfoTag:YES withDynamicLabel:NO to:experimentalSection];
+    [self addSetting:self.touchMoveEventIntervalStack ofId:@"touchMoveEventIntervalStack" withInfoTag:YES withDynamicLabel:NO to:experimentalSection];
     [experimentalSection addToParentStack:parentStack];
-    [experimentalSection setExpanded:NO];
-
-
+    [experimentalSection setExpanded:YES];
 }
 
 
@@ -845,13 +900,13 @@ BOOL isCustomResolution(CGSize res) {
 }
 
 - (void)attachInfoTagForStack:(UIStackView* )stack{
-    bool usingTextButton = false;
-    UIButton* button = [UIButton buttonWithType:UIButtonTypeSystem];
+    UIButton* button = [self findInfoButtonFromStack:stack];
+    if(button) return;
+    button = [UIButton buttonWithType:UIButtonTypeSystem];
     if (@available(iOS 13.0, *)) {
         UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithPointSize:13.5 weight:UIImageSymbolWeightBold];
         [button setImage:[UIImage systemImageNamed:@"info.circle" withConfiguration:config] forState:UIControlStateNormal];
     } else {
-        usingTextButton = true;
         [button setTitle:@"info" forState:UIControlStateNormal];
         button.titleLabel.font = [UIFont systemFontOfSize:13 weight:UIFontWeightBold];
     }
@@ -864,7 +919,7 @@ BOOL isCustomResolution(CGSize res) {
     [stack addSubview:button];
     [NSLayoutConstraint activateConstraints:@[
         [button.trailingAnchor constraintEqualToAnchor:stack.trailingAnchor constant:-4],
-        [button.topAnchor constraintEqualToAnchor:stack.topAnchor constant: usingTextButton ? -2 : 0],
+        [button.bottomAnchor constraintEqualToAnchor:        stack.arrangedSubviews[0].bottomAnchor constant:-1],
     ]];
 }
 
@@ -1073,23 +1128,19 @@ BOOL isCustomResolution(CGSize res) {
         
         [self.resolutionSelector removeSegmentAtIndex:0 animated:NO]; // remove 360p
         [self.resolutionSelector removeSegmentAtIndex:5 animated:NO]; // remove custom segment
-        self.resolutionDisplayView.layer.cornerRadius = 10;
-        self.resolutionDisplayView.clipsToBounds = YES;
-        UITapGestureRecognizer *resolutionDisplayViewTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(resolutionDisplayViewTapped:)];
-        [self.resolutionDisplayView addGestureRecognizer:resolutionDisplayViewTap];
-        
-        resolutionTable[0] = CGSizeMake(640, 360);
-        resolutionTable[1] = CGSizeMake(1280, 720);
-        resolutionTable[2] = CGSizeMake(1920, 1080);
-        resolutionTable[3] = CGSizeMake(3840, 2160);
-        resolutionTable[4] = CGSizeMake(safeAreaWidth, fullScreenHeight);
-        resolutionTable[5] = CGSizeMake(fullScreenWidth, fullScreenHeight);
-        resolutionTable[6] = CGSizeMake([currentSettings.width integerValue], [currentSettings.height integerValue]); // custom initial value
+
+        resolutionTable[0] = CGSizeMake(1280, 720);
+        resolutionTable[1] = CGSizeMake(1920, 1080);
+        resolutionTable[2] = CGSizeMake(3840, 2160);
+        resolutionTable[3] = CGSizeMake(safeAreaWidth, fullScreenHeight);
+        resolutionTable[4] = CGSizeMake(fullScreenWidth, fullScreenHeight);
+        resolutionTable[5] = CGSizeMake([currentSettings.width integerValue], [currentSettings.height integerValue]); // custom initial value
         [self updateResolutionTable];
         
         // Don't populate the custom entry unless we have a custom resolution
-        if (!isCustomResolution(resolutionTable[6])) {
-            resolutionTable[6] = CGSizeMake(0, 0);
+        //self.customResolutionSwitch
+        if (!isCustomResolution(resolutionTable[5])) {
+            resolutionTable[5] = CGSizeMake(0, 0);
         }
         
         NSInteger framerate;
@@ -1174,6 +1225,12 @@ BOOL isCustomResolution(CGSize res) {
         _lastSelectedResolutionIndex = resolution;
         [self.resolutionSelector setSelectedSegmentIndex:resolution];
         [self.resolutionSelector addTarget:self action:@selector(newResolutionChosen) forControlEvents:UIControlEventValueChanged];
+        [self.customResolutionSwitch addTarget:self action:@selector(customResolutionSwitched:) forControlEvents:UIControlEventValueChanged];
+        CGSize currentResolution = CGSizeMake(currentSettings.width.intValue, currentSettings.height.intValue);
+        [self.customResolutionSwitch setOn: isCustomResolution(currentResolution)];
+        NSLog(@"isCustomResolution %d", isCustomResolution(currentResolution));
+        self.resolutionDisplayLabel.accessibilityIdentifier = @"resolutionDisplayLabel";
+        
         [self.framerateSelector setSelectedSegmentIndex:framerate];
         [self.framerateSelector addTarget:self action:@selector(updateBitrate) forControlEvents:UIControlEventValueChanged];
         [self.bitrateSlider setMinimumValue:0];
@@ -1181,7 +1238,7 @@ BOOL isCustomResolution(CGSize res) {
         [self.bitrateSlider setValue:[self getSliderValueForBitrate:_bitrate] animated:YES];
         [self.bitrateSlider addTarget:self action:@selector(bitrateSliderMoved) forControlEvents:UIControlEventValueChanged];
         [self updateBitrateText];
-        [self updateResolutionDisplayViewText];
+        [self updateResolutionDisplayLabel];
         
         // Unlock Display Orientation setting
         bool unlockDisplayOrientationSelectorEnabled = [self isFullScreenRequired];//need "requires fullscreen" enabled in the app bunddle to make runtime orientation limitation woring
@@ -1544,16 +1601,16 @@ BOOL isCustomResolution(CGSize res) {
 }
 
 - (void) newResolutionChosen {
-    BOOL lastSegmentSelected = [self.resolutionSelector selectedSegmentIndex] + 1 == [self.resolutionSelector numberOfSegments];
-    if (lastSegmentSelected) {
-        [self promptCustomResolutionDialog];
-    }
-    else {
-        [self updateBitrate];
-        [self updateResolutionDisplayViewText];
-        _lastSelectedResolutionIndex = [self.resolutionSelector selectedSegmentIndex];
-    }
+    [self updateBitrate];
+    [self updateResolutionDisplayLabel];
+    _lastSelectedResolutionIndex = [self.resolutionSelector selectedSegmentIndex];
     [self updateResolutionTable];
+}
+
+- (void)customResolutionSwitched:(UISwitch* )sender{
+    if(sender.isOn) [self promptCustomResolutionDialog];
+    else [self newResolutionChosen];
+    [self.resolutionSelector setEnabled:!sender.isOn];
 }
 
 - (void) promptCustomResolutionDialog {
@@ -1619,8 +1676,7 @@ BOOL isCustomResolution(CGSize res) {
 
         resolutionTable[RESOLUTION_TABLE_CUSTOM_INDEX] = CGSizeMake(width, height);
         [self updateBitrate];
-        [self updateResolutionDisplayViewText];
-        self->_lastSelectedResolutionIndex = [self.resolutionSelector selectedSegmentIndex];
+        [self updateResolutionDisplayLabel];
         
         UIAlertController *alertController = [UIAlertController alertControllerWithTitle:[LocalizationHelper localizedStringForKey:@"Custom Resolution Selected"] message: [LocalizationHelper localizedStringForKey:@"Custom resolutions are not officially supported by GeForce Experience, so it will not set your host display resolution. You will need to set it manually while in game.\n\nResolutions that are not supported by your client or host PC may cause streaming errors."] preferredStyle:UIAlertControllerStyleAlert];
         [alertController addAction:[UIAlertAction actionWithTitle:[LocalizationHelper localizedStringForKey:@"Ok"] style:UIAlertActionStyleDefault handler:nil]];
@@ -1629,43 +1685,27 @@ BOOL isCustomResolution(CGSize res) {
 
     [alertController addAction:[UIAlertAction actionWithTitle:[LocalizationHelper localizedStringForKey:@"Cancel"] style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
         // Restore the previous selection
-        [self.resolutionSelector setSelectedSegmentIndex:self->_lastSelectedResolutionIndex];
+        [self.customResolutionSwitch setOn:false];
+        [self.resolutionSelector setEnabled:true];
     }]];
 
     [self presentViewController:alertController animated:YES completion:nil];
 }
 
 - (void)resolutionDisplayViewTapped:(UITapGestureRecognizer *)sender {
-    NSURL *url = [NSURL URLWithString:@"https://moonlight-stream.org/custom-resolution"];
-    if ([[UIApplication sharedApplication] canOpenURL:url]) {
-        [[UIApplication sharedApplication] openURL:url options:@{} completionHandler:nil];
-    }
 }
 
-- (void) updateResolutionDisplayViewText {
+- (void) updateResolutionDisplayLabel {
     NSInteger width = [self getChosenStreamWidth];
     NSInteger height = [self getChosenStreamHeight];
-    CGFloat viewFrameWidth = self.resolutionDisplayView.frame.size.width;
-    CGFloat viewFrameHeight = self.resolutionDisplayView.frame.size.height;
-    CGFloat padding = 10;
-    CGFloat fontSize = [UIFont smallSystemFontSize];
     
-    for (UIView *subview in self.resolutionDisplayView.subviews) {
-        [subview removeFromSuperview];
-    }
-    UILabel *label1 = [[UILabel alloc] init];
-    label1.text = [LocalizationHelper localizedStringForKey:@"Set PC/Game resolution:"];
-    label1.font = [UIFont systemFontOfSize:fontSize];
-    [label1 sizeToFit];
-    label1.frame = CGRectMake(padding, (viewFrameHeight - label1.frame.size.height) / 2, label1.frame.size.width, label1.frame.size.height);
-
-    UILabel *label2 = [[UILabel alloc] init];
-    label2.text = [NSString stringWithFormat:@"%ld x %ld", (long)width, (long)height];
-    [label2 sizeToFit];
-    label2.frame = CGRectMake(viewFrameWidth - label2.frame.size.width - padding, (viewFrameHeight - label2.frame.size.height) / 2, label2.frame.size.width, label2.frame.size.height);
-
-    [self.resolutionDisplayView addSubview:label1];
-    [self.resolutionDisplayView addSubview:label2];
+    [self findDynamicLabelFromStack:_resolutionStack].text = [NSString stringWithFormat:@"%ld × %ld", (long)width, (long)height];
+    /*
+    [self.resolutionDisplayLabel sizeToFit];
+    self.resolutionDisplayLabel.textAlignment = NSTextAlignmentCenter;
+    self.resolutionDisplayLabel.adjustsFontSizeToFitWidth = YES;
+    self.resolutionDisplayLabel.textColor = [ThemeManager appPrimaryColor];
+    self.resolutionDisplayLabel.font = [UIFont systemFontOfSize:17 weight:UIFontWeightMedium]; */
 }
 
 - (void) touchMoveEventIntervalSliderMoved{
@@ -1700,8 +1740,8 @@ BOOL isCustomResolution(CGSize res) {
 
 - (void) updateBitrateText {
     // Display bitrate in Mbps
-    if(_bitrate / 1000. > 50.0) [self.bitrateLabel setText:[LocalizationHelper localizedStringForKey:@"Bitrate: %.1f Mbps - Use High Bitrates with Caution!", _bitrate / 1000.]];
-    else [self.bitrateLabel setText:[LocalizationHelper localizedStringForKey:@"Bitrate: %.1f Mbps", _bitrate / 1000.]];
+    UILabel* label = [self findDynamicLabelFromStack:self.bitrateStack];
+    [label setText:[LocalizationHelper localizedStringForKey:@"%.1f Mbps", _bitrate / 1000.]];
 }
 
 - (NSInteger) getChosenFrameRate {
@@ -1741,8 +1781,7 @@ BOOL isCustomResolution(CGSize res) {
 
 - (NSInteger) getChosenStreamHeight {
     // because the 4k resolution can be removed
-    BOOL lastSegmentSelected = [self.resolutionSelector selectedSegmentIndex] + 1 == [self.resolutionSelector numberOfSegments];
-    if (lastSegmentSelected) {
+    if (self.customResolutionSwitch.isOn) {
         return resolutionTable[RESOLUTION_TABLE_CUSTOM_INDEX].height;
     }
 
@@ -1751,8 +1790,7 @@ BOOL isCustomResolution(CGSize res) {
 
 - (NSInteger) getChosenStreamWidth {
     // because the 4k resolution can be removed
-    BOOL lastSegmentSelected = [self.resolutionSelector selectedSegmentIndex] + 1 == [self.resolutionSelector numberOfSegments];
-    if (lastSegmentSelected) {
+    if (self.customResolutionSwitch.isOn) {
         return resolutionTable[RESOLUTION_TABLE_CUSTOM_INDEX].width;
     }
 
@@ -1784,6 +1822,7 @@ BOOL isCustomResolution(CGSize res) {
     for (UIView *subview in view.subviews) {
         if ([subview isKindOfClass:[UILabel class]]) {
             UILabel *label = (UILabel *)subview;
+            if(label.accessibilityIdentifier != nil) break;
             if (@available(iOS 13.0, *)) {
                 label.layer.filters = nil;
                 label.textColor = [ThemeManager textColor];
