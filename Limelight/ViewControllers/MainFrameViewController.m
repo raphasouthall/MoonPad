@@ -1119,25 +1119,17 @@ static NSMutableSet* hostList;
     
     //[settingsViewController.resolutionSelector setEnabled:!self.settingsExpandedInStreamView];
     settingsViewController.resolutionStack.hidden = self.settingsExpandedInStreamView;
-    [settingsViewController.framerateSelector setEnabled:!self.settingsExpandedInStreamView];
     settingsViewController.fpsStack.hidden = self.settingsExpandedInStreamView;
     [settingsViewController widget:settingsViewController.bitrateSlider setEnabled:!self.settingsExpandedInStreamView];
     //settingsViewController.bitrateStack.hidden = self.settingsExpandedInStreamView;
-    [settingsViewController.optimizeSettingsSelector setEnabled:!self.settingsExpandedInStreamView];
     settingsViewController.optimizeSettingsStack.hidden = self.settingsExpandedInStreamView;
-    [settingsViewController.audioOnPCSelector setEnabled:!self.settingsExpandedInStreamView];
     settingsViewController.audioOnPcStack.hidden = self.settingsExpandedInStreamView;
-    [settingsViewController.codecSelector setEnabled:!self.settingsExpandedInStreamView];
     settingsViewController.codecStack.hidden = self.settingsExpandedInStreamView;
     settingsViewController.yuv444Stack.hidden = self.settingsExpandedInStreamView;
     settingsViewController.HdrStack.hidden = self.settingsExpandedInStreamView;
-    [settingsViewController.framePacingSelector setEnabled:!self.settingsExpandedInStreamView];
     settingsViewController.framepacingStack.hidden = self.settingsExpandedInStreamView;
-    [settingsViewController.btMouseSelector setEnabled:!self.settingsExpandedInStreamView];
     settingsViewController.citrixX1MouseStack.hidden = self.settingsExpandedInStreamView;
-    [settingsViewController.externalDisplayModeSelector setEnabled:!self.settingsExpandedInStreamView];
     settingsViewController.externalDisplayModeStack.hidden = self.settingsExpandedInStreamView;
-    [settingsViewController.backToStreamingButton setEnabled:self.settingsExpandedInStreamView]; // will be deprecated soon
     // [settingsViewController.unlockDisplayOrientationSelector setEnabled:!self.settingsExpandedInStreamView && [self isFullScreenRequired]];//need "requires fullscreen" enabled in the app bunddle to make runtime orientation limitation woring
 }
 

@@ -467,12 +467,10 @@ BOOL isCustomResolution(CGSize res) {
     [self addSetting:self.resolutionStack ofId:@"resolutionStack" withInfoTag:YES withDynamicLabel:YES to:videoSection];
     [self addSetting:self.fpsStack ofId:@"fpsStack" withInfoTag:NO withDynamicLabel:NO to:videoSection];
     [self addSetting:self.bitrateStack ofId:@"bitrateStack" withInfoTag:YES withDynamicLabel:YES to:videoSection];
-    //[self addDynamicLabelForStack:self.bitrateStack];
-    
-    [self addSetting:self.codecStack ofId:@"codecStack" withInfoTag:NO withDynamicLabel:NO to:videoSection];
-    [self addSetting:self.HdrStack ofId:@"HdrStack" withInfoTag:YES withDynamicLabel:NO to:videoSection];
-    [self addSetting:self.yuv444Stack ofId:@"yuv444Stack" withInfoTag:NO withDynamicLabel:NO to:videoSection];
     [self addSetting:self.framepacingStack ofId:@"framepacingStack" withInfoTag:NO withDynamicLabel:NO to:videoSection];
+    [self addSetting:self.codecStack ofId:@"codecStack" withInfoTag:NO withDynamicLabel:NO to:videoSection];
+    [self addSetting:self.HdrStack ofId:@"HdrStack" withInfoTag:NO withDynamicLabel:NO to:videoSection];
+    [self addSetting:self.yuv444Stack ofId:@"yuv444Stack" withInfoTag:YES withDynamicLabel:NO to:videoSection];
     [videoSection addToParentStack:parentStack];
     [videoSection setExpanded:YES];
 
