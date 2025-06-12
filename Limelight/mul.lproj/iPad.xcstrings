@@ -1233,7 +1233,7 @@
     },
     "D2u-4j-7kg.segmentTitles[0]" : {
       "comment" : "Class = \"UISegmentedControl\"; D2u-4j-7kg.segmentTitles[0] = \"No\"; ObjectID = \"D2u-4j-7kg\";",
-      "extractionState" : "extracted_with_value",
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1263,7 +1263,7 @@
     },
     "D2u-4j-7kg.segmentTitles[1]" : {
       "comment" : "Class = \"UISegmentedControl\"; D2u-4j-7kg.segmentTitles[1] = \"Yes\"; ObjectID = \"D2u-4j-7kg\";",
-      "extractionState" : "extracted_with_value",
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2581,6 +2581,18 @@
         }
       }
     },
+    "MNm-86-RGl.text" : {
+      "comment" : "Class = \"UILabel\"; text = \"YUV 4:4:4\"; ObjectID = \"MNm-86-RGl\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "YUV 4:4:4"
+          }
+        }
+      }
+    },
     "mSL-ru-nRm.title" : {
       "comment" : "Class = \"UIBarButtonItem\"; title = \"Settings\"; ObjectID = \"mSL-ru-nRm\";",
       "extractionState" : "extracted_with_value",
@@ -2901,7 +2913,7 @@
     },
     "OHY-2z-Tm7.text" : {
       "comment" : "Class = \"UILabel\"; text = \"Enable YUV 4:4:4 (Beta)\"; ObjectID = \"OHY-2z-Tm7\";",
-      "extractionState" : "extracted_with_value",
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {

@@ -53,8 +53,6 @@
 @property (strong, nonatomic) IBOutlet UISegmentedControl *framerateSelector;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *resolutionSelector;
 @property (weak, nonatomic) IBOutlet UISwitch *customResolutionSwitch;
-@property (weak, nonatomic) IBOutlet UILabel *resolutionDisplayLabel;
-@property (strong, nonatomic) IBOutlet UIView *resolutionDisplayView;
 @property (strong, nonatomic) IBOutlet UILabel *touchModeLabel;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *touchModeSelector;
 @property (strong, nonatomic) IBOutlet UILabel *onscreenControllerLabel;
@@ -65,8 +63,8 @@
 @property (strong, nonatomic) IBOutlet UISegmentedControl *swapABXYButtonsSelector;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *audioOnPCSelector;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *codecSelector;
-@property (strong, nonatomic) IBOutlet UISegmentedControl *yuv444Selector;
 @property (weak, nonatomic) IBOutlet UISwitch *hdrSwitch;
+@property (weak, nonatomic) IBOutlet UISwitch *yuv444Switch;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *framePacingSelector;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *btMouseSelector;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *reverseMouseWheelDirectionSelector;

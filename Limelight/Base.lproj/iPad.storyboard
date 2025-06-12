@@ -757,28 +757,26 @@ ICAgICAgICAgICAgICA
                                     <constraint firstAttribute="width" constant="380" id="dvp-zp-nLG"/>
                                 </constraints>
                             </stackView>
-                            <stackView opaque="NO" contentMode="scaleToFill" ambiguous="YES" axis="vertical" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="qmS-0e-0jd" userLabel="yuv444 Stack">
-                                <rect key="frame" x="17" y="1680" width="380" height="56.5"/>
+                            <stackView opaque="NO" contentMode="scaleToFill" spacing="20" id="Qfd-bG-FSa" userLabel="yuv444Stack">
+                                <rect key="frame" x="17" y="1683" width="280" height="31"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Enable YUV 4:4:4 (Beta)" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OHY-2z-Tm7">
-                                        <rect key="frame" x="0.0" y="0.0" width="380" height="20.5"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="YUV 4:4:4" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MNm-86-RGl" userLabel="yuv444Label">
+                                        <rect key="frame" x="0.0" y="0.0" width="130" height="31"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="130" id="foL-nr-sZ9"/>
+                                        </constraints>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                        <color key="textColor" red="0.93902439019999995" green="0.9625305918" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="1" translatesAutoresizingMaskIntoConstraints="NO" id="D2u-4j-7kg" userLabel="Enable YUV 4:4:4 (Beta)">
-                                        <rect key="frame" x="0.0" y="25.5" width="380" height="32"/>
-                                        <segments>
-                                            <segment title="No"/>
-                                            <segment title="Yes"/>
-                                        </segments>
-                                        <color key="tintColor" red="0.6716768742" green="0.61711704730000005" blue="0.99902987480000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                        <color key="selectedSegmentTintColor" systemColor="linkColor"/>
-                                    </segmentedControl>
+                                    <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jIQ-jh-tvP" userLabel="yuv444Switch">
+                                        <rect key="frame" x="150" y="0.0" width="132" height="31"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="130" id="a86-Rl-9pP"/>
+                                        </constraints>
+                                    </switch>
                                 </subviews>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="380" id="FLZ-lq-4Lc"/>
-                                </constraints>
                             </stackView>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -856,13 +854,13 @@ ICAgICAgICAgICAgICA
                         <outlet property="touchPointerVelocityFactorUILabel" destination="egA-7n-Dpe" id="QGf-uN-5Io"/>
                         <outlet property="unlockDisplayOrientationSelector" destination="KNe-bN-CDb" id="C8u-Ro-HDy"/>
                         <outlet property="unlockDisplayOrientationStack" destination="5dA-cw-gOa" id="HHx-qM-BZi"/>
-                        <outlet property="yuv444Selector" destination="D2u-4j-7kg" id="Dpx-IW-u0c"/>
-                        <outlet property="yuv444Stack" destination="qmS-0e-0jd" id="RCV-Z4-wWa"/>
+                        <outlet property="yuv444Stack" destination="Qfd-bG-FSa" id="kpm-TK-Ngg"/>
+                        <outlet property="yuv444Switch" destination="jIQ-jh-tvP" id="Qru-gO-haR"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="01j-TU-OoL" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="video.and.waveform" catalog="system" id="20f-ao-iK1">
-                    <rect key="frame" x="0.0" y="-4" width="240" height="128"/>
+                    <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                 </imageView>
                 <navigationBar contentMode="scaleToFill" id="3qa-QW-sSl">

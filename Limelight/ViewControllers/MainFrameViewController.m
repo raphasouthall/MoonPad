@@ -1129,7 +1129,6 @@ static NSMutableSet* hostList;
     settingsViewController.audioOnPcStack.hidden = self.settingsExpandedInStreamView;
     [settingsViewController.codecSelector setEnabled:!self.settingsExpandedInStreamView];
     settingsViewController.codecStack.hidden = self.settingsExpandedInStreamView;
-    [settingsViewController.yuv444Selector setEnabled:!self.settingsExpandedInStreamView];
     settingsViewController.yuv444Stack.hidden = self.settingsExpandedInStreamView;
     settingsViewController.HdrStack.hidden = self.settingsExpandedInStreamView;
     [settingsViewController.framePacingSelector setEnabled:!self.settingsExpandedInStreamView];

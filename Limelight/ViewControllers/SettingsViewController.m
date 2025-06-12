@@ -1214,7 +1214,7 @@ BOOL isCustomResolution(CGSize res) {
             [self.hdrSwitch setOn:currentSettings.enableHdr];
         }
         
-        [self.yuv444Selector setSelectedSegmentIndex:currentSettings.enableYUV444 ? 1 : 0];
+        [self.yuv444Switch setOn:currentSettings.enableYUV444];
         [self.statsOverlaySelector setSelectedSegmentIndex:currentSettings.statsOverlayLevel.intValue];
         [self.btMouseSelector setSelectedSegmentIndex:currentSettings.btMouseSupport ? 1 : 0];
         [self.optimizeSettingsSelector setSelectedSegmentIndex:currentSettings.optimizeGames ? 1 : 0];
@@ -1229,7 +1229,6 @@ BOOL isCustomResolution(CGSize res) {
         CGSize currentResolution = CGSizeMake(currentSettings.width.intValue, currentSettings.height.intValue);
         [self.customResolutionSwitch setOn: isCustomResolution(currentResolution)];
         NSLog(@"isCustomResolution %d", isCustomResolution(currentResolution));
-        self.resolutionDisplayLabel.accessibilityIdentifier = @"resolutionDisplayLabel";
         
         [self.framerateSelector setSelectedSegmentIndex:framerate];
         [self.framerateSelector addTarget:self action:@selector(updateBitrate) forControlEvents:UIControlEventValueChanged];
@@ -1898,7 +1897,7 @@ BOOL isCustomResolution(CGSize res) {
     BOOL swapABXYButtons = [self.swapABXYButtonsSelector selectedSegmentIndex] == 1;
     BOOL audioOnPC = [self.audioOnPCSelector selectedSegmentIndex] == 1;
     uint32_t preferredCodec = [self getChosenCodecPreference];
-    BOOL enableYUV444 = [self.yuv444Selector selectedSegmentIndex] == 1;
+    BOOL enableYUV444 = self.yuv444Switch.isOn;
     BOOL btMouseSupport = [self.btMouseSelector selectedSegmentIndex] == 1;
     BOOL useFramePacing = [self.framePacingSelector selectedSegmentIndex] == 1;
     // BOOL absoluteTouchMode = [self.touchModeSelector selectedSegmentIndex] == 1;
