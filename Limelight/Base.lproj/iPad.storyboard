@@ -506,19 +506,17 @@ ICAgICAgICAgICAgICA
                                 </constraints>
                             </stackView>
                             <stackView opaque="NO" contentMode="scaleToFill" ambiguous="YES" axis="vertical" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="pN7-bs-8yu" userLabel="slideToSettingsDistance Stack">
-                                <rect key="frame" x="16" y="1185" width="0.0" height="56.5"/>
+                                <rect key="frame" x="16" y="1185" width="380" height="55.5"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Slide Distance for Stream View Menu: 0.5 * screen-width     " lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="pMN-6T-aYE" userLabel="Slide To Settings Distance UI Label">
-                                        <rect key="frame" x="0.0" y="0.0" width="0.0" height="18.5"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Slide Distance for Stream View Menu: 0.5 * screen-width     " lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pMN-6T-aYE" userLabel="Slide To Settings Distance UI Label">
+                                        <rect key="frame" x="0.0" y="0.0" width="380" height="20.5"/>
                                         <color key="tintColor" red="0.81533776120000001" green="0.85979419950000002" blue="0.91372549020000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <slider opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" id="8p6-FP-UWP">
-                                        <rect key="frame" x="-2" y="23.5" width="4" height="34"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="8p6-FP-UWP">
+                                        <rect key="frame" x="-2" y="25.5" width="384" height="31"/>
                                         <color key="tintColor" systemColor="linkColor"/>
                                     </slider>
                                 </subviews>
