@@ -92,19 +92,19 @@
                                         <color key="tintColor" systemColor="linkColor"/>
                                         <color key="selectedSegmentTintColor" systemColor="linkColor"/>
                                     </segmentedControl>
-                                    <stackView opaque="NO" contentMode="scaleToFill" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="dH7-Sy-EdJ" userLabel="ResolutionInnerStack2">
+                                    <stackView opaque="NO" contentMode="scaleToFill" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="djj-8b-2pB" userLabel="ResolutionInnerStack2">
                                         <rect key="frame" x="0.0" y="71.5" width="380" height="31"/>
                                         <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Custom Resolution" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1ri-Kt-gSf">
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Custom Resolution" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hq8-dy-8BF">
                                                 <rect key="frame" x="0.0" y="0.0" width="130" height="31"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="width" constant="130" id="wgu-KB-nC0"/>
+                                                    <constraint firstAttribute="width" constant="130" id="13q-rc-BQb"/>
                                                 </constraints>
                                                 <fontDescription key="fontDescription" type="system" pointSize="11"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wIq-fF-X8l">
+                                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="E5w-kK-dOo">
                                                 <rect key="frame" x="150" y="0.0" width="232" height="31"/>
                                             </switch>
                                         </subviews>
@@ -183,51 +183,25 @@
                                     <constraint firstAttribute="width" constant="380" id="2q2-Xb-Ubk"/>
                                 </constraints>
                             </stackView>
-                            <stackView opaque="NO" contentMode="scaleToFill" ambiguous="YES" axis="vertical" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="qmS-0e-0jd" userLabel="yuv444 Stack">
-                                <rect key="frame" x="17" y="1614" width="380" height="56.5"/>
+                            <stackView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="dH7-Sy-EdJ" userLabel="HDRStack">
+                                <rect key="frame" x="20" y="1628" width="280" height="31"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Enable YUV 4:4:4 (Beta)" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OHY-2z-Tm7">
-                                        <rect key="frame" x="0.0" y="0.0" width="380" height="20.5"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="HDR" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2w1-Vw-GVy">
+                                        <rect key="frame" x="0.0" y="0.0" width="130" height="31"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="130" id="9mp-gd-Zxi"/>
+                                        </constraints>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                        <color key="textColor" red="0.93902439019999995" green="0.9625305918" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="1" translatesAutoresizingMaskIntoConstraints="NO" id="D2u-4j-7kg" userLabel="Enable YUV 4:4:4 (Beta)">
-                                        <rect key="frame" x="0.0" y="25.5" width="380" height="32"/>
-                                        <segments>
-                                            <segment title="No"/>
-                                            <segment title="Yes"/>
-                                        </segments>
-                                        <color key="tintColor" red="0.6716768742" green="0.61711704730000005" blue="0.99902987480000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                        <color key="selectedSegmentTintColor" systemColor="linkColor"/>
-                                    </segmentedControl>
+                                    <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wIq-fF-X8l" userLabel="HDR Switch">
+                                        <rect key="frame" x="150" y="0.0" width="132" height="31"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="130" id="hJy-Aj-ymJ"/>
+                                        </constraints>
+                                    </switch>
                                 </subviews>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="380" id="FLZ-lq-4Lc"/>
-                                </constraints>
-                            </stackView>
-                            <stackView opaque="NO" contentMode="scaleToFill" ambiguous="YES" axis="vertical" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="wTQ-T2-A6b" userLabel="HDR Stack">
-                                <rect key="frame" x="15" y="1686" width="380" height="56.5"/>
-                                <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="HDR (Beta)                                                                                   " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bZL-t1-mk7">
-                                        <rect key="frame" x="0.0" y="0.0" width="380" height="20.5"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                        <color key="textColor" red="0.93902439019999995" green="0.9625305918" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="1" translatesAutoresizingMaskIntoConstraints="NO" id="RRk-03-hIr" userLabel="HDR (Beta)                                                                                   ">
-                                        <rect key="frame" x="0.0" y="25.5" width="380" height="32"/>
-                                        <segments>
-                                            <segment title="No"/>
-                                            <segment title="Yes"/>
-                                        </segments>
-                                        <color key="tintColor" red="0.6716768742" green="0.61711704730000005" blue="0.99902987480000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                        <color key="selectedSegmentTintColor" systemColor="linkColor"/>
-                                    </segmentedControl>
-                                </subviews>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="380" id="DHv-Aj-imR"/>
-                                </constraints>
                             </stackView>
                             <stackView opaque="NO" contentMode="scaleToFill" ambiguous="YES" axis="vertical" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="9C2-td-rMV" userLabel="framepacing Stack">
                                 <rect key="frame" x="15" y="1759" width="380" height="56.5"/>
@@ -785,12 +759,35 @@ ICAgICAgICAgICAgICA
                                     <constraint firstAttribute="width" constant="380" id="dvp-zp-nLG"/>
                                 </constraints>
                             </stackView>
+                            <stackView opaque="NO" contentMode="scaleToFill" ambiguous="YES" axis="vertical" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="qmS-0e-0jd" userLabel="yuv444 Stack">
+                                <rect key="frame" x="17" y="1680" width="380" height="56.5"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Enable YUV 4:4:4 (Beta)" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OHY-2z-Tm7">
+                                        <rect key="frame" x="0.0" y="0.0" width="380" height="20.5"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <color key="textColor" red="0.93902439019999995" green="0.9625305918" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="1" translatesAutoresizingMaskIntoConstraints="NO" id="D2u-4j-7kg" userLabel="Enable YUV 4:4:4 (Beta)">
+                                        <rect key="frame" x="0.0" y="25.5" width="380" height="32"/>
+                                        <segments>
+                                            <segment title="No"/>
+                                            <segment title="Yes"/>
+                                        </segments>
+                                        <color key="tintColor" red="0.6716768742" green="0.61711704730000005" blue="0.99902987480000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <color key="selectedSegmentTintColor" systemColor="linkColor"/>
+                                    </segmentedControl>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="380" id="FLZ-lq-4Lc"/>
+                                </constraints>
+                            </stackView>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </view>
                     <size key="freeformSize" width="682" height="2500"/>
                     <connections>
-                        <outlet property="HdrStack" destination="wTQ-T2-A6b" id="PQ7-Xe-p70"/>
+                        <outlet property="HdrStack" destination="dH7-Sy-EdJ" id="lVV-l0-VBW"/>
                         <outlet property="asyncNativeTouchPrioritySelector" destination="AXb-DO-LzB" id="3Z4-0v-aQ4"/>
                         <outlet property="asyncTouchStack" destination="aP7-M9-psT" id="Yzx-Vt-V15"/>
                         <outlet property="audioOnPCSelector" destination="gid-cU-pV9" id="WDf-6N-wt3"/>
@@ -803,14 +800,14 @@ ICAgICAgICAgICAgICA
                         <outlet property="cmdToolScreenEdgeSelector" destination="yY7-Sf-Zes" id="fgL-xr-obH"/>
                         <outlet property="codecSelector" destination="aFy-0w-YPe" id="DlU-0l-gwz"/>
                         <outlet property="codecStack" destination="gWg-BF-yDI" id="GGc-JQ-N8y"/>
-                        <outlet property="customResolutionSwitch" destination="wIq-fF-X8l" id="xzM-7N-Ljq"/>
+                        <outlet property="customResolutionSwitch" destination="E5w-kK-dOo" id="hrt-v2-8dY"/>
                         <outlet property="externalDisplayModeSelector" destination="VWB-YB-Ptj" id="0ak-pc-evb"/>
                         <outlet property="externalDisplayModeStack" destination="YBu-VX-wpN" id="72y-R6-fF7"/>
                         <outlet property="fpsStack" destination="TuR-H8-e2H" id="zGQ-gR-P1i"/>
                         <outlet property="framePacingSelector" destination="OOg-A3-DdM" id="XJL-lk-f5K"/>
                         <outlet property="framepacingStack" destination="9C2-td-rMV" id="5wc-qn-fo5"/>
                         <outlet property="framerateSelector" destination="8hF-kb-2uV" id="dfT-hb-csE"/>
-                        <outlet property="hdrSelector" destination="RRk-03-hIr" id="1Fp-n6-zh0"/>
+                        <outlet property="hdrSwitch" destination="wIq-fF-X8l" id="Ozz-h0-nJL"/>
                         <outlet property="keyboardToggleFingerNumLabel" destination="nh6-cn-z23" id="ong-b0-2ST"/>
                         <outlet property="keyboardToggleFingerNumSlider" destination="4wJ-Gd-Dmp" id="fbp-o8-KRA"/>
                         <outlet property="keyboardToggleFingerNumStack" destination="Tv6-pw-87l" id="RtJ-Ib-GJg"/>
@@ -1425,16 +1422,16 @@ ICAgICAgICAgICAgICA
         <image name="tray.full.fill" catalog="system" width="128" height="88"/>
         <image name="video.and.waveform" catalog="system" width="128" height="94"/>
         <systemColor name="linkColor">
-            <color red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.0" green="0.47843137254901963" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="systemBrownColor">
-            <color red="0.63529411759999999" green="0.51764705879999995" blue="0.36862745099999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.63529411764705879" green="0.51764705882352946" blue="0.36862745098039218" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemTealColor">
-            <color red="0.18823529410000001" green="0.69019607839999997" blue="0.78039215689999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.18823529411764706" green="0.69019607843137254" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

@@ -470,7 +470,7 @@ BOOL isCustomResolution(CGSize res) {
     //[self addDynamicLabelForStack:self.bitrateStack];
     
     [self addSetting:self.codecStack ofId:@"codecStack" withInfoTag:NO withDynamicLabel:NO to:videoSection];
-    [self addSetting:self.HdrStack ofId:@"HdrStack" withInfoTag:NO withDynamicLabel:NO to:videoSection];
+    [self addSetting:self.HdrStack ofId:@"HdrStack" withInfoTag:YES withDynamicLabel:NO to:videoSection];
     [self addSetting:self.yuv444Stack ofId:@"yuv444Stack" withInfoTag:NO withDynamicLabel:NO to:videoSection];
     [self addSetting:self.framepacingStack ofId:@"framepacingStack" withInfoTag:NO withDynamicLabel:NO to:videoSection];
     [videoSection addToParentStack:parentStack];
@@ -1207,12 +1207,11 @@ BOOL isCustomResolution(CGSize res) {
         }
         
         if (!VTIsHardwareDecodeSupported(kCMVideoCodecType_HEVC) || !(AVPlayer.availableHDRModes & AVPlayerHDRModeHDR10)) {
-            [self.hdrSelector removeAllSegments];
-            [self.hdrSelector insertSegmentWithTitle:[LocalizationHelper localizedStringForKey:@"Unsupported on this device"] atIndex:0 animated:NO];
-            [self.hdrSelector setEnabled:NO];
+            [self.hdrSwitch setOn:NO];
+            [self.hdrSwitch setEnabled:NO];
         }
         else {
-            [self.hdrSelector setSelectedSegmentIndex:currentSettings.enableHdr ? 1 : 0];
+            [self.hdrSwitch setOn:currentSettings.enableHdr];
         }
         
         [self.yuv444Selector setSelectedSegmentIndex:currentSettings.enableYUV444 ? 1 : 0];
@@ -1906,7 +1905,7 @@ BOOL isCustomResolution(CGSize res) {
     NSInteger touchMode = [self.touchModeSelector selectedSegmentIndex];
     NSInteger statsOverlayLevel = [self.statsOverlaySelector selectedSegmentIndex];
     BOOL statsOverlayEnabled = statsOverlayLevel != 0;
-    BOOL enableHdr = [self.hdrSelector selectedSegmentIndex] == 1;
+    BOOL enableHdr = self.hdrSwitch.isOn;
     BOOL unlockDisplayOrientation = [self.unlockDisplayOrientationSelector selectedSegmentIndex] == 1;
     NSInteger resolutionSelected = [self.resolutionSelector selectedSegmentIndex];
     NSInteger externalDisplayMode = [self.externalDisplayModeSelector selectedSegmentIndex];

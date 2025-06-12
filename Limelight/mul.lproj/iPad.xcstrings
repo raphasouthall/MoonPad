@@ -2,30 +2,30 @@
   "sourceLanguage" : "en",
   "strings" : {
     "1ri-Kt-gSf.text" : {
-      "comment" : "Class = \"UILabel\"; text = \"Custom Resolution\"; ObjectID = \"1ri-Kt-gSf\";",
-      "extractionState" : "extracted_with_value",
+      "comment" : "Class = \"UILabel\"; text = \"dfasfasdfasdf\"; ObjectID = \"1ri-Kt-gSf\";",
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "Custom Resolution"
+            "value" : "dfasfasdfasdf"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "自定义分辨率"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "自定义分辨率"
           }
         },
         "zh-HK" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "自定义分辨率"
           }
         }
@@ -117,6 +117,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "启用"
+          }
+        }
+      }
+    },
+    "2w1-Vw-GVy.text" : {
+      "comment" : "Class = \"UILabel\"; text = \"HDR\"; ObjectID = \"2w1-Vw-GVy\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "HDR"
           }
         }
       }
@@ -993,7 +1005,7 @@
     },
     "bZL-t1-mk7.text" : {
       "comment" : "Class = \"UILabel\"; text = \"HDR (Beta)                                                                                   \"; ObjectID = \"bZL-t1-mk7\";",
-      "extractionState" : "extracted_with_value",
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1983,6 +1995,36 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "启用"
+          }
+        }
+      }
+    },
+    "hq8-dy-8BF.text" : {
+      "comment" : "Class = \"UILabel\"; text = \"Custom Resolution\"; ObjectID = \"hq8-dy-8BF\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Custom Resolution"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "自定义分辨率"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "自定义分辨率"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "自定义分辨率"
           }
         }
       }
@@ -3333,7 +3375,7 @@
     },
     "RRk-03-hIr.segmentTitles[0]" : {
       "comment" : "Class = \"UISegmentedControl\"; RRk-03-hIr.segmentTitles[0] = \"No\"; ObjectID = \"RRk-03-hIr\";",
-      "extractionState" : "extracted_with_value",
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -3363,7 +3405,7 @@
     },
     "RRk-03-hIr.segmentTitles[1]" : {
       "comment" : "Class = \"UISegmentedControl\"; RRk-03-hIr.segmentTitles[1] = \"Yes\"; ObjectID = \"RRk-03-hIr\";",
-      "extractionState" : "extracted_with_value",
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
