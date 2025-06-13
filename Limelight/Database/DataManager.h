@@ -21,6 +21,13 @@ typedef NS_ENUM(NSUInteger, UINavigationBarHeight) {
     UINavigationBarHeightIPhone = 44
 };
 
+typedef NS_ENUM(NSInteger, TouchMode) {
+    RelativeTouch,
+    NativeTouch,
+    AbsoluteTouch,
+    NativeTouchOnly
+};
+
 typedef NS_ENUM(NSInteger, TouchEventPriorityEnum) {
     AsyncNativeTouchOff,
     EqualPriority,

@@ -91,7 +91,7 @@
 
 
 - (bool)isOscLayoutToolEnabled{
-    return (_settings.touchMode.intValue == RELATIVE_TOUCH || _settings.touchMode.intValue == REGULAR_NATIVE_TOUCH || _settings.touchMode.intValue == ABSOLUTE_TOUCH) && _settings.onscreenControls.intValue == OnScreenControlsLevelCustom;
+    return (_settings.touchMode.intValue == RelativeTouch || _settings.touchMode.intValue == NativeTouch || _settings.touchMode.intValue == AbsoluteTouch) && _settings.onscreenControls.intValue == OnScreenControlsLevelCustom;
 }
 
 - (void)configOscLayoutTool{
@@ -103,7 +103,7 @@
         _oscLayoutTapRecoginizer.tapDownTimeThreshold = 0.2;
         _oscLayoutTapRecoginizer.delaysTouchesBegan = NO;
         _oscLayoutTapRecoginizer.delaysTouchesEnded = NO;
-        if(_settings.touchMode.intValue == ABSOLUTE_TOUCH) _oscLayoutTapRecoginizer.immediateTriggering = true; // make immediate triggering on for absolute touch mode
+        if(_settings.touchMode.intValue == AbsoluteTouch) _oscLayoutTapRecoginizer.immediateTriggering = true; // make immediate triggering on for absolute touch mode
         
         [self.view addGestureRecognizer:_oscLayoutTapRecoginizer]; //
         /* sets a reference to the correct 'LayoutOnScreenControlsViewController' depending on whether the user is on an iPhone or iPad */
@@ -150,7 +150,7 @@
 }
 
 - (void)configZoomGestureAndAddStreamView{
-    if (_settings.touchMode.intValue == ABSOLUTE_TOUCH) {
+    if (_settings.touchMode.intValue == AbsoluteTouch) {
         _scrollView = [[UIScrollView alloc] initWithFrame:self.view.frame];
 #if !TARGET_OS_TV
         [_scrollView.panGestureRecognizer setMinimumNumberOfTouches:2];

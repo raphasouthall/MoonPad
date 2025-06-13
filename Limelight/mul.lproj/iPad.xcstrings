@@ -553,6 +553,36 @@
         }
       }
     },
+    "AlL-fp-WCm.text" : {
+      "comment" : "Class = \"UILabel\"; text = \"Enable On-Screen Widget & Peripherals\"; ObjectID = \"AlL-fp-WCm\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Enable On-Screen Widget & Peripherals"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "启用屏显控件与外设"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "启用屏显控件与外设"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "启用屏显控件与外设"
+          }
+        }
+      }
+    },
     "aup-5k-z6P.text" : {
       "comment" : "Class = \"UILabel\"; text = \"Show Local Keyboard Toolbar                                                      \"; ObjectID = \"aup-5k-z6P\";",
       "extractionState" : "extracted_with_value",
@@ -794,37 +824,7 @@
       }
     },
     "bhC-da-VGd.segmentTitles[2]" : {
-      "comment" : "Class = \"UISegmentedControl\"; bhC-da-VGd.segmentTitles[2] = \"Native Only\"; ObjectID = \"bhC-da-VGd\";",
-      "extractionState" : "extracted_with_value",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "Native Only"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "仅多点触控"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "仅多点触控"
-          }
-        },
-        "zh-HK" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "仅多点触控"
-          }
-        }
-      }
-    },
-    "bhC-da-VGd.segmentTitles[3]" : {
-      "comment" : "Class = \"UISegmentedControl\"; bhC-da-VGd.segmentTitles[3] = \"Absolute Touch\"; ObjectID = \"bhC-da-VGd\";",
+      "comment" : "Class = \"UISegmentedControl\"; bhC-da-VGd.segmentTitles[2] = \"Absolute Touch\"; ObjectID = \"bhC-da-VGd\";",
       "extractionState" : "extracted_with_value",
       "localizations" : {
         "en" : {
@@ -1491,36 +1491,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "仅多点触控"
-          }
-        }
-      }
-    },
-    "e4G-id-vjI.segmentTitles[3]" : {
-      "comment" : "Class = \"UISegmentedControl\"; e4G-id-vjI.segmentTitles[3] = \"Absolute Touch\"; ObjectID = \"e4G-id-vjI\";",
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "Absolute Touch"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "单点鼠标"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "单点鼠标"
-          }
-        },
-        "zh-HK" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "单点鼠标"
           }
         }
       }
