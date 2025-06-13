@@ -124,9 +124,7 @@ static const double X1_MOUSE_SPEED_DIVISOR = 2.5;
     self->touchHandler = [[RelativeTouchHandler alloc] initWithView:self];
 #else
     // iOS uses touch Mode depending on user preference
-    
-    uint8_t mode = settings.touchMode.intValue;
-    
+        
     switch (settings.touchMode.intValue) {
         case NativeTouch:
             keyboardToggleRecognizer.immediateTriggering = false;

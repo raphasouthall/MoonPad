@@ -90,7 +90,7 @@
     slideGestureVerticalThreshold = CGRectGetHeight([[UIScreen mainScreen] bounds]) * 0.4;
     screenWidthWithThreshold = CGRectGetWidth([[UIScreen mainScreen] bounds]) - EDGE_TOLERANCE;
 
-    self->pointerVelocityDividerLocationByPoints = CGRectGetWidth([[UIScreen mainScreen] bounds]) * settings.pointerVelocityModeDivider.floatValue;
+    self->pointerVelocityDividerLocationByPoints = self->streamView.bounds.size.width * settings.pointerVelocityModeDivider.floatValue;
     
     [NativeTouchPointer initContextWithView:self->streamView andSettings:settings];
     //_touchesCapturedByOnScreenButtons = [[NSMutableSet alloc] init];

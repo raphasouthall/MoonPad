@@ -291,7 +291,7 @@
                             <stackView opaque="NO" contentMode="scaleToFill" ambiguous="YES" axis="vertical" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="b1U-nD-gYE" userLabel="pointerVelocityDivider Stack">
                                 <rect key="frame" x="15" y="460" width="380" height="56.5"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Touch Pointer Velocity: Scaled on 0% of Right Screen           " lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="DkI-w6-jku" userLabel="pointerVelocityModeDivider">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Divider Position" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="DkI-w6-jku" userLabel="pointerVelocityModeDivider">
                                         <rect key="frame" x="0.0" y="0.0" width="380" height="18.5"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <color key="tintColor" red="0.81533776120000001" green="0.85979419950000002" blue="0.91372549020000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -312,7 +312,7 @@
                             <stackView opaque="NO" contentMode="scaleToFill" ambiguous="YES" axis="vertical" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="vdk-mK-ztu" userLabel="PointerVelocityFactor stack">
                                 <rect key="frame" x="15" y="524" width="380" height="56.5"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Touch Pointer Velocity: 100%                                                    " lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="egA-7n-Dpe" userLabel="touchPointerVelocityFactor">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Touch Pointer Velocity" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="egA-7n-Dpe" userLabel="touchPointerVelocityFactor">
                                         <rect key="frame" x="0.0" y="0.0" width="380" height="18.5"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <color key="tintColor" red="0.81533776120000001" green="0.85979419950000002" blue="0.91372549020000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -354,7 +354,7 @@
                             <stackView opaque="NO" contentMode="scaleToFill" ambiguous="YES" axis="vertical" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="aQ8-4e-CQB" userLabel="mousePointerVelocity Stack">
                                 <rect key="frame" x="17" y="744" width="380" height="56.5"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Mouse Pointer Velocity: 100%                                                   " lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="oPM-G6-u5O" userLabel="mousePointerVelocityFactor">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Mouse Pointer Velocity                                     " lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="oPM-G6-u5O" userLabel="mousePointerVelocityFactor">
                                         <rect key="frame" x="0.0" y="0.0" width="380" height="18.5"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <color key="tintColor" red="0.81533776120000001" green="0.85979419950000002" blue="0.91372549020000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -375,7 +375,7 @@
                             <stackView opaque="NO" contentMode="scaleToFill" ambiguous="YES" axis="vertical" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="ziJ-RC-xkP" userLabel="onScreenWidget Stack">
                                 <rect key="frame" x="16" y="808" width="380" height="56.5"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="On-Screen Controls &amp; Widgets                                                " lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LGV-5y-piG">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="On-Screen Widgets                                                " lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LGV-5y-piG">
                                         <rect key="frame" x="0.0" y="0.0" width="380" height="20.5"/>
                                         <color key="tintColor" red="0.81533776120000001" green="0.85979419950000002" blue="0.91372549020000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -424,23 +424,26 @@
                             <stackView opaque="NO" contentMode="scaleToFill" ambiguous="YES" axis="vertical" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="Tv6-pw-87l" userLabel="keyboardToggleFingerNum Stack">
                                 <rect key="frame" x="17" y="884" width="380" height="56.5"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="nh6-cn-z23">
-                                        <rect key="frame" x="0.0" y="0.0" width="380" height="18.5"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Local Soft Keyboard Gesture" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="nh6-cn-z23">
+                                        <rect key="frame" x="0.0" y="0.0" width="380" height="20.5"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <color key="tintColor" red="0.81533776120000001" green="0.85979419950000002" blue="0.91372549020000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                        <string key="text" base64-UTF8="YES">
-CFRvIFRvZ2dsZSBMb2NhbCBLZXlib2FyZDogVGFwIDMgRmluZ2VycyAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICA
-</string>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="3" minValue="3" maxValue="13" id="4wJ-Gd-Dmp">
-                                        <rect key="frame" x="-2" y="23.5" width="384" height="34"/>
+                                    <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="1" id="kho-5R-daP" userLabel="localSoftKeyboardGestureSelector">
+                                        <rect key="frame" x="0.0" y="25.5" width="380" height="32"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <color key="tintColor" systemColor="linkColor"/>
-                                    </slider>
+                                        <segments>
+                                            <segment title="3 Finger Tap"/>
+                                            <segment title="4 Finger Tap"/>
+                                            <segment title="5 Finger Tap"/>
+                                            <segment title="Disabled"/>
+                                        </segments>
+                                        <color key="tintColor" red="0.6716768742" green="0.61711704730000005" blue="0.99902987480000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <color key="selectedSegmentTintColor" systemColor="linkColor"/>
+                                    </segmentedControl>
                                 </subviews>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="380" id="1bX-IR-Vkj"/>
@@ -818,9 +821,6 @@ ICAgICAgICAgICAgICA
                         <outlet property="framepacingStack" destination="9C2-td-rMV" id="5wc-qn-fo5"/>
                         <outlet property="framerateSelector" destination="8hF-kb-2uV" id="dfT-hb-csE"/>
                         <outlet property="hdrSwitch" destination="wIq-fF-X8l" id="Ozz-h0-nJL"/>
-                        <outlet property="keyboardToggleFingerNumLabel" destination="nh6-cn-z23" id="ong-b0-2ST"/>
-                        <outlet property="keyboardToggleFingerNumSlider" destination="4wJ-Gd-Dmp" id="fbp-o8-KRA"/>
-                        <outlet property="keyboardToggleFingerNumStack" destination="Tv6-pw-87l" id="RtJ-Ib-GJg"/>
                         <outlet property="liftStreamViewForKeyboardSelector" destination="MM5-O0-vK3" id="tSC-Rp-Qfg"/>
                         <outlet property="liftStreamViewForKeyboardStack" destination="mes-so-dfK" id="nXR-Ot-Ydf"/>
                         <outlet property="localMousePointerModeSelector" destination="4FU-iP-c6T" id="4Gz-ao-xH2"/>
@@ -854,6 +854,8 @@ ICAgICAgICAgICAgICA
                         <outlet property="slideToSettingsScreenEdgeSelector" destination="Mm0-xf-9eh" id="3gH-zH-Hy3"/>
                         <outlet property="slideToSettingsScreenEdgeStack" destination="tgA-05-vWV" id="5ir-95-hsv"/>
                         <outlet property="slideToSettingsScreenEdgeUILabel" destination="IvI-tw-APj" id="7qc-yD-pry"/>
+                        <outlet property="softKeyboardGestureSelector" destination="kho-5R-daP" id="AaA-Xg-0fw"/>
+                        <outlet property="softKeyboardGestureStack" destination="Tv6-pw-87l" id="RtJ-Ib-GJg"/>
                         <outlet property="statsOverlaySelector" destination="NLH-qN-qCo" id="EF8-JF-O3S"/>
                         <outlet property="statsOverlayStack" destination="UcP-0b-nJD" id="UdI-NS-O6k"/>
                         <outlet property="swapABXYButtonsSelector" destination="dpd-Bw-aHE" id="lJv-8Q-2jg"/>
@@ -1432,16 +1434,16 @@ ICAgICAgICAgICAgICA
         <image name="tray.full.fill" catalog="system" width="128" height="88"/>
         <image name="video.and.waveform" catalog="system" width="128" height="94"/>
         <systemColor name="linkColor">
-            <color red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.0" green="0.47843137254901963" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="systemBrownColor">
-            <color red="0.63529411759999999" green="0.51764705879999995" blue="0.36862745099999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.63529411764705879" green="0.51764705882352946" blue="0.36862745098039218" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemTealColor">
-            <color red="0.18823529410000001" green="0.69019607839999997" blue="0.78039215689999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.18823529411764706" green="0.69019607843137254" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

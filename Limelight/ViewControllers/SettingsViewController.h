@@ -28,7 +28,8 @@
 @property (strong, nonatomic) IBOutlet UIStackView *touchMoveEventIntervalStack;
 @property (strong, nonatomic) IBOutlet UIStackView *mousePointerVelocityStack;
 @property (strong, nonatomic) IBOutlet UIStackView *onScreenWidgetStack;
-@property (strong, nonatomic) IBOutlet UIStackView *keyboardToggleFingerNumStack;
+@property (strong, nonatomic) IBOutlet UIStackView *softKeyboardGestureStack;
+@property (weak, nonatomic) IBOutlet UISegmentedControl *softKeyboardGestureSelector;
 @property (strong, nonatomic) IBOutlet UIStackView *liftStreamViewForKeyboardStack;
 @property (strong, nonatomic) IBOutlet UIStackView *showKeyboardToolbarStack;
 @property (strong, nonatomic) IBOutlet UIStackView *slideToSettingsScreenEdgeStack;
@@ -72,8 +73,6 @@
 @property (strong, nonatomic) IBOutlet UISegmentedControl *reverseMouseWheelDirectionSelector;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *statsOverlaySelector;
 @property (strong, nonatomic) IBOutlet UIScrollView *scrollView;
-@property (strong, nonatomic) IBOutlet UILabel *keyboardToggleFingerNumLabel;
-@property (strong, nonatomic) IBOutlet UISlider *keyboardToggleFingerNumSlider;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *liftStreamViewForKeyboardSelector;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *showKeyboardToolbarSelector;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *slideToSettingsScreenEdgeSelector;

@@ -122,6 +122,29 @@
         }
       }
     },
+    "%d finger tap gesture" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%d指轻按手势"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%d指轻按手势"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%d指轻按手势"
+          }
+        }
+      }
+    },
     "%u ms (variance: %u ms)" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1123,6 +1146,29 @@
         }
       }
     },
+    "Experimental" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "实验性功能"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "实验性功能"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "实验性功能"
+          }
+        }
+      }
+    },
     "Failed to import profiles" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1234,6 +1280,29 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "帧率: %5.2f     网络丢帧: %.2f%%     网络延迟: %@"
+          }
+        }
+      }
+    },
+    "Gestures" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "手势"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "手势"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "手势"
           }
         }
       }
@@ -2113,6 +2182,29 @@
         }
       }
     },
+    "Others" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "其他"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "其他"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "其他"
+          }
+        }
+      }
+    },
     "Pairing" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2155,6 +2247,29 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "配对失败"
+          }
+        }
+      }
+    },
+    "Peripherals" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "外设"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "外设"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "外设"
           }
         }
       }
@@ -3120,6 +3235,29 @@
         }
       }
     },
+    "Touch Control" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "触控"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "触控"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "触控"
+          }
+        }
+      }
+    },
     "Touch Mode - Double Tap to Drag, OSC Available" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -3277,6 +3415,29 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "该设备不支持"
+          }
+        }
+      }
+    },
+    "Video" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "视频"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "视频"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "视频"
           }
         }
       }

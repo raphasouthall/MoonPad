@@ -25,7 +25,7 @@
     NSInteger _bitrate;
     NSInteger _lastSelectedResolutionIndex;
     bool justEnteredSettingsViewDoNotOpenOscLayoutTool;
-    uint16_t oscLayoutFingers;
+    uint16_t oswLayoutFingers;
     CustomEdgeSlideGestureRecognizer *slideToCloseSettingsViewRecognizer;
     UIStackView *parentStack;
     NSMutableDictionary *_settingStackDict;
@@ -481,10 +481,10 @@ BOOL isCustomResolution(CGSize res) {
         [touchControlSection setSectionWithIcon:[UIImage imageNamed:@"arcade.stick.console"] andSize:20.5];
     }
     [self addSetting:self.touchModeStack ofId:@"touchModeStack" withInfoTag:YES withDynamicLabel:NO to:touchControlSection];
-    [self addSetting:self.pointerVelocityDividerStack ofId:@"pointerVelocityDividerStack" withInfoTag:YES withDynamicLabel:NO to:touchControlSection];
-    [self addSetting:self.pointerVelocityFactorStack ofId:@"pointerVelocityFactorStack" withInfoTag:YES withDynamicLabel:NO to:touchControlSection];
-    [self addSetting:self.mousePointerVelocityStack ofId:@"mousePointerVelocityStack" withInfoTag:YES withDynamicLabel:NO to:touchControlSection];
-    [self addSetting:self.onScreenWidgetStack ofId:@"onScreenWidgetStack" withInfoTag:YES withDynamicLabel:NO to:touchControlSection];
+    [self addSetting:self.pointerVelocityDividerStack ofId:@"pointerVelocityDividerStack" withInfoTag:YES withDynamicLabel:YES to:touchControlSection];
+    [self addSetting:self.pointerVelocityFactorStack ofId:@"pointerVelocityFactorStack" withInfoTag:YES withDynamicLabel:YES to:touchControlSection];
+    [self addSetting:self.mousePointerVelocityStack ofId:@"mousePointerVelocityStack" withInfoTag:NO withDynamicLabel:YES to:touchControlSection];
+    [self addSetting:self.onScreenWidgetStack ofId:@"onScreenWidgetStack" withInfoTag:YES withDynamicLabel:YES to:touchControlSection];
     [self addSetting:self.swapAbaxyStack ofId:@"swapAbaxyStack" withInfoTag:NO withDynamicLabel:NO to:touchControlSection];
     [touchControlSection addToParentStack:parentStack];
     [touchControlSection setExpanded:YES];
@@ -500,7 +500,7 @@ BOOL isCustomResolution(CGSize res) {
         [gesturesSection setSectionWithIcon:[UIImage systemImageNamed:@"hand.draw"] andSize:23];
     }
     
-    [self addSetting:self.keyboardToggleFingerNumStack ofId:@"keyboardToggleFingerNumStack" withInfoTag:NO withDynamicLabel:NO to:gesturesSection];
+    [self addSetting:self.softKeyboardGestureStack ofId:@"softKeyboardGestureStack" withInfoTag:YES withDynamicLabel:NO to:gesturesSection];
     [self addSetting:self.slideToSettingsScreenEdgeStack ofId:@"slideToSettingsScreenEdgeStack" withInfoTag:NO withDynamicLabel:NO to:gesturesSection];
     [self addSetting:self.slideToCmdToolScreenEdgeStack ofId:@"slideToCmdToolScreenEdgeStack" withInfoTag:NO withDynamicLabel:NO to:gesturesSection];
     [self addSetting:self.slideToSettingsDistanceStack ofId:@"slideToSettingsDistanceStack" withInfoTag:NO withDynamicLabel:NO to:gesturesSection];
@@ -583,7 +583,7 @@ BOOL isCustomResolution(CGSize res) {
     [parentStackTmp addArrangedSubview:self.touchMoveEventIntervalStack];
     [parentStackTmp addArrangedSubview:self.mousePointerVelocityStack];
     [parentStackTmp addArrangedSubview:self.onScreenWidgetStack];
-    [parentStackTmp addArrangedSubview:self.keyboardToggleFingerNumStack];
+    [parentStackTmp addArrangedSubview:self.softKeyboardGestureStack];
     [parentStackTmp addArrangedSubview:self.liftStreamViewForKeyboardStack];
     [parentStackTmp addArrangedSubview:self.showKeyboardToolbarStack];
     [parentStackTmp addArrangedSubview:self.slideToSettingsScreenEdgeStack];
@@ -1041,8 +1041,6 @@ BOOL isCustomResolution(CGSize res) {
 
 - (void)viewDidLoad {
     //[self updateTheme];
-    [UIView performWithoutAnimation:^{
-        
         settingStackWillBeRelocatedToLowestPosition = false;
         
         [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"_UIConstraintBasedLayoutLogUnsatisfiable"];
@@ -1261,13 +1259,13 @@ BOOL isCustomResolution(CGSize res) {
         
         // pointer veloc setting, will be enable/disabled by touchMode
         [self.pointerVelocityModeDividerSlider setValue: (uint8_t)(currentSettings.pointerVelocityModeDivider.floatValue * 100) animated:YES]; // Load old setting.
-        [self.pointerVelocityModeDividerSlider addTarget:self action:@selector(pointerVelocityModeDividerSliderMoved) forControlEvents:(UIControlEventValueChanged)]; // Update label display when slider is being moved.
-        [self pointerVelocityModeDividerSliderMoved];
+        [self.pointerVelocityModeDividerSlider addTarget:self action:@selector(pointerVelocityModeDividerSliderMoved:) forControlEvents:(UIControlEventValueChanged)]; // Update label display when slider is being moved.
+        [self pointerVelocityModeDividerSliderMoved:self.pointerVelocityModeDividerSlider];
         
         // init pointer veloc setting,  will be enable/disabled by touchMode
         [self.touchPointerVelocityFactorSlider setValue: [self map_SliderValue_fromVelocFactor: currentSettings.touchPointerVelocityFactor.floatValue] animated:YES]; // Load old setting.
-        [self.touchPointerVelocityFactorSlider addTarget:self action:@selector(touchPointerVelocityFactorSliderMoved) forControlEvents:(UIControlEventValueChanged)]; // Update label display when slider is being moved.
-        [self touchPointerVelocityFactorSliderMoved];
+        [self.touchPointerVelocityFactorSlider addTarget:self action:@selector(touchPointerVelocityFactorSliderMoved:) forControlEvents:(UIControlEventValueChanged)]; // Update label display when slider is being moved.
+        [self touchPointerVelocityFactorSliderMoved:self.touchPointerVelocityFactorSlider];
         
         // async native touch event
         // [self.asyncNativeTouchPrioritySelector setSelectedSegmentIndex:currentSettings.asyncNativeTouchPriority.intValue]; // load old setting of asyncNativeTouchPriority
@@ -1275,22 +1273,24 @@ BOOL isCustomResolution(CGSize res) {
         
         // init relative touch mouse pointer veloc setting,  will be enable/disabled by touchMode
         [self.mousePointerVelocityFactorSlider setValue:[self map_SliderValue_fromVelocFactor: currentSettings.mousePointerVelocityFactor.floatValue] animated:YES]; // Load old setting.
-        [self.mousePointerVelocityFactorSlider addTarget:self action:@selector(mousePointerVelocityFactorSliderMoved) forControlEvents:(UIControlEventValueChanged)]; // Update label display when slider is being moved.
-        [self mousePointerVelocityFactorSliderMoved];
+        [self.mousePointerVelocityFactorSlider addTarget:self action:@selector(mousePointerVelocityFactorSliderMoved:) forControlEvents:(UIControlEventValueChanged)]; // Update label display when slider is being moved.
+        [self mousePointerVelocityFactorSliderMoved:self.mousePointerVelocityFactorSlider];
         
         
         // these settings will be affected by onscreenControl & touchMode, must be loaded before them.
         // NSLog(@"osc tool fingers setting test: %d", currentSettings.oscLayoutToolFingers.intValue);
-        self->oscLayoutFingers = (uint16_t)currentSettings.oscLayoutToolFingers.intValue; // load old setting of oscLayoutFingers
-        [self.keyboardToggleFingerNumSlider setValue:(CGFloat)currentSettings.keyboardToggleFingers.intValue animated:YES]; // Load old setting. old setting was converted to uint16_t before saving.
-        [self.keyboardToggleFingerNumSlider addTarget:self action:@selector(keyboardToggleFingerNumSliderMoved) forControlEvents:(UIControlEventValueChanged)]; // Update label display when slider is being moved.
-        [self keyboardToggleFingerNumSliderMoved];
+        self->oswLayoutFingers = (uint16_t)currentSettings.oscLayoutToolFingers.intValue; // load old setting of oscLayoutFingers
+    uint8_t keyboardToggleFingers = currentSettings.keyboardToggleFingers.intValue;
+    
+    [self.softKeyboardGestureSelector setSelectedSegmentIndex:keyboardToggleFingers>=5 ? 3 : keyboardToggleFingers-3];
+        
+        
         
         // this setting will be affected by touchMode, must be loaded before them.
         NSInteger onscreenControlsLevel = [currentSettings.onscreenControls integerValue];
         [self.onScreenWidgetSelector setSelectedSegmentIndex:onscreenControlsLevel];
-        [self.onScreenWidgetSelector addTarget:self action:@selector(onscreenControlChanged) forControlEvents:UIControlEventValueChanged];
-        [self onscreenControlChanged];
+        [self.onScreenWidgetSelector addTarget:self action:@selector(onScreenWidgetChanged) forControlEvents:UIControlEventValueChanged];
+        [self onScreenWidgetChanged];
         
         // touch move event interval for native-touch.
         [self.touchMoveEventIntervalSlider setValue:currentSettings.touchMoveEventInterval.intValue animated:YES]; // Load old setting.
@@ -1326,7 +1326,6 @@ BOOL isCustomResolution(CGSize res) {
         
         [self.externalDisplayModeSelector setSelectedSegmentIndex:currentSettings.externalDisplayMode.integerValue];
         [self.localMousePointerModeSelector setSelectedSegmentIndex:currentSettings.localMousePointerMode.integerValue];
-    }];
 }
 
 - (void)slideToSettingsScreenEdgeChanged{
@@ -1350,14 +1349,14 @@ BOOL isCustomResolution(CGSize res) {
     [self.touchModeLabel setText:labelText];
 }
 
-- (void)showCustomOSCTip {
+- (void)showCustomOswTip {
     NSString* edgeSide = self.slideToSettingsScreenEdgeSelector.selectedSegmentIndex == 1 ? [LocalizationHelper localizedStringForKey:@"left"] : [LocalizationHelper localizedStringForKey:@"right"];
     UIAlertController *alertController = [UIAlertController alertControllerWithTitle:[LocalizationHelper localizedStringForKey:@"Rebase in Streaming"]
-                                                                             message:[LocalizationHelper localizedStringForKey:@"Open widget tool in streaming by:\nSliding from %@ screen edge to open cmd tool.\nOr tap %d fingers on stream view, number of fingers required:", edgeSide, self->oscLayoutFingers]
+                                                                             message:[LocalizationHelper localizedStringForKey:@"Open widget tool in streaming by:\nSliding from %@ screen edge to open cmd tool.\nOr tap %d fingers on stream view, number of fingers required:", edgeSide, self->oswLayoutFingers]
                                                                       preferredStyle:UIAlertControllerStyleAlert];
     
     [alertController addTextFieldWithConfigurationHandler:^(UITextField *textField) {
-        textField.placeholder = [LocalizationHelper localizedStringForKey:@"%d", self->oscLayoutFingers];
+        textField.placeholder = [LocalizationHelper localizedStringForKey:@"%d", self->oswLayoutFingers];
         textField.keyboardType = UIKeyboardTypeNumberPad;
     }];
     
@@ -1368,23 +1367,24 @@ BOOL isCustomResolution(CGSize res) {
     UIAlertAction *okAction = [UIAlertAction actionWithTitle:[LocalizationHelper localizedStringForKey:@"OK"]
                                                        style:UIAlertActionStyleDefault
                                                      handler:^(UIAlertAction *action) {
-                                                         UITextField *textField = alertController.textFields.firstObject;
-                                                         NSString *inputText = textField.text;
-                                                         NSInteger fingers = [inputText integerValue];
-                                                         if (inputText.length > 0 && fingers >= 4) {
-                                                             self->oscLayoutFingers = (uint16_t) fingers;
-                                                             NSLog(@"OK button tapped with %d fingers", (uint16_t)fingers);
-                                                         } else {
-                                                             NSLog(@"OK button tapped with no change");
-                                                         }
+         UITextField *textField = alertController.textFields.firstObject;
+         NSString *inputText = textField.text;
+         NSInteger fingers = [inputText integerValue];
+         if (inputText.length > 0 && fingers >= 4) {
+             self->oswLayoutFingers = (uint16_t) fingers;
+             NSLog(@"OK button tapped with %d fingers", (uint16_t)fingers);
+         } else {
+             NSLog(@"OK button tapped with no change");
+         }
+         
+         // Continue execution after the alert is dismissed
+         if (!self->_mainFrameViewController.settingsExpandedInStreamView) {
+             [self invokeOscLayout]; // Don't open osc layout tool immediately during streaming
+         }
                                                          
-                                                         // Continue execution after the alert is dismissed
-                                                         if (!self->_mainFrameViewController.settingsExpandedInStreamView) {
-                                                             [self invokeOscLayout]; // Don't open osc layout tool immediately during streaming
-                                                         }
-                                                         
-                                                        [self.onscreenControllerLabel setText:[LocalizationHelper localizedStringForKey: @"Tap %d Fingers to Change OSC Layout in Stream View", self->oscLayoutFingers]]; //update the osc label
-                                                        [self keyboardToggleFingerNumSliderMoved]; //update keyboard toggle number;
+        [self findDynamicLabelFromStack:self.onScreenWidgetStack].text = [LocalizationHelper localizedStringForKey:@"%d finger tap gesture", self->oswLayoutFingers];
+        //markmark
+        [self handleOswGestureChange];
                                                      }];
     
     [alertController addAction:cancelAction];
@@ -1398,12 +1398,24 @@ BOOL isCustomResolution(CGSize res) {
     return [self isNotNativeTouchOnly] && self.onScreenWidgetSelector.selectedSegmentIndex != OnScreenControlsLevelOff;
 }
 
+- (bool)isCustomOswEnabled{
+    return [self isOswEnabled] && self.onScreenWidgetSelector.selectedSegmentIndex == OnScreenControlsLevelCustom;
+}
+
 - (bool)isNotNativeTouchOnly{
     return (self.enableOswForNativeTouchSwitch.isOn && self.touchModeSelector.selectedSegmentIndex == NativeTouch) || self.touchModeSelector.selectedSegmentIndex == RelativeTouch || self.touchModeSelector.selectedSegmentIndex == AbsoluteTouch;
 }
 
+- (void)handleOswGestureChange{
+    if(oswLayoutFingers == self.softKeyboardGestureSelector.selectedSegmentIndex + 3 && oswLayoutFingers < 6){
+        [_softKeyboardGestureSelector setSelectedSegmentIndex:_softKeyboardGestureSelector.selectedSegmentIndex-1];
+    }
+    for (NSInteger i = 0; i < _softKeyboardGestureSelector.numberOfSegments; i++) {
+        [_softKeyboardGestureSelector setEnabled:![self isCustomOswEnabled] ?  true : i+3 != oswLayoutFingers forSegmentAtIndex:i]; // 或 NO 来禁用
+    }
+}
 
-- (void)onscreenControlChanged{
+- (void)onScreenWidgetChanged{
     
     BOOL isIPhone = ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPhone);
     if (isIPhone) {
@@ -1416,19 +1428,17 @@ BOOL isCustomResolution(CGSize res) {
         self.layoutOnScreenControlsVC.modalPresentationStyle = UIModalPresentationFullScreen;
     }
     
-    bool customOscEnabled = [self isOswEnabled] && [self.onScreenWidgetSelector selectedSegmentIndex] == OnScreenControlsLevelCustom;
-    // [self widget:self.keyboardToggleFingerNumSlider setEnabled:!customOscEnabled];
+    bool customOscEnabled = [self isCustomOswEnabled];
+    UILabel* oswDynamicLabel = [self findDynamicLabelFromStack:self.onScreenWidgetStack];
+        oswDynamicLabel.text = [LocalizationHelper localizedStringForKey:@"%d finger tap gesture", self->oswLayoutFingers];
+    oswDynamicLabel.hidden = !customOscEnabled;
+    [self handleOswGestureChange];
     if(customOscEnabled && !justEnteredSettingsViewDoNotOpenOscLayoutTool) {
         // [self.keyboardToggleFingerNumSlider setValue:3.0];
         // [self keyboardToggleFingerNumSliderMoved];
-        [self keyboardToggleFingerNumSliderMoved]; // go to exclude 5 fingers
-        [self.onscreenControllerLabel setText:[LocalizationHelper localizedStringForKey: @"Tap %d Fingers to Change OSC Layout in Stream View", self->oscLayoutFingers]];
-        [self showCustomOSCTip];
+        //markmark
+        [self showCustomOswTip];
         justEnteredSettingsViewDoNotOpenOscLayoutTool = false;
-        //if (self.layoutOnScreenControlsVC.isBeingPresented == NO)
-    }
-    else{
-        [self.onscreenControllerLabel setText:[LocalizationHelper localizedStringForKey: @"On-Screen Controls & Widgets"]];
     }
     justEnteredSettingsViewDoNotOpenOscLayoutTool = false;
 }
@@ -1439,12 +1449,12 @@ BOOL isCustomResolution(CGSize res) {
 }
 
 
-- (void) pointerVelocityModeDividerSliderMoved {
-    [self.pointerVelocityModeDividerUILabel setText:[LocalizationHelper localizedStringForKey:@"Touch Pointer Velocity: Scaled on %d%% of Right Screen", 100 - (uint8_t)self.pointerVelocityModeDividerSlider.value]];
+- (void) pointerVelocityModeDividerSliderMoved:(UISlider* )sender {
+    [self findDynamicLabelFromStack:self.pointerVelocityDividerStack].text = [LocalizationHelper localizedStringForKey:@"| %d%% | %d%% |", (uint8_t)sender.value, 100-(uint8_t)sender.value];
 }
 
-- (void) touchPointerVelocityFactorSliderMoved {
-    [self.touchPointerVelocityFactorUILabel setText:[LocalizationHelper localizedStringForKey: @"Touch Pointer Velocity: %d%%",  [self map_velocFactorDisplay_fromSliderValue: self.touchPointerVelocityFactorSlider.value]]]; // Update label display
+- (void) touchPointerVelocityFactorSliderMoved:(UISlider* )sender {
+    [self findDynamicLabelFromStack:self.pointerVelocityFactorStack].text = [NSString stringWithFormat:@"%d%%", [self map_velocFactorDisplay_fromSliderValue: self.touchPointerVelocityFactorSlider.value]]; // Update label display
 }
 
 
@@ -1465,8 +1475,8 @@ BOOL isCustomResolution(CGSize res) {
     return sliderValue;
 }
 
-- (void) mousePointerVelocityFactorSliderMoved {
-    [self.mousePointerVelocityFactorUILabel setText:[LocalizationHelper localizedStringForKey: @"Mouse Pointer Velocity: %d%%",  [self map_velocFactorDisplay_fromSliderValue: self.mousePointerVelocityFactorSlider.value]]]; // Update label display
+- (void) mousePointerVelocityFactorSliderMoved:(UISlider* )sender {
+    [self findDynamicLabelFromStack:_mousePointerVelocityStack].text = [NSString stringWithFormat:@"%d%%", [self map_velocFactorDisplay_fromSliderValue:sender.value]];
 }
 
 - (uint32_t) getScreenEdgeFromSelector {
@@ -1512,7 +1522,7 @@ BOOL isCustomResolution(CGSize res) {
     //bool asyncNativeTouchEnabled = [self.asyncNativeTouchPrioritySelector selectedSegmentIndex] != AsyncNativeTouchOff;
     self.enableOswSwitchStack.hidden = !isNativeTouch;
     // [self.asyncNativeTouchPrioritySelector setEnabled:![self showOswSelector]]; // this selector stay aligned with oscSelector
-    self.touchMoveEventIntervalStack.hidden = !isNativeTouch; // applies to native touch modes only
+    [self.touchMoveEventIntervalSlider setEnabled: isNativeTouch]; // applies to native touch modes only
     self.pointerVelocityDividerStack.hidden = !isNativeTouch;
     self.pointerVelocityFactorStack.hidden = !isNativeTouch;
     self.mousePointerVelocityStack.hidden = !(sender.selectedSegmentIndex == RelativeTouch);
@@ -1703,21 +1713,6 @@ BOOL isCustomResolution(CGSize res) {
     [self.touchMoveEventIntervalLabel setText:[LocalizationHelper localizedStringForKey:@"Interval of Multi-Touch Move Events: %d μs", (uint16_t)self.touchMoveEventIntervalSlider.value]];
 }
 
-- (void) keyboardToggleFingerNumSliderMoved{
-    // bool oscEnabled = [self isOnScreenControllerOrButtonEnabled];
-    bool customOscEnabled = [self isOswEnabled] && [self.onScreenWidgetSelector selectedSegmentIndex] == OnScreenControlsLevelCustom;
-    
-    CGFloat sliderValue = self.keyboardToggleFingerNumSlider.value;
-    if(customOscEnabled){
-        // exclude self->oscLayoutFingers when custom osc is enabled
-        if(sliderValue > self->oscLayoutFingers - 1 && sliderValue < self->oscLayoutFingers) [self.keyboardToggleFingerNumSlider setValue: self->oscLayoutFingers - 1];
-        if(sliderValue >= self->oscLayoutFingers && sliderValue < self->oscLayoutFingers + 1) [self.keyboardToggleFingerNumSlider setValue: self->oscLayoutFingers + 1];
-    }
-        
-    sliderValue = self.keyboardToggleFingerNumSlider.value;
-    if(sliderValue > 10.5f) [self.keyboardToggleFingerNumLabel setText:[LocalizationHelper localizedStringForKey:@"Local Keyboard Toggle Disabled"]];
-    else [self.keyboardToggleFingerNumLabel setText:[LocalizationHelper localizedStringForKey:@"To Toggle Local Keyboard: Tap %d Fingers", (uint16_t)sliderValue]]; // Initiate label display, exclude 5 fingers.
-}
 
 - (void) slideToMenuDistanceSliderMoved{
     [self.slideToSettingsDistanceUILabel setText:[LocalizationHelper localizedStringForKey:@"Slide Distance for in-Stream Menu: %.2f * screen-width", self.slideToMenuDistanceSlider.value]];
@@ -1867,9 +1862,9 @@ BOOL isCustomResolution(CGSize res) {
     NSInteger height = [self getChosenStreamHeight];
     NSInteger width = [self getChosenStreamWidth];
     NSInteger onscreenControls = [self.onScreenWidgetSelector selectedSegmentIndex];
-    NSInteger keyboardToggleFingers = (uint16_t)self.keyboardToggleFingerNumSlider.value;
-    NSInteger oscLayoutToolFingers = (uint16_t)self->oscLayoutFingers;
-    // NSLog(@"saveSettings keyboardToggleFingers  %d", (uint16_t)keyboardToggleFingers);
+    NSInteger keyboardToggleFingers = self.softKeyboardGestureSelector.selectedSegmentIndex == 3 ? 20 : self.softKeyboardGestureSelector.selectedSegmentIndex+3;
+    NSInteger oscLayoutToolFingers = (uint16_t)self->oswLayoutFingers;
+
     CGFloat slideToSettingsDistance = self.slideToMenuDistanceSlider.value;
     uint32_t slideToSettingsScreenEdge = [self getScreenEdgeFromSelector];
     CGFloat pointerVelocityModeDivider = (CGFloat)(uint8_t)self.pointerVelocityModeDividerSlider.value/100;
