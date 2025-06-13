@@ -61,7 +61,6 @@ static StreamView* streamView;
     fixedResetCoordY = streamViewHeight * 0.4;
     pointerVelocityFactor = settings.touchPointerVelocityFactor.floatValue;
     NSLog(@"stream wdith %f, stream height %f", streamViewWidth, streamViewHeight);
-    NSLog(@"pointerVelocityFactor:  %.2f", pointerVelocityFactor);
 }
 
 @end

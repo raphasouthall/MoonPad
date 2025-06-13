@@ -22,6 +22,7 @@
 @property (nonatomic, retain) Settings * parent;
 
 @property (nonatomic, retain) NSNumber * settingsMenuMode;
+@property (nonatomic, retain) NSNumber * settingsMenuWidth;
 @property (nonatomic, retain) NSNumber * bitrate;
 @property (nonatomic, retain) NSNumber * framerate;
 @property (nonatomic, retain) NSNumber * height;

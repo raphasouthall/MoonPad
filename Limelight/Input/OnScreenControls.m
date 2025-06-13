@@ -145,10 +145,6 @@ static float L3_Y;
     return touchAddrsCapturedByOnScreenControls;
 }
 
-+ (void) testMethod{
-    NSLog(@"swift calling test");
-}
-
 - (void) sendRightStickTouchPadEvent:(CGFloat) stickX : (CGFloat) stickY{
     [_controllerSupport updateRightStick:_controller x: stickX y: stickY]; // stick value populated to the controllerSupport here
     [_controllerSupport updateFinished:_controller];
@@ -370,13 +366,13 @@ static float L3_Y;
         // _activeCustomOscButtonPositionDict will be updated every time when the osc profile is reloaded
         OSCProfile *oscProfile = [profilesManager getSelectedProfile]; //returns the currently selected OSCProfile
         [_activeCustomOscButtonPositionDict removeAllObjects]; //reset the Dict.
-        NSLog(@"_activeCustomOscButtonPositionDict update: STARTOVER");
+        // NSLog(@"_activeCustomOscButtonPositionDict update: STARTOVER");
         for (NSData *buttonStateEncoded in oscProfile.buttonStates) {
             OnScreenButtonState* buttonState = [profilesManager unarchiveButtonStateEncoded:buttonStateEncoded];
             buttonState.position = [self denormalizeWidgetPosition:buttonState.position];
             if(!buttonState.isHidden && [validPositionButtonNames containsObject:buttonState.name] && (buttonState.buttonType == LegacyOscButton || [profilesManager getIndexOfSelectedProfile] == 0 ) ){
                 [_activeCustomOscButtonPositionDict setObject:[NSValue valueWithCGPoint:buttonState.position] forKey:buttonState.name]; // we got a buttonname -> position dict here
-                NSLog(@"_activeCustomOscButtonPositionDict update, button name:%@,  position: %f, %f", buttonState.name, buttonState.position.x, buttonState.position.y);
+                // NSLog(@"_activeCustomOscButtonPositionDict update, button name:%@,  position: %f, %f", buttonState.name, buttonState.position.x, buttonState.position.y);
             }
             
             // retrieve size factors & other necessary configurations for complex control
@@ -397,7 +393,7 @@ static float L3_Y;
                 if(_dPadSizeFactor == 0) _dPadSizeFactor = 1.0; // dealing with invalid sizefactor
             }
         }
-        NSLog(@"_activeCustomOscButtonPositionDict update, active button number: %lu", (unsigned long)[_activeCustomOscButtonPositionDict count]);
+        //NSLog(@"_activeCustomOscButtonPositionDict update, active button number: %lu", (unsigned long)[_activeCustomOscButtonPositionDict count]);
     }
     else{
         // deal with simple & full mode configurations
@@ -405,7 +401,7 @@ static float L3_Y;
         _leftStickOpacity = _rightStickOpacity = DEFAULT_STICK_OPACITY;
     }
     
-    NSLog(@"rightStickOpacity: %f", _rightStickOpacity);
+    //NSLog(@"rightStickOpacity: %f", _rightStickOpacity);
     
     // belows are orginal codes:
     switch (self._level) {
@@ -849,7 +845,7 @@ static float L3_Y;
                     [buttonLayer.name isEqualToString:@"rightButton"] ||
                     [buttonLayer.name isEqualToString:@"downButton"] ||
                     [buttonLayer.name isEqualToString:@"leftButton"]){
-                    NSLog(@"layerName: %@, alpha: %f", buttonLayer.name, buttonStateDecoded.backgroundAlpha);
+                    // NSLog(@"layerName: %@, alpha: %f", buttonLayer.name, buttonStateDecoded.backgroundAlpha);
                     [self adjustControllerLayerOpacityWith:buttonLayer and:buttonStateDecoded.backgroundAlpha];
                 }
                 if([buttonLayer.name isEqualToString:@"leftStickBackground"]){

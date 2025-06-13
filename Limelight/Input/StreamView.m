@@ -221,13 +221,11 @@ static const double X1_MOUSE_SPEED_DIVISOR = 2.5;
     [self becomeFirstResponder];
 }
 
-// this method also deals with lifting streamview for local keyboard
 - (void)keyboardWillShow:(NSNotification *)notification{
     if(settings.liftStreamViewForKeyboard && !isInputingText){
         NSDictionary *userInfo = notification.userInfo;
         // Get the keyboard size from the notification
         CGRect keyboardFrame = [userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue];
-        // NSLog(@"keyboard height %f, lowest point height %f", keyboardFrame.size.height, keyboardToggleRecognizer.lowestTouchPointHeight);
         if(keyboardFrame.size.height < CGRectGetHeight([[UIScreen mainScreen] bounds]) * 0.25) return; // return in case of abnormal keyboard height
         HeightViewLiftedTo = keyboardFrame.size.height - keyboardToggleRecognizer.lowestTouchPointHeight + CGRectGetHeight([[UIScreen mainScreen] bounds]) * 0.1; // lift the StreamView to the height of lowest touch point of multi-finger tap gesture, while reserving the view of 1/10 screen height for remote typing.
         if(HeightViewLiftedTo < 0) HeightViewLiftedTo = 0;  // set HeightViewLiftedTo to 0 if it is high enough and not going to be covered by keyboard.
@@ -389,7 +387,7 @@ static const double X1_MOUSE_SPEED_DIVISOR = 2.5;
 
 - (void) reloadOnScreenWidgetViews{
     
-    NSLog(@"reload on screen keyboard buttons here");
+    // NSLog(@"reload on screen keyboard buttons here");
 
     // remove all keyboard widget views first
     [self clearOnScreenKeyboardButtons];

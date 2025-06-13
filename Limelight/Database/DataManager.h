@@ -68,8 +68,7 @@ typedef NS_ENUM(NSInteger, SettingsMenuMode) {
                    unlockDisplayOrientation:(BOOL)unlockDisplayOrientation
               resolutionSelected:(NSInteger)resolutionSelected
              externalDisplayMode:(NSInteger)externalDisplayMode
-                       localMousePointerMode:(NSInteger)localMousePointerMode
-                 settinsMenuMode:(NSInteger)settinsMenuMode;
+           localMousePointerMode:(NSInteger)localMousePointerMode;
 
 - (NSArray*) getHosts;
 - (void) updateHost:(TemporaryHost*)host;

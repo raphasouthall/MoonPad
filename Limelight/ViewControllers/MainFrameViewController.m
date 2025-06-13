@@ -68,6 +68,8 @@
     NSArray* _sortedAppList;
     NSCache* _boxArtCache;
     bool _background;
+    UIView* menuSeparator;
+    UIView* snapshot;
     UINavigationBarAppearance *navBarAppearanceStandard;
     UINavigationBarAppearance *navBarAppearanceScroll;
 
@@ -417,7 +419,6 @@ static NSMutableSet* hostList;
 
 - (void)pairButtonTappedForHost:(TemporaryHost *)host{
     _selectedHost = host;
-    NSLog(@"pairButtonTappedForHost");
     [self showLoadingFrame: ^{
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             // Wait for the PC's status to be known
@@ -665,7 +666,6 @@ static NSMutableSet* hostList;
                         UIAlertController* netTestAlert = [UIAlertController alertControllerWithTitle:[LocalizationHelper localizedStringForKey:@"Network Test Complete"] message:message preferredStyle:UIAlertControllerStyleAlert];
                         [netTestAlert addAction:[UIAlertAction actionWithTitle:[LocalizationHelper localizedStringForKey:@"Ok"] style:UIAlertActionStyleDefault handler:nil]];
                         [[self activeViewController] presentViewController:netTestAlert animated:YES completion:^{
-                            NSLog(@"restore tint");
                             [self restoreTintColorForAllSubViews];
                         }];
                     }];
@@ -1217,7 +1217,6 @@ static NSMutableSet* hostList;
         self->waterMark.font = [UIFont systemFontOfSize:22];
         self->waterMark.text = [LocalizationHelper localizedStringForKey:@"waterMarkText"];
         CGFloat labelHeight = 60;
-        NSLog(@"fullscr: %d", [self isFullScreenRequired]);
         // the app is unable to automatically lock screen orientation in app window resizable mode(aka. not require fullscreen)
         
         // if(![self isFullScreenRequired]){
@@ -1533,13 +1532,14 @@ static NSMutableSet* hostList;
     // SettingsViewController* settingsViewController = (SettingsViewController*)[self.revealViewController rearViewController];
     // [settingsViewController updateResolutionTable];
     
-    
+    UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleMenuResize:)];
+    [self.view addGestureRecognizer:longPress];
+
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"iPad" bundle:nil];
     SettingsViewController *viewController = [storyboard instantiateViewControllerWithIdentifier:@"settingsViewController"];
     // 强制加载视图
     __unused UIView *view = viewController.view;
      
-
 }
 
 -(void)viewDidLayoutSubviews{
@@ -2034,9 +2034,78 @@ static NSMutableSet* hostList;
     [_boxArtCache removeAllObjects];
 }
 
+- (UIView* )findMenuSeparator{
+    BOOL shouldBreak = NO;
+    UIView* seperator=self.view;
+    while(seperator && !shouldBreak) {
+        for(UIView* view in seperator.subviews) {
+            if([view.accessibilityIdentifier isEqualToString:@"menuSeparator"]) {
+                seperator = view;
+                shouldBreak = YES;
+                break;
+            }
+        }
+        if (shouldBreak) break;
+        seperator = seperator.superview;
+    }
+    return seperator;
+}
+
+- (void)handleMenuResize:(UILongPressGestureRecognizer *)gesture {
+    CGPoint locationInView = [gesture locationInView:self.view];
+    CGPoint locationInSuperView = [gesture locationInView:self.revealViewController.view];
+    
+    menuSeparator = [self findMenuSeparator];
+    if(menuSeparator.hidden || menuSeparator == nil) return;
+    
+    if(gesture.state == UIGestureRecognizerStateBegan){
+        if(locationInView.x < 30) {
+            snapshot = [[UIView alloc] init];
+            snapshot.backgroundColor = [ThemeManager appPrimaryColor];
+            CGFloat screenWidth = [UIScreen mainScreen].bounds.size.height;
+            snapshot.frame = CGRectMake(locationInSuperView.x,0, 2, screenWidth);
+            [self.revealViewController.view addSubview:snapshot];
+        }
+        return;
+    }
+    CGFloat screenWidthInPoints = CGRectGetWidth([[UIScreen mainScreen] bounds]);
+    CGFloat limitedWidth = MIN(MAX(locationInSuperView.x, 280),screenWidthInPoints/2);
+    if(gesture.state == UIGestureRecognizerStateChanged){
+        if(snapshot) snapshot.center = CGPointMake(limitedWidth, snapshot.center.y);
+    }
+    if(gesture.state == UIGestureRecognizerStateEnded || gesture.state == UIGestureRecognizerStateCancelled){
+        [snapshot removeFromSuperview];
+        self.revealViewController.rearViewRevealWidth = limitedWidth;
+        [self.revealViewController setupNavigationBar];
+        if(self.revealViewController.isStreaming) [self.revealViewController buttonsInStreaming];
+        else [self.revealViewController buttonsNotInStreaming];
+        DataManager* dataMan = [[DataManager alloc] init];
+        Settings* settings = [dataMan retrieveSettings];
+        settings.settingsMenuWidth = [NSNumber numberWithFloat:self.revealViewController.rearViewRevealWidth];
+        [dataMan saveData];
+    }
+}
+
+
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
     [self.view endEditing:YES];
 }
+
+- (void)touchesMoved:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
+    /*
+    NSLog(@"%f touchesMoved", CACurrentMediaTime());
+    UITouch* touch = touches.anyObject;
+    CGPoint touchPoint = [touch locationInView:self.view.superview];
+    if(snapshot){
+        snapshot.center = CGPointMake(touchPoint.x, snapshot.center.y);
+    }
+     */
+}
+
+- (void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
+    [snapshot removeFromSuperview];
+}
+
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
     [textField resignFirstResponder];

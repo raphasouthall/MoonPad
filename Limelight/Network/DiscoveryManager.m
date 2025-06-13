@@ -115,7 +115,7 @@
     //BOOL ret = NO;
     freeaddrinfo(result);
     
-    NSLog(@"IP Check, is prohibited: %d", ret);
+   // NSLog(@"IP Check, is prohibited: %d", ret);
 
     return NO;
 //#else

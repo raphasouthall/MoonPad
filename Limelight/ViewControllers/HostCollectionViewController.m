@@ -119,8 +119,6 @@ static const CGFloat cellOffsetY = 20;
 
 - (void)didMoveToParentViewController:(UIViewController *)parent {
     [super didMoveToParentViewController:parent];
-    NSLog(@"moved to parentVC: %@", parent);
-    // 可以在这里进行一些初始化，比如加载数据、刷新 UI 等
 }
 
 - (void)addHost:(TemporaryHost *)host {
@@ -130,9 +128,7 @@ static const CGFloat cellOffsetY = 20;
         [self.items addObject:host];
         [self.items addObject:host];
         [self.collectionView reloadData];
-        // [self.view layoutIfNeeded];
     }
-    NSLog(@"addhost log");
 }
 
 - (void)removeHost:(TemporaryHost *)host {
@@ -194,7 +190,6 @@ static const CGFloat cellOffsetY = 20;
 }
 
 - (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
-    NSLog(@"config cell log");
 
     HostCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"HostCell" forIndexPath:indexPath];
     TemporaryHost *host = self.items[indexPath.item];

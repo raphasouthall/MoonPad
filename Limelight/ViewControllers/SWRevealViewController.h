@@ -146,6 +146,8 @@
 
 #pragma mark - SWRevealViewController Class
 
+
+
 // Enum values for setFrontViewPosition:animated:
 typedef NS_ENUM( NSInteger, FrontViewPosition)
 {
@@ -328,7 +330,7 @@ typedef NS_ENUM(NSInteger, SWRevealToggleAnimationType)
 
 - (void)buttonsInStreaming;
 - (void)buttonsNotInStreaming;
-
+- (void)setupNavigationBar;
 
 @end
 

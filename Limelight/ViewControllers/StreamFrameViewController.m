@@ -294,7 +294,6 @@
     UIAlertAction *confirmAction = [UIAlertAction actionWithTitle:[LocalizationHelper localizedStringForKey:@"Got it! (15)"]
                                                            style:UIAlertActionStyleDefault
                                                          handler:^(UIAlertAction * _Nonnull action) {
-        NSLog(@"用户确认了操作");
     }];
     confirmAction.enabled = NO;
     [alert addAction:confirmAction];
@@ -371,7 +370,7 @@
      */
     if(_settings.externalDisplayMode.intValue == 2) _streamVideoRenderView = _streamView;
     else {
-        NSLog(@"renderView separated from streamView");
+        //NSLog(@"renderView separated from streamView");
         _streamVideoRenderView = (StreamView*)[[UIView alloc] initWithFrame:self.view.frame];
         _streamVideoRenderView.bounds = _streamView.bounds;
         _streamVideoRenderView.userInteractionEnabled = false; // this will prevent renderView from intrecepting touchEvents which shall be interacting with streamView

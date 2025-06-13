@@ -102,6 +102,8 @@ static CGFloat scaledValue( CGFloat v1, CGFloat min2, CGFloat max2, CGFloat min1
     
         _frontView = [[UIView alloc] initWithFrame:bounds];
         _frontView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
+        _frontView.userInteractionEnabled = YES;
+
         [self reloadShadow];
 
         [self addSubview:_frontView];
@@ -233,6 +235,7 @@ static CGFloat scaledValue( CGFloat v1, CGFloat min2, CGFloat max2, CGFloat min1
 
 
 # pragma mark - overrides
+
 
 - (void)layoutSubviews
 {
@@ -688,7 +691,11 @@ const int FrontViewPositionNone = 0xff;
     _rearViewPosition = FrontViewPositionLeft;
     _rightViewPosition = FrontViewPositionLeft;
     // _rearViewRevealWidth = 492.0f;
-    _rearViewRevealWidth = 390; //mark: settingMenuLayout
+    
+    DataManager* dataMan = [[DataManager alloc] init];
+    TemporarySettings* currentSettings = [dataMan getSettings];
+    _rearViewRevealWidth = currentSettings.settingsMenuWidth.floatValue; //mark: settingMenuLayout
+    
     // _rearViewRevealOverdraw = 60.0f;
     _rearViewRevealOverdraw = 0.0f;
     _rearViewRevealDisplacement = 40.0f;
@@ -783,7 +790,6 @@ const int FrontViewPositionNone = 0xff;
     // now set the desired initial position
     [self _setFrontViewPosition:initialPosition withDuration:0.0];
     [self setupMenuSeparator];
-
 }
 
 - (bool)isIphone{
@@ -831,6 +837,7 @@ const int FrontViewPositionNone = 0xff;
 
 
 - (void)viewDidLoad{
+    
     self.isStreaming = false; //init this flag
 }
 
@@ -862,6 +869,7 @@ const int FrontViewPositionNone = 0xff;
 
 - (void)willMoveToPosition{
     
+    
     SettingsMenuMode currentMenuMode = [self getSettingsMenuMode];
     
     _separatorLine.hidden = _frontViewPosition == FrontViewPositionLeft;
@@ -876,12 +884,17 @@ const int FrontViewPositionNone = 0xff;
         //if(currentMenuMode == AllSettings) [self allSettingSelected];
         //if(currentMenuMode == FavoriteSettings) [self favoriteSettingSelected];
     }
+    else{
+        // _rearViewRevealWidth = _rearViewRevealWidth + 20;
+        [self setupNavigationBar];
+    }
 }
 
 
 - (void)setupMenuSeparator{
     // 分隔线
     _separatorLine = [[UIView alloc] init];
+    _separatorLine.accessibilityIdentifier = @"menuSeparator";
     _separatorLine.backgroundColor = [ThemeManager separatorColor];
     _separatorLine.translatesAutoresizingMaskIntoConstraints = NO;
     [_contentView.frontView addSubview:_separatorLine];
@@ -907,7 +920,9 @@ const int FrontViewPositionNone = 0xff;
 
 - (void)setupNavigationBar {
     // 创建导航栏
-    if (_dockedNavBar == nil) _dockedNavBar = [[UINavigationBar alloc] init];
+    if (_dockedNavBar == nil || _rearViewRevealWidth != _dockedNavBar.bounds.size.width) _dockedNavBar = [[UINavigationBar alloc] init];
+
+    //_dockedNavBar = [[UINavigationBar alloc] init];
     _dockedNavBar.translatesAutoresizingMaskIntoConstraints = NO;
     _dockedNavBar.userInteractionEnabled = YES;
     
@@ -942,6 +957,7 @@ const int FrontViewPositionNone = 0xff;
     [_dockedNavBar setItems:@[_navItem]];
     _dockedNavBar.titleTextAttributes = @{NSForegroundColorAttributeName: [UIColor whiteColor]};
     
+    [_dockedNavBar removeFromSuperview];
     [_contentView.rearNavView addSubview:_dockedNavBar];
 
     // 设置导航栏约束
@@ -951,7 +967,7 @@ const int FrontViewPositionNone = 0xff;
         [_dockedNavBar.leadingAnchor constraintEqualToAnchor:_contentView.rearNavView.leadingAnchor],
         [_dockedNavBar.widthAnchor constraintEqualToConstant:_rearViewRevealWidth],
     ]];
-    NSLog(@"rearViewRevealWidth %f", _rearViewRevealWidth);
+    [self layoutSettingsView];
     
 }
 
@@ -2018,7 +2034,6 @@ const int FrontViewPositionNone = 0xff;
         if ( positionIsChanging )
         {
             if ( [self->_delegate respondsToSelector:@selector(revealController:didMoveToPosition:)] ){
-                NSLog(@"expansion: %f", CACurrentMediaTime() - self->timeStamp);
                 [self->_delegate revealController:self didMoveToPosition:newPosition];
             }
         }

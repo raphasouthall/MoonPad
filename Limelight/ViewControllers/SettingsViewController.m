@@ -609,7 +609,7 @@ BOOL isCustomResolution(CGSize res) {
     bool scrollDown = location.y > self.view.bounds.size.height - 100;
     bool scrollUp = location.y < 150;
     
-    NSLog(@"%f flag: %d, %d, obj: %@, locY: %f", CACurrentMediaTime(), scrollUp, scrollDown, _autoScrollDisplayLink, location.y);
+    //NSLog(@"%f flag: %d, %d, obj: %@, locY: %f", CACurrentMediaTime(), scrollUp, scrollDown, _autoScrollDisplayLink, location.y);
     
     if(!(scrollUp||scrollDown)) [self stopAutoScroll];
     
@@ -624,7 +624,7 @@ BOOL isCustomResolution(CGSize res) {
         if(scrollDown) scrollDirection = 1;
         if(scrollUp) scrollDirection = -1;
         _scrollSpeed = _scrollSpeed * scrollDirection;
-        NSLog(@"%f, scrollSpeed: %f", CACurrentMediaTime(), _scrollSpeed);
+        //NSLog(@"%f, scrollSpeed: %f", CACurrentMediaTime(), _scrollSpeed);
 
         _autoScrollDisplayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(startScroll)];
         [_autoScrollDisplayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSRunLoopCommonModes];
@@ -711,12 +711,8 @@ BOOL isCustomResolution(CGSize res) {
         UIView *subview = parentStack.arrangedSubviews[i];
         // CGRect frame = [subview convertRect:subview.bounds toView:parentStack];
         CGFloat stackMinY = CGRectGetMinY(subview.frame);
-        NSLog(@" index: %ld, stackY: %f, touchY: %f", (long)i, CGRectGetMidY(subview.frame), location.y);
-        if(stackMinY < location.y){
-            NSLog(@"index: %ld", i);
-            //subview.backgroundColor = [ThemeManager appPrimaryColorWithAlpha];
-            return i;
-        }
+        // NSLog(@" index: %ld, stackY: %f, touchY: %f", (long)i, CGRectGetMidY(subview.frame), location.y);
+        if(stackMinY < location.y) return i;
     }
     return 0;
 }
@@ -779,7 +775,6 @@ BOOL isCustomResolution(CGSize res) {
                                                                 style:UIAlertActionStyleDefault
                                                               handler:^(UIAlertAction * _Nonnull action) {
         [self addSettingToFavorite:self->capturedStack];
-        // 在这里执行收藏逻辑
     }];
     [actionSheet addAction:addFavoriteAction];
     return actionSheet;
@@ -825,7 +820,7 @@ BOOL isCustomResolution(CGSize res) {
                 
             case UIGestureRecognizerStateChanged:
                 snapshot.center = CGPointMake(locationInParentStack.x, locationInParentStack.y);
-                NSLog(@"coordY in rootView: %f", locationInRootView.y);
+                // NSLog(@"coordY in rootView: %f", locationInRootView.y);
                 [self handleAutoScroll:locationInRootView];
                 [self updateRelocationIndicatorFor:locationInParentStack];
                 
@@ -834,7 +829,6 @@ BOOL isCustomResolution(CGSize res) {
             case UIGestureRecognizerStateCancelled:
             case UIGestureRecognizerStateEnded:
                 // 更新快照视图位置
-                // snapshot.center = CGPointMake(originalCenter.x, point.y);
                 [self stopAutoScroll];
                 [snapshot removeFromSuperview];
                 snapshot = nil;
@@ -843,7 +837,6 @@ BOOL isCustomResolution(CGSize res) {
                 [self clearRelocationIndicator];
                 NSInteger oldIndex = [parentStack.arrangedSubviews indexOfObject:capturedStack];
                 newIndex = newIndex > oldIndex ? newIndex - 1 : newIndex;
-                //NSInteger newIndex = 1;
                 //NSLog(@"newidx %ld, oldidx %ld", newIndex, oldIndex);
                 if(settingStackWillBeRelocatedToLowestPosition){
                     newIndex = newIndex + 1;
@@ -978,8 +971,6 @@ BOOL isCustomResolution(CGSize res) {
 }
 
 - (void)switchToAllSettings{
-
-    
     for(UIView* view in parentStack.subviews){
         [view removeFromSuperview];
     }
@@ -1226,7 +1217,6 @@ BOOL isCustomResolution(CGSize res) {
         [self.customResolutionSwitch addTarget:self action:@selector(customResolutionSwitched:) forControlEvents:UIControlEventValueChanged];
         CGSize currentResolution = CGSizeMake(currentSettings.width.intValue, currentSettings.height.intValue);
         [self.customResolutionSwitch setOn: isCustomResolution(currentResolution)];
-        NSLog(@"isCustomResolution %d", isCustomResolution(currentResolution));
         
         [self.framerateSelector setSelectedSegmentIndex:framerate];
         [self.framerateSelector addTarget:self action:@selector(updateBitrate) forControlEvents:UIControlEventValueChanged];
@@ -1934,15 +1924,13 @@ BOOL isCustomResolution(CGSize res) {
                       useFramePacing:useFramePacing
                            enableHdr:enableHdr
                       btMouseSupport:btMouseSupport
-                   // absoluteTouchMode:absoluteTouchMode
                            touchMode:touchMode
                    statsOverlayLevel:statsOverlayLevel
                         statsOverlayEnabled:statsOverlayEnabled
                        unlockDisplayOrientation:unlockDisplayOrientation
                   resolutionSelected:resolutionSelected
                  externalDisplayMode:externalDisplayMode
-               localMousePointerMode:localMousePointerMode
-                     settinsMenuMode:currentSettingsMenuMode];
+               localMousePointerMode:localMousePointerMode];
 }
 
 - (void)didReceiveMemoryWarning {
