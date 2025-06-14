@@ -988,7 +988,7 @@ BOOL isCustomResolution(CGSize res) {
     [stack addSubview:button];
     [NSLayoutConstraint activateConstraints:@[
         [button.trailingAnchor constraintEqualToAnchor:stack.trailingAnchor constant:-4],
-        [button.bottomAnchor constraintEqualToAnchor:        stack.arrangedSubviews[0].bottomAnchor constant:-2],
+        [button.bottomAnchor constraintEqualToAnchor:        stack.arrangedSubviews[0].bottomAnchor constant:0],
     ]];
 }
 
