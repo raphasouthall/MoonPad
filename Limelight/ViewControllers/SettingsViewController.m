@@ -583,11 +583,11 @@ BOOL isCustomResolution(CGSize res) {
         [otherSection setSectionWithIcon:[UIImage systemImageNamed:@"cube"] andSize:20.5];
     }
     [self addSetting:self.statsOverlayStack ofId:@"statsOverlayStack" withInfoTag:NO withDynamicLabel:NO to:otherSection];
+    [self addSetting:self.unlockDisplayOrientationStack ofId:@"unlockDisplayOrientationStack" withInfoTag:YES withDynamicLabel:NO to:otherSection];
     [self addSetting:self.optimizeGamesStack ofId:@"optimizeGamesStack" withInfoTag:YES withDynamicLabel:NO to:otherSection];
     [self addSetting:self.audioOnPcStack ofId:@"audioOnPcStack" withInfoTag:NO withDynamicLabel:NO to:otherSection];
     [self addSetting:self.multiControllerStack ofId:@"multiControllerStack" withInfoTag:YES withDynamicLabel:NO to:otherSection];
-    [self addSetting:self.showKeyboardToolbarStack ofId:@"showKeyboardToolbarStack" withInfoTag:YES withDynamicLabel:NO to:otherSection];
-    [self addSetting:self.unlockDisplayOrientationStack ofId:@"unlockDisplayOrientationStack" withInfoTag:YES withDynamicLabel:NO to:otherSection];
+    [self addSetting:self.softKeyboardToolbarStack ofId:@"softKeyboardToolbarStack" withInfoTag:YES withDynamicLabel:NO to:otherSection];
     [otherSection addToParentStack:_parentStack];
     [otherSection setExpanded:YES];
     
@@ -599,7 +599,7 @@ BOOL isCustomResolution(CGSize res) {
         [experimentalSection setSectionWithIcon:[UIImage imageNamed:@"flask"] andSize:20];
     }
     // [self addSetting:self.asyncTouchStack ofId:@"asyncTouchStack" withInfoTag:YES withDynamicLabel:NO to:experimentalSection];
-    [self addSetting:self.touchMoveEventIntervalStack ofId:@"touchMoveEventIntervalStack" withInfoTag:YES withDynamicLabel:NO to:experimentalSection];
+    [self addSetting:self.touchMoveEventIntervalStack ofId:@"touchMoveEventIntervalStack" withInfoTag:YES withDynamicLabel:YES to:experimentalSection];
     [experimentalSection addToParentStack:_parentStack];
     [experimentalSection setExpanded:YES];
 }
@@ -643,7 +643,7 @@ BOOL isCustomResolution(CGSize res) {
     [parentStackTmp addArrangedSubview:self.onScreenWidgetStack];
     [parentStackTmp addArrangedSubview:self.softKeyboardGestureStack];
     [parentStackTmp addArrangedSubview:self.liftStreamViewForKeyboardStack];
-    [parentStackTmp addArrangedSubview:self.showKeyboardToolbarStack];
+    [parentStackTmp addArrangedSubview:self.softKeyboardToolbarStack];
     [parentStackTmp addArrangedSubview:self.slideToSettingsScreenEdgeStack];
     [parentStackTmp addArrangedSubview:self.slideToToolboxScreenEdgeStack];
     [parentStackTmp addArrangedSubview:self.slideToSettingsDistanceStack];
@@ -1267,9 +1267,9 @@ BOOL isCustomResolution(CGSize res) {
         [self.citrixX1MouseSwitch setOn:currentSettings.btMouseSupport];
         [self.optimizeGamesSwitch setOn: currentSettings.optimizeGames];
         [self.framePacingSelector setSelectedSegmentIndex:currentSettings.useFramePacing ? 1 : 0];
-        [self.multiControllerSelector setSelectedSegmentIndex:currentSettings.multiController ? 1 : 0];
+        [self.multiControllerSwitch setOn:currentSettings.multiController];
         [self.swapABXYButtonsSelector setSelectedSegmentIndex:currentSettings.swapABXYButtons ? 1 : 0];
-        [self.audioOnPCSelector setSelectedSegmentIndex:currentSettings.playAudioOnPC ? 1 : 0];
+        [self.audioOnPcSwitch setOn:currentSettings.playAudioOnPC];
         _lastSelectedResolutionIndex = resolution;
         [self.resolutionSelector setSelectedSegmentIndex:resolution];
         [self.resolutionSelector addTarget:self action:@selector(newResolutionChosen) forControlEvents:UIControlEventValueChanged];
@@ -1297,7 +1297,7 @@ BOOL isCustomResolution(CGSize res) {
         [self.liftStreamViewForKeyboardSelector setSelectedSegmentIndex:currentSettings.liftStreamViewForKeyboard ? 1 : 0];// Load old setting
         
         // showkeyboard toolbar setting
-        [self.showKeyboardToolbarSelector setSelectedSegmentIndex:currentSettings.showKeyboardToolbar ? 1 : 0];// Load old setting
+        [self.softKeyboardToolbarSwitch setOn:currentSettings.showKeyboardToolbar];// Load old setting
         
         // reverse mouse wheel direction setting
         [self.reverseMouseWheelDirectionSelector setSelectedSegmentIndex:currentSettings.reverseMouseWheelDirection ? 1 : 0];// Load old setting
@@ -1354,8 +1354,8 @@ BOOL isCustomResolution(CGSize res) {
         
         // touch move event interval for native-touch.
         [self.touchMoveEventIntervalSlider setValue:currentSettings.touchMoveEventInterval.intValue animated:YES]; // Load old setting.
-        [self.touchMoveEventIntervalSlider addTarget:self action:@selector(touchMoveEventIntervalSliderMoved) forControlEvents:(UIControlEventValueChanged)]; // Update label display when slider is being moved.
-        [self touchMoveEventIntervalSliderMoved];
+    [self.touchMoveEventIntervalSlider addTarget:self action:@selector(touchMoveEventIntervalSliderMoved:) forControlEvents:(UIControlEventValueChanged)]; // Update label display when slider is being moved.
+    [self touchMoveEventIntervalSliderMoved:self.touchMoveEventIntervalSlider];
         
         
         // this part will enable/disable oscSelector & the asyncNativeTouchPriority selector
@@ -1583,7 +1583,8 @@ BOOL isCustomResolution(CGSize res) {
     //bool asyncNativeTouchEnabled = [self.asyncNativeTouchPrioritySelector selectedSegmentIndex] != AsyncNativeTouchOff;
     self.enableOswSwitchStack.hidden = !isNativeTouch;
     // [self.asyncNativeTouchPrioritySelector setEnabled:![self showOswSelector]]; // this selector stay aligned with oscSelector
-    [self.touchMoveEventIntervalSlider setEnabled: isNativeTouch]; // applies to native touch modes only
+    [self.touchMoveEventIntervalSlider setEnabled: isNativeTouch];
+    [self touchMoveEventIntervalSliderMoved:self.touchMoveEventIntervalSlider];
     self.pointerVelocityDividerStack.hidden = !isNativeTouch;
     self.pointerVelocityFactorStack.hidden = !isNativeTouch;
     self.mousePointerVelocityStack.hidden = !(sender.selectedSegmentIndex == RelativeTouch);
@@ -1770,8 +1771,9 @@ BOOL isCustomResolution(CGSize res) {
     self.resolutionDisplayLabel.font = [UIFont systemFontOfSize:17 weight:UIFontWeightMedium]; */
 }
 
-- (void) touchMoveEventIntervalSliderMoved{
-    [self.touchMoveEventIntervalLabel setText:[LocalizationHelper localizedStringForKey:@"Interval of Multi-Touch Move Events: %d μs", (uint16_t)self.touchMoveEventIntervalSlider.value]];
+- (void) touchMoveEventIntervalSliderMoved:(UISlider* )sender{
+    [self findDynamicLabelFromStack:self.touchMoveEventIntervalStack].text = sender.enabled ?
+    [NSString stringWithFormat:@"  %d μs  ", (uint16_t)self.touchMoveEventIntervalSlider.value] : @"";
 }
 
 
@@ -1941,11 +1943,11 @@ BOOL isCustomResolution(CGSize res) {
     NSInteger asyncNativeTouchPriority = 1;
     //BOOL liftStreamViewForKeyboard = [self.liftStreamViewForKeyboardSelector selectedSegmentIndex] == 1;
     BOOL liftStreamViewForKeyboard = YES; // enable and hide this option
-    BOOL showKeyboardToolbar = [self.showKeyboardToolbarSelector selectedSegmentIndex] == 1;
+    BOOL showKeyboardToolbar = self.softKeyboardToolbarSwitch.isOn;
     BOOL optimizeGames = self.optimizeGamesSwitch.isOn;
-    BOOL multiController = [self.multiControllerSelector selectedSegmentIndex] == 1;
+    BOOL multiController = self.multiControllerSwitch.isOn;
     BOOL swapABXYButtons = [self.swapABXYButtonsSelector selectedSegmentIndex] == 1;
-    BOOL audioOnPC = [self.audioOnPCSelector selectedSegmentIndex] == 1;
+    BOOL audioOnPC = self.audioOnPcSwitch.isOn;
     uint32_t preferredCodec = [self getChosenCodecPreference];
     BOOL enableYUV444 = self.yuv444Switch.isOn;
     BOOL btMouseSupport = self.citrixX1MouseSwitch.isOn;

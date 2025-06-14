@@ -34,14 +34,17 @@
 @property (strong, nonatomic) IBOutlet UIStackView *softKeyboardGestureStack;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *softKeyboardGestureSelector;
 @property (strong, nonatomic) IBOutlet UIStackView *liftStreamViewForKeyboardStack;
-@property (strong, nonatomic) IBOutlet UIStackView *showKeyboardToolbarStack;
+@property (strong, nonatomic) IBOutlet UIStackView *softKeyboardToolbarStack;
+@property (weak, nonatomic) IBOutlet UISwitch *softKeyboardToolbarSwitch;
 @property (strong, nonatomic) IBOutlet UIStackView *slideToSettingsScreenEdgeStack;
 @property (strong, nonatomic) IBOutlet UIStackView *slideToToolboxScreenEdgeStack;
 @property (strong, nonatomic) IBOutlet UIStackView *slideToSettingsDistanceStack;
 @property (strong, nonatomic) IBOutlet UIStackView *optimizeGamesStack;
 @property (strong, nonatomic) IBOutlet UIStackView *multiControllerStack;
+@property (weak, nonatomic) IBOutlet UISwitch *multiControllerSwitch;
 @property (strong, nonatomic) IBOutlet UIStackView *swapAbaxyStack;
 @property (strong, nonatomic) IBOutlet UIStackView *audioOnPcStack;
+@property (weak, nonatomic) IBOutlet UISwitch *audioOnPcSwitch;
 @property (strong, nonatomic) IBOutlet UIStackView *codecStack;
 @property (strong, nonatomic) IBOutlet UIStackView *yuv444Stack;
 @property (strong, nonatomic) IBOutlet UIStackView *HdrStack;
@@ -65,9 +68,7 @@
 @property (strong, nonatomic) IBOutlet UILabel *onscreenControllerLabel;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *onScreenWidgetSelector;
 //@property (strong, nonatomic) IBOutlet UISegmentedControl *asyncNativeTouchPrioritySelector;
-@property (strong, nonatomic) IBOutlet UISegmentedControl *multiControllerSelector;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *swapABXYButtonsSelector;
-@property (strong, nonatomic) IBOutlet UISegmentedControl *audioOnPCSelector;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *codecSelector;
 @property (weak, nonatomic) IBOutlet UISwitch *hdrSwitch;
 @property (weak, nonatomic) IBOutlet UISwitch *yuv444Switch;
@@ -76,7 +77,6 @@
 @property (strong, nonatomic) IBOutlet UISegmentedControl *statsOverlaySelector;
 @property (strong, nonatomic) IBOutlet UIScrollView *scrollView;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *liftStreamViewForKeyboardSelector;
-@property (strong, nonatomic) IBOutlet UISegmentedControl *showKeyboardToolbarSelector;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *slideToSettingsScreenEdgeSelector;
 
 @property (strong, nonatomic) IBOutlet UILabel *touchMoveEventIntervalLabel;
