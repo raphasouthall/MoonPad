@@ -377,7 +377,7 @@ BOOL isCustomResolution(CGSize res) {
     _parentStack.translatesAutoresizingMaskIntoConstraints = NO;
     [self.scrollView addSubview:_parentStack];
     [NSLayoutConstraint activateConstraints:@[
-        [_parentStack.topAnchor constraintEqualToAnchor:self.scrollView.contentLayoutGuide.topAnchor constant: [self getStandardNavBarHeight]],
+        [_parentStack.topAnchor constraintEqualToAnchor:self.scrollView.contentLayoutGuide.topAnchor constant: currentSettingsMenuMode == AllSettings ? [self getStandardNavBarHeight] : [self getStandardNavBarHeight]+20],
         [_parentStack.bottomAnchor constraintEqualToAnchor:self.scrollView.contentLayoutGuide.bottomAnchor constant:-20],
         [_parentStack.centerXAnchor constraintEqualToAnchor:self.view.centerXAnchor constant: 0], //mark: settingMenuLayout
         [_parentStack.widthAnchor constraintEqualToAnchor:self.view.widthAnchor constant:-20] // section width adjusted here //mark: settingMenuLayout
@@ -1013,17 +1013,19 @@ BOOL isCustomResolution(CGSize res) {
 }
 
 - (void)switchToFavoriteSettings{
-    [self updateTheme];
+    for(UIView* view in _parentStack.subviews){
+        [view removeFromSuperview];
+    }
     currentSettingsMenuMode = FavoriteSettings;
+    [self initParentStack];
+    [self updateTheme];
     DataManager* dataMan = [[DataManager alloc] init];
     Settings *currentSettings = [dataMan retrieveSettings];
     currentSettings.settingsMenuMode = [NSNumber numberWithInteger:currentSettingsMenuMode];
     [dataMan saveData];
     
-    for(UIView* view in _parentStack.subviews){
-        [view removeFromSuperview];
-    }
     _parentStack.spacing = 15;
+    
     [self loadFavoriteSettingStackIdentifiers];
     for(NSString* settingIdentifier in _favoriteSettingStackIdentifiers){
         [_parentStack addArrangedSubview:_settingStackDict[settingIdentifier]];
@@ -1032,6 +1034,7 @@ BOOL isCustomResolution(CGSize res) {
 }
 
 - (void)switchToAllSettings{
+    currentSettingsMenuMode = AllSettings;
     for(UIView* view in _parentStack.subviews){
         [view removeFromSuperview];
     }
@@ -1039,7 +1042,6 @@ BOOL isCustomResolution(CGSize res) {
     [self layoutSections];
     [self updateTheme];
         //[self doneRemoveSettingItem];
-    currentSettingsMenuMode = AllSettings;
     DataManager* dataMan = [[DataManager alloc] init];
     Settings *currentSettings = [dataMan retrieveSettings];
     currentSettings.settingsMenuMode = [NSNumber numberWithInteger:currentSettingsMenuMode];
