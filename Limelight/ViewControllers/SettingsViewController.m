@@ -776,6 +776,21 @@ BOOL isCustomResolution(CGSize res) {
     return 0;
 }
 
+- (void)highlightedPurpleBackgroundForView:(UIView* )view{
+    view.layer.cornerRadius = 6;
+    view.layer.masksToBounds = YES;
+    view.clipsToBounds = YES;
+    view.backgroundColor = [UIColor colorWithRed:0.5 green:0.5 blue:1 alpha:0.35];
+}
+
+- (void)highlightedBackgroundForView:(UIView* )view{
+    view.layer.cornerRadius = 6;
+    view.layer.masksToBounds = YES;
+    view.clipsToBounds = YES;
+    view.backgroundColor = [ThemeManager appPrimaryColorWithAlpha];
+}
+
+
 - (void)updateRelocationIndicatorFor:(CGPoint)locationInParentStack{
     uint16_t currentIndex = [self parentStackIndexForLocation:locationInParentStack];
     UIStackView* currentStack;
@@ -785,18 +800,12 @@ BOOL isCustomResolution(CGSize res) {
         if(currentIndex == i){
             settingStackWillBeRelocatedToLowestPosition = false;
             if(i == _parentStack.arrangedSubviews.count-1 && locationInParentStack.y > CGRectGetMaxY(currentStack.frame)){
-                snapshot.layer.cornerRadius = 6;
-                snapshot.layer.masksToBounds = YES;
-                snapshot.clipsToBounds = YES;
-                snapshot.backgroundColor = [UIColor colorWithRed:0.5 green:0.5 blue:1 alpha:0.35];
+                [self highlightedPurpleBackgroundForView:snapshot];
                 currentStack.backgroundColor = [UIColor clearColor];
                 settingStackWillBeRelocatedToLowestPosition = true;
             }
             else{
-                currentStack.layer.cornerRadius = 6;
-                currentStack.layer.masksToBounds = YES;
-                currentStack.clipsToBounds = YES;
-                currentStack.backgroundColor = [ThemeManager appPrimaryColorWithAlpha];
+                [self highlightedBackgroundForView:currentStack];
                 snapshot.backgroundColor = [UIColor clearColor];
             }
         }
@@ -817,6 +826,7 @@ BOOL isCustomResolution(CGSize res) {
 - (void)findCapturedStackByTouchLocation:(CGPoint)point{
     UIView *touchedView = [_parentStack hitTest:point withEvent:nil];
     while(touchedView){
+        NSLog(@"view captured: %@, %@", touchedView, touchedView.accessibilityIdentifier);
         if([touchedView isKindOfClass:[UIStackView class]] && touchedView.accessibilityIdentifier != nil){
             capturedStack = (UIStackView *)touchedView;
             break;
@@ -834,23 +844,31 @@ BOOL isCustomResolution(CGSize res) {
                                                                 style:UIAlertActionStyleDefault
                                                               handler:^(UIAlertAction * _Nonnull action) {
         [self addSettingToFavorite:self->capturedStack];
+        self->capturedStack.backgroundColor = [UIColor clearColor];
     }];
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@""
+                                                            style:UIAlertActionStyleCancel
+                                                          handler:^(UIAlertAction * _Nonnull action) {
+        self->capturedStack.backgroundColor = [UIColor clearColor];
+    }];
+    
     [actionSheet addAction:addFavoriteAction];
+    [actionSheet addAction:cancelAction];
     return actionSheet;
 }
 
 - (void)handleLongPress:(UILongPressGestureRecognizer *)gesture {
     CGPoint locationInParentStack = [gesture locationInView:_parentStack];
     CGPoint locationInRootView = [gesture locationInView:self.view.superview];
-    if(currentSettingsMenuMode == AllSettings){
-        if (gesture.state == UIGestureRecognizerStateBegan) {
-            [self findCapturedStackByTouchLocation:locationInParentStack];
-            if(capturedStack == nil) return;
-            UIAlertController* actionSheet = [self prepareAddToFavoriteActionSheet];
-            actionSheet.popoverPresentationController.sourceView = capturedStack;
-            [self presentViewController:actionSheet animated:YES completion:nil];
-        }
+    if(currentSettingsMenuMode == AllSettings &&gesture.state == UIGestureRecognizerStateBegan) {
+        [self findCapturedStackByTouchLocation:locationInParentStack];
+        if(capturedStack == nil) return;
+        [self highlightedBackgroundForView:capturedStack];
+        UIAlertController* actionSheet = [self prepareAddToFavoriteActionSheet];
+        actionSheet.popoverPresentationController.sourceView = capturedStack;
+        [self presentViewController:actionSheet animated:YES completion:nil];
     }
+    
     
     static CGPoint originalCenter;
     static NSInteger originalIndex;
@@ -870,7 +888,8 @@ BOOL isCustomResolution(CGSize res) {
                 if(capturedStack == nil) return;
 
                 snapshot = [capturedStack snapshotViewAfterScreenUpdates:YES];
-                snapshot.center = capturedStack.center;
+                //snapshot.center = capturedStack.center;
+                snapshot.center = locationInParentStack;
                 [_parentStack addSubview:snapshot];
                 capturedStack.hidden = YES;
                 originalCenter = capturedStack.center;
@@ -878,7 +897,7 @@ BOOL isCustomResolution(CGSize res) {
                 break;
                 
             case UIGestureRecognizerStateChanged:
-                snapshot.center = CGPointMake(locationInParentStack.x, locationInParentStack.y);
+                snapshot.center = locationInParentStack;
                 // NSLog(@"coordY in rootView: %f", locationInRootView.y);
                 [self handleAutoScroll:locationInRootView];
                 [self updateRelocationIndicatorFor:locationInParentStack];
