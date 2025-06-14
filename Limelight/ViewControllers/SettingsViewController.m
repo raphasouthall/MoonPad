@@ -502,8 +502,8 @@ BOOL isCustomResolution(CGSize res) {
     
     [self addSetting:self.softKeyboardGestureStack ofId:@"softKeyboardGestureStack" withInfoTag:YES withDynamicLabel:NO to:gesturesSection];
     [self addSetting:self.slideToSettingsScreenEdgeStack ofId:@"slideToSettingsScreenEdgeStack" withInfoTag:NO withDynamicLabel:NO to:gesturesSection];
-    [self addSetting:self.slideToCmdToolScreenEdgeStack ofId:@"slideToCmdToolScreenEdgeStack" withInfoTag:NO withDynamicLabel:NO to:gesturesSection];
-    [self addSetting:self.slideToSettingsDistanceStack ofId:@"slideToSettingsDistanceStack" withInfoTag:NO withDynamicLabel:NO to:gesturesSection];
+    [self addSetting:self.slideToToolboxScreenEdgeStack ofId:@"slideToToolboxScreenEdgeStack" withInfoTag:NO withDynamicLabel:NO to:gesturesSection];
+    [self addSetting:self.slideToSettingsDistanceStack ofId:@"slideToSettingsDistanceStack" withInfoTag:YES withDynamicLabel:YES to:gesturesSection];
     [gesturesSection addToParentStack:parentStack];
     [gesturesSection setExpanded:YES];
 
@@ -512,8 +512,8 @@ BOOL isCustomResolution(CGSize res) {
     if (@available(iOS 13.0, *)) {
         [peripheralSection setSectionWithIcon:[UIImage imageNamed:@"cable.connector.video"] andSize:20];
     }
-    [self addSetting:self.externalDisplayModeStack ofId:@"externalDisplayModeStack" withInfoTag:NO withDynamicLabel:NO to:peripheralSection];
-    [self addSetting:self.localMousePointerModeStack ofId:@"localMousePointerModeStack" withInfoTag:NO withDynamicLabel:NO to:peripheralSection];
+    [self addSetting:self.externalDisplayModeStack ofId:@"externalDisplayModeStack" withInfoTag:YES withDynamicLabel:NO to:peripheralSection];
+    [self addSetting:self.localMousePointerModeStack ofId:@"localMousePointerModeStack" withInfoTag:YES withDynamicLabel:NO to:peripheralSection];
     [self addSetting:self.reverseMouseWheelDirectionStack ofId:@"reverseMouseWheelDirectionStack" withInfoTag:NO withDynamicLabel:NO to:peripheralSection];
     [self addSetting:self.citrixX1MouseStack ofId:@"citrixX1MouseStack" withInfoTag:NO withDynamicLabel:NO to:peripheralSection];
     [peripheralSection addToParentStack:parentStack];
@@ -587,7 +587,7 @@ BOOL isCustomResolution(CGSize res) {
     [parentStackTmp addArrangedSubview:self.liftStreamViewForKeyboardStack];
     [parentStackTmp addArrangedSubview:self.showKeyboardToolbarStack];
     [parentStackTmp addArrangedSubview:self.slideToSettingsScreenEdgeStack];
-    [parentStackTmp addArrangedSubview:self.slideToCmdToolScreenEdgeStack];
+    [parentStackTmp addArrangedSubview:self.slideToToolboxScreenEdgeStack];
     [parentStackTmp addArrangedSubview:self.slideToSettingsDistanceStack];
     [parentStackTmp addArrangedSubview:self.optimizeSettingsStack];
     [parentStackTmp addArrangedSubview:self.multiControllerStack];
@@ -1204,7 +1204,7 @@ BOOL isCustomResolution(CGSize res) {
         
         [self.yuv444Switch setOn:currentSettings.enableYUV444];
         [self.statsOverlaySelector setSelectedSegmentIndex:currentSettings.statsOverlayLevel.intValue];
-        [self.btMouseSelector setSelectedSegmentIndex:currentSettings.btMouseSupport ? 1 : 0];
+        [self.citrixX1MouseSwitch setOn:currentSettings.btMouseSupport];
         [self.optimizeSettingsSelector setSelectedSegmentIndex:currentSettings.optimizeGames ? 1 : 0];
         [self.framePacingSelector setSelectedSegmentIndex:currentSettings.useFramePacing ? 1 : 0];
         [self.multiControllerSelector setSelectedSegmentIndex:currentSettings.multiController ? 1 : 0];
@@ -1245,13 +1245,13 @@ BOOL isCustomResolution(CGSize res) {
         //  slide to menu settings
         [self.slideToSettingsScreenEdgeSelector setSelectedSegmentIndex:[self getSelectorIndexFromScreenEdge:(uint32_t)currentSettings.slideToSettingsScreenEdge.integerValue]];
         // Load old setting
-        [self.cmdToolScreenEdgeSelector setEnabled:false];
+        [self.slideToToolboxScreenEdgeSelector setEnabled:false];
         [self.slideToSettingsScreenEdgeSelector addTarget:self action:@selector(slideToSettingsScreenEdgeChanged) forControlEvents:UIControlEventValueChanged];
         [self slideToSettingsScreenEdgeChanged];
         
         [self.slideToMenuDistanceSlider setValue:currentSettings.slideToSettingsDistance.floatValue];
-        [self.slideToMenuDistanceSlider addTarget:self action:@selector(slideToMenuDistanceSliderMoved) forControlEvents:(UIControlEventValueChanged)]; // Update label display when slider is being moved.
-        [self slideToMenuDistanceSliderMoved];
+    [self.slideToMenuDistanceSlider addTarget:self action:@selector(slideToMenuDistanceSliderMoved:) forControlEvents:(UIControlEventValueChanged)]; // Update label display when slider is being moved.
+    [self slideToMenuDistanceSliderMoved:self.slideToMenuDistanceSlider];
         
         
         
@@ -1329,8 +1329,8 @@ BOOL isCustomResolution(CGSize res) {
 }
 
 - (void)slideToSettingsScreenEdgeChanged{
-    if([self.slideToSettingsScreenEdgeSelector selectedSegmentIndex] == 0) [self.cmdToolScreenEdgeSelector setSelectedSegmentIndex:1];
-    else [self.cmdToolScreenEdgeSelector setSelectedSegmentIndex:0];
+    if([self.slideToSettingsScreenEdgeSelector selectedSegmentIndex] == 0) [self.slideToToolboxScreenEdgeSelector setSelectedSegmentIndex:1];
+    else [self.slideToToolboxScreenEdgeSelector setSelectedSegmentIndex:0];
 }
 
 
@@ -1714,8 +1714,8 @@ BOOL isCustomResolution(CGSize res) {
 }
 
 
-- (void) slideToMenuDistanceSliderMoved{
-    [self.slideToSettingsDistanceUILabel setText:[LocalizationHelper localizedStringForKey:@"Slide Distance for in-Stream Menu: %.2f * screen-width", self.slideToMenuDistanceSlider.value]];
+- (void) slideToMenuDistanceSliderMoved:(UISlider* )sender{
+    [self findDynamicLabelFromStack:_slideToSettingsDistanceStack].text = [LocalizationHelper localizedStringForKey:@"%d%% screen width", (uint8_t)(sender.value * 100)];
 }
 
 - (void) bitrateSliderMoved {
@@ -1884,7 +1884,7 @@ BOOL isCustomResolution(CGSize res) {
     BOOL audioOnPC = [self.audioOnPCSelector selectedSegmentIndex] == 1;
     uint32_t preferredCodec = [self getChosenCodecPreference];
     BOOL enableYUV444 = self.yuv444Switch.isOn;
-    BOOL btMouseSupport = [self.btMouseSelector selectedSegmentIndex] == 1;
+    BOOL btMouseSupport = self.citrixX1MouseSwitch.isOn;
     BOOL useFramePacing = [self.framePacingSelector selectedSegmentIndex] == 1;
     NSInteger touchMode = [self isNotNativeTouchOnly] ? self.touchModeSelector.selectedSegmentIndex : NativeTouchOnly;
     NSInteger statsOverlayLevel = [self.statsOverlaySelector selectedSegmentIndex];

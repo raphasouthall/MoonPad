@@ -33,7 +33,7 @@
 @property (strong, nonatomic) IBOutlet UIStackView *liftStreamViewForKeyboardStack;
 @property (strong, nonatomic) IBOutlet UIStackView *showKeyboardToolbarStack;
 @property (strong, nonatomic) IBOutlet UIStackView *slideToSettingsScreenEdgeStack;
-@property (strong, nonatomic) IBOutlet UIStackView *slideToCmdToolScreenEdgeStack;
+@property (strong, nonatomic) IBOutlet UIStackView *slideToToolboxScreenEdgeStack;
 @property (strong, nonatomic) IBOutlet UIStackView *slideToSettingsDistanceStack;
 @property (strong, nonatomic) IBOutlet UIStackView *optimizeSettingsStack;
 @property (strong, nonatomic) IBOutlet UIStackView *multiControllerStack;
@@ -45,6 +45,7 @@
 @property (strong, nonatomic) IBOutlet UIStackView *framepacingStack;
 @property (strong, nonatomic) IBOutlet UIStackView *reverseMouseWheelDirectionStack;
 @property (strong, nonatomic) IBOutlet UIStackView *citrixX1MouseStack;
+@property (weak, nonatomic) IBOutlet UISwitch *citrixX1MouseSwitch;
 @property (strong, nonatomic) IBOutlet UIStackView *statsOverlayStack;
 @property (strong, nonatomic) IBOutlet UIStackView *unlockDisplayOrientationStack;
 @property (strong, nonatomic) IBOutlet UIStackView *externalDisplayModeStack;
@@ -69,7 +70,6 @@
 @property (weak, nonatomic) IBOutlet UISwitch *hdrSwitch;
 @property (weak, nonatomic) IBOutlet UISwitch *yuv444Switch;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *framePacingSelector;
-@property (strong, nonatomic) IBOutlet UISegmentedControl *btMouseSelector;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *reverseMouseWheelDirectionSelector;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *statsOverlaySelector;
 @property (strong, nonatomic) IBOutlet UIScrollView *scrollView;
@@ -80,7 +80,7 @@
 @property (strong, nonatomic) IBOutlet UILabel *touchMoveEventIntervalLabel;
 @property (strong, nonatomic) IBOutlet UISlider *touchMoveEventIntervalSlider;
 @property (strong, nonatomic) IBOutlet UILabel *slideToSettingsScreenEdgeUILabel;
-@property (strong, nonatomic) IBOutlet UISegmentedControl *cmdToolScreenEdgeSelector;
+@property (strong, nonatomic) IBOutlet UISegmentedControl *slideToToolboxScreenEdgeSelector;
 @property (strong, nonatomic) IBOutlet UILabel *slideToSettingsDistanceUILabel;
 @property (strong, nonatomic) IBOutlet UISlider *slideToMenuDistanceSlider;
 @property (strong, nonatomic) IBOutlet UISlider *pointerVelocityModeDividerSlider;

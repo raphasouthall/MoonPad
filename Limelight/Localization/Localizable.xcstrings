@@ -145,6 +145,29 @@
         }
       }
     },
+    "%d%% screen width" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%d%%屏幕宽度"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%d%%屏幕宽度"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%d%%屏幕宽度"
+          }
+        }
+      }
+    },
     "%u ms (variance: %u ms)" : {
       "extractionState" : "manual",
       "localizations" : {

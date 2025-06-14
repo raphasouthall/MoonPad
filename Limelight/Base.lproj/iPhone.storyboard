@@ -600,7 +600,6 @@ ICAgICAgICAgICAgIA
                         <outlet property="bitrateLabel" destination="SBv-Wn-LB7" id="Wdu-me-Bvd"/>
                         <outlet property="bitrateSlider" destination="3nn-MI-9Xu" id="IuD-Rk-vPp"/>
                         <outlet property="btMouseSelector" destination="o4O-hO-teB" id="bLu-uv-yUX"/>
-                        <outlet property="cmdToolScreenEdgeSelector" destination="zDR-Ss-JPc" id="cUd-Ot-bZg"/>
                         <outlet property="codecSelector" destination="AbS-CW-fjP" id="ohH-Tc-UzM"/>
                         <outlet property="externalDisplayModeSelector" destination="VWB-YB-Ptj" id="0ak-pc-evb"/>
                         <outlet property="framePacingSelector" destination="d2a-Ka-H2c" id="Ocv-3E-lIm"/>
@@ -623,6 +622,7 @@ ICAgICAgICAgICAgIA
                         <outlet property="reverseMouseWheelDirectionSelector" destination="p2k-7u-PDc" id="7Oo-Um-bi4"/>
                         <outlet property="scrollView" destination="iNk-qF-gIr" id="h7U-Xp-ULQ"/>
                         <outlet property="showKeyboardToolbarSelector" destination="6fE-k6-IG0" id="ZNP-ET-75U"/>
+                        <outlet property="slideToCmdToolScreenEdgeSelector" destination="zDR-Ss-JPc" id="cUd-Ot-bZg"/>
                         <outlet property="slideToMenuDistanceSlider" destination="3MK-Qx-ZVc" id="Rv3-x0-qe3"/>
                         <outlet property="slideToSettingsDistanceUILabel" destination="Ex1-zI-oAH" id="LDq-gh-z78"/>
                         <outlet property="slideToSettingsScreenEdgeSelector" destination="2Lx-OY-ZPu" id="C3j-zx-gul"/>

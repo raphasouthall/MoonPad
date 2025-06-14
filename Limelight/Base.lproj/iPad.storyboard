@@ -424,7 +424,7 @@
                             <stackView opaque="NO" contentMode="scaleToFill" ambiguous="YES" axis="vertical" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="Tv6-pw-87l" userLabel="keyboardToggleFingerNum Stack">
                                 <rect key="frame" x="17" y="884" width="380" height="56.5"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Local Soft Keyboard Gesture" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="nh6-cn-z23">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Toggle Local Soft Keyboard" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="nh6-cn-z23">
                                         <rect key="frame" x="0.0" y="0.0" width="380" height="20.5"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <color key="tintColor" red="0.81533776120000001" green="0.85979419950000002" blue="0.91372549020000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -476,7 +476,7 @@
                             <stackView opaque="NO" contentMode="scaleToFill" ambiguous="YES" axis="vertical" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="tgA-05-vWV" userLabel="slideToSettingsScreenEdge Stack">
                                 <rect key="frame" x="15" y="1113" width="380" height="56.5"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Open Settings in Stream View by Sliding from:                        " lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IvI-tw-APj">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Open Settings in Streaming" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IvI-tw-APj">
                                         <rect key="frame" x="0.0" y="0.0" width="380" height="20.5"/>
                                         <color key="tintColor" red="0.81533776120000001" green="0.85979419950000002" blue="0.91372549020000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -486,8 +486,8 @@
                                     <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="Mm0-xf-9eh">
                                         <rect key="frame" x="0.0" y="25.5" width="380" height="32"/>
                                         <segments>
-                                            <segment title="Left Screen Edge"/>
-                                            <segment title="Right Screen Edge"/>
+                                            <segment title="Slide From Left Edge"/>
+                                            <segment title="Slide From Right Edge"/>
                                         </segments>
                                         <color key="tintColor" red="0.6716768742" green="0.61711704730000005" blue="0.99902987480000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <color key="selectedSegmentTintColor" systemColor="linkColor"/>
@@ -497,10 +497,10 @@
                                     <constraint firstAttribute="width" constant="380" id="WEi-Im-NuH"/>
                                 </constraints>
                             </stackView>
-                            <stackView opaque="NO" contentMode="scaleToFill" ambiguous="YES" axis="vertical" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="msN-pa-Kn3" userLabel="slideToCmdToolScreenEdge Stack">
+                            <stackView opaque="NO" contentMode="scaleToFill" ambiguous="YES" axis="vertical" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="msN-pa-Kn3" userLabel="slideToToolboxScreenEdge Stack">
                                 <rect key="frame" x="15" y="1189" width="380" height="56.5"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Open Command Tool in Stream View by Sliding from:          " lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Zp4-fA-IeL">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Open Toolbox in Streaming" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Zp4-fA-IeL">
                                         <rect key="frame" x="0.0" y="0.0" width="380" height="20.5"/>
                                         <color key="tintColor" red="0.81533776120000001" green="0.85979419950000002" blue="0.91372549020000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -511,8 +511,8 @@
                                         <rect key="frame" x="0.0" y="25.5" width="380" height="32"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <segments>
-                                            <segment title="Left Screen Edge"/>
-                                            <segment title="Right Screen Edge"/>
+                                            <segment title="Slide From Left Edge"/>
+                                            <segment title="Slide From Right Edge"/>
                                         </segments>
                                         <color key="tintColor" red="0.6716768742" green="0.61711704730000005" blue="0.99902987480000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <color key="selectedSegmentTintColor" systemColor="linkColor"/>
@@ -525,7 +525,7 @@
                             <stackView opaque="NO" contentMode="scaleToFill" ambiguous="YES" axis="vertical" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="pN7-bs-8yu" userLabel="slideToSettingsDistance Stack">
                                 <rect key="frame" x="16" y="1263" width="380" height="55.5"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Slide Distance for Stream View Menu: 0.5 * screen-width     " lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pMN-6T-aYE" userLabel="Slide To Settings Distance UI Label">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Gesture Slide Distance" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pMN-6T-aYE" userLabel="Slide To Settings Distance UI Label">
                                         <rect key="frame" x="0.0" y="0.0" width="380" height="20.5"/>
                                         <color key="tintColor" red="0.81533776120000001" green="0.85979419950000002" blue="0.91372549020000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -576,7 +576,7 @@
                                     <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="4FU-iP-c6T" userLabel="Mouse Mode">
                                         <rect key="frame" x="0.0" y="25.5" width="380" height="32"/>
                                         <segments>
-                                            <segment title="Restricted by Window"/>
+                                            <segment title="Captured"/>
                                             <segment title="Hidden"/>
                                             <segment title="Visible"/>
                                         </segments>
@@ -591,7 +591,7 @@
                             <stackView opaque="NO" contentMode="scaleToFill" ambiguous="YES" axis="vertical" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="2P0-Tg-zWd" userLabel="reverseMouseWheelDirection Stack">
                                 <rect key="frame" x="15" y="1909" width="380" height="56.5"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Reverse Wheel Direction for Physical Mouse                           " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FwK-oG-vuz">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Physical Mouse Wheel Scroll" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FwK-oG-vuz">
                                         <rect key="frame" x="0.0" y="0.0" width="380" height="20.5"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <color key="textColor" red="0.93902439019999995" green="0.9625305918" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -600,8 +600,8 @@
                                     <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="1" translatesAutoresizingMaskIntoConstraints="NO" id="mTM-NL-CcF" userLabel="Reverse Wheel Direction for Physical Mouse                           ">
                                         <rect key="frame" x="0.0" y="25.5" width="380" height="32"/>
                                         <segments>
-                                            <segment title="No"/>
-                                            <segment title="Yes"/>
+                                            <segment title="Align with System"/>
+                                            <segment title="Reversed"/>
                                         </segments>
                                         <color key="tintColor" red="0.6716768742" green="0.61711704730000005" blue="0.99902987480000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <color key="selectedSegmentTintColor" systemColor="linkColor"/>
@@ -609,29 +609,6 @@
                                 </subviews>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="380" id="S9G-oL-OV0"/>
-                                </constraints>
-                            </stackView>
-                            <stackView opaque="NO" contentMode="scaleToFill" ambiguous="YES" axis="vertical" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="77p-qt-4ak" userLabel="citrixX1Mouse Stack">
-                                <rect key="frame" x="15" y="1986" width="380" height="56.5"/>
-                                <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Citrix X1 Mouse Support                                                               " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="t9f-V8-GCm">
-                                        <rect key="frame" x="0.0" y="0.0" width="380" height="20.5"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                        <color key="textColor" red="0.93902439019999995" green="0.9625305918" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="1" translatesAutoresizingMaskIntoConstraints="NO" id="goy-IW-LuT" userLabel="Citrix X1 Mouse Support                                                               ">
-                                        <rect key="frame" x="0.0" y="25.5" width="380" height="32"/>
-                                        <segments>
-                                            <segment title="No"/>
-                                            <segment title="Yes"/>
-                                        </segments>
-                                        <color key="tintColor" red="0.6716768742" green="0.61711704730000005" blue="0.99902987480000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                        <color key="selectedSegmentTintColor" systemColor="linkColor"/>
-                                    </segmentedControl>
-                                </subviews>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="380" id="fpF-ZU-wFe"/>
                                 </constraints>
                             </stackView>
                             <stackView opaque="NO" contentMode="scaleToFill" ambiguous="YES" axis="vertical" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="UcP-0b-nJD" userLabel="statsOverlay Stack">
@@ -795,6 +772,27 @@
                                     </switch>
                                 </subviews>
                             </stackView>
+                            <stackView opaque="NO" contentMode="scaleToFill" spacing="20" id="gjX-s1-k61" userLabel="CitrixX1MouseStack">
+                                <rect key="frame" x="20" y="1973" width="280" height="31"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Citrix X1 Mouse" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5aI-Zx-dNf">
+                                        <rect key="frame" x="0.0" y="0.0" width="130" height="31"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="130" id="jpP-y3-Vte"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="GQM-NR-WIO" userLabel="citrixX1MouseSwitch">
+                                        <rect key="frame" x="150" y="0.0" width="132" height="31"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="130" id="MmP-8X-kG2"/>
+                                        </constraints>
+                                    </switch>
+                                </subviews>
+                            </stackView>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </view>
@@ -806,9 +804,8 @@
                         <outlet property="bitrateLabel" destination="lMt-4H-fkV" id="mpE-bW-R48"/>
                         <outlet property="bitrateSlider" destination="JAY-nj-UNz" id="fHd-v5-9Vo"/>
                         <outlet property="bitrateStack" destination="2cV-yC-0QL" id="eHB-kH-hoF"/>
-                        <outlet property="btMouseSelector" destination="goy-IW-LuT" id="tcQ-Dy-PGO"/>
-                        <outlet property="citrixX1MouseStack" destination="77p-qt-4ak" id="OM1-pZ-0Xd"/>
-                        <outlet property="cmdToolScreenEdgeSelector" destination="yY7-Sf-Zes" id="fgL-xr-obH"/>
+                        <outlet property="citrixX1MouseStack" destination="gjX-s1-k61" id="8QP-No-ugv"/>
+                        <outlet property="citrixX1MouseSwitch" destination="GQM-NR-WIO" id="RNm-18-mrK"/>
                         <outlet property="codecSelector" destination="aFy-0w-YPe" id="DlU-0l-gwz"/>
                         <outlet property="codecStack" destination="gWg-BF-yDI" id="GGc-JQ-N8y"/>
                         <outlet property="customResolutionSwitch" destination="E5w-kK-dOo" id="hrt-v2-8dY"/>
@@ -847,13 +844,14 @@
                         <outlet property="scrollView" destination="WRy-3f-gEP" id="V8B-oF-27B"/>
                         <outlet property="showKeyboardToolbarSelector" destination="KJd-PE-5cS" id="vUx-FV-BOO"/>
                         <outlet property="showKeyboardToolbarStack" destination="90g-DY-GKi" id="9zo-2D-8P5"/>
-                        <outlet property="slideToCmdToolScreenEdgeStack" destination="msN-pa-Kn3" id="GBR-Ed-bJX"/>
-                        <outlet property="slideToMenuDistanceSlider" destination="8p6-FP-UWP" id="iYa-ZS-dzX"/>
+                        <outlet property="slideToMenuDistanceSlider" destination="8p6-FP-UWP" id="8z3-2I-oPd"/>
                         <outlet property="slideToSettingsDistanceStack" destination="pN7-bs-8yu" id="azp-qU-GnS"/>
                         <outlet property="slideToSettingsDistanceUILabel" destination="pMN-6T-aYE" id="If8-fO-rya"/>
                         <outlet property="slideToSettingsScreenEdgeSelector" destination="Mm0-xf-9eh" id="3gH-zH-Hy3"/>
                         <outlet property="slideToSettingsScreenEdgeStack" destination="tgA-05-vWV" id="5ir-95-hsv"/>
                         <outlet property="slideToSettingsScreenEdgeUILabel" destination="IvI-tw-APj" id="7qc-yD-pry"/>
+                        <outlet property="slideToToolboxScreenEdgeSelector" destination="yY7-Sf-Zes" id="bZE-uc-KcL"/>
+                        <outlet property="slideToToolboxScreenEdgeStack" destination="msN-pa-Kn3" id="p9F-Aj-h3X"/>
                         <outlet property="softKeyboardGestureSelector" destination="kho-5R-daP" id="AaA-Xg-0fw"/>
                         <outlet property="softKeyboardGestureStack" destination="Tv6-pw-87l" id="RtJ-Ib-GJg"/>
                         <outlet property="statsOverlaySelector" destination="NLH-qN-qCo" id="EF8-JF-O3S"/>
@@ -1434,16 +1432,16 @@
         <image name="tray.full.fill" catalog="system" width="128" height="88"/>
         <image name="video.and.waveform" catalog="system" width="128" height="94"/>
         <systemColor name="linkColor">
-            <color red="0.0" green="0.47843137254901963" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="systemBrownColor">
-            <color red="0.63529411764705879" green="0.51764705882352946" blue="0.36862745098039218" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.63529411759999999" green="0.51764705879999995" blue="0.36862745099999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemTealColor">
-            <color red="0.18823529411764706" green="0.69019607843137254" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.18823529410000001" green="0.69019607839999997" blue="0.78039215689999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>
