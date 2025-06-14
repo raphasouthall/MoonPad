@@ -10,6 +10,11 @@
 
 #import <UIKit/UIKit.h>
 
+@protocol HideOverlappedDynamicLabelDelegate <NSObject>
+- (void)hideOverlappedDynamicLabels;
+@end
+
+
 @interface MenuSectionView : UIView
 
 // 外部可访问属性
@@ -22,6 +27,7 @@
 @property (nonatomic, assign) CGFloat headerViewHeight;
 @property (nonatomic, assign) CGFloat headerViewVerticalSpacing;
 @property (nonatomic, strong) NSMutableArray<UIStackView *> *subStackViews;
+@property (nonatomic, weak) id<HideOverlappedDynamicLabelDelegate> delegate; // Delegate property
 
 // 方法
 - (void)setSectionWithIcon:(UIImage *)icon andSize:(CGFloat)size;

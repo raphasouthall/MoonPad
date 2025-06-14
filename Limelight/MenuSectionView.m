@@ -10,6 +10,7 @@
 #import "MenuSectionView.h"
 #import "ThemeManager.h"
 
+
 @interface MenuSectionView ()
 
 @property (nonatomic, strong) UIStackView *rootStackView;
@@ -20,7 +21,6 @@
 @property (nonatomic, strong) NSLayoutConstraint *heightConstraint;
 @property (nonatomic, strong) UIView *headerView;
 @property (nonatomic, strong) UIView *separatorLine;
-
 
 @end
 
@@ -344,6 +344,10 @@
             ]];
             [self layoutIfNeeded];
         }];
+    }
+    
+    if ([self.delegate respondsToSelector:@selector(hideOverlappedDynamicLabels)]) {
+        [self.delegate hideOverlappedDynamicLabels];
     }
 }
 

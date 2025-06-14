@@ -70,6 +70,9 @@
     bool _background;
     UIView* menuSeparator;
     UIView* snapshot;
+    
+    SettingsViewController* settingsViewController;
+    
     UINavigationBarAppearance *navBarAppearanceStandard;
     UINavigationBarAppearance *navBarAppearanceScroll;
 
@@ -1102,7 +1105,7 @@ static NSMutableSet* hostList;
 }
 
 - (void)revealController:(SWRevealViewController *)revealController willMoveToPosition:(FrontViewPosition)position {
-    SettingsViewController* settingsViewController = (SettingsViewController*)[revealController rearViewController];
+    settingsViewController = (SettingsViewController*)[revealController rearViewController];
     revealController.navBarMenuDelegate = settingsViewController;
     if (position == FrontViewPositionLeft) {
         self.navigationItem.leftBarButtonItems = @[_settingsButton];
@@ -1122,7 +1125,7 @@ static NSMutableSet* hostList;
     settingsViewController.fpsStack.hidden = self.settingsExpandedInStreamView;
     [settingsViewController widget:settingsViewController.bitrateSlider setEnabled:!self.settingsExpandedInStreamView];
     //settingsViewController.bitrateStack.hidden = self.settingsExpandedInStreamView;
-    settingsViewController.optimizeSettingsStack.hidden = self.settingsExpandedInStreamView;
+    settingsViewController.optimizeGamesStack.hidden = self.settingsExpandedInStreamView;
     settingsViewController.audioOnPcStack.hidden = self.settingsExpandedInStreamView;
     settingsViewController.codecStack.hidden = self.settingsExpandedInStreamView;
     settingsViewController.yuv444Stack.hidden = self.settingsExpandedInStreamView;
@@ -2083,6 +2086,13 @@ static NSMutableSet* hostList;
         Settings* settings = [dataMan retrieveSettings];
         settings.settingsMenuWidth = [NSNumber numberWithFloat:self.revealViewController.rearViewRevealWidth];
         [dataMan saveData];
+        
+        
+        double delayInSeconds = 0.02;
+        dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
+        dispatch_after(popTime, dispatch_get_main_queue(), ^{
+            [self->settingsViewController hideDynamicLabelsWhenOverlapped:self->settingsViewController.parentStack];
+        });
     }
 }
 

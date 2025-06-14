@@ -14,15 +14,18 @@
 #import "CustomOSCViewControl/LayoutOnScreenControlsViewController.h"
 #import "MainFrameViewController.h"
 #import "CustomEdgeSlideGestureRecognizer.h"
+#import "MenuSectionView.h"
 
-@interface SettingsViewController : UIViewController <RearNavigationBarMenuDelegate>
+@interface SettingsViewController : UIViewController <RearNavigationBarMenuDelegate, HideOverlappedDynamicLabelDelegate>
 @property (strong, nonatomic) IBOutlet UINavigationBar *navigationBar;
+@property (strong, nonatomic) UIStackView *parentStack;
 @property (strong, nonatomic) IBOutlet UIStackView *resolutionStack;
 @property (strong, nonatomic) IBOutlet UIStackView *fpsStack;
 @property (strong, nonatomic) IBOutlet UIStackView *bitrateStack;
 @property (strong, nonatomic) IBOutlet UIStackView *touchModeStack;
 @property (weak, nonatomic) IBOutlet UIStackView *enableOswSwitchStack;
 //@property (strong, nonatomic) IBOutlet UIStackView *asyncTouchStack;
+@property (weak, nonatomic) IBOutlet UISwitch *optimizeGamesSwitch;
 @property (strong, nonatomic) IBOutlet UIStackView *pointerVelocityDividerStack;
 @property (strong, nonatomic) IBOutlet UIStackView *pointerVelocityFactorStack;
 @property (strong, nonatomic) IBOutlet UIStackView *touchMoveEventIntervalStack;
@@ -35,7 +38,7 @@
 @property (strong, nonatomic) IBOutlet UIStackView *slideToSettingsScreenEdgeStack;
 @property (strong, nonatomic) IBOutlet UIStackView *slideToToolboxScreenEdgeStack;
 @property (strong, nonatomic) IBOutlet UIStackView *slideToSettingsDistanceStack;
-@property (strong, nonatomic) IBOutlet UIStackView *optimizeSettingsStack;
+@property (strong, nonatomic) IBOutlet UIStackView *optimizeGamesStack;
 @property (strong, nonatomic) IBOutlet UIStackView *multiControllerStack;
 @property (strong, nonatomic) IBOutlet UIStackView *swapAbaxyStack;
 @property (strong, nonatomic) IBOutlet UIStackView *audioOnPcStack;
@@ -62,7 +65,6 @@
 @property (strong, nonatomic) IBOutlet UILabel *onscreenControllerLabel;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *onScreenWidgetSelector;
 //@property (strong, nonatomic) IBOutlet UISegmentedControl *asyncNativeTouchPrioritySelector;
-@property (strong, nonatomic) IBOutlet UISegmentedControl *optimizeSettingsSelector;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *multiControllerSelector;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *swapABXYButtonsSelector;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *audioOnPCSelector;
@@ -109,6 +111,7 @@
 - (void)updateResolutionTable;
 - (void)widget:(UISlider*)widget setEnabled:(bool)enabled;
 - (void)updateTheme;
+- (void)hideDynamicLabelsWhenOverlapped:(UIView* )view;
 
 
 @end

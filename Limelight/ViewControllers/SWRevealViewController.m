@@ -695,8 +695,10 @@ const int FrontViewPositionNone = 0xff;
     DataManager* dataMan = [[DataManager alloc] init];
     TemporarySettings* currentSettings = [dataMan getSettings];
     _rearViewRevealWidth = currentSettings.settingsMenuWidth.floatValue; //mark: settingMenuLayout
-    _rearViewRevealWidth = 390; //temp config for dev
-
+    //uint32_t test = _rearViewRevealWidth;
+    //nil;
+    // _rearViewRevealWidth = 373; //temp config for dev
+    
     // _rearViewRevealOverdraw = 60.0f;
     _rearViewRevealOverdraw = 0.0f;
     _rearViewRevealDisplacement = 40.0f;

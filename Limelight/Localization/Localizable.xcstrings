@@ -122,7 +122,7 @@
         }
       }
     },
-    "%d finger tap gesture" : {
+    "%d finger tap" : {
       "extractionState" : "manual",
       "localizations" : {
         "zh-Hans" : {

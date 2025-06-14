@@ -12,7 +12,6 @@
 #import "SettingsViewController.h"
 #import "TemporarySettings.h"
 #import "DataManager.h"
-#import "MenuSectionView.h"
 #import "ThemeManager.h"
 
 #import <UIKit/UIGestureRecognizerSubclass.h>
@@ -27,7 +26,6 @@
     bool justEnteredSettingsViewDoNotOpenOscLayoutTool;
     uint16_t oswLayoutFingers;
     CustomEdgeSlideGestureRecognizer *slideToCloseSettingsViewRecognizer;
-    UIStackView *parentStack;
     NSMutableDictionary *_settingStackDict;
     NSMutableArray *_favoriteSettingStackIdentifiers;
     bool settingStackWillBeRelocatedToLowestPosition;
@@ -192,21 +190,7 @@ CGSize resolutionTable[RESOLUTION_TABLE_SIZE];
     
     // Add a bit of padding so the view doesn't end right at the button of the display
     self.scrollView.contentSize = CGSizeMake(self.scrollView.contentSize.width,
-                                             [self isIPhone] ? highestViewY + 20 : parentStack.frame.size.height + [self getStandardNavBarHeight] + 20);
-    /*
-    self.scrollView.translatesAutoresizingMaskIntoConstraints = NO;
-    [NSLayoutConstraint activateConstraints:@[
-        // [self.scrollView.topAnchor constraintEqualToAnchor:],
-        [self.scrollView.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor],
-        [self.scrollView.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor],
-        [self.scrollView.topAnchor constraintEqualToAnchor:self.view.topAnchor],
-        [self.scrollView.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor],
-    ]];
-    
-    NSLog(@"settingsViewWidth: %f", self.view.bounds.size.width);
-*/
-    
-    
+                                             [self isIPhone] ? highestViewY + 20 : _parentStack.frame.size.height + [self getStandardNavBarHeight] + 20);
     
     double delayInSeconds = 3;
     // Convert the delay into a dispatch_time_t value
@@ -387,16 +371,16 @@ BOOL isCustomResolution(CGSize res) {
     ]];
      */
 
-    parentStack = [[UIStackView alloc] init];
-    parentStack.axis = UILayoutConstraintAxisVertical;
-    parentStack.spacing = 0;
-    parentStack.translatesAutoresizingMaskIntoConstraints = NO;
-    [self.scrollView addSubview:parentStack];
+    _parentStack = [[UIStackView alloc] init];
+    _parentStack.axis = UILayoutConstraintAxisVertical;
+    _parentStack.spacing = 0;
+    _parentStack.translatesAutoresizingMaskIntoConstraints = NO;
+    [self.scrollView addSubview:_parentStack];
     [NSLayoutConstraint activateConstraints:@[
-        [parentStack.topAnchor constraintEqualToAnchor:self.scrollView.contentLayoutGuide.topAnchor constant: [self getStandardNavBarHeight]],
-        [parentStack.bottomAnchor constraintEqualToAnchor:self.scrollView.contentLayoutGuide.bottomAnchor constant:-20],
-        [parentStack.centerXAnchor constraintEqualToAnchor:self.view.centerXAnchor constant: 0], //mark: settingMenuLayout
-        [parentStack.widthAnchor constraintEqualToAnchor:self.view.widthAnchor constant:-20] // section width adjusted here //mark: settingMenuLayout
+        [_parentStack.topAnchor constraintEqualToAnchor:self.scrollView.contentLayoutGuide.topAnchor constant: [self getStandardNavBarHeight]],
+        [_parentStack.bottomAnchor constraintEqualToAnchor:self.scrollView.contentLayoutGuide.bottomAnchor constant:-20],
+        [_parentStack.centerXAnchor constraintEqualToAnchor:self.view.centerXAnchor constant: 0], //mark: settingMenuLayout
+        [_parentStack.widthAnchor constraintEqualToAnchor:self.view.widthAnchor constant:-20] // section width adjusted here //mark: settingMenuLayout
     ]];
 }
 
@@ -416,6 +400,74 @@ BOOL isCustomResolution(CGSize res) {
     return label;
 }
 
+- (void)hideOverlappedDynamicLabelWithinStack:(UIStackView* )stack{
+    UILabel* label1 = [self findDynamicLabelFromStack:stack];
+    for(UIView* view in stack.subviews){
+        if([view isKindOfClass:[UILabel class]] && view != label1){
+            UILabel* label2 = (UILabel* )view;
+            CGRect textRect1 = [label1 textRectForBounds:label1.bounds limitedToNumberOfLines:label1.numberOfLines];
+            CGRect textRect2 = [label2 textRectForBounds:label2.bounds limitedToNumberOfLines:label2.numberOfLines];
+            CGRect textRect1InLabel2 = [label2 convertRect:textRect1 fromView:label1];
+            if(CGRectIntersectsRect(textRect1InLabel2, textRect2)){
+                label1.hidden = YES;return;
+            }
+        }
+    }
+    label1.hidden = NO;
+}
+
+- (void)updateThemeForLabelsttt:(UIView *)view {
+    for (UIView *subview in view.subviews) {
+        if ([subview isKindOfClass:[UILabel class]]) {
+            UILabel *label = (UILabel *)subview;
+            if(label.accessibilityIdentifier != nil) break;
+            if (@available(iOS 13.0, *)) {
+                label.layer.filters = nil;
+                label.textColor = [ThemeManager textColor];
+            } else {
+                // Fallback on earlier versions
+            }
+        }
+        [self updateThemeForLabels:subview];
+    }
+}
+
+- (UIView *)findCommonSuperViewFor:(UIView *)view1 andView:(UIView *)view2 {
+    if (!view1 || !view2) return nil;
+    // 把 view1 的所有 superview 放入集合
+    NSMutableSet<UIView *> *superviewsOfView1 = [NSMutableSet set];
+    UIView *currentView = view1;
+    while (currentView) {
+        [superviewsOfView1 addObject:currentView];
+        currentView = currentView.superview;
+    }
+    // 向上遍历 view2，找到第一个也在 view1 superview 集合里的视图
+    currentView = view2;
+    while (currentView) {
+        if ([superviewsOfView1 containsObject:currentView]) {
+            return currentView;
+        }
+        currentView = currentView.superview;
+    }
+    return nil; // 没有共同父视图（一般不会发生，除非来自不同的视图层次结构）
+}
+
+- (void)hideOverlappedDynamicLabels{
+    [self hideDynamicLabelsWhenOverlapped:self.parentStack];
+}
+
+- (void)hideDynamicLabelsWhenOverlapped:(UIView* )view{
+    for (UIView *subview in view.subviews) {
+        if ([subview isKindOfClass:[UIStackView class]]) {
+            UIStackView *stack = (UIStackView *)subview;
+            if(stack.accessibilityIdentifier != nil) {
+                // NSLog(@"found stack: %@", stack.accessibilityIdentifier);
+                [self hideOverlappedDynamicLabelWithinStack:stack];
+            }
+        }
+        [self hideDynamicLabelsWhenOverlapped:subview];
+    }
+}
 
 - (void)addDynamicLabelForStack:(UIStackView* )stack{
     UILabel* label = [self findDynamicLabelFromStack:stack];
@@ -461,6 +513,7 @@ BOOL isCustomResolution(CGSize res) {
     
     
     MenuSectionView *videoSection = [[MenuSectionView alloc] init];
+    videoSection.delegate = self;
     videoSection.sectionTitle = [LocalizationHelper localizedStringForKey:@"Video"];
     if (@available(iOS 13.0, *)) {
         [videoSection setSectionWithIcon:[UIImage systemImageNamed:@"waveform"] andSize:20];
@@ -472,10 +525,11 @@ BOOL isCustomResolution(CGSize res) {
     [self addSetting:self.codecStack ofId:@"codecStack" withInfoTag:NO withDynamicLabel:NO to:videoSection];
     [self addSetting:self.HdrStack ofId:@"HdrStack" withInfoTag:NO withDynamicLabel:NO to:videoSection];
     [self addSetting:self.yuv444Stack ofId:@"yuv444Stack" withInfoTag:YES withDynamicLabel:NO to:videoSection];
-    [videoSection addToParentStack:parentStack];
+    [videoSection addToParentStack:_parentStack];
     [videoSection setExpanded:YES];
 
     touchControlSection = [[MenuSectionView alloc] init];
+    touchControlSection.delegate = self;
     touchControlSection.sectionTitle = [LocalizationHelper localizedStringForKey:@"Touch Control"];
     if (@available(iOS 13.0, *)) {
         [touchControlSection setSectionWithIcon:[UIImage imageNamed:@"arcade.stick.console"] andSize:20.5];
@@ -486,7 +540,7 @@ BOOL isCustomResolution(CGSize res) {
     [self addSetting:self.mousePointerVelocityStack ofId:@"mousePointerVelocityStack" withInfoTag:NO withDynamicLabel:YES to:touchControlSection];
     [self addSetting:self.onScreenWidgetStack ofId:@"onScreenWidgetStack" withInfoTag:YES withDynamicLabel:YES to:touchControlSection];
     [self addSetting:self.swapAbaxyStack ofId:@"swapAbaxyStack" withInfoTag:NO withDynamicLabel:NO to:touchControlSection];
-    [touchControlSection addToParentStack:parentStack];
+    [touchControlSection addToParentStack:_parentStack];
     [touchControlSection setExpanded:YES];
 
     
@@ -495,6 +549,7 @@ BOOL isCustomResolution(CGSize res) {
     
     
     MenuSectionView *gesturesSection = [[MenuSectionView alloc] init];
+    gesturesSection.delegate = self;
     gesturesSection.sectionTitle = [LocalizationHelper localizedStringForKey:@"Gestures"];
     if (@available(iOS 13.0, *)) {
         [gesturesSection setSectionWithIcon:[UIImage systemImageNamed:@"hand.draw"] andSize:23];
@@ -504,10 +559,11 @@ BOOL isCustomResolution(CGSize res) {
     [self addSetting:self.slideToSettingsScreenEdgeStack ofId:@"slideToSettingsScreenEdgeStack" withInfoTag:NO withDynamicLabel:NO to:gesturesSection];
     [self addSetting:self.slideToToolboxScreenEdgeStack ofId:@"slideToToolboxScreenEdgeStack" withInfoTag:NO withDynamicLabel:NO to:gesturesSection];
     [self addSetting:self.slideToSettingsDistanceStack ofId:@"slideToSettingsDistanceStack" withInfoTag:YES withDynamicLabel:YES to:gesturesSection];
-    [gesturesSection addToParentStack:parentStack];
+    [gesturesSection addToParentStack:_parentStack];
     [gesturesSection setExpanded:YES];
 
     MenuSectionView *peripheralSection = [[MenuSectionView alloc] init];
+    peripheralSection.delegate = self;
     peripheralSection.sectionTitle = [LocalizationHelper localizedStringForKey:@"Peripherals"];
     if (@available(iOS 13.0, *)) {
         [peripheralSection setSectionWithIcon:[UIImage imageNamed:@"cable.connector.video"] andSize:20];
@@ -516,33 +572,35 @@ BOOL isCustomResolution(CGSize res) {
     [self addSetting:self.localMousePointerModeStack ofId:@"localMousePointerModeStack" withInfoTag:YES withDynamicLabel:NO to:peripheralSection];
     [self addSetting:self.reverseMouseWheelDirectionStack ofId:@"reverseMouseWheelDirectionStack" withInfoTag:NO withDynamicLabel:NO to:peripheralSection];
     [self addSetting:self.citrixX1MouseStack ofId:@"citrixX1MouseStack" withInfoTag:NO withDynamicLabel:NO to:peripheralSection];
-    [peripheralSection addToParentStack:parentStack];
+    [peripheralSection addToParentStack:_parentStack];
     [peripheralSection setExpanded:YES];
 
     
     MenuSectionView *otherSection = [[MenuSectionView alloc] init];
+    otherSection.delegate = self;
     otherSection.sectionTitle = [LocalizationHelper localizedStringForKey:@"Others"];
     if (@available(iOS 13.0, *)) {
         [otherSection setSectionWithIcon:[UIImage systemImageNamed:@"cube"] andSize:20.5];
     }
     [self addSetting:self.statsOverlayStack ofId:@"statsOverlayStack" withInfoTag:NO withDynamicLabel:NO to:otherSection];
-    [self addSetting:self.optimizeSettingsStack ofId:@"optimizeSettingsStack" withInfoTag:YES withDynamicLabel:NO to:otherSection];
+    [self addSetting:self.optimizeGamesStack ofId:@"optimizeGamesStack" withInfoTag:YES withDynamicLabel:NO to:otherSection];
     [self addSetting:self.audioOnPcStack ofId:@"audioOnPcStack" withInfoTag:NO withDynamicLabel:NO to:otherSection];
     [self addSetting:self.multiControllerStack ofId:@"multiControllerStack" withInfoTag:YES withDynamicLabel:NO to:otherSection];
     [self addSetting:self.showKeyboardToolbarStack ofId:@"showKeyboardToolbarStack" withInfoTag:YES withDynamicLabel:NO to:otherSection];
     [self addSetting:self.unlockDisplayOrientationStack ofId:@"unlockDisplayOrientationStack" withInfoTag:YES withDynamicLabel:NO to:otherSection];
-    [otherSection addToParentStack:parentStack];
+    [otherSection addToParentStack:_parentStack];
     [otherSection setExpanded:YES];
     
     
     MenuSectionView *experimentalSection = [[MenuSectionView alloc] init];
+    experimentalSection.delegate = self;
     experimentalSection.sectionTitle = [LocalizationHelper localizedStringForKey:@"Experimental"];
     if (@available(iOS 13.0, *)) {
         [experimentalSection setSectionWithIcon:[UIImage imageNamed:@"flask"] andSize:20];
     }
     // [self addSetting:self.asyncTouchStack ofId:@"asyncTouchStack" withInfoTag:YES withDynamicLabel:NO to:experimentalSection];
     [self addSetting:self.touchMoveEventIntervalStack ofId:@"touchMoveEventIntervalStack" withInfoTag:YES withDynamicLabel:NO to:experimentalSection];
-    [experimentalSection addToParentStack:parentStack];
+    [experimentalSection addToParentStack:_parentStack];
     [experimentalSection setExpanded:YES];
 }
 
@@ -589,7 +647,7 @@ BOOL isCustomResolution(CGSize res) {
     [parentStackTmp addArrangedSubview:self.slideToSettingsScreenEdgeStack];
     [parentStackTmp addArrangedSubview:self.slideToToolboxScreenEdgeStack];
     [parentStackTmp addArrangedSubview:self.slideToSettingsDistanceStack];
-    [parentStackTmp addArrangedSubview:self.optimizeSettingsStack];
+    [parentStackTmp addArrangedSubview:self.optimizeGamesStack];
     [parentStackTmp addArrangedSubview:self.multiControllerStack];
     [parentStackTmp addArrangedSubview:self.swapAbaxyStack];
     [parentStackTmp addArrangedSubview:self.audioOnPcStack];
@@ -708,8 +766,8 @@ BOOL isCustomResolution(CGSize res) {
 
 
 - (NSInteger)parentStackIndexForLocation:(CGPoint)location {
-    for (NSInteger i = parentStack.arrangedSubviews.count-1; i >=0; i--) {
-        UIView *subview = parentStack.arrangedSubviews[i];
+    for (NSInteger i = _parentStack.arrangedSubviews.count-1; i >=0; i--) {
+        UIView *subview = _parentStack.arrangedSubviews[i];
         // CGRect frame = [subview convertRect:subview.bounds toView:parentStack];
         CGFloat stackMinY = CGRectGetMinY(subview.frame);
         // NSLog(@" index: %ld, stackY: %f, touchY: %f", (long)i, CGRectGetMidY(subview.frame), location.y);
@@ -721,12 +779,12 @@ BOOL isCustomResolution(CGSize res) {
 - (void)updateRelocationIndicatorFor:(CGPoint)locationInParentStack{
     uint16_t currentIndex = [self parentStackIndexForLocation:locationInParentStack];
     UIStackView* currentStack;
-    for (NSInteger i = parentStack.arrangedSubviews.count-1; i >=0; i--) {
-        currentStack = parentStack.arrangedSubviews[i];
+    for (NSInteger i = _parentStack.arrangedSubviews.count-1; i >=0; i--) {
+        currentStack = _parentStack.arrangedSubviews[i];
 
         if(currentIndex == i){
             settingStackWillBeRelocatedToLowestPosition = false;
-            if(i == parentStack.arrangedSubviews.count-1 && locationInParentStack.y > CGRectGetMaxY(currentStack.frame)){
+            if(i == _parentStack.arrangedSubviews.count-1 && locationInParentStack.y > CGRectGetMaxY(currentStack.frame)){
                 snapshot.layer.cornerRadius = 6;
                 snapshot.layer.masksToBounds = YES;
                 snapshot.clipsToBounds = YES;
@@ -750,14 +808,14 @@ BOOL isCustomResolution(CGSize res) {
 }
 
 - (void)clearRelocationIndicator{
-    for (UIView* view in parentStack.arrangedSubviews) {
+    for (UIView* view in _parentStack.arrangedSubviews) {
         view.layer.cornerRadius = 0;
         view.backgroundColor = [UIColor clearColor];
     }
 }
 
 - (void)findCapturedStackByTouchLocation:(CGPoint)point{
-    UIView *touchedView = [parentStack hitTest:point withEvent:nil];
+    UIView *touchedView = [_parentStack hitTest:point withEvent:nil];
     while(touchedView){
         if([touchedView isKindOfClass:[UIStackView class]] && touchedView.accessibilityIdentifier != nil){
             capturedStack = (UIStackView *)touchedView;
@@ -782,7 +840,7 @@ BOOL isCustomResolution(CGSize res) {
 }
 
 - (void)handleLongPress:(UILongPressGestureRecognizer *)gesture {
-    CGPoint locationInParentStack = [gesture locationInView:parentStack];
+    CGPoint locationInParentStack = [gesture locationInView:_parentStack];
     CGPoint locationInRootView = [gesture locationInView:self.view.superview];
     if(currentSettingsMenuMode == AllSettings){
         if (gesture.state == UIGestureRecognizerStateBegan) {
@@ -813,10 +871,10 @@ BOOL isCustomResolution(CGSize res) {
 
                 snapshot = [capturedStack snapshotViewAfterScreenUpdates:YES];
                 snapshot.center = capturedStack.center;
-                [parentStack addSubview:snapshot];
+                [_parentStack addSubview:snapshot];
                 capturedStack.hidden = YES;
                 originalCenter = capturedStack.center;
-                originalIndex = [parentStack.arrangedSubviews indexOfObject:capturedStack];
+                originalIndex = [_parentStack.arrangedSubviews indexOfObject:capturedStack];
                 break;
                 
             case UIGestureRecognizerStateChanged:
@@ -836,7 +894,7 @@ BOOL isCustomResolution(CGSize res) {
                 // 计算新的插入位置
                 NSInteger newIndex = [self parentStackIndexForLocation:locationInParentStack];
                 [self clearRelocationIndicator];
-                NSInteger oldIndex = [parentStack.arrangedSubviews indexOfObject:capturedStack];
+                NSInteger oldIndex = [_parentStack.arrangedSubviews indexOfObject:capturedStack];
                 newIndex = newIndex > oldIndex ? newIndex - 1 : newIndex;
                 //NSLog(@"newidx %ld, oldidx %ld", newIndex, oldIndex);
                 if(settingStackWillBeRelocatedToLowestPosition){
@@ -845,9 +903,9 @@ BOOL isCustomResolution(CGSize res) {
                 }
                 
                 if (newIndex != NSNotFound) {
-                    if(newIndex >= parentStack.arrangedSubviews.count) newIndex = parentStack.arrangedSubviews.count-1;
-                    [parentStack removeArrangedSubview:capturedStack];
-                    [parentStack insertArrangedSubview:capturedStack atIndex:newIndex];
+                    if(newIndex >= _parentStack.arrangedSubviews.count) newIndex = _parentStack.arrangedSubviews.count-1;
+                    [_parentStack removeArrangedSubview:capturedStack];
+                    [_parentStack insertArrangedSubview:capturedStack atIndex:newIndex];
                     // [parentStack addSubview:capturedStack];
                     originalIndex = newIndex;
                     capturedStack.hidden = NO;
@@ -949,8 +1007,9 @@ BOOL isCustomResolution(CGSize res) {
 - (void)layoutSettingsView{
     [self.view layoutSubviews];
     if(currentSettingsMenuMode == AllSettings){
-        for(MenuSectionView* section in parentStack.arrangedSubviews) [section updateViewForFoldState];
+        for(MenuSectionView* section in _parentStack.arrangedSubviews) [section updateViewForFoldState];
     }
+    [self hideDynamicLabelsWhenOverlapped:self.parentStack];
 }
 
 - (void)switchToFavoriteSettings{
@@ -961,18 +1020,19 @@ BOOL isCustomResolution(CGSize res) {
     currentSettings.settingsMenuMode = [NSNumber numberWithInteger:currentSettingsMenuMode];
     [dataMan saveData];
     
-    for(UIView* view in parentStack.subviews){
+    for(UIView* view in _parentStack.subviews){
         [view removeFromSuperview];
     }
-    parentStack.spacing = 15;
+    _parentStack.spacing = 15;
     [self loadFavoriteSettingStackIdentifiers];
     for(NSString* settingIdentifier in _favoriteSettingStackIdentifiers){
-        [parentStack addArrangedSubview:_settingStackDict[settingIdentifier]];
+        [_parentStack addArrangedSubview:_settingStackDict[settingIdentifier]];
     }
+    [self hideDynamicLabelsWhenOverlapped:self.parentStack];
 }
 
 - (void)switchToAllSettings{
-    for(UIView* view in parentStack.subviews){
+    for(UIView* view in _parentStack.subviews){
         [view removeFromSuperview];
     }
     [self initParentStack];
@@ -989,7 +1049,7 @@ BOOL isCustomResolution(CGSize res) {
 
 - (void)enterRemoveSettingItemMode{
     currentSettingsMenuMode = RemoveSettingItem;
-    for(UIStackView* stack in parentStack.arrangedSubviews){
+    for(UIStackView* stack in _parentStack.arrangedSubviews){
         for(UIView* view in stack.subviews){
             if([view.accessibilityIdentifier isEqualToString:@"infoButton"]) view.hidden = YES;
             // view.userInteractionEnabled = false;
@@ -1001,7 +1061,7 @@ BOOL isCustomResolution(CGSize res) {
 
 - (void)doneRemoveSettingItem{
     currentSettingsMenuMode = FavoriteSettings;
-    for(UIStackView* stack in parentStack.arrangedSubviews){
+    for(UIStackView* stack in _parentStack.arrangedSubviews){
         //stack.userInteractionEnabled = true;
         for(UIView* view in stack.subviews){
             //view.
@@ -1016,8 +1076,8 @@ BOOL isCustomResolution(CGSize res) {
     if(currentSettingsMenuMode != AllSettings){
         [_favoriteSettingStackIdentifiers removeAllObjects];
         //for(NSInteger i = 0; i < parentStack.arrangedSubviews.count; i++){
-        for(NSInteger i = 0; i < parentStack.arrangedSubviews.count; i++){
-            [_favoriteSettingStackIdentifiers addObject:parentStack.arrangedSubviews[i].accessibilityIdentifier];
+        for(NSInteger i = 0; i < _parentStack.arrangedSubviews.count; i++){
+            [_favoriteSettingStackIdentifiers addObject:_parentStack.arrangedSubviews[i].accessibilityIdentifier];
         }
     }
     
@@ -1205,7 +1265,7 @@ BOOL isCustomResolution(CGSize res) {
         [self.yuv444Switch setOn:currentSettings.enableYUV444];
         [self.statsOverlaySelector setSelectedSegmentIndex:currentSettings.statsOverlayLevel.intValue];
         [self.citrixX1MouseSwitch setOn:currentSettings.btMouseSupport];
-        [self.optimizeSettingsSelector setSelectedSegmentIndex:currentSettings.optimizeGames ? 1 : 0];
+        [self.optimizeGamesSwitch setOn: currentSettings.optimizeGames];
         [self.framePacingSelector setSelectedSegmentIndex:currentSettings.useFramePacing ? 1 : 0];
         [self.multiControllerSelector setSelectedSegmentIndex:currentSettings.multiController ? 1 : 0];
         [self.swapABXYButtonsSelector setSelectedSegmentIndex:currentSettings.swapABXYButtons ? 1 : 0];
@@ -1382,7 +1442,7 @@ BOOL isCustomResolution(CGSize res) {
              [self invokeOscLayout]; // Don't open osc layout tool immediately during streaming
          }
                                                          
-        [self findDynamicLabelFromStack:self.onScreenWidgetStack].text = [LocalizationHelper localizedStringForKey:@"%d finger tap gesture", self->oswLayoutFingers];
+        [self findDynamicLabelFromStack:self.onScreenWidgetStack].text = [LocalizationHelper localizedStringForKey:@"%d finger tap", self->oswLayoutFingers];
         //markmark
         [self handleOswGestureChange];
                                                      }];
@@ -1430,7 +1490,8 @@ BOOL isCustomResolution(CGSize res) {
     
     bool customOscEnabled = [self isCustomOswEnabled];
     UILabel* oswDynamicLabel = [self findDynamicLabelFromStack:self.onScreenWidgetStack];
-        oswDynamicLabel.text = [LocalizationHelper localizedStringForKey:@"%d finger tap gesture", self->oswLayoutFingers];
+        NSString* labelText = [LocalizationHelper localizedStringForKey:@"%d finger tap", self->oswLayoutFingers];
+    oswDynamicLabel.text = [NSString stringWithFormat:@"  %@  ", labelText];
     oswDynamicLabel.hidden = !customOscEnabled;
     [self handleOswGestureChange];
     if(customOscEnabled && !justEnteredSettingsViewDoNotOpenOscLayoutTool) {
@@ -1450,11 +1511,11 @@ BOOL isCustomResolution(CGSize res) {
 
 
 - (void) pointerVelocityModeDividerSliderMoved:(UISlider* )sender {
-    [self findDynamicLabelFromStack:self.pointerVelocityDividerStack].text = [LocalizationHelper localizedStringForKey:@"| %d%% | %d%% |", (uint8_t)sender.value, 100-(uint8_t)sender.value];
+    [self findDynamicLabelFromStack:self.pointerVelocityDividerStack].text = [NSString stringWithFormat:@"  | %d%% | %d%% |  ", (uint8_t)sender.value, 100-(uint8_t)sender.value];
 }
 
 - (void) touchPointerVelocityFactorSliderMoved:(UISlider* )sender {
-    [self findDynamicLabelFromStack:self.pointerVelocityFactorStack].text = [NSString stringWithFormat:@"%d%%", [self map_velocFactorDisplay_fromSliderValue: self.touchPointerVelocityFactorSlider.value]]; // Update label display
+    [self findDynamicLabelFromStack:self.pointerVelocityFactorStack].text = [NSString stringWithFormat:@"  %d%%  ", [self map_velocFactorDisplay_fromSliderValue: self.touchPointerVelocityFactorSlider.value]]; // Update label display
 }
 
 
@@ -1476,7 +1537,7 @@ BOOL isCustomResolution(CGSize res) {
 }
 
 - (void) mousePointerVelocityFactorSliderMoved:(UISlider* )sender {
-    [self findDynamicLabelFromStack:_mousePointerVelocityStack].text = [NSString stringWithFormat:@"%d%%", [self map_velocFactorDisplay_fromSliderValue:sender.value]];
+    [self findDynamicLabelFromStack:_mousePointerVelocityStack].text = [NSString stringWithFormat:@"  %d%%  ",[self map_velocFactorDisplay_fromSliderValue:sender.value]];
 }
 
 - (uint32_t) getScreenEdgeFromSelector {
@@ -1715,7 +1776,10 @@ BOOL isCustomResolution(CGSize res) {
 
 
 - (void) slideToMenuDistanceSliderMoved:(UISlider* )sender{
-    [self findDynamicLabelFromStack:_slideToSettingsDistanceStack].text = [LocalizationHelper localizedStringForKey:@"%d%% screen width", (uint8_t)(sender.value * 100)];
+    UILabel* displayLabel = [self findDynamicLabelFromStack:_slideToSettingsDistanceStack];
+    // displayLabel.font = [UIFont systemFontOfSize:12 weight:UIFontWeightMedium];
+    NSString* labelText = [LocalizationHelper localizedStringForKey:@"%d%% screen width", (uint8_t)(sender.value * 100)];
+    displayLabel.text = [NSString stringWithFormat:@"  %@  ", labelText];
 }
 
 - (void) bitrateSliderMoved {
@@ -1727,7 +1791,7 @@ BOOL isCustomResolution(CGSize res) {
 - (void) updateBitrateText {
     // Display bitrate in Mbps
     UILabel* label = [self findDynamicLabelFromStack:self.bitrateStack];
-    [label setText:[LocalizationHelper localizedStringForKey:@"%.1f Mbps", _bitrate / 1000.]];
+    [label setText:[LocalizationHelper localizedStringForKey:@"  %.1f Mbps  ", _bitrate / 1000.]];
 }
 
 - (NSInteger) getChosenFrameRate {
@@ -1878,7 +1942,7 @@ BOOL isCustomResolution(CGSize res) {
     //BOOL liftStreamViewForKeyboard = [self.liftStreamViewForKeyboardSelector selectedSegmentIndex] == 1;
     BOOL liftStreamViewForKeyboard = YES; // enable and hide this option
     BOOL showKeyboardToolbar = [self.showKeyboardToolbarSelector selectedSegmentIndex] == 1;
-    BOOL optimizeGames = [self.optimizeSettingsSelector selectedSegmentIndex] == 1;
+    BOOL optimizeGames = self.optimizeGamesSwitch.isOn;
     BOOL multiController = [self.multiControllerSelector selectedSegmentIndex] == 1;
     BOOL swapABXYButtons = [self.swapABXYButtonsSelector selectedSegmentIndex] == 1;
     BOOL audioOnPC = [self.audioOnPCSelector selectedSegmentIndex] == 1;
