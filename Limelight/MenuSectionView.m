@@ -259,7 +259,6 @@
 
 - (void)addToParentStack:(UIStackView *)parentStack {
     [parentStack insertArrangedSubview:self atIndex:parentStack.arrangedSubviews.count];
-    NSLog(@"title: %@, count: %ld", self.sectionTitle, parentStack.arrangedSubviews.count);
     self.translatesAutoresizingMaskIntoConstraints = NO;
     [NSLayoutConstraint activateConstraints:@[
         [self.leadingAnchor constraintEqualToAnchor:parentStack.leadingAnchor constant:0],
@@ -317,9 +316,6 @@
 
 
 - (void)updateViewForFoldState {
-    if([self getSettingsMenuMode] != AllSettings) return;
-    [self setNeedsLayout];
-    [self layoutIfNeeded];
     [self setupConstraints];
     if (_expanded) {
         _rootStackView.hidden = NO;

@@ -202,15 +202,12 @@ static const CGFloat cellOffsetY = 20;
 - (CGSize)collectionView:(UICollectionView *)collectionView
                   layout:(UICollectionViewLayout *)collectionViewLayout
   sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
-    NSLog(@"return cellsize: %f, %f", self.cellSize.width, self.cellSize.height);
     return self.cellSize;
 }
 
 - (CGFloat)collectionView:(UICollectionView *)collectionView
                    layout:(UICollectionViewLayout *)collectionViewLayout
 minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
-    NSLog(@"return iterIterm: %f", self.interItemMinimumSpacing);
-
     return self.interItemMinimumSpacing;
 }
 
