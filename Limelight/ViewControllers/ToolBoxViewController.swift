@@ -8,12 +8,14 @@
 
 import UIKit
 
+@objc protocol ToolBoxSpecialEntryDelegate: NSObjectProtocol {
+    @objc optional func openWidgetLayoutTool()
+    @objc optional func switchWidgetProfile()
+}
+
+
 @objc public class ToolBoxViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
-    @objc protocol ToolBoxSpecialEntryDelegate: NSObjectProtocol {
-        @objc optional func openWidgetLayoutTool()
-        @objc optional func switchWidgetProfile()
-    }
     @objc weak var specialEntryDelegate: ToolBoxSpecialEntryDelegate?
     public let tableView = UITableView()
     private let addButton = UIButton(type: .system)

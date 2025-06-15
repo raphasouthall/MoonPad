@@ -23,7 +23,7 @@
 
 @interface MainFrameViewController : UICollectionViewController <DiscoveryCallback, PairCallback, HostCallback, AppCallback, AppAssetCallback, NSURLConnectionDelegate, SWRevealViewControllerDelegate, HostCardActionDelegate>
 
-@property (weak, nonatomic) IBOutlet UIBarButtonItem *settingsButton;
+@property (nonatomic, strong) IBOutlet UIBarButtonItem *settingsButton;
 #if !TARGET_OS_TV
 @property (nonatomic, assign) bool settingsExpandedInStreamView;
 @property (nonatomic, strong) HostCollectionViewController *hostCollectionVC;

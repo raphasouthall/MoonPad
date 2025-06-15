@@ -9,9 +9,11 @@
 // MenuSectionView.h
 
 #import <UIKit/UIKit.h>
+#import "DataManager.h"
 
-@protocol HideOverlappedDynamicLabelDelegate <NSObject>
+@protocol MenuSectionDelegate <NSObject>
 - (void)hideOverlappedDynamicLabels;
+- (SettingsMenuMode)getSettingsMenuMode;
 @end
 
 
@@ -27,7 +29,7 @@
 @property (nonatomic, assign) CGFloat headerViewHeight;
 @property (nonatomic, assign) CGFloat headerViewVerticalSpacing;
 @property (nonatomic, strong) NSMutableArray<UIStackView *> *subStackViews;
-@property (nonatomic, weak) id<HideOverlappedDynamicLabelDelegate> delegate; // Delegate property
+@property (nonatomic, weak) id<MenuSectionDelegate> delegate; // Delegate property
 
 // 方法
 - (void)setSectionWithIcon:(UIImage *)icon andSize:(CGFloat)size;

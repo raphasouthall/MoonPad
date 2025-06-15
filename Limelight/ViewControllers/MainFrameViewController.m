@@ -70,11 +70,8 @@
     bool _background;
     UIView* menuSeparator;
     UIView* snapshot;
-    
     SettingsViewController* settingsViewController;
-    
-    UINavigationBarAppearance *navBarAppearanceStandard;
-    UINavigationBarAppearance *navBarAppearanceScroll;
+    id navBarAppearanceStandard;
 
 #if TARGET_OS_TV
     UITapGestureRecognizer* _menuRecognizer;
@@ -142,10 +139,11 @@ static NSMutableSet* hostList;
 - (void)updateTitle {
 
     if (@available(iOS 13.0, *)) {
-        navBarAppearanceScroll.titleTextAttributes = navBarAppearanceStandard.titleTextAttributes = @{
+        NSDictionary* titleTextAttributes = @{
             NSFontAttributeName: [UIFont systemFontOfSize:20 weight:UIFontWeightMedium],
             NSForegroundColorAttributeName: [ThemeManager textColor] // 可选，设置标题颜色
         };
+        [navBarAppearanceStandard setValue:titleTextAttributes forKey:@"titleTextAttributes"];
     }
 
     if (_selectedHost != nil) {
@@ -157,10 +155,11 @@ static NSMutableSet* hostList;
     }
     else {
         if (@available(iOS 13.0, *)) {
-            navBarAppearanceScroll.titleTextAttributes = navBarAppearanceStandard.titleTextAttributes = @{
+            NSDictionary* titleTextAttributes = @{
                 NSFontAttributeName: [UIFont systemFontOfSize:24 weight:UIFontWeightSemibold],
                 NSForegroundColorAttributeName: [ThemeManager textColor] // 可选，设置标题颜色
             };
+            [navBarAppearanceStandard setValue:titleTextAttributes forKey:@"titleTextAttributes"];
         }
         /*
         self.navigationController.navigationBar.titleTextAttributes = @{
@@ -170,11 +169,7 @@ static NSMutableSet* hostList;
         self.title = [LocalizationHelper localizedStringForKey: @"Hosts" ];
         //self.title = nil;
     }
-    if (@available(iOS 13.0, *)) {
-        [self applyNavBarAppearance];
-    } else {
-        self.navigationController.navigationBar.backgroundColor = [ThemeManager appBackgroundColor];
-    }
+    [self applyNavBarAppearance];
 }
 
 - (void)alreadyPaired {
@@ -1121,18 +1116,38 @@ static NSMutableSet* hostList;
     else [revealController buttonsNotInStreaming];
     
     //[settingsViewController.resolutionSelector setEnabled:!self.settingsExpandedInStreamView];
-    settingsViewController.resolutionStack.hidden = self.settingsExpandedInStreamView;
-    settingsViewController.fpsStack.hidden = self.settingsExpandedInStreamView;
+    //settingsViewController.resolutionStack.hidden = self.settingsExpandedInStreamView;
+    [settingsViewController setHidden:_settingsExpandedInStreamView forStack:settingsViewController.resolutionStack];
+    //settingsViewController.fpsStack.hidden = self.settingsExpandedInStreamView;
+    [settingsViewController setHidden:_settingsExpandedInStreamView forStack:settingsViewController.fpsStack];
+
     [settingsViewController widget:settingsViewController.bitrateSlider setEnabled:!self.settingsExpandedInStreamView];
     //settingsViewController.bitrateStack.hidden = self.settingsExpandedInStreamView;
-    settingsViewController.optimizeGamesStack.hidden = self.settingsExpandedInStreamView;
-    settingsViewController.audioOnPcStack.hidden = self.settingsExpandedInStreamView;
-    settingsViewController.codecStack.hidden = self.settingsExpandedInStreamView;
-    settingsViewController.yuv444Stack.hidden = self.settingsExpandedInStreamView;
-    settingsViewController.HdrStack.hidden = self.settingsExpandedInStreamView;
-    settingsViewController.framepacingStack.hidden = self.settingsExpandedInStreamView;
-    settingsViewController.citrixX1MouseStack.hidden = self.settingsExpandedInStreamView;
-    settingsViewController.externalDisplayModeStack.hidden = self.settingsExpandedInStreamView;
+    //settingsViewController.optimizeGamesStack.hidden = self.settingsExpandedInStreamView;
+    [settingsViewController setHidden:_settingsExpandedInStreamView forStack:settingsViewController.optimizeGamesStack];
+
+    //settingsViewController.audioOnPcStack.hidden = self.settingsExpandedInStreamView;
+    [settingsViewController setHidden:_settingsExpandedInStreamView forStack:settingsViewController.audioOnPcStack];
+    
+    //settingsViewController.codecStack.hidden = self.settingsExpandedInStreamView;
+    [settingsViewController setHidden:_settingsExpandedInStreamView forStack:settingsViewController.codecStack];
+
+    
+    //settingsViewController.yuv444Stack.hidden = self.settingsExpandedInStreamView;
+    [settingsViewController setHidden:_settingsExpandedInStreamView forStack:settingsViewController.yuv444Stack];
+
+    //settingsViewController.HdrStack.hidden = self.settingsExpandedInStreamView;
+    [settingsViewController setHidden:_settingsExpandedInStreamView forStack:settingsViewController.HdrStack];
+
+    //settingsViewController.framepacingStack.hidden = self.settingsExpandedInStreamView;
+    [settingsViewController setHidden:_settingsExpandedInStreamView forStack:settingsViewController.framepacingStack];
+
+    //settingsViewController.citrixX1MouseStack.hidden = self.settingsExpandedInStreamView;
+    [settingsViewController setHidden:_settingsExpandedInStreamView forStack:settingsViewController.citrixX1MouseStack];
+
+    //settingsViewController.externalDisplayModeStack.hidden = self.settingsExpandedInStreamView;
+    [settingsViewController setHidden:_settingsExpandedInStreamView forStack:settingsViewController.externalDisplayModeStack];
+
     // [settingsViewController.unlockDisplayOrientationSelector setEnabled:!self.settingsExpandedInStreamView && [self isFullScreenRequired]];//need "requires fullscreen" enabled in the app bunddle to make runtime orientation limitation woring
 }
 
@@ -1368,42 +1383,37 @@ static NSMutableSet* hostList;
     ]];
 }
 
-- (void)applyNavBarAppearance API_AVAILABLE(ios(13.0)){
-    self.navigationController.navigationBar.standardAppearance = navBarAppearanceStandard;
-    self.navigationController.navigationBar.scrollEdgeAppearance = navBarAppearanceStandard;
+- (void)applyNavBarAppearance{
+    if (@available(iOS 13.0, *)) {
+        self.navigationController.navigationBar.standardAppearance.backgroundColor = [UIColor clearColor]; // old ios depend on this, do not remove
+        self.navigationController.navigationBar.standardAppearance = navBarAppearanceStandard;
+        self.navigationController.navigationBar.scrollEdgeAppearance = navBarAppearanceStandard;
+    }
+    else{
+        self.navigationController.navigationBar.backgroundColor = [UIColor clearColor]; // old ios depend on this, do not remove
+        self.navigationController.navigationBar.barTintColor = [UIColor clearColor]; // ios 14 depend on this, do not remove
+        self.navigationController.navigationBar.barTintColor = [ThemeManager appBackgroundColor]; // ios 14 depend on this, do not remove
+    }
 }
 
 - (void)setupNavBar{
     if (@available(iOS 13.0, *)) {
-        navBarAppearanceStandard = [[UINavigationBarAppearance alloc] init];
-        [navBarAppearanceStandard configureWithOpaqueBackground]; // 不透明
-        navBarAppearanceStandard.backgroundColor =[ThemeManager appBackgroundColor];; // 设置你需要的背景色
-        navBarAppearanceStandard.shadowColor = nil; // 去掉底部分割线（可选）
-        navBarAppearanceStandard.titleTextAttributes = @{
+        Class appearanceClass = NSClassFromString(@"UINavigationBarAppearance");
+        navBarAppearanceStandard = [[appearanceClass alloc] init];
+        [navBarAppearanceStandard performSelector:@selector(configureWithOpaqueBackground)]; // 不透明
+        [navBarAppearanceStandard setValue:[ThemeManager appBackgroundColor] forKey:@"backgroundColor"]; // 设置你需要的背景色
+        [navBarAppearanceStandard setValue:nil forKey:@"shadowColor"]; // 设置你需要的背景色
+        NSDictionary* titleTextAttributes = @{
             NSForegroundColorAttributeName: [ThemeManager textColor]
         };
-        navBarAppearanceStandard.shadowColor = [UIColor clearColor];
-        navBarAppearanceStandard.backgroundImage = nil;
-        
-        /*
-        navBarAppearanceScroll = [[UINavigationBarAppearance alloc] init];
-        [navBarAppearanceScroll configureWithTransparentBackground];
-        navBarAppearanceScroll.backgroundEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleRegular];
-        navBarAppearanceScroll.backgroundColor =[[ThemeManager appBackgroundColor] colorWithAlphaComponent:0.6]; // 设置你需要的背景色
-        //navBarAppearanceScroll.shadowColor = nil; // 去掉底部分割线（可选）
-        navBarAppearanceScroll.titleTextAttributes = @{
-            NSForegroundColorAttributeName: [ThemeManager textColor]
-        };
-        // navBarAppearanceScroll.shadowColor = [UIColor clearColor];
-        navBarAppearanceScroll.backgroundImage = nil;*/
+        [navBarAppearanceStandard setValue:titleTextAttributes forKey:@"titleTextAttributes"];
+        [navBarAppearanceStandard setValue:[UIColor clearColor] forKey:@"shadowColor"];
+        [navBarAppearanceStandard setValue:nil forKey:@"backgroundImage"];
 
-        //appearance.
-        [self applyNavBarAppearance];
+        //navBarAppearanceStandard.backgroundImage = nil;
     }
-    else {
-        self.navigationController.navigationBar.backgroundColor = [ThemeManager appBackgroundColor];
-    }
-    
+    [self applyNavBarAppearance];
+
     self->_addHostButton = [self createAddHostButton];
     self->_helpButton = [self createHelpButton];
     //[self setupHostViewTitle];
@@ -1419,7 +1429,7 @@ static NSMutableSet* hostList;
     if (@available(iOS 13.0, *)) {
         [_settingsButton setTitle:nil];
         UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithPointSize:23 weight:UIImageSymbolWeightMedium ];
-        UIImage *image = [[UIImage systemImageNamed:@"sidebar.left" withConfiguration:config] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+        UIImage *image = [[UIImage systemImageNamed:@"sidebar.left" withConfiguration:config] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
         [_settingsButton setImage:image];
         _settingsButton.imageInsets = UIEdgeInsetsMake(10, 10, 0, 0);
     } else {

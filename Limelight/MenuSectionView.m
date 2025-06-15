@@ -309,12 +309,23 @@
     [self updateViewForFoldState];
 }
 
+- (SettingsMenuMode)getSettingsMenuMode {
+    if ([self.delegate respondsToSelector:@selector(getSettingsMenuMode)]) {
+        return [self.delegate getSettingsMenuMode];
+    } else return AllSettings;
+}
+
+
 - (void)updateViewForFoldState {
+    if([self getSettingsMenuMode] != AllSettings) return;
+    [self setNeedsLayout];
+    [self layoutIfNeeded];
     [self setupConstraints];
     if (_expanded) {
         _rootStackView.hidden = NO;
         _separatorLine.hidden = NO;
         CGSize fittingSize = [self.rootStackView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize];
+        //CGSize fittingSize = [self.rootStackView systemLayoutSizeFittingSize:UILayoutFittingExpandedSize];
         CGFloat rootStackViewHeight = fittingSize.height;
         fittingSize = [self.headerView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize];
         CGFloat headerHeight = fittingSize.height;

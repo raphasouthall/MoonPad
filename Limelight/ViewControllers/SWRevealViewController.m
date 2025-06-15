@@ -871,8 +871,6 @@ const int FrontViewPositionNone = 0xff;
 #pragma mark - Public methods and property accessors
 
 - (void)willMoveToPosition{
-    
-    
     SettingsMenuMode currentMenuMode = [self getSettingsMenuMode];
     
     _separatorLine.hidden = _frontViewPosition == FrontViewPositionLeft;
@@ -883,9 +881,9 @@ const int FrontViewPositionNone = 0xff;
 
     if(_frontViewPosition != FrontViewPositionLeft){
         [self setupMoreButtonMenu];
-        [self layoutSettingsView];
-        //if(currentMenuMode == AllSettings) [self allSettingSelected];
-        //if(currentMenuMode == FavoriteSettings) [self favoriteSettingSelected];
+        [self layoutSettingsView]; //注意， 该方法在菜单展开前又运行了一次， 会执行按清单隐藏stack的任务,此时直接使用.hidden = false 的方式，将stack从hiddenstacks清单中移除，导致stack保持隐藏无法恢复;
+        //而此willMoveToPosition内部方法，发生在 delegate的willMoveToPosition之后（由mainFrameVC执行的委托）
+        //因此应在mainFrameVC中的willMoveToPosition委托方法中先行setHidden:false，更新hiddenStack清单, 再在此内部方法中运行layoutSettingsView，确保因串流中展开而隐藏的stack可以正确恢复
     }
     else{
         // _rearViewRevealWidth = _rearViewRevealWidth + 20;
@@ -943,7 +941,8 @@ const int FrontViewPositionNone = 0xff;
         _dockedNavBar.scrollEdgeAppearance = navBarAppearanceStandard;
     } else {
         _dockedNavBar.backgroundColor = [UIColor clearColor];
-        _dockedNavBar.barTintColor = [[ThemeManager appBackgroundColor] colorWithAlphaComponent:0.1];
+        _dockedNavBar.backgroundColor = [ThemeManager appBackgroundColor];
+        _dockedNavBar.shadowImage = [UIImage new]; // remove bottom line for navbar
     }
 
     
@@ -983,7 +982,7 @@ const int FrontViewPositionNone = 0xff;
     if (@available(iOS 13.0, *)) {
         [backButton setTitle:nil];
         UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithPointSize:23 weight:UIImageSymbolWeightMedium ];
-        UIImage *image = [[UIImage systemImageNamed:@"sidebar.left" withConfiguration:config] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+        UIImage *image = [[UIImage systemImageNamed:@"sidebar.left" withConfiguration:config] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
         [backButton setImage:image];
         backButton.imageInsets = UIEdgeInsetsMake(20, 10, 0, 0);
     } else {
@@ -1024,7 +1023,7 @@ const int FrontViewPositionNone = 0xff;
     if (@available(iOS 13.0, *)) {
         [_moreButton setTitle:nil];
         UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithPointSize:23 weight:UIImageSymbolWeightMedium ];
-        UIImage *image = [[UIImage systemImageNamed:@"ellipsis.circle" withConfiguration:config] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+        UIImage *image = [[UIImage systemImageNamed:@"ellipsis.circle" withConfiguration:config] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
         [_moreButton setImage:image];
         _moreButton.imageInsets = UIEdgeInsetsMake(20, 0, 0, -10);
     } else {
@@ -1198,10 +1197,16 @@ const int FrontViewPositionNone = 0xff;
 }
 
 - (void)disconnectRemoteSession{
+    //先不要运行foldRearView, 以确保在断开时可以捕获 hiddenStacks （在串流中展开时已被设置了setHidden）,执行临时hidden = false,并重新计算heightContraint, 因此可确保substacks发生转移前恢复原有高度。以下切换all/favorite的方法内置了layoutSettingsView方法，该方法会在新的superView根据额外维护的清单隐藏stack，从而避免stack以hidden状态发生superView转移。
     if([self getSettingsMenuMode] == RemoveSettingItem) [self doneRemoveSettingItemSelected];
-
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"SessionDisconnectedBySettingsMenuNotification" object:self];
+    if([self getSettingsMenuMode] == AllSettings) [self allSettingSelected];
+    if([self getSettingsMenuMode] == FavoriteSettings) [self favoriteSettingSelected];
+    
+    // foldRearView此时, 收起时先通过mainFrame委托方法触发setHidden:false(hidden=false, 并更新清单) 再由内部willMoveToPosition运行layoutSettingsView，根据清单执行隐藏, 确保经过setHidden:false的stack可以恢复显示。
     [self foldRearView];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"SessionDisconnectedBySettingsMenuNotification" object:self];
+
+    // 以上两段没有执行顺序要求，因为第一段放后面的话， 也能保证stack不会在hidden状态下被转移到新的superView
 }
 
 -(void)deviceOrientationDidChange{
