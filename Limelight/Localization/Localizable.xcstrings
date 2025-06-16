@@ -47,6 +47,29 @@
         }
       }
     },
+    " Add Host" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : " 添加主机"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : " 添加主机"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : " 添加主机"
+          }
+        }
+      }
+    },
     "!ML_TEST_RESULT_INCONCLUSIVE" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -237,6 +260,35 @@
         }
       }
     },
+    "Add Host" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "添加主机"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "添加主机"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "添加主机"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "添加主机"
+          }
+        }
+      }
+    },
     "Add Host Manually" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -302,6 +354,29 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "别名标签 (可留空)"
+          }
+        }
+      }
+    },
+    "All Settings" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "全部设置"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "全部设置"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "全部设置"
           }
         }
       }
@@ -1257,6 +1332,29 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "解析主机域名失败"
+          }
+        }
+      }
+    },
+    "Favorite Settings" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "收藏夹"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "收藏夹"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "收藏夹"
           }
         }
       }
@@ -2638,6 +2736,29 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "移除主机"
+          }
+        }
+      }
+    },
+    "Remove Items" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "移除设置项"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "移除设置项"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "移除设置项"
           }
         }
       }

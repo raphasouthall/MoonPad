@@ -1293,7 +1293,7 @@ static NSMutableSet* hostList;
         UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithPointSize:17 weight:UIImageSymbolWeightMedium];
         UIImage *image = [UIImage systemImageNamed:@"plus.circle" withConfiguration:config];
         [button setImage:image forState:UIControlStateNormal];
-        [button setTitle:@" Add Host" forState:UIControlStateNormal]; // 注意空格用于间隔
+        [button setTitle:[LocalizationHelper localizedStringForKey:@" Add Host"] forState:UIControlStateNormal]; // 注意空格用于间隔
     } else {
         [button setTitle:@"Add Host" forState:UIControlStateNormal]; // 注意空格用于间隔
     }
@@ -1548,11 +1548,12 @@ static NSMutableSet* hostList;
     UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleMenuResize:)];
     [self.view addGestureRecognizer:longPress];
 
-    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"iPad" bundle:nil];
+    /*
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:[self isIPhone]?@"iPhone":@"iPad" bundle:nil];
     SettingsViewController *viewController = [storyboard instantiateViewControllerWithIdentifier:@"settingsViewController"];
     // 强制加载视图
     __unused UIView *view = viewController.view;
-     
+     */
 }
 
 -(void)viewDidLayoutSubviews{

@@ -190,9 +190,7 @@ CGSize resolutionTable[RESOLUTION_TABLE_SIZE];
     }
     
     // Add a bit of padding so the view doesn't end right at the button of the display
-    self.scrollView.contentSize = CGSizeMake(self.scrollView.contentSize.width,
-                                             [self isIPhone] ? highestViewY + 20 : _parentStack.frame.size.height + [self getStandardNavBarHeight] + 20);
-    
+    self.scrollView.contentSize = CGSizeMake(self.scrollView.contentSize.width, _parentStack.frame.size.height + [self getStandardNavBarHeight] + 20);
     double delayInSeconds = 3;
     // Convert the delay into a dispatch_time_t value
     dispatch_time_t delayTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
@@ -1157,7 +1155,7 @@ BOOL isCustomResolution(CGSize res) {
 
     // return;
     BOOL isIPad = ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad);
-    if(isIPad){
+    if(true){
         //[self layoutWidgetes]; // layout for ipad tmply
         // [self.view ]
         for(UIView* view in self.view.subviews){
