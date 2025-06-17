@@ -1727,6 +1727,29 @@
         }
       }
     },
+    "Hosts" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "远程主机"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "远程主机"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "远程主机"
+          }
+        }
+      }
+    },
     "Indicator Offset: %.0f" : {
       "extractionState" : "manual",
       "localizations" : {

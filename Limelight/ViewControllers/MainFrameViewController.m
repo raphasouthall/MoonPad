@@ -156,7 +156,7 @@ static NSMutableSet* hostList;
     else {
         if (@available(iOS 13.0, *)) {
             NSDictionary* titleTextAttributes = @{
-                NSFontAttributeName: [UIFont systemFontOfSize:24 weight:UIFontWeightSemibold],
+                NSFontAttributeName: [UIFont systemFontOfSize:22 weight:UIFontWeightMedium],
                 NSForegroundColorAttributeName: [ThemeManager textColor] // 可选，设置标题颜色
             };
             [navBarAppearanceStandard setValue:titleTextAttributes forKey:@"titleTextAttributes"];
@@ -2067,7 +2067,9 @@ static NSMutableSet* hostList;
 - (void)handleMenuResize:(UILongPressGestureRecognizer *)gesture {
     CGPoint locationInView = [gesture locationInView:self.view];
     CGPoint locationInSuperView = [gesture locationInView:self.revealViewController.view];
-    
+    CGFloat screenHeight = [UIScreen mainScreen].bounds.size.height;
+    CGFloat screenWidth = [UIScreen mainScreen].bounds.size.width;
+
     menuSeparator = [self findMenuSeparator];
     if(menuSeparator.hidden || menuSeparator == nil) return;
     
@@ -2075,14 +2077,16 @@ static NSMutableSet* hostList;
         if(locationInView.x < 30) {
             snapshot = [[UIView alloc] init];
             snapshot.backgroundColor = [ThemeManager appPrimaryColor];
-            CGFloat screenWidth = [UIScreen mainScreen].bounds.size.height;
-            snapshot.frame = CGRectMake(locationInSuperView.x,0, 2, screenWidth);
+            screenHeight = [UIScreen mainScreen].bounds.size.height;
+            snapshot.frame = CGRectMake(locationInSuperView.x,0, 2, screenHeight);
             [self.revealViewController.view addSubview:snapshot];
         }
         return;
     }
-    CGFloat screenWidthInPoints = CGRectGetWidth([[UIScreen mainScreen] bounds]);
-    CGFloat limitedWidth = MIN(MAX(locationInSuperView.x, 280),screenWidthInPoints/2);
+    
+    bool isPortrait = screenHeight>screenWidth;
+    
+    CGFloat limitedWidth = MIN(MAX(locationInSuperView.x, isPortrait ? 200 : 280),isPortrait ? screenWidth*0.75 : screenWidth/2);
     if(gesture.state == UIGestureRecognizerStateChanged){
         if(snapshot) snapshot.center = CGPointMake(limitedWidth, snapshot.center.y);
     }
@@ -2167,7 +2171,7 @@ static NSMutableSet* hostList;
 
 - (CGSize)getHostCardSize{
     CGSize cardSize;
-    if([self isIPhone]) cardSize.height = 0.4*MIN(CGRectGetHeight([[UIScreen mainScreen] bounds]),CGRectGetWidth([[UIScreen mainScreen] bounds]));
+    if([self isIPhone]) cardSize.height = 0.37*MIN(CGRectGetHeight([[UIScreen mainScreen] bounds]),CGRectGetWidth([[UIScreen mainScreen] bounds]));
     else cardSize.height = 0.25*MIN(CGRectGetHeight([[UIScreen mainScreen] bounds]),CGRectGetWidth([[UIScreen mainScreen] bounds]));
     TemporaryHost* dummyHost = [[TemporaryHost alloc] init];
     HostCardView* dummyCard = [[HostCardView alloc] initWithHost:dummyHost];
@@ -2188,10 +2192,11 @@ static NSMutableSet* hostList;
     
     // 设置其布局（Auto Layout 示例）
     // CGFloat hostCollectionViewPadding = 75;
+    CGFloat leftPadding = [self isIPhone] ? 30 : 0;
     self.hostCollectionVC.view.translatesAutoresizingMaskIntoConstraints = NO;
     [NSLayoutConstraint activateConstraints:@[
         [self.hostCollectionVC.view.topAnchor constraintEqualToAnchor:self.view.safeAreaLayoutGuide.topAnchor constant:0],
-        [self.hostCollectionVC.view.leadingAnchor constraintEqualToAnchor:self.view.safeAreaLayoutGuide.leadingAnchor constant:0],
+        [self.hostCollectionVC.view.leadingAnchor constraintEqualToAnchor:self.view.safeAreaLayoutGuide.leadingAnchor constant:leftPadding],
         [self.hostCollectionVC.view.trailingAnchor constraintEqualToAnchor:self.view.safeAreaLayoutGuide.trailingAnchor constant:0],
         // [self.hostCollectionVC.view.bottomAnchor constraintEqualToAnchor:self.view.safeAreaLayoutGuide.bottomAnchor constant:0] //?
     ]];
