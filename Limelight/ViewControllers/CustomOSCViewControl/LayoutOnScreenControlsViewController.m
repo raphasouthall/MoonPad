@@ -108,7 +108,7 @@
             widgetView.stickIndicatorOffset = buttonState.stickIndicatorOffset;
             widgetView.minStickOffset = buttonState.minStickOffset;
             // Add the widgetView to the view controller's view
-            [self.view insertSubview:widgetView belowSubview:self.widgetSizeStack];
+            [self.view insertSubview:widgetView belowSubview:self.widgetPanelStack];
             buttonState.position = [self denormalizeWidgetPosition:buttonState.position];
             [widgetView setLocationWithPosition:buttonState.position];
             [widgetView resizeWidgetView]; // resize must be called after relocation
@@ -561,7 +561,7 @@
     newWidget.stickIndicatorOffset = widget.stickIndicatorOffset;
     newWidget.minStickOffset = [widgetInitParams[@"minStickOffsetString"] floatValue];
     // Add the widgetView to the view controller's view
-    [self.view insertSubview:newWidget belowSubview:self.widgetSizeStack];
+    [self.view insertSubview:newWidget belowSubview:self.widgetPanelStack];
 
     if(createNew) [newWidget setLocationWithPosition:CGPointMake(90, 130)];
     else [newWidget setLocationWithPosition:widget.center];
@@ -585,7 +585,7 @@
     widgetView.minStickOffset = [widgetInitParams[@"minStickOffsetString"] floatValue];
     [self.OnScreenWidgetViews addObject:widgetView];
     // Add the widgetView to the view controller's view
-    [self.view insertSubview:widgetView belowSubview:self.widgetSizeStack];
+    [self.view insertSubview:widgetView belowSubview:self.widgetPanelStack];
     [widgetView setLocationWithPosition:CGPointMake(90, 130)];
     [widgetView resizeWidgetView];
 }
@@ -1013,7 +1013,7 @@
 - (void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
     
     // removing keyboard buttons objs
-    UITouch *touch = [touches anyObject]; // Get the first touch in the set
+    // UITouch *touch = [touches anyObject]; // Get the first touch in the set
     
     if(selectedWidgetView) [self.view insertSubview:selectedWidgetView belowSubview:_widgetPanelStack];
 

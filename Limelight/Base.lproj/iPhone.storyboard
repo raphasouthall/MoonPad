@@ -3,6 +3,7 @@
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23721"/>
+        <capability name="Image references" minToolsVersion="12.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -158,102 +159,110 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Jnu-63-bcf" customClass="ToolBarContainerView">
-                                <rect key="frame" x="0.0" y="0.0" width="1300" height="50"/>
+                                <rect key="frame" x="0.0" y="0.0" width="1300" height="45"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleAspectFill" alignment="center" spacing="70" translatesAutoresizingMaskIntoConstraints="NO" id="4he-pe-kYB">
-                                        <rect key="frame" x="275" y="0.0" width="750" height="50"/>
+                                        <rect key="frame" x="275" y="0.0" width="750" height="45"/>
                                         <subviews>
                                             <button opaque="NO" tag="20" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dhG-Fo-0GK" userLabel="Trash">
-                                                <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                                <rect key="frame" x="0.0" y="6.5" width="50" height="32.5"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="50" id="0vV-wV-Efz"/>
                                                     <constraint firstAttribute="width" constant="50" id="j9W-Ja-bVn"/>
                                                 </constraints>
-                                                <color key="tintColor" red="0.6705882353" green="0.61711704730000005" blue="0.99902987480000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
+                                                <color key="tintColor" systemColor="systemTealColor"/>
                                                 <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                                <state key="normal" image="Trash">
-                                                    <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="64"/>
+                                                <state key="normal" image="trash.fill" catalog="system">
+                                                    <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="25" weight="bold"/>
                                                 </state>
                                                 <connections>
                                                     <action selector="trashCanTapped:" destination="ZYS-Zm-PJs" eventType="touchUpInside" id="xeo-uK-pwk"/>
                                                 </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Pdg-l4-BvF" userLabel="Undo">
-                                                <rect key="frame" x="120" y="0.0" width="50" height="50"/>
+                                                <rect key="frame" x="120" y="8.5" width="50" height="28"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="50" id="7KW-Xe-OEK"/>
                                                     <constraint firstAttribute="width" constant="50" id="gHD-A0-AVS"/>
                                                 </constraints>
-                                                <color key="tintColor" red="0.6705882353" green="0.61568627450000002" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
+                                                <color key="tintColor" systemColor="systemTealColor"/>
                                                 <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                                <state key="normal" image="ArrowBackward">
-                                                    <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="64"/>
+                                                <state key="normal" image="arrow.uturn.backward" catalog="system">
+                                                    <color key="titleColor" systemColor="systemTealColor"/>
+                                                    <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="25" weight="semibold"/>
                                                 </state>
                                                 <connections>
                                                     <action selector="undoTapped:" destination="ZYS-Zm-PJs" eventType="touchUpInside" id="Lzm-gS-xMV"/>
                                                 </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LPA-ea-YHC" userLabel="Save">
-                                                <rect key="frame" x="240" y="0.0" width="50" height="50"/>
+                                                <rect key="frame" x="240" y="7" width="50" height="31"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="50" id="Lot-pn-o60"/>
                                                     <constraint firstAttribute="height" constant="50" id="uWO-So-qxr"/>
                                                 </constraints>
-                                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
-                                                <color key="tintColor" red="0.6705882353" green="0.61568627450000002" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
+                                                <color key="tintColor" systemColor="systemTealColor"/>
                                                 <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                                <state key="normal" image="SquareAndArrowDown">
-                                                    <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="64"/>
+                                                <state key="normal" image="square.and.arrow.down.fill" catalog="system">
+                                                    <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="25" weight="semibold"/>
                                                 </state>
                                                 <connections>
                                                     <action selector="saveTapped:" destination="ZYS-Zm-PJs" eventType="touchUpInside" id="cSe-fN-UWC"/>
                                                 </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rXW-Ms-2cJ" userLabel="Load">
-                                                <rect key="frame" x="360" y="0.0" width="50" height="50"/>
+                                                <rect key="frame" x="360" y="9.5" width="50" height="26"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="50" id="91g-27-mVH"/>
                                                     <constraint firstAttribute="height" constant="50" id="kRj-b6-Bx1"/>
                                                 </constraints>
-                                                <color key="tintColor" red="0.6705882353" green="0.61568627450000002" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <color key="tintColor" systemColor="systemTealColor"/>
                                                 <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                                <state key="normal" image="SquaresArrowUp">
-                                                    <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="64"/>
+                                                <state key="normal" image="tray.full.fill" catalog="system">
+                                                    <color key="titleColor" systemColor="systemTealColor"/>
+                                                    <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="25" weight="semibold"/>
                                                 </state>
                                                 <connections>
                                                     <action selector="loadTapped:" destination="ZYS-Zm-PJs" eventType="touchUpInside" id="DVp-Xi-K27"/>
                                                 </connections>
                                             </button>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Up4-28-sgF" userLabel="Add">
-                                                <rect key="frame" x="480" y="0.0" width="50" height="50"/>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Up4-28-sgF" userLabel="Add">
+                                                <rect key="frame" x="480" y="6.5" width="50" height="32"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="50" id="rWU-US-9dl"/>
                                                     <constraint firstAttribute="width" constant="50" id="wWj-wB-MRd"/>
                                                 </constraints>
-                                                <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
-                                                <color key="tintColor" red="0.6705882353" green="0.61568627450000002" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <color key="tintColor" systemColor="systemTealColor"/>
                                                 <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                                <state key="normal" title="Add"/>
+                                                <state key="normal" image="plus.rectangle.fill.on.rectangle.fill" catalog="system">
+                                                    <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="25" weight="semibold"/>
+                                                </state>
                                                 <connections>
                                                     <action selector="addTapped:" destination="ZYS-Zm-PJs" eventType="touchUpInside" id="Yzn-KO-PS9"/>
                                                 </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4pE-po-Zn1">
-                                                <rect key="frame" x="600" y="0.0" width="50" height="50"/>
+                                                <rect key="frame" x="600" y="10.5" width="50" height="24"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="50" id="oFn-jm-orG"/>
                                                     <constraint firstAttribute="height" constant="50" id="sls-Vh-uxz"/>
                                                 </constraints>
-                                                <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
-                                                <color key="tintColor" red="0.6705882353" green="0.61568627450000002" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <color key="tintColor" systemColor="systemTealColor"/>
                                                 <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                                <state key="normal" title="Edit"/>
+                                                <state key="normal" image="rectangle.and.pencil.and.ellipsis">
+                                                    <color key="titleColor" systemColor="systemTealColor"/>
+                                                    <color key="titleShadowColor" systemColor="systemTealColor"/>
+                                                    <preferredSymbolConfiguration key="preferredSymbolConfiguration" weight="black"/>
+                                                </state>
                                                 <connections>
                                                     <action selector="editTapped:" destination="ZYS-Zm-PJs" eventType="touchUpInside" id="bd9-hf-0gN"/>
                                                 </connections>
                                             </button>
                                             <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="RDI-on-aPY">
-                                                <rect key="frame" x="720" y="0.0" width="30" height="50"/>
+                                                <rect key="frame" x="720" y="0.0" width="30" height="45"/>
                                             </stackView>
                                         </subviews>
                                         <constraints>
@@ -261,11 +270,11 @@
                                         </constraints>
                                     </stackView>
                                     <view alpha="0.89999997615814209" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Zll-IP-PFt" userLabel="Chevron View">
-                                        <rect key="frame" x="624" y="50" width="52" height="25"/>
+                                        <rect key="frame" x="624" y="45" width="52" height="25"/>
                                         <subviews>
                                             <imageView clipsSubviews="YES" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ChevronCompactUp" translatesAutoresizingMaskIntoConstraints="NO" id="76O-3K-aa8">
                                                 <rect key="frame" x="0.0" y="0.0" width="52" height="25"/>
-                                                <color key="tintColor" red="0.6705882353" green="0.61568627450000002" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <color key="tintColor" systemColor="systemTealColor"/>
                                             </imageView>
                                         </subviews>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -278,51 +287,65 @@
                                             <constraint firstItem="76O-3K-aa8" firstAttribute="leading" secondItem="Zll-IP-PFt" secondAttribute="leading" id="xdb-MV-O2f"/>
                                         </constraints>
                                     </view>
+                                    <stackView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="rFV-gg-hGO">
+                                        <rect key="frame" x="595" y="-78" width="128" height="70"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    </stackView>
+                                    <button opaque="NO" tag="40" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="fill" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nHH-6h-4D1">
+                                        <rect key="frame" x="18" y="10" width="50" height="31"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="50" id="sBF-hd-nF8"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
+                                        <color key="tintColor" systemColor="systemTealColor"/>
+                                        <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                        <state key="normal">
+                                            <imageReference key="image" image="arrow.left.square.fill" catalog="system" symbolScale="default"/>
+                                            <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="28" scale="default" weight="semibold"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="closeTapped:" destination="ZYS-Zm-PJs" eventType="touchUpInside" id="U8V-Ry-ym9"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="50" id="OSW-rn-n8z"/>
+                                    <constraint firstItem="nHH-6h-4D1" firstAttribute="top" secondItem="Jnu-63-bcf" secondAttribute="top" constant="10" id="BgT-Ab-49Z"/>
+                                    <constraint firstAttribute="height" constant="45" id="OSW-rn-n8z"/>
+                                    <constraint firstItem="nHH-6h-4D1" firstAttribute="leading" secondItem="Jnu-63-bcf" secondAttribute="leading" constant="18" id="PqC-oI-mFI"/>
                                     <constraint firstItem="4he-pe-kYB" firstAttribute="centerX" secondItem="Jnu-63-bcf" secondAttribute="centerX" id="VRj-3r-zcK"/>
-                                    <constraint firstItem="Zll-IP-PFt" firstAttribute="top" secondItem="Jnu-63-bcf" secondAttribute="top" constant="50" id="lWA-W3-5cq"/>
+                                    <constraint firstItem="Zll-IP-PFt" firstAttribute="top" secondItem="4he-pe-kYB" secondAttribute="bottom" id="lWA-W3-5cq"/>
                                     <constraint firstItem="4he-pe-kYB" firstAttribute="top" secondItem="Jnu-63-bcf" secondAttribute="top" id="rBU-cP-Ypw"/>
+                                    <constraint firstAttribute="centerY" secondItem="4he-pe-kYB" secondAttribute="centerY" id="vme-I2-46x"/>
                                     <constraint firstItem="Zll-IP-PFt" firstAttribute="centerX" secondItem="Jnu-63-bcf" secondAttribute="centerX" id="yvK-OU-Gl6"/>
                                 </constraints>
                             </view>
-                            <button opaque="NO" tag="40" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nHH-6h-4D1">
-                                <rect key="frame" x="25" y="5" width="40" height="40"/>
-                                <color key="tintColor" red="0.6705882353" green="0.61568627450000002" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                <state key="normal" image="OSCLayoutExit"/>
-                                <connections>
-                                    <action selector="closeTapped:" destination="ZYS-Zm-PJs" eventType="touchUpInside" id="U8V-Ry-ym9"/>
-                                </connections>
-                            </button>
                             <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="1" minValue="0.59999999999999998" maxValue="6" id="DGw-22-vUn" userLabel="Slider">
-                                <rect key="frame" x="39" y="82" width="337" height="31"/>
+                                <rect key="frame" x="104" y="275" width="337" height="31"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" systemColor="secondaryLabelColor"/>
                                 <color key="tintColor" red="0.6716768742" green="0.61711704730000005" blue="0.99902987480000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </slider>
                             <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="1" minValue="0.59999999999999998" maxValue="6" id="VLi-Mk-ESg" userLabel="Slider">
-                                <rect key="frame" x="39" y="117" width="337" height="31"/>
+                                <rect key="frame" x="104" y="310" width="337" height="31"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" systemColor="secondaryLabelColor"/>
                                 <color key="tintColor" red="0.6716768742" green="0.61711704730000005" blue="0.99902987480000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </slider>
                             <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.83299999999999996" minValue="0.001" maxValue="0.999" id="P6S-oW-Ewb" userLabel="Slider">
-                                <rect key="frame" x="39" y="152" width="177" height="31"/>
+                                <rect key="frame" x="104" y="345" width="177" height="31"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" systemColor="secondaryLabelColor"/>
                                 <color key="tintColor" red="0.6716768742" green="0.61711704730000005" blue="0.99902987480000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </slider>
                             <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" minValue="0.0" maxValue="8" id="61X-O2-FOs" userLabel="Slider">
-                                <rect key="frame" x="380" y="152" width="131" height="31"/>
+                                <rect key="frame" x="445" y="345" width="131" height="31"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" systemColor="secondaryLabelColor"/>
                                 <color key="tintColor" red="0.6716768742" green="0.61711704730000005" blue="0.99902987480000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </slider>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Profile:" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yJC-bq-EOU">
-                                <rect key="frame" x="380" y="83" width="131" height="65"/>
+                                <rect key="frame" x="445" y="276" width="131" height="65"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" red="0.38551661729999998" green="0.28289704380000003" blue="0.61853601300000005" alpha="0.28999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
@@ -330,13 +353,13 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="120" minValue="0.0" maxValue="350" id="OaL-Ph-J4n" userLabel="Slider">
-                                <rect key="frame" x="39" y="222" width="472" height="31"/>
+                                <rect key="frame" x="104" y="415" width="472" height="31"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" systemColor="secondaryLabelColor"/>
                                 <color key="tintColor" red="0.6716768742" green="0.61711704730000005" blue="0.99902987480000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </slider>
                             <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="1" minValue="0.0" maxValue="8" id="QXI-Ex-JNV" userLabel="Slider">
-                                <rect key="frame" x="38" y="187" width="473" height="31"/>
+                                <rect key="frame" x="103" y="380" width="473" height="31"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" systemColor="secondaryLabelColor"/>
                                 <color key="tintColor" red="0.6716768742" green="0.61711704730000005" blue="0.99902987480000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -346,8 +369,6 @@
                         <constraints>
                             <constraint firstItem="Jnu-63-bcf" firstAttribute="leading" secondItem="Mwx-9q-yJJ" secondAttribute="leading" id="3k1-o1-EkI"/>
                             <constraint firstAttribute="trailing" secondItem="Jnu-63-bcf" secondAttribute="trailing" id="MRJ-Z6-gk9"/>
-                            <constraint firstItem="nHH-6h-4D1" firstAttribute="top" secondItem="Mwx-9q-yJJ" secondAttribute="top" constant="5" id="V6U-iF-tHN"/>
-                            <constraint firstItem="nHH-6h-4D1" firstAttribute="leading" secondItem="Mwx-9q-yJJ" secondAttribute="leading" constant="25" id="gvp-Ht-1ps"/>
                             <constraint firstItem="Jnu-63-bcf" firstAttribute="top" secondItem="Mwx-9q-yJJ" secondAttribute="top" id="wNr-7F-S0i" userLabel="Toolbar Top Constraint iPhone"/>
                         </constraints>
                     </view>
@@ -371,7 +392,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ORo-HP-JDj" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1569.5652173913045" y="1372.7678571428571"/>
+            <point key="canvasLocation" x="838" y="1219"/>
         </scene>
         <!--Profiles Table View Controller-->
         <scene sceneID="C7c-yg-gQK">
@@ -1280,12 +1301,14 @@
         </scene>
     </scenes>
     <resources>
-        <image name="ArrowBackward" width="40" height="40"/>
         <image name="ChevronCompactUp" width="35" height="10"/>
-        <image name="OSCLayoutExit" width="40" height="40"/>
-        <image name="SquareAndArrowDown" width="40" height="40"/>
-        <image name="SquaresArrowUp" width="40" height="40"/>
-        <image name="Trash" width="40" height="40"/>
+        <image name="arrow.left.square.fill" catalog="system" width="128" height="114"/>
+        <image name="arrow.uturn.backward" catalog="system" width="128" height="113"/>
+        <image name="plus.rectangle.fill.on.rectangle.fill" catalog="system" width="128" height="102"/>
+        <image name="rectangle.and.pencil.and.ellipsis" width="36.005599975585938" height="24.95680046081543"/>
+        <image name="square.and.arrow.down.fill" catalog="system" width="121" height="128"/>
+        <image name="trash.fill" catalog="system" width="117" height="128"/>
+        <image name="tray.full.fill" catalog="system" width="128" height="88"/>
         <systemColor name="linkColor">
             <color red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
@@ -1294,6 +1317,9 @@
         </systemColor>
         <systemColor name="systemBrownColor">
             <color red="0.63529411759999999" green="0.51764705879999995" blue="0.36862745099999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="systemTealColor">
+            <color red="0.18823529410000001" green="0.69019607839999997" blue="0.78039215689999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>
