@@ -1548,12 +1548,11 @@ static NSMutableSet* hostList;
     UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleMenuResize:)];
     [self.view addGestureRecognizer:longPress];
 
-    /*
+    
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:[self isIPhone]?@"iPhone":@"iPad" bundle:nil];
     SettingsViewController *viewController = [storyboard instantiateViewControllerWithIdentifier:@"settingsViewController"];
     // 强制加载视图
     __unused UIView *view = viewController.view;
-     */
 }
 
 -(void)viewDidLayoutSubviews{

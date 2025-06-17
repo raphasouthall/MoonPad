@@ -124,9 +124,6 @@ static const CGFloat cellOffsetY = 20;
 - (void)addHost:(TemporaryHost *)host {
     if(![self.items containsObject:host]){
         [self.items addObject:host];
-        [self.items addObject:host];
-        [self.items addObject:host];
-        [self.items addObject:host];
         [self.collectionView reloadData];
     }
 }

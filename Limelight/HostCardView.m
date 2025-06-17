@@ -40,6 +40,7 @@
     UIImageView* lockIconView;
     CGFloat computerIconMonitorCenterYOffset;
     CGFloat buttonHeight;
+    CGFloat buttonLabelFontSize;
     CGFloat iconAndButtonSpacing;
     UIColor *defaultBlue;
     UIColor *defaultGreen;
@@ -53,10 +54,11 @@ static const float REFRESH_CYCLE = 2.0f;
 - (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
+        buttonLabelFontSize = 15*_sizeFactor;
         longPressFired = false;
         computerIconMonitorCenterYOffset = -3.3*_sizeFactor;
         iconAndButtonSpacing = 37*_sizeFactor;
-        buttonHeight = 40*_sizeFactor;
+        buttonHeight = 39*_sizeFactor;
         defaultBlue = [ThemeManager appPrimaryColor];
         defaultGreen = [UIColor colorWithRed:52.0/255.0 green:199.0/255.0 blue:89.0/255.0 alpha:1.0];
         // self.userIterfaceStyle = UIUserInterfaceStyleLight
@@ -263,7 +265,7 @@ static const float REFRESH_CYCLE = 2.0f;
     self.statusLabel = [[UILabel alloc] initWithFrame:CGRectMake(205, 68, 100, 24)];
     self.statusLabel.translatesAutoresizingMaskIntoConstraints = NO;
     self.statusLabel.text = [LocalizationHelper localizedStringForKey:@"Online"];
-    self.statusLabel.font = [UIFont systemFontOfSize:15*_sizeFactor weight:UIFontWeightMedium];
+    self.statusLabel.font = [UIFont systemFontOfSize:14*_sizeFactor weight:UIFontWeightMedium];
     self.statusLabel.textColor = defaultGreen;
     // self.statusLabel.font = [UIFont systemFontOfSize:16*_sizeFactor];
     // 在线状态图标
@@ -289,7 +291,7 @@ static const float REFRESH_CYCLE = 2.0f;
     self.appButton.frame = CGRectMake(20, 200, 150, buttonHeight);
     [self.appButton setTitle:[LocalizationHelper localizedStringForKey:@"Applications"] forState:UIControlStateNormal];
     [self.appButton setTitleColor:[ThemeManager textColorGray] forState:UIControlStateNormal]; //theme
-    self.appButton.titleLabel.font = [UIFont systemFontOfSize:16*_sizeFactor];
+    self.appButton.titleLabel.font = [UIFont systemFontOfSize:buttonLabelFontSize];
     [self.appButton addTarget:self action:@selector(appButtonTapped) forControlEvents:UIControlEventPrimaryActionTriggered];
     [self addSubview:self.appButton];
     [NSLayoutConstraint activateConstraints:@[
@@ -309,7 +311,7 @@ static const float REFRESH_CYCLE = 2.0f;
     self.launchButton.layer.cornerRadius = 10;
     [self.launchButton setTitle:[LocalizationHelper localizedStringForKey:@"  Launch"] forState:UIControlStateNormal];
     [self.launchButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal]; // theme
-    self.launchButton.titleLabel.font = [UIFont boldSystemFontOfSize:16*_sizeFactor];
+    self.launchButton.titleLabel.font = [UIFont boldSystemFontOfSize:buttonLabelFontSize];
     self.launchButton.tintColor = [UIColor whiteColor];
     [self.launchButton addTarget:self action:@selector(launchButtonTapped) forControlEvents:UIControlEventPrimaryActionTriggered];
     [self addSubview:self.launchButton];
@@ -338,7 +340,7 @@ static const float REFRESH_CYCLE = 2.0f;
     self.pairButton.layer.cornerRadius = 10;
     [self.pairButton setTitle:[LocalizationHelper localizedStringForKey:@"  Pair with PIN"] forState:UIControlStateNormal];
     [self.pairButton setTitleColor:defaultBlue forState:UIControlStateNormal]; // theme
-    self.pairButton.titleLabel.font = [UIFont boldSystemFontOfSize:16*_sizeFactor];
+    self.pairButton.titleLabel.font = [UIFont boldSystemFontOfSize:buttonLabelFontSize];
     if (@available(iOS 13.0, *)) {
         UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithPointSize:self.pairButton.frame.size.height/3.5*_sizeFactor weight:UIImageSymbolWeightBold];
         UIImage *templateImage = [UIImage systemImageNamed:@"lock.open.fill" withConfiguration:config];
@@ -372,7 +374,7 @@ static const float REFRESH_CYCLE = 2.0f;
     self.wakeupButton.layer.cornerRadius = 10;
     [self.wakeupButton setTitle:[LocalizationHelper localizedStringForKey:@"  Wake-on-LAN"] forState:UIControlStateNormal];
     [self.wakeupButton setTitleColor:defaultBlue forState:UIControlStateNormal]; // theme
-    self.wakeupButton.titleLabel.font = [UIFont boldSystemFontOfSize:16*_sizeFactor];
+    self.wakeupButton.titleLabel.font = [UIFont boldSystemFontOfSize:buttonLabelFontSize];
     [self.wakeupButton addTarget:self action:@selector(wakeupButtonTapped) forControlEvents:UIControlEventPrimaryActionTriggered];
     [self addSubview:self.wakeupButton];
     
@@ -514,7 +516,7 @@ static const float REFRESH_CYCLE = 2.0f;
             self.statusIcon.image = [[UIImage imageNamed:@"wifi_green"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
             self.statusIcon.hidden = NO;
             _hostIconView.tintColor = [UIColor whiteColor];
-            _appButton.titleLabel.font = [UIFont systemFontOfSize:16*_sizeFactor];
+            _appButton.titleLabel.font = [UIFont systemFontOfSize:buttonLabelFontSize];
             if(host.pairState == PairStatePaired){
                 _iconBackgroundView.backgroundColor = defaultBlue;
                 lockIconView.hidden = YES;
