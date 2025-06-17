@@ -262,7 +262,7 @@ static const float REFRESH_CYCLE = 2.0f;
     // 在线文字
     self.statusLabel = [[UILabel alloc] initWithFrame:CGRectMake(205, 68, 100, 24)];
     self.statusLabel.translatesAutoresizingMaskIntoConstraints = NO;
-    self.statusLabel.text = @"Online";
+    self.statusLabel.text = [LocalizationHelper localizedStringForKey:@"Online"];
     self.statusLabel.font = [UIFont systemFontOfSize:15*_sizeFactor weight:UIFontWeightMedium];
     self.statusLabel.textColor = defaultGreen;
     // self.statusLabel.font = [UIFont systemFontOfSize:16*_sizeFactor];
@@ -510,7 +510,7 @@ static const float REFRESH_CYCLE = 2.0f;
         case StateOnline:
             [_hostSpinner stopAnimating];
             _statusLabel.textColor = defaultGreen;
-            _statusLabel.text = @"Online";
+            _statusLabel.text = [LocalizationHelper localizedStringForKey:@"Online"];
             self.statusIcon.image = [[UIImage imageNamed:@"wifi_green"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
             self.statusIcon.hidden = NO;
             _hostIconView.tintColor = [UIColor whiteColor];
@@ -550,7 +550,7 @@ static const float REFRESH_CYCLE = 2.0f;
             // _iconBackgroundView.backgroundColor = _userIterfaceStyle == UIUserInterfaceStyleDark ? [UIColor appBackgroundColorDark] : [UIColor appBackgroundColorLight];
             _iconBackgroundView.backgroundColor = [ThemeManager appBackgroundColor];
             _statusLabel.textColor = [ThemeManager textColorGray];
-            _statusLabel.text = @"Offline";
+            _statusLabel.text = [LocalizationHelper localizedStringForKey: @"Offline"];
             _statusIcon.tintColor = [ThemeManager textColorGray];
             if (@available(iOS 13.0, *)) {
                 _statusIcon.image = [UIImage systemImageNamed:@"exclamationmark.triangle.fill"];
@@ -581,7 +581,7 @@ static const float REFRESH_CYCLE = 2.0f;
             // _iconBackgroundView.backgroundColor = _userIterfaceStyle == UIUserInterfaceStyleDark ? [UIColor appBackgroundColorDark] : [UIColor appBackgroundColorLight];
             _iconBackgroundView.backgroundColor = [ThemeManager appPrimaryColorWithAlpha];
             _statusLabel.textColor = [ThemeManager textColorGray];
-            _statusLabel.text = @"Detecting...";
+            _statusLabel.text = [LocalizationHelper localizedStringForKey: @"Detecting..."];
             _statusIcon.tintColor = [ThemeManager textColorGray];
             if (@available(iOS 13.0, *)) {
                 _statusIcon.image = [UIImage systemImageNamed:@"antenna.radiowaves.left.and.right"];
