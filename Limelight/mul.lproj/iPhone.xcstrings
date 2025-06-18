@@ -1117,6 +1117,18 @@
         }
       }
     },
+    "dJh-Ck-ugh.text" : {
+      "comment" : "Class = \"UILabel\"; text = \"test\"; ObjectID = \"dJh-Ck-ugh\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "test"
+          }
+        }
+      }
+    },
     "E7F-vx-pnM.text" : {
       "comment" : "Class = \"UILabel\"; text = \"Frame Rate\"; ObjectID = \"E7F-vx-pnM\";",
       "extractionState" : "extracted_with_value",
@@ -1173,6 +1185,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "触点灵敏度"
+          }
+        }
+      }
+    },
+    "eiL-iX-G3Z.text" : {
+      "comment" : "Class = \"UILabel\"; text = \"test\"; ObjectID = \"eiL-iX-G3Z\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "test"
           }
         }
       }
@@ -1263,6 +1287,30 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "最高流畅度"
+          }
+        }
+      }
+    },
+    "f46-Pt-0Pv.text" : {
+      "comment" : "Class = \"UILabel\"; text = \"Profile:\"; ObjectID = \"f46-Pt-0Pv\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Profile:"
+          }
+        }
+      }
+    },
+    "fcy-zp-LGa.text" : {
+      "comment" : "Class = \"UILabel\"; text = \"test\"; ObjectID = \"fcy-zp-LGa\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "test"
           }
         }
       }
@@ -1447,6 +1495,18 @@
         }
       }
     },
+    "Idx-O1-5dn.text" : {
+      "comment" : "Class = \"UILabel\"; text = \"test\"; ObjectID = \"Idx-O1-5dn\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "test"
+          }
+        }
+      }
+    },
     "INW-Cp-Ybl.segmentTitles[0]" : {
       "comment" : "Class = \"UISegmentedControl\"; INW-Cp-Ybl.segmentTitles[0] = \"No\"; ObjectID = \"INW-Cp-Ybl\";",
       "extractionState" : "extracted_with_value",
@@ -1467,6 +1527,18 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Yes"
+          }
+        }
+      }
+    },
+    "kva-gQ-CZh.text" : {
+      "comment" : "Class = \"UILabel\"; text = \"test\"; ObjectID = \"kva-gQ-CZh\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "test"
           }
         }
       }
@@ -1743,6 +1815,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "打开软键盘"
+          }
+        }
+      }
+    },
+    "qPQ-U2-aSg.text" : {
+      "comment" : "Class = \"UILabel\"; text = \"test\"; ObjectID = \"qPQ-U2-aSg\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "test"
           }
         }
       }
@@ -2265,7 +2349,7 @@
     },
     "yJC-bq-EOU.text" : {
       "comment" : "Class = \"UILabel\"; text = \"Profile:\"; ObjectID = \"yJC-bq-EOU\";",
-      "extractionState" : "extracted_with_value",
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {

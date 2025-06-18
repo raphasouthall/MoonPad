@@ -840,12 +840,12 @@
     self.stickIndicatorOffsetStack.hidden = YES;
     
     [self.view bringSubviewToFront:self.toolbarRootView];
-    [self.view insertSubview:self.widgetSizeStack belowSubview:self.toolbarRootView];
-    self.widgetSizeStack.translatesAutoresizingMaskIntoConstraints = YES;
-    CGRect frame = CGRectMake(0, 0, self.widgetSizeStack.frame.size.width, self.widgetSizeStack.frame.size.height);
+    [self.view insertSubview:self.widgetPanelStack belowSubview:self.toolbarRootView];
+    self.widgetPanelStack.translatesAutoresizingMaskIntoConstraints = YES;
+    CGRect frame = CGRectMake(0, 0, self.widgetPanelStack.frame.size.width, self.widgetPanelStack.frame.size.height);
     //frame.origin = CGPointMake(self.view.bounds.size.width/2, 100);
-    frame.origin = CGPointMake(self.view.bounds.size.width/2-self.widgetSizeStack.frame.size.width/2, 100);
-    self.widgetSizeStack.frame = frame;
+    frame.origin = CGPointMake(self.view.bounds.size.width/2-self.widgetPanelStack.frame.size.width/2, 100);
+    self.widgetPanelStack.frame = frame;
     [self autoFitView:self.widgetPanelStack];
 }
 
