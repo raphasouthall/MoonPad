@@ -1831,6 +1831,186 @@
         }
       }
     },
+    "QRV-je-HEZ.segmentTitles[0]" : {
+      "comment" : "Class = \"UISegmentedControl\"; QRV-je-HEZ.segmentTitles[0] = \"light\"; ObjectID = \"QRV-je-HEZ\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "light"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "轻微"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "轻微"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "轻微"
+          }
+        }
+      }
+    },
+    "QRV-je-HEZ.segmentTitles[1]" : {
+      "comment" : "Class = \"UISegmentedControl\"; QRV-je-HEZ.segmentTitles[1] = \"medium\"; ObjectID = \"QRV-je-HEZ\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "medium"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "中等"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "中等"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "中等"
+          }
+        }
+      }
+    },
+    "QRV-je-HEZ.segmentTitles[2]" : {
+      "comment" : "Class = \"UISegmentedControl\"; QRV-je-HEZ.segmentTitles[2] = \"heavy\"; ObjectID = \"QRV-je-HEZ\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "heavy"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "强烈"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "强烈"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "强烈"
+          }
+        }
+      }
+    },
+    "QRV-je-HEZ.segmentTitles[3]" : {
+      "comment" : "Class = \"UISegmentedControl\"; QRV-je-HEZ.segmentTitles[3] = \"soft\"; ObjectID = \"QRV-je-HEZ\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "soft"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "柔和"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "柔和"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "柔和"
+          }
+        }
+      }
+    },
+    "QRV-je-HEZ.segmentTitles[4]" : {
+      "comment" : "Class = \"UISegmentedControl\"; QRV-je-HEZ.segmentTitles[4] = \"rigid\"; ObjectID = \"QRV-je-HEZ\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "rigid"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "刚性"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "刚性"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "刚性"
+          }
+        }
+      }
+    },
+    "QRV-je-HEZ.segmentTitles[5]" : {
+      "comment" : "Class = \"UISegmentedControl\"; QRV-je-HEZ.segmentTitles[5] = \"off\"; ObjectID = \"QRV-je-HEZ\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "off"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "关闭"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "关闭"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "关闭"
+          }
+        }
+      }
+    },
     "S7X-Kt-2jd.text" : {
       "comment" : "Class = \"UILabel\"; text = \"Show Local Keyboard Toolbar                                                      \"; ObjectID = \"S7X-Kt-2jd\";",
       "extractionState" : "extracted_with_value",
@@ -2031,6 +2211,36 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "隔空播放"
+          }
+        }
+      }
+    },
+    "u3w-Se-xzH.text" : {
+      "comment" : "Class = \"UILabel\"; text = \"Vibration Style\"; ObjectID = \"u3w-Se-xzH\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Vibration Style"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "振动模式"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "振动模式"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "振动模式"
           }
         }
       }

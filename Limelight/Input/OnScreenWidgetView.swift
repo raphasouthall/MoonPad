@@ -41,6 +41,7 @@ import UIKit
     @objc public var heightFactor: CGFloat = 1.0
     @objc public var borderWidth: CGFloat = 0.0
     @objc public var backgroundAlpha: CGFloat = 0.5
+    @objc public var vibrationStyle: Int = 6
     @objc public var latestTouchLocation: CGPoint
     @objc public var selfViewOnTheRight: Bool = false
     @objc public var shape: String = "default"
@@ -50,10 +51,9 @@ import UIKit
 
     
     private let appWindow: UIView
-
     
-    
-
+    private var vibrationGenerator = UIImpactFeedbackGenerator(style: .light)
+    private var vibrationOn: Bool = false
 
     // for all touchPad or buttons hybrid with touchPads
     @objc public var hasStickIndicator: Bool = false
@@ -123,6 +123,7 @@ import UIKit
     // whole button press down visual effect
     @objc public let buttonDownVisualEffectLayer = CAShapeLayer()
     private var buttonDownVisualEffectWidth: CGFloat
+    
     
     @objc init(cmdString: String, buttonLabel: String, shape:String) {
         
@@ -226,8 +227,24 @@ import UIKit
         fatalError("init(coder:) has not been implemented")
     }
     
-    
     // ======================================================================================================
+    
+    @objc public func setVibration(style: Int) {
+        if #available(iOS 13.0, *) {
+            vibrationOn = style < UIImpactFeedbackGenerator.FeedbackStyle.rigid.rawValue + 1
+        } else {
+            vibrationOn = style < UIImpactFeedbackGenerator.FeedbackStyle.heavy.rawValue + 1
+        };
+        vibrationStyle = style;
+        if #available(iOS 13.0, *) {
+            print("rigid value \(UIImpactFeedbackGenerator.FeedbackStyle.rigid.rawValue)")
+        } else {
+            // Fallback on earlier versions
+        };
+        if vibrationOn {
+            vibrationGenerator = UIImpactFeedbackGenerator(style: UIImpactFeedbackGenerator.FeedbackStyle(rawValue: style) ?? UIImpactFeedbackGenerator.FeedbackStyle.light)
+        }
+    }
     
     @objc public func setLocation(position: CGPoint) {
         /*
@@ -437,6 +454,12 @@ import UIKit
         self.layer.superlayer?.addSublayer(indicatorBorder)
         indicatorBorder.position = CGPointMake(CGRectGetMinX(self.frame)+touchBeganLocation.x, CGRectGetMinY(self.frame)+touchBeganLocation.y)
         
+        if vibrationOn {
+            vibrationGenerator.prepare()
+            vibrationGenerator.impactOccurred()
+            print("vibrationInstance: \(vibrationGenerator)")
+        }
+
         return indicatorBorder
     }
 
@@ -787,7 +810,7 @@ import UIKit
     }
     
     //==== wholeButtonPress visual effect=============================================
-    private func buttonDownVisualEffect() {
+    private func buttonDownEffect() {
         // setupBorderLayer()
         CATransaction.begin()
         CATransaction.setDisableActions(true)
@@ -795,6 +818,11 @@ import UIKit
         buttonDownVisualEffectLayer.position = CGPointMake(CGRectGetMidX(self.frame), CGRectGetMidY(self.frame)) // update position every time we press down the button
         buttonDownVisualEffectLayer.borderWidth = self.buttonDownVisualEffectWidth // this will show the visual effect
         buttonDownVisualEffectLayer.borderColor = moonlightPurple
+        if vibrationOn {
+            vibrationGenerator.prepare()
+            vibrationGenerator.impactOccurred()
+            print("vibrationInstance: \(vibrationGenerator)")
+        }
         CATransaction.commit()
     }
     
@@ -1019,7 +1047,7 @@ import UIKit
             
             // this will also deal with button events
             if self.widgetType == WidgetTypeEnum.button && !self.comboButtonStrings.isEmpty {
-                self.buttonDownVisualEffect()
+                self.buttonDownEffect()
                 self.sendComboButtonsDownEvent(comboStrings: self.comboButtonStrings)
             }
             
@@ -1034,7 +1062,7 @@ import UIKit
         }
         // here is in edit mode:
         else{
-            self.buttonDownVisualEffect()
+            self.buttonDownEffect()
             NotificationCenter.default.post(name: Notification.Name("OnScreenWidgetViewSelected"),object: self) // inform layout tool controller to fetch button size factors. self will be passed as the object of the notification
         }
     }

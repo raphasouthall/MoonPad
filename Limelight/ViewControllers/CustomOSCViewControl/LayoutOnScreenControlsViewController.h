@@ -75,6 +75,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (weak, nonatomic) IBOutlet UISlider *sensitivitySlider;
 @property (weak, nonatomic) IBOutlet UIStackView *sensitivityStack;
 
+@property (strong, nonatomic) IBOutlet UISegmentedControl *vibrationStyleSelector;
+@property (strong, nonatomic) IBOutlet UIStackView *vibrationStyleStack;
 
 
 

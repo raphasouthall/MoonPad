@@ -37,6 +37,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, assign) CGFloat oscLayerSizeFactor; // for OnScreenController CALayer
 @property (nonatomic, assign) CGFloat backgroundAlpha; // for OnScreenController CALayer
+@property (nonatomic, assign) uint8_t vibrationStyle; // for OnScreenController CALayer
 
 // @property (nonatomic, assign) BOOL hasValidPosition;
 

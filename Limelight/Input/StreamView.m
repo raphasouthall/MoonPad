@@ -411,6 +411,7 @@ static const double X1_MOUSE_SPEED_DIVISOR = 2.5;
                 widgetView.widthFactor = buttonState.widthFactor;
                 widgetView.heightFactor = buttonState.heightFactor;
                 widgetView.borderWidth = buttonState.borderWidth;
+                [widgetView setVibrationWithStyle:buttonState.vibrationStyle];
                 widgetView.sensitivityFactor = buttonState.sensitivityFactor;
                 widgetView.stickIndicatorOffset = buttonState.stickIndicatorOffset;
                 widgetView.minStickOffset = buttonState.minStickOffset;

@@ -104,6 +104,7 @@
             widgetView.widthFactor = buttonState.widthFactor;
             widgetView.heightFactor = buttonState.heightFactor;
             widgetView.borderWidth = buttonState.borderWidth;
+            [widgetView setVibrationWithStyle:buttonState.vibrationStyle];
             widgetView.sensitivityFactor = buttonState.sensitivityFactor;
             widgetView.stickIndicatorOffset = buttonState.stickIndicatorOffset;
             widgetView.minStickOffset = buttonState.minStickOffset;
@@ -614,6 +615,7 @@
     CGRect newFrame = view.frame;
     newFrame.size = fittingSize;
     view.frame = newFrame;
+    if([self isIPhone]) [self updateClippedMaskForView:view];
 }
 
 - (void)widgetViewTapped: (NSNotification *)notification{
@@ -663,6 +665,10 @@
     [self.widgetHeightLabel setText:[LocalizationHelper localizedStringForKey:@"Height: %.2f", self->selectedWidgetView.heightFactor]];
     [self.widgetAlphaLabel setText:[LocalizationHelper localizedStringForKey:@"Alpha: %.2f", self->selectedWidgetView.backgroundAlpha]];
     [self.widgetBorderWidthLabel setText:[LocalizationHelper localizedStringForKey:@"Border Width: %.2f", self->selectedWidgetView.borderWidth]];
+    if([self isIPhone]){
+        self.vibrationStyleSelector.selectedSegmentIndex = self->selectedWidgetView.vibrationStyle;
+        //[self->selectedWidgetView setva]
+    }
 }
 
 - (void)setControllerCALayerSliderValues: (NSNotification *)notification{
@@ -692,62 +698,68 @@
     [self.widgetAlphaLabel setText:[LocalizationHelper localizedStringForKey:@"Alpha: %.2f", alpha]];
 }
 
-- (void)widgetSizeSliderMoved{
-    [self.widgetSizeLabel setText:[LocalizationHelper localizedStringForKey:@"Size: %.2f", self.widgetSizeSlider.value]];
-    [self.widgetHeightLabel setText:[LocalizationHelper localizedStringForKey:@"Height: %.2f", self.widgetSizeSlider.value]]; // resizing the whole button
-    [self.widgetHeightSlider setValue: self.widgetSizeSlider.value];
+- (void)widgetSizeSliderMoved:(UISlider* )sender{
+    [self.widgetSizeLabel setText:[LocalizationHelper localizedStringForKey:@"Size: %.2f", sender.value]];
+    [self.widgetHeightLabel setText:[LocalizationHelper localizedStringForKey:@"Height: %.2f", sender.value]]; // resizing the whole button
+    [self.widgetHeightSlider setValue: sender.value];
     
     if(self->selectedWidgetView != nil && self->widgetViewSelected){
         self->selectedWidgetView.translatesAutoresizingMaskIntoConstraints = true; // this is mandatory to prevent unexpected key view location change
         // when adjusting width, the widgetView height will be syncronized
-        self->selectedWidgetView.widthFactor = self->selectedWidgetView.heightFactor = self.widgetSizeSlider.value;
+        self->selectedWidgetView.widthFactor = self->selectedWidgetView.heightFactor = sender.value;
         [self->selectedWidgetView resizeWidgetView];
     }
     if(self->selectedControllerLayer != nil && self->controllerLayerSelected){
-        [self.layoutOSC resizeControllerLayerWith:self->selectedControllerLayer and:self.widgetSizeSlider.value];
+        [self.layoutOSC resizeControllerLayerWith:self->selectedControllerLayer and:sender.value];
     }
 }
 
-- (void)widgetHeightSliderMoved{
-    [self.widgetHeightLabel setText:[LocalizationHelper localizedStringForKey:@"Height: %.2f", self.widgetHeightSlider.value]];
+- (void)widgetHeightSliderMoved:(UISlider* )sender{
+    [self.widgetHeightLabel setText:[LocalizationHelper localizedStringForKey:@"Height: %.2f", sender.value]];
     if(self->selectedWidgetView != nil && self->widgetViewSelected){
         self->selectedWidgetView.translatesAutoresizingMaskIntoConstraints = true; // this is mandatory to prevent unexpected key view location change
         if([self->selectedWidgetView.shape isEqualToString:@"round"]) return; // don't change height for round buttons, except for dPad buttons which are in rectangle shape
-        self->selectedWidgetView.heightFactor = self.widgetHeightSlider.value;
+        self->selectedWidgetView.heightFactor = sender.value;
         [self->selectedWidgetView resizeWidgetView];
     }
 }
 
-- (void)widgetAlphaSliderMoved{
-    [self.widgetAlphaLabel setText:[LocalizationHelper localizedStringForKey:@"Alpha: %.2f", self.widgetAlphaSlider.value]];
+- (void)widgetAlphaSliderMoved:(UISlider* )sender{
+    [self.widgetAlphaLabel setText:[LocalizationHelper localizedStringForKey:@"Alpha: %.2f", sender.value]];
     if(self->selectedWidgetView != nil && self->widgetViewSelected){
-        [self->selectedWidgetView adjustTransparencyWithAlpha:self.widgetAlphaSlider.value];
+        [self->selectedWidgetView adjustTransparencyWithAlpha:sender.value];
     }
 
     if(self->selectedControllerLayer != nil && self->controllerLayerSelected){
-        [self.layoutOSC adjustControllerLayerOpacityWith:self->selectedControllerLayer and:self.widgetAlphaSlider.value];
+        [self.layoutOSC adjustControllerLayerOpacityWith:self->selectedControllerLayer and:sender.value];
     }
     return;
 }
 
-- (void)widgetBorderWidthSliderMoved{
-    [self.widgetBorderWidthLabel setText:[LocalizationHelper localizedStringForKey:@"Border Width: %.2f", self.widgetBorderWidthSlider.value]];
+- (void)widgetBorderWidthSliderMoved:(UISlider* )sender{
+    [self.widgetBorderWidthLabel setText:[LocalizationHelper localizedStringForKey:@"Border Width: %.2f", sender.value]];
     if(self->selectedWidgetView != nil && self->widgetViewSelected){
-        [self->selectedWidgetView adjustBorderWithWidth:self.widgetBorderWidthSlider.value];
+        [self->selectedWidgetView adjustBorderWithWidth:sender.value];
     }
     return;
 }
 
-- (void)sensitivitySliderMoved{
-    [self.sensitivityLabel setText:[LocalizationHelper localizedStringForKey:@"Sensitivity: %.2f", self.sensitivitySlider.value]];
-    if(self->selectedWidgetView != nil && self->widgetViewSelected) self->selectedWidgetView.sensitivityFactor = self.sensitivitySlider.value;
+- (void)vibrationStyleChanged:(UISegmentedControl* )sender{
+    if(self->selectedWidgetView != nil && self->widgetViewSelected){
+        [self->selectedWidgetView setVibrationWithStyle:sender.selectedSegmentIndex];
+    }
+}
+
+- (void)sensitivitySliderMoved:(UISlider* )sender{
+    [self.sensitivityLabel setText:[LocalizationHelper localizedStringForKey:@"Sensitivity: %.2f", sender.value]];
+    if(self->selectedWidgetView != nil && self->widgetViewSelected) self->selectedWidgetView.sensitivityFactor = sender.value;
     return;
 }
 
-- (void)stickIndicatorOffsetSliderMoved{
-    [self.stickIndicatorOffsetLabel setText:[LocalizationHelper localizedStringForKey:@"Indicator Offset: %.0f", self.stickIndicatorOffsetSlider.value]];
+- (void)stickIndicatorOffsetSliderMoved:(UISlider* )sender{
+    [self.stickIndicatorOffsetLabel setText:[LocalizationHelper localizedStringForKey:@"Indicator Offset: %.0f", sender.value]];
     if(self->selectedWidgetView != nil && self->widgetViewSelected){
-        self->selectedWidgetView.stickIndicatorOffset = self.stickIndicatorOffsetSlider.value;
+        self->selectedWidgetView.stickIndicatorOffset = sender.value;
         [self->selectedWidgetView updateStickIndicator];
     }
     return;
@@ -790,17 +802,10 @@
     self.widgetPanelStack.layer.cornerRadius = 16;
     self.widgetPanelStack.clipsToBounds = YES;
     
-    /*
-    [NSLayoutConstraint activateConstraints:@[
-        [self.widgetPanelStack.centerXAnchor constraintEqualToAnchor:self.view.centerXAnchor constant:0],
-        [self.widgetPanelStack.topAnchor constraintEqualToAnchor:self.view.topAnchor constant:120],
-    ]];
-    */
-    
     self.widgetPanelStack.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.5];
     
     [self.currentProfileLabel setText:[LocalizationHelper localizedStringForKey:@"Profile: %@",[profilesManager getSelectedProfile].name]];
-    self.currentProfileLabel.layer.cornerRadius = 12;
+    self.currentProfileLabel.layer.cornerRadius = [self isIPhone] ? 9 : 12;
     self.currentProfileLabel.clipsToBounds = YES;
     
     self.widgetSizeStack.userInteractionEnabled = YES;
@@ -813,40 +818,77 @@
         }
     }
     
-    [self.widgetSizeSlider addTarget:self action:@selector(widgetSizeSliderMoved) forControlEvents:(UIControlEventValueChanged)];
+    [self.widgetSizeSlider addTarget:self action:@selector(widgetSizeSliderMoved:) forControlEvents:(UIControlEventValueChanged)];
     self.widgetSizeLabel.text = [LocalizationHelper localizedStringForKey:@"Size"];
     self.widgetSizeStack.hidden = _quickSwitchEnabled;
 
-    [self.widgetHeightSlider addTarget:self action:@selector(widgetHeightSliderMoved) forControlEvents:(UIControlEventValueChanged)];
+    [self.widgetHeightSlider addTarget:self action:@selector(widgetHeightSliderMoved:) forControlEvents:(UIControlEventValueChanged)];
 
     self.widgetHeightLabel.text = [LocalizationHelper localizedStringForKey:@"Height"];
     self.widgetHeightStack.hidden = _quickSwitchEnabled;
 
-    [self.widgetAlphaSlider addTarget:self action:@selector(widgetAlphaSliderMoved) forControlEvents:(UIControlEventValueChanged)];
+    [self.widgetAlphaSlider addTarget:self action:@selector(widgetAlphaSliderMoved:) forControlEvents:(UIControlEventValueChanged)];
     self.widgetAlphaLabel.text = [LocalizationHelper localizedStringForKey:@"Alpha"];
    
-    [self.widgetBorderWidthSlider addTarget:self action:@selector(widgetBorderWidthSliderMoved) forControlEvents:(UIControlEventValueChanged)];
+    [self.widgetBorderWidthSlider addTarget:self action:@selector(widgetBorderWidthSliderMoved:) forControlEvents:(UIControlEventValueChanged)];
     self.widgetBorderWidthLabel.text = [LocalizationHelper localizedStringForKey:@"Border Width"];
     self.borderWidthAlphaStack.hidden = _quickSwitchEnabled;
   
-    [self.sensitivitySlider addTarget:self action:@selector(sensitivitySliderMoved) forControlEvents:(UIControlEventValueChanged)];
+    [self.sensitivitySlider addTarget:self action:@selector(sensitivitySliderMoved:) forControlEvents:(UIControlEventValueChanged)];
     self.sensitivityLabel.text = [LocalizationHelper localizedStringForKey:@"Sensitivity"];
     self.sensitivityStack.hidden = YES;
     
     // stick indicator offset slider
     //self.stickIndicatorOffsetSlider.hidden = YES;
-    [self.stickIndicatorOffsetSlider addTarget:self action:@selector(stickIndicatorOffsetSliderMoved) forControlEvents:(UIControlEventValueChanged)];
+    [self.stickIndicatorOffsetSlider addTarget:self action:@selector(stickIndicatorOffsetSliderMoved:) forControlEvents:(UIControlEventValueChanged)];
     self.stickIndicatorOffsetLabel.text = [LocalizationHelper localizedStringForKey:@"Indicator Offset"];
     self.stickIndicatorOffsetStack.hidden = YES;
+    
+    
+    if([self isIPhone]){
+        [self.vibrationStyleSelector addTarget:self action:@selector(vibrationStyleChanged:) forControlEvents:(UIControlEventValueChanged)];
+        self.vibrationStyleStack.hidden = NO;
+    }
     
     [self.view bringSubviewToFront:self.toolbarRootView];
     [self.view insertSubview:self.widgetPanelStack belowSubview:self.toolbarRootView];
     self.widgetPanelStack.translatesAutoresizingMaskIntoConstraints = YES;
+    
+    
     CGRect frame = CGRectMake(0, 0, self.widgetPanelStack.frame.size.width, self.widgetPanelStack.frame.size.height);
     //frame.origin = CGPointMake(self.view.bounds.size.width/2, 100);
     frame.origin = CGPointMake(self.view.bounds.size.width/2-self.widgetPanelStack.frame.size.width/2, 100);
     self.widgetPanelStack.frame = frame;
     [self autoFitView:self.widgetPanelStack];
+    
+    if([self isIPhone]) {
+        for(UIView* view in _widgetPanelStack.arrangedSubviews){
+            view.transform = CGAffineTransformMakeScale(0.83, 0.83);
+        }
+        self.widgetPanelStack.layoutMargins = UIEdgeInsetsMake(3, 2, 7, 2);
+        
+        self.widgetPanelStack.clipsToBounds = YES;
+
+        CAShapeLayer *maskLayer = [CAShapeLayer layer];
+        CGRect visibleRect = CGRectInset(self.widgetPanelStack.bounds, 40, 0); // 左右各裁掉
+        UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:visibleRect cornerRadius:12];
+        maskLayer.path = path.CGPath;
+
+        self.widgetPanelStack.layer.mask = maskLayer;
+    }
+}
+
+- (void)updateClippedMaskForView:(UIView* )view{
+    CAShapeLayer *maskLayer = [CAShapeLayer layer];
+    view.layer.mask = nil;
+    CGRect visibleRect = CGRectInset(view.bounds, 40, 0); // 左右各裁掉 20pt
+    UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:visibleRect cornerRadius:12];
+    maskLayer.path = path.CGPath;
+    view.layer.mask = maskLayer;
+}
+
+- (BOOL)isIPhone{
+    return ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPhone);
 }
 
 - (void)handleProfileTablViewDismiss{
@@ -901,7 +943,7 @@
     _oscProfilesTableViewController = [storyboard instantiateViewControllerWithIdentifier:@"OSCProfilesTableViewController"];
     _oscProfilesTableViewController.streamViewBounds = self.view.bounds;
     
-    _oscProfilesTableViewController.needToUpdateOscLayoutTVC = ^() {   // a block that will be called when the modally presented 'OSCProfilesTableViewController' VC is dismissed. By the time the 'OSCProfilesTableViewController' VC is dismissed the user would have potentially selected a different OSC ofile with a different layout and they want to see this layout on this 'LayoutOnScreenControlsViewController.' This block of code will load the profile and then hide/show and move each OSC button to their appropriate position
+    _oscProfilesTableViewController.needToUpdateOscLayoutTVC = ^() {   // a block that will be called when the modally presented 'OSCProfilesTableViewController' VC is dismissed. By the time the 'OSCProfilesTableViewController' VC is dismissed the user would have potentially selected a different OSC ofile with a different layout and they want to see this layout on this 'LayoutOnScreenControlsViewController.' This block of code will load the proffile and then hide/show and move each OSC button to their appropriate position
         [self.layoutOSC updateControls];  // creates and saves a 'Default' OSC profile or loads the one the user selected on the previous screen
         
         [self addInnerAnalogSticksToOuterAnalogLayers];
@@ -1014,6 +1056,7 @@
     
     // removing keyboard buttons objs
     // UITouch *touch = [touches anyObject]; // Get the first touch in the set
+    _widgetPanelStack.userInteractionEnabled = true;
     
     if(selectedWidgetView) [self.view insertSubview:selectedWidgetView belowSubview:_widgetPanelStack];
 

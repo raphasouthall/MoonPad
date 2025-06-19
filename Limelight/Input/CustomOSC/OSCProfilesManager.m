@@ -241,7 +241,7 @@ static CGRect streamViewBounds;
 
 
 - (bool) updateSelectedProfile:(NSMutableArray *) oscButtonLayers {
-    NSMutableArray* buttonStatesEncoded = [self convertOnScreenControllerAndButtonsToButtonStates:oscButtonLayers];
+    NSMutableArray* buttonStatesEncoded = [self convertOnScreenControllerAndWidgetsToButtonStates:oscButtonLayers];
     if([self getIndexOfSelectedProfile]==0) return false;
     OSCProfile *newProfile = [[OSCProfile alloc] initWithName:[self getSelectedProfile].name
                             buttonStates:buttonStatesEncoded isSelected:YES];        // create a new 'OSCProfile'. Set the array of encoded button states created above to the 'buttonStates' property of the new profile, along with a 'name'. Set 'isSelected' argument to YES which will set this saved profile as the one that will show up in the game stream view
@@ -258,7 +258,7 @@ static CGRect streamViewBounds;
 
 
 - (void) saveProfileWithName:(NSString*)name andButtonLayers:(NSMutableArray *)oscButtonLayers {
-    NSMutableArray* buttonStatesEncoded = [self convertOnScreenControllerAndButtonsToButtonStates:oscButtonLayers];
+    NSMutableArray* buttonStatesEncoded = [self convertOnScreenControllerAndWidgetsToButtonStates:oscButtonLayers];
     OSCProfile *newProfile = [[OSCProfile alloc] initWithName:name
                             buttonStates:buttonStatesEncoded isSelected:YES];        // create a new 'OSCProfile'. Set the array of encoded button states created above to the 'buttonStates' property of the new profile, along with a 'name'. Set 'isSelected' argument to YES which will set this saved profile as the one that will show up in the game stream view
     /* set all saved OSCProfiles 'isSelected' property to NO since the new profile you're adding will be set as the selected profile */
@@ -308,7 +308,7 @@ static CGRect streamViewBounds;
     return position;
 }
 
-- (NSMutableArray* ) convertOnScreenControllerAndButtonsToButtonStates:(NSMutableArray *) oscButtonLayers {
+- (NSMutableArray* ) convertOnScreenControllerAndWidgetsToButtonStates:(NSMutableArray *) oscButtonLayers {
     /* iterate through each OSC button the user sees on screen, create an 'OnScreenButtonState' object from each button, encode each object, and then add each object to an array */
     /*
     NSSet *validPositionButtonNames = [NSSet setWithObjects:
@@ -357,6 +357,7 @@ static CGRect streamViewBounds;
         buttonState.heightFactor = widgetView.heightFactor;
         buttonState.backgroundAlpha = widgetView.backgroundAlpha;
         buttonState.borderWidth = widgetView.borderWidth;
+        buttonState.vibrationStyle = widgetView.vibrationStyle;
         buttonState.sensitivityFactor = widgetView.sensitivityFactor;
         buttonState.stickIndicatorOffset = widgetView.stickIndicatorOffset;
         buttonState.widgetShape = widgetView.shape;

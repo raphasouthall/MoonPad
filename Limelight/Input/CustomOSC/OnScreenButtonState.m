@@ -33,6 +33,7 @@
     [encoder encodeObject:self.name forKey:@"name"];
     [encoder encodeObject:self.alias forKey:@"alias"];
     [encoder encodeInt:self.buttonType forKey:@"buttonType"];
+    [encoder encodeInt:self.vibrationStyle forKey:@"vibrationStyle"];
     [encoder encodeCGPoint:self.position forKey:@"position"];
     [encoder encodeBool:self.isHidden forKey:@"isHidden"];
     [encoder encodeFloat:self.widthFactor forKey:@"widthFactor"];
@@ -51,6 +52,7 @@
         self.name = [decoder decodeObjectForKey:@"name"];
         self.alias = [decoder decodeObjectForKey:@"alias"];
         self.buttonType = [decoder decodeIntForKey:@"buttonType"];
+        self.vibrationStyle = [decoder decodeIntForKey:@"vibrationStyle"];
         self.position = [decoder decodeCGPointForKey:@"position"];
         self.isHidden = [decoder decodeBoolForKey:@"isHidden"];
         self.widthFactor = [decoder decodeFloatForKey:@"widthFactor"];
