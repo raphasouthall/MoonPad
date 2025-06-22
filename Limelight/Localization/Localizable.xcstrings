@@ -168,7 +168,7 @@
         }
       }
     },
-    "[ Open On-Screen Widget Tool ]" : {
+    "[ Open on-screen widget tool ]" : {
       "extractionState" : "manual",
       "localizations" : {
         "zh-Hans" : {
@@ -187,6 +187,29 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "[ 打开屏显控件工具 ]"
+          }
+        }
+      }
+    },
+    "[ Switch among on-screen widget profiles ]" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "[ 切换屏显控件布局 ]"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "[ 切换屏显控件布局 ]"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "[ 切换屏显控件布局 ]"
           }
         }
       }

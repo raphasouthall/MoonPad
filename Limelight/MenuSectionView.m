@@ -321,6 +321,13 @@
 
 - (void)updateViewForFoldState {
     [self setupConstraints];
+    NSInteger visibleCount = 0;
+    for (UIView *subview in _rootStackView.arrangedSubviews) {
+        if (!subview.isHidden) {
+            visibleCount++;
+        }
+    }
+    self.hidden = visibleCount == 0;
     if (_expanded) {
         _rootStackView.hidden = NO;
         _separatorLine.hidden = NO;
