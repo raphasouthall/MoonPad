@@ -1130,14 +1130,19 @@ static NSMutableSet* hostList;
     [settingsViewController setHidden:_settingsExpandedInStreamView forStack:settingsViewController.audioOnPcStack];
     
     //settingsViewController.codecStack.hidden = self.settingsExpandedInStreamView;
-    [settingsViewController setHidden:_settingsExpandedInStreamView forStack:settingsViewController.codecStack];
+    //[settingsViewController setHidden:_settingsExpandedInStreamView forStack:settingsViewController.codecStack];
+    [settingsViewController.codecSelector setEnabled:!_settingsExpandedInStreamView];
 
     
-    //settingsViewController.yuv444Stack.hidden = self.settingsExpandedInStreamView;
-    [settingsViewController setHidden:_settingsExpandedInStreamView forStack:settingsViewController.yuv444Stack];
+    // settingsViewController.yuv444Stack.hidden = self.settingsExpandedInStreamView;
+    // [settingsViewController setHidden:_settingsExpandedInStreamView forStack:settingsViewController.yuv444Stack];
+    [settingsViewController.yuv444Switch setEnabled:!_settingsExpandedInStreamView];
+
 
     //settingsViewController.HdrStack.hidden = self.settingsExpandedInStreamView;
-    [settingsViewController setHidden:_settingsExpandedInStreamView forStack:settingsViewController.HdrStack];
+    // [settingsViewController setHidden:_settingsExpandedInStreamView forStack:settingsViewController.HdrStack];
+    [settingsViewController.hdrSwitch setEnabled:!_settingsExpandedInStreamView];
+
 
     //settingsViewController.framepacingStack.hidden = self.settingsExpandedInStreamView;
     [settingsViewController setHidden:_settingsExpandedInStreamView forStack:settingsViewController.framepacingStack];

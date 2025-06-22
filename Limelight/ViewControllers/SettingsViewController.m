@@ -931,10 +931,14 @@ BOOL isCustomResolution(CGSize res) {
     
 
 - (void)addSettingToFavorite:(UIStackView* )settingStack{
+    
+    if([_favoriteSettingStackIdentifiers containsObject:settingStack.accessibilityIdentifier]) return;
+    
     [_favoriteSettingStackIdentifiers addObject:settingStack.accessibilityIdentifier];
     for(NSString *identifier in _favoriteSettingStackIdentifiers){
         NSLog(@"favorite setting: %@", identifier);
     }
+    
     [self saveFavoriteSettingStackIdentifiers];
 }
 
