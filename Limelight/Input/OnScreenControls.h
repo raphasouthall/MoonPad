@@ -36,6 +36,8 @@ static const float BUTTON_DIST = 20;
     CGFloat _dPadSizeFactor;
 }
 
++ (NSMutableDictionary *)layerVibrationStyleDic;
+
 typedef NS_ENUM(NSInteger, OnScreenControlsLevel) {
     OnScreenControlsLevelOff,
     OnScreenControlsLevelSimple,
@@ -104,6 +106,8 @@ typedef NS_ENUM(NSInteger, OnScreenControlsLevel) {
 @property OnScreenControlsLevel _level;
 
 @property NSMutableArray *OSCButtonLayers;
+@property NSMutableDictionary* layerVibrationStyleDic;
+
 
 
 + (NSMutableSet* )touchAddrsCapturedByOnScreenControls;

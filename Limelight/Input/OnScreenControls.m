@@ -56,6 +56,8 @@ static NSSet *validPositionButtonNames;
     NSDate* l3TouchStart;
     NSDate* r3TouchStart;
     
+    UIImpactFeedbackGenerator* vibrationGenerator;
+    
     BOOL l3Set;
     BOOL r3Set;
     
@@ -219,7 +221,6 @@ static float L3_Y;
     _originalControllerLayerOpacityDict = [[NSMutableDictionary alloc] init];
     // we have to retrieve largerStickLR1 setting direct from the database, since streamConfig is invalid in LayoutOnScreenControls
     DataManager* dataMan = [[DataManager alloc] init];
-    Settings* settings = [dataMan retrieveSettings];
     _largerStickLR1 = true;
     _oscTapExlusionAreaSizeFactor = 1.05;
         
@@ -370,6 +371,7 @@ static float L3_Y;
         for (NSData *buttonStateEncoded in oscProfile.buttonStates) {
             OnScreenButtonState* buttonState = [profilesManager unarchiveButtonStateEncoded:buttonStateEncoded];
             buttonState.position = [self denormalizeWidgetPosition:buttonState.position];
+            [OnScreenControls.layerVibrationStyleDic setObject:@(buttonState.vibrationStyle) forKey:buttonState.name];
             if(!buttonState.isHidden && [validPositionButtonNames containsObject:buttonState.name] && (buttonState.buttonType == LegacyOscButton || [profilesManager getIndexOfSelectedProfile] == 0 ) ){
                 [_activeCustomOscButtonPositionDict setObject:[NSValue valueWithCGPoint:buttonState.position] forKey:buttonState.name]; // we got a buttonname -> position dict here
                 // NSLog(@"_activeCustomOscButtonPositionDict update, button name:%@,  position: %f, %f", buttonState.name, buttonState.position.x, buttonState.position.y);
@@ -1098,7 +1100,7 @@ static float L3_Y;
             // Allow the user to slide their finger to another d-pad button
             if ([_upButton.presentationLayer hitTest:touchLocation]) {
                 [_controllerSupport setButtonFlag:_controller flags:UP_FLAG];
-                [self oscButtonTouchDownVisualEffect:_upButton];
+                [self oscButtonTouchDownFeedback:_upButton];
                 updated = true;
             } else {
                 _upButton.opacity = [_originalControllerLayerOpacityDict[_upButton.name] floatValue];
@@ -1107,7 +1109,7 @@ static float L3_Y;
 
             if ([_downButton.presentationLayer hitTest:touchLocation]) {
                 [_controllerSupport setButtonFlag:_controller flags:DOWN_FLAG];
-                [self oscButtonTouchDownVisualEffect:_downButton];
+                [self oscButtonTouchDownFeedback:_downButton];
                 updated = true;
             } else {
                 _downButton.opacity = [_originalControllerLayerOpacityDict[_downButton.name] floatValue];
@@ -1116,7 +1118,7 @@ static float L3_Y;
 
             if ([_leftButton.presentationLayer hitTest:touchLocation]) {
                 [_controllerSupport setButtonFlag:_controller flags:LEFT_FLAG];
-                [self oscButtonTouchDownVisualEffect:_leftButton];
+                [self oscButtonTouchDownFeedback:_leftButton];
                 updated = true;
             } else {
                 _leftButton.opacity = [_originalControllerLayerOpacityDict[_leftButton.name] floatValue];
@@ -1125,7 +1127,7 @@ static float L3_Y;
             
             if ([_rightButton.presentationLayer hitTest:touchLocation]) {
                 [_controllerSupport setButtonFlag:_controller flags:RIGHT_FLAG];
-                [self oscButtonTouchDownVisualEffect:_rightButton];
+                [self oscButtonTouchDownFeedback:_rightButton];
                 updated = true;
             } else {
                 _rightButton.opacity = [_originalControllerLayerOpacityDict[_rightButton.name] floatValue];
@@ -1172,7 +1174,7 @@ static float L3_Y;
 }
 
 
-- (void)oscButtonTouchDownVisualEffect:(CALayer* )button{
+- (void)oscButtonTouchDownFeedback:(CALayer* )button{
     [CATransaction begin];
     [CATransaction setDisableActions:YES]; 
     
@@ -1200,6 +1202,26 @@ static float L3_Y;
     button.shadowOffset = CGSizeZero;
     button.shadowOpacity = 1.0;
     button.shadowRadius = 0.0; // Adjust the radius to simulate border thickness
+    
+    NSNumber *style = [OnScreenControls.layerVibrationStyleDic objectForKey:button.name];
+    uint8_t vibrationStyle = [style unsignedCharValue];
+    
+    bool vibraiontOn;
+    if (@available(iOS 13.0, *)) {
+        vibraiontOn = vibrationStyle < UIImpactFeedbackStyleRigid+1;
+    } else {
+        vibraiontOn = vibrationStyle < UIImpactFeedbackStyleHeavy+1;
+    }
+    // NSLog(@"vibration on: %d",vibraiontOn);
+
+    if(vibraiontOn){
+        vibrationGenerator = [[UIImpactFeedbackGenerator alloc] initWithStyle:vibrationStyle];
+        [vibrationGenerator prepare];
+        [vibrationGenerator impactOccurred];
+        NSLog(@"vibration instance: %@",vibrationGenerator);
+    }
+
+    
     [CATransaction commit];
 }
 
@@ -1217,28 +1239,28 @@ static float L3_Y;
         if ([_aButton.presentationLayer hitTest:touchLocation]) {
             [_controllerSupport setButtonFlag:_controller flags:A_FLAG];
             _aTouch = touch;
-            [self oscButtonTouchDownVisualEffect:_aButton];
+            [self oscButtonTouchDownFeedback:_aButton];
             updated = true;
             touchEventCapturedByOsc = true;
             // NSLog(@"Captured OSC A");
         } else if ([_bButton.presentationLayer hitTest:touchLocation]) {
             [_controllerSupport setButtonFlag:_controller flags:B_FLAG];
             _bTouch = touch;
-            [self oscButtonTouchDownVisualEffect:_bButton];
+            [self oscButtonTouchDownFeedback:_bButton];
             updated = true;
             touchEventCapturedByOsc = true;
             // NSLog(@"Captured OSC B");
         } else if ([_xButton.presentationLayer hitTest:touchLocation]) {
             [_controllerSupport setButtonFlag:_controller flags:X_FLAG];
             _xTouch = touch;
-            [self oscButtonTouchDownVisualEffect:_xButton];
+            [self oscButtonTouchDownFeedback:_xButton];
             updated = true;
             touchEventCapturedByOsc = true;
             // NSLog(@"Captured OSC X");
         } else if ([_yButton.presentationLayer hitTest:touchLocation]) {
             [_controllerSupport setButtonFlag:_controller flags:Y_FLAG];
             _yTouch = touch;
-            [self oscButtonTouchDownVisualEffect:_yButton];
+            [self oscButtonTouchDownFeedback:_yButton];
             updated = true;
             touchEventCapturedByOsc = true;
             // NSLog(@"Captured OSC Y");
@@ -1246,7 +1268,7 @@ static float L3_Y;
             [_controllerSupport setButtonFlag:_controller flags:UP_FLAG];
             _dpadTouch = touch;
             _upTouch = touch;
-            [self oscButtonTouchDownVisualEffect:_upButton];
+            [self oscButtonTouchDownFeedback:_upButton];
             updated = true;
             touchEventCapturedByOsc = true;
             // NSLog(@"Captured OSC UP");
@@ -1254,14 +1276,14 @@ static float L3_Y;
             [_controllerSupport setButtonFlag:_controller flags:DOWN_FLAG];
             _dpadTouch = touch;
             _downTouch = touch;
-            [self oscButtonTouchDownVisualEffect:_downButton];
+            [self oscButtonTouchDownFeedback:_downButton];
             updated = true;
             touchEventCapturedByOsc = true;
         } else if ([_leftButton.presentationLayer hitTest:touchLocation]) {
             [_controllerSupport setButtonFlag:_controller flags:LEFT_FLAG];
             _dpadTouch = touch;
             _leftTouch = touch;
-            [self oscButtonTouchDownVisualEffect:_leftButton];
+            [self oscButtonTouchDownFeedback:_leftButton];
             updated = true;
             touchEventCapturedByOsc = true;
             // NSLog(@"Captured OSC LEFT");
@@ -1269,49 +1291,49 @@ static float L3_Y;
             [_controllerSupport setButtonFlag:_controller flags:RIGHT_FLAG];
             _dpadTouch = touch;
             _rightTouch = touch;
-            [self oscButtonTouchDownVisualEffect:_rightButton];
+            [self oscButtonTouchDownFeedback:_rightButton];
             updated = true;
             touchEventCapturedByOsc = true;
             // NSLog(@"Captured OSC RIGHT");
         } else if ([_startButton.presentationLayer hitTest:touchLocation]) {
             [_controllerSupport setButtonFlag:_controller flags:PLAY_FLAG];
             _startTouch = touch;
-            [self oscButtonTouchDownVisualEffect:_startButton];
+            [self oscButtonTouchDownFeedback:_startButton];
             updated = true;
             touchEventCapturedByOsc = true;
             // NSLog(@"Captured OSC PLAY");
         } else if ([_selectButton.presentationLayer hitTest:touchLocation]) {
             [_controllerSupport setButtonFlag:_controller flags:BACK_FLAG];
             _selectTouch = touch;
-            [self oscButtonTouchDownVisualEffect:_selectButton];
+            [self oscButtonTouchDownFeedback:_selectButton];
             updated = true;
             touchEventCapturedByOsc = true;
             // NSLog(@"Captured OSC BACK");
         } else if ([_l1Button.presentationLayer hitTest:touchLocation]) {
             [_controllerSupport setButtonFlag:_controller flags:LB_FLAG];
             _l1Touch = touch;
-            [self oscButtonTouchDownVisualEffect:_l1Button];
+            [self oscButtonTouchDownFeedback:_l1Button];
             updated = true;
             touchEventCapturedByOsc = true;
             // NSLog(@"Captured OSC LB");
         } else if ([_r1Button.presentationLayer hitTest:touchLocation]) {
             [_controllerSupport setButtonFlag:_controller flags:RB_FLAG];
             _r1Touch = touch;
-            [self oscButtonTouchDownVisualEffect:_r1Button];
+            [self oscButtonTouchDownFeedback:_r1Button];
             updated = true;
             touchEventCapturedByOsc = true;
             // NSLog(@"Captured OSC RB");
         } else if ([_l2Button.presentationLayer hitTest:touchLocation]) {
             [_controllerSupport updateLeftTrigger:_controller left:0xFF];
             _l2Touch = touch;
-            [self oscButtonTouchDownVisualEffect:_l2Button];
+            [self oscButtonTouchDownFeedback:_l2Button];
             updated = true;
             touchEventCapturedByOsc = true;
             // NSLog(@"Captured OSC LeftTrigger");
         } else if ([_r2Button.presentationLayer hitTest:touchLocation]) {
             [_controllerSupport updateRightTrigger:_controller right:0xFF];
             _r2Touch = touch;
-            [self oscButtonTouchDownVisualEffect:_r2Button];
+            [self oscButtonTouchDownFeedback:_r2Button];
             updated = true;
             touchEventCapturedByOsc = true;
             // NSLog(@"Captured OSC RightTrigger");
@@ -1351,7 +1373,7 @@ static float L3_Y;
                 double l3TouchTime = [l3TouchStart timeIntervalSinceNow] * -1000.0;
                 if (l3TouchTime < STICK_CLICK_RATE) {
                     [_controllerSupport setButtonFlag:_controller flags:LS_CLK_FLAG];
-                    [self oscButtonTouchDownVisualEffect:_leftStick];
+                    [self oscButtonTouchDownFeedback:_leftStick];
                     updated = true;
                     touchEventCapturedByOsc = true;
                     // NSLog(@"Captured OSC LS_CLK3");
@@ -1369,7 +1391,7 @@ static float L3_Y;
                 double r3TouchTime = [r3TouchStart timeIntervalSinceNow] * -1000.0;
                 if (r3TouchTime < STICK_CLICK_RATE) {
                     [_controllerSupport setButtonFlag:_controller flags:RS_CLK_FLAG];
-                    [self oscButtonTouchDownVisualEffect:_rightStick];
+                    [self oscButtonTouchDownFeedback:_rightStick];
                     updated = true;
                     touchEventCapturedByOsc = true;
                     // NSLog(@"Captured OSC LS_CLK4");
@@ -1944,6 +1966,15 @@ static float L3_Y;
         self._leftStick.opacity = targetAlpha;
         self._leftStickBackground.opacity = targetAlpha + 1.0f/6.0f;
     }
+}
+
++ (NSMutableDictionary *)layerVibrationStyleDic{
+    static NSMutableDictionary *dict = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        dict = [NSMutableDictionary dictionary];
+    });
+    return dict;
 }
 
 

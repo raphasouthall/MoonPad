@@ -875,6 +875,8 @@ const int FrontViewPositionNone = 0xff;
     
     _separatorLine.hidden = _frontViewPosition == FrontViewPositionLeft;
     
+    _contentView.rearNavView.hidden = _frontViewPosition == FrontViewPositionLeft;
+    
     if(_frontViewPosition == FrontViewPositionLeft && currentMenuMode == RemoveSettingItem){
         [self doneRemoveSettingItemSelected];
     }
@@ -2024,7 +2026,7 @@ const int FrontViewPositionNone = 0xff;
         (newPosition >= FrontViewPositionRightMostRemoved || newPosition <= FrontViewPositionLeftSideMostRemoved ) &&
         (_frontViewPosition < FrontViewPositionRightMostRemoved && _frontViewPosition > FrontViewPositionLeftSideMostRemoved && _frontViewPosition != FrontViewPositionNone);
     
-    if ( positionIsChanging )
+    if(positionIsChanging)
     {
         if ( [_delegate respondsToSelector:@selector(revealController:willMoveToPosition:)] )
             [_delegate revealController:self willMoveToPosition:newPosition];

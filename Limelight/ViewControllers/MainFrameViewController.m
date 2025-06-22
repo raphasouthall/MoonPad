@@ -1295,7 +1295,7 @@ static NSMutableSet* hostList;
         [button setImage:image forState:UIControlStateNormal];
         [button setTitle:[LocalizationHelper localizedStringForKey:@" Add Host"] forState:UIControlStateNormal]; // 注意空格用于间隔
     } else {
-        [button setTitle:@"Add Host" forState:UIControlStateNormal]; // 注意空格用于间隔
+        [button setTitle:[LocalizationHelper localizedStringForKey:@"Add Host"] forState:UIControlStateNormal]; // 注意空格用于间隔
     }
     // [button setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
 
@@ -1335,7 +1335,7 @@ static NSMutableSet* hostList;
         [button setImage:image forState:UIControlStateNormal];
         [button setTitle:@"" forState:UIControlStateNormal]; // 注意空格用于间隔
     } else {
-        [button setTitle:@"Help" forState:UIControlStateNormal]; // 注意空格用于间隔
+        [button setTitle:[LocalizationHelper localizedStringForKey:@"About"] forState:UIControlStateNormal]; // 注意空格用于间隔
     }
     // [button setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
 

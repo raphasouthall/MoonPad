@@ -37,6 +37,7 @@
     BOOL widgetPanelMovedByTouch;
     CGPoint widgetPanelStoredCenter;
     CGPoint latestTouchLocation;
+    UIImpactFeedbackGenerator *vibrationGenerator;
 }
 
 @synthesize trashCanButton;
@@ -225,6 +226,8 @@
     self.toolbarRootView.layer.shadowOffset = CGSizeMake(0, 0);
     self.toolbarRootView.layer.shadowOpacity = 0.5;
     self.toolbarRootView.layer.shadowRadius = 7;
+    
+    vibrationGenerator = [[UIImpactFeedbackGenerator alloc] initWithStyle:UIImpactFeedbackStyleMedium];
 }
 
 
@@ -561,6 +564,7 @@
     newWidget.sensitivityFactor = widget.sensitivityFactor;
     newWidget.stickIndicatorOffset = widget.stickIndicatorOffset;
     newWidget.minStickOffset = [widgetInitParams[@"minStickOffsetString"] floatValue];
+    [newWidget setVibrationWithStyle:widget.vibrationStyle];
     // Add the widgetView to the view controller's view
     [self.view insertSubview:newWidget belowSubview:self.widgetPanelStack];
 
@@ -569,6 +573,7 @@
     [newWidget resizeWidgetView]; // resize must be called after relocation
     [newWidget adjustTransparencyWithAlpha:widget.backgroundAlpha];
     [newWidget adjustBorderWithWidth:widget.borderWidth];
+    [newWidget setVibrationWithStyle:widget.vibrationStyle];
     [self.OnScreenWidgetViews addObject:newWidget];
     self->selectedWidgetView = newWidget;
     if(!createNew){
@@ -589,6 +594,7 @@
     [self.view insertSubview:widgetView belowSubview:self.widgetPanelStack];
     [widgetView setLocationWithPosition:CGPointMake(90, 130)];
     [widgetView resizeWidgetView];
+    [widgetView setVibrationWithStyle:UIImpactFeedbackStyleLight];
 }
 
 
@@ -667,7 +673,6 @@
     [self.widgetBorderWidthLabel setText:[LocalizationHelper localizedStringForKey:@"Border Width: %.2f", self->selectedWidgetView.borderWidth]];
     if([self isIPhone]){
         self.vibrationStyleSelector.selectedSegmentIndex = self->selectedWidgetView.vibrationStyle;
-        //[self->selectedWidgetView setva]
     }
 }
 
@@ -696,6 +701,10 @@
     [self.widgetSizeLabel setText:[LocalizationHelper localizedStringForKey:@"Size: %.2f", sizeFactor]];
     [self.widgetHeightLabel setText:[LocalizationHelper localizedStringForKey:@"Height: %.2f", sizeFactor]];
     [self.widgetAlphaLabel setText:[LocalizationHelper localizedStringForKey:@"Alpha: %.2f", alpha]];
+    if([self isIPhone]){
+        NSNumber *style = [OnScreenControls.layerVibrationStyleDic objectForKey:selectedControllerLayer.name];
+        self.vibrationStyleSelector.selectedSegmentIndex = [style unsignedCharValue];
+    }
 }
 
 - (void)widgetSizeSliderMoved:(UISlider* )sender{
@@ -745,8 +754,23 @@
 }
 
 - (void)vibrationStyleChanged:(UISegmentedControl* )sender{
+    bool vibraiontOn;
+    if (@available(iOS 13.0, *)) {
+        vibraiontOn = sender.selectedSegmentIndex < UIImpactFeedbackStyleRigid+1;
+    } else {
+        vibraiontOn = sender.selectedSegmentIndex < UIImpactFeedbackStyleHeavy+1;
+    }
+    if(vibraiontOn){
+        vibrationGenerator = [[UIImpactFeedbackGenerator alloc] initWithStyle:sender.selectedSegmentIndex];
+        [vibrationGenerator prepare];
+        [vibrationGenerator impactOccurred];
+        NSLog(@"vibration instance: %@", vibrationGenerator);
+    }
     if(self->selectedWidgetView != nil && self->widgetViewSelected){
         [self->selectedWidgetView setVibrationWithStyle:sender.selectedSegmentIndex];
+    }
+    if(self->selectedControllerLayer != nil && self->controllerLayerSelected){
+        [OnScreenControls.layerVibrationStyleDic setObject:@(sender.selectedSegmentIndex) forKey:self->selectedControllerLayer.name];
     }
 }
 
@@ -848,6 +872,11 @@
     if([self isIPhone]){
         [self.vibrationStyleSelector addTarget:self action:@selector(vibrationStyleChanged:) forControlEvents:(UIControlEventValueChanged)];
         self.vibrationStyleStack.hidden = NO;
+        NSDictionary *normalAttributes = @{
+            NSForegroundColorAttributeName: [UIColor whiteColor]
+        };
+        [self.vibrationStyleSelector setTitleTextAttributes:normalAttributes forState:UIControlStateNormal];
+
     }
     
     [self.view bringSubviewToFront:self.toolbarRootView];
@@ -875,6 +904,12 @@
         maskLayer.path = path.CGPath;
 
         self.widgetPanelStack.layer.mask = maskLayer;
+        
+        if (@available(iOS 13.0, *) && self.vibrationStyleSelector.numberOfSegments == 6) {
+        } else {
+            [self.vibrationStyleSelector removeSegmentAtIndex:3 animated:NO];
+            [self.vibrationStyleSelector removeSegmentAtIndex:3 animated:NO];
+        }
     }
 }
 

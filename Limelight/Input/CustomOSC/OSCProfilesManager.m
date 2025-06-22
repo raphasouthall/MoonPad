@@ -337,6 +337,14 @@ static CGRect streamViewBounds;
         buttonState.isHidden = oscButtonLayer.isHidden;
         buttonState.oscLayerSizeFactor = [OnScreenControls getControllerLayerSizeFactor:oscButtonLayer];
         buttonState.backgroundAlpha = oscButtonLayer.opacity;
+        
+        NSNumber *style = [OnScreenControls.layerVibrationStyleDic objectForKey:oscButtonLayer.name];
+        if ([style isKindOfClass:[NSNumber class]]) {
+            buttonState.vibrationStyle = [style unsignedCharValue];
+            // 使用 val
+        }
+        else buttonState.vibrationStyle = UIImpactFeedbackStyleLight;
+
         // NSLog(@"oscLayerName: %@, opacity: %f, ", oscButtonLayer.name, buttonState.backgroundAlpha);
 
         

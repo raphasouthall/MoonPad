@@ -415,22 +415,6 @@ BOOL isCustomResolution(CGSize res) {
     label1.hidden = NO;
 }
 
-- (void)updateThemeForLabelsttt:(UIView *)view {
-    for (UIView *subview in view.subviews) {
-        if ([subview isKindOfClass:[UILabel class]]) {
-            UILabel *label = (UILabel *)subview;
-            if(label.accessibilityIdentifier != nil) break;
-            if (@available(iOS 13.0, *)) {
-                label.layer.filters = nil;
-                label.textColor = [ThemeManager textColor];
-            } else {
-                // Fallback on earlier versions
-            }
-        }
-        [self updateThemeForLabels:subview];
-    }
-}
-
 - (UIView *)findCommonSuperViewFor:(UIView *)view1 andView:(UIView *)view2 {
     if (!view1 || !view2) return nil;
     // 把 view1 的所有 superview 放入集合
@@ -845,7 +829,7 @@ BOOL isCustomResolution(CGSize res) {
         [self addSettingToFavorite:self->capturedStack];
         self->capturedStack.backgroundColor = [UIColor clearColor];
     }];
-    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@""
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:[self isIPhone] ? [LocalizationHelper localizedStringForKey:@"Cancel"] : @""
                                                             style:UIAlertActionStyleCancel
                                                           handler:^(UIAlertAction * _Nonnull action) {
         self->capturedStack.backgroundColor = [UIColor clearColor];
@@ -952,7 +936,7 @@ BOOL isCustomResolution(CGSize res) {
         UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithPointSize:16 weight:UIImageSymbolWeightMedium];
         [button setImage:[UIImage systemImageNamed:@"minus.circle" withConfiguration:config] forState:UIControlStateNormal];
     } else {
-        [button setTitle:@"Remove" forState:UIControlStateNormal];
+        [button setTitle:[LocalizationHelper localizedStringForKey:@"Remove"] forState:UIControlStateNormal];
     }
     button.accessibilityIdentifier = @"removeButton";
     button.translatesAutoresizingMaskIntoConstraints = NO;
