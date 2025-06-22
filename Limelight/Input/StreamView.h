@@ -18,12 +18,12 @@
 
 @protocol UserInteractionDelegate <NSObject>
 
-- (void) userInteractionBegan;
-- (void) userInteractionEnded;
-- (void) streamExitRequested;
-- (void) toggleStatsOverlay;
-- (void) localMousePointerMode;
-- (void) toggleMouseVisible;
+- (void)userInteractionBegan;
+- (void)userInteractionEnded;
+- (void)streamExitRequested;
+- (void)toggleStatsOverlay;
+- (void)localMousePointerMode;
+- (void)toggleMouseVisible;
 
 @end
 
@@ -56,6 +56,10 @@
 - (uint16_t)getRotationFromAzimuthAngle:(float)azimuthAngle;
 
 - (OnScreenControlsLevel) getCurrentOscState;
+
+- (void)keyboardWillShow:(NSNotification *)notification;
+- (void)keyboardWillHide;
+
 
 #if !TARGET_OS_TV
 - (void) updateCursorLocation:(CGPoint)location isMouse:(BOOL)isMouse;

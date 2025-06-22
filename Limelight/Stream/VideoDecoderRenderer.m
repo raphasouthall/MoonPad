@@ -79,6 +79,7 @@ extern int ff_isom_write_av1c(AVIOContext *pb, const uint8_t *buf, int size,
 
 - (id)initWithView:(StreamView*)view callbacks:(id<ConnectionCallbacks>)callbacks streamAspectRatio:(float)aspectRatio useFramePacing:(BOOL)useFramePacing
 {
+    NSLog(@"initializing video decoder %f", CACurrentMediaTime());
     self = [super init];
     
     _view = view;
@@ -145,8 +146,8 @@ int DrSubmitDecodeUnit(PDECODE_UNIT decodeUnit);
     }
 }
 
-- (void)stop
-{
+- (void)stop{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     [_displayLink invalidate];
 }
 

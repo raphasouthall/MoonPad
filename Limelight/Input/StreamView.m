@@ -104,15 +104,7 @@ static const double X1_MOUSE_SPEED_DIVISOR = 2.5;
     keyboardToggleRecognizer.tapDownTimeThreshold = 0.2; // tap down time threshold in seconds.
     keyboardToggleRecognizer.delaysTouchesBegan = NO;
     keyboardToggleRecognizer.delaysTouchesEnded = NO;
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(keyboardWillShow:)
-                                                 name:UIKeyboardWillShowNotification
-                                               object:nil];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(keyboardWillHide:)
-                                                 name:UIKeyboardWillHideNotification
-                                               object:nil];
+    NSLog(@"setup streamView %f", CACurrentMediaTime());
     
     // if(settings.touchMode.intValue == NativeTouchOnly) [self addGestureRecognizer:keyboardToggleRecognizer]; //keep legacy approach in pure native mode
     // else [self->streamFrameTopLayerView addGestureRecognizer:keyboardToggleRecognizer]; //add to the superview in other modes
@@ -233,11 +225,11 @@ static const double X1_MOUSE_SPEED_DIVISOR = 2.5;
         self.frame = liftedStreamFrame;
         isInputingText = true;
     }
-    // NSLog(@"keyboard will show");
+    NSLog(@"keyboard will show %f", CACurrentMediaTime());
 }
 
 // this method also deals with recovering streamview when local keyboard is turned off
-- (void)keyboardWillHide:(NSNotification *)notification{
+- (void)keyboardWillHide{
     
     if(isInputingText){
         CGRect liftedStreamFrame = self.frame;
@@ -246,7 +238,6 @@ static const double X1_MOUSE_SPEED_DIVISOR = 2.5;
         self.frame = liftedStreamFrame;
         isInputingText = false;
     }
-    // NSLog(@"keyboard will hide");
 }
 
 

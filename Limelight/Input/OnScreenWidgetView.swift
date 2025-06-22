@@ -19,6 +19,12 @@ import UIKit
         }
     }
     
+    @objc protocol OnScreenWidgetGuidelineUpdateDelegate: AnyObject {
+        func updateGuidelinesForOnScreenWidget(_ sender: Any)
+    }
+    @objc public weak var guidelineDelegate: OnScreenWidgetGuidelineUpdateDelegate?
+
+    
     enum WidgetTypeEnum: UInt8 {
         case uninitialized = 0
         case button = 1
@@ -1079,7 +1085,7 @@ import UIKit
         // center = currentLocation;
         //NSLog("x coord: %f, y coord: %f", self.frame.origin.x, self.frame.origin.y)
         if OnScreenWidgetView.editMode {
-            NotificationCenter.default.post(name: Notification.Name("OnScreenWidgetMovedByTouch"), object:self) // inform the layoutOnScreenControl to update guideLines for this widget view
+            guidelineDelegate?.updateGuidelinesForOnScreenWidget(self)
         }
     }
     

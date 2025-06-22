@@ -32,11 +32,6 @@
 
 
 - (id) initWithView:(UIView*)view controllerSup:(ControllerSupport*)controllerSupport streamConfig:(StreamConfiguration*)streamConfig oscLevel:(int)oscLevel {
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(handleMovingOnScreenWidgetNotification:)
-                                                 name:@"OnScreenWidgetMovedByTouch"
-                                               object:nil];
-
     
     _view = view;
     _view.multipleTouchEnabled = false;
@@ -121,12 +116,7 @@
     [self._view addSubview: verticalGuideline];
 }
 
-- (void) handleMovingOnScreenWidgetNotification: (NSNotification *)notification{
-    OnScreenWidgetView* widget = notification.object;
-    [self updateGuidelinesForOnScreenWidget:widget];
-}
-
-- (void) updateGuidelinesForOnScreenWidget: (OnScreenWidgetView* )widget{
+- (void)updateGuidelinesForOnScreenWidget:(OnScreenWidgetView* )widget{
     /* have guidelines follow wherever the user is touching on the screen */
     horizontalGuideline.hidden = verticalGuideline.hidden = NO;
     horizontalGuideline.center = verticalGuideline.center = CGPointMake(CGRectGetMidX(widget.frame), CGRectGetMidY(widget.frame));
@@ -347,7 +337,6 @@
     horizontalGuideline.backgroundColor = [UIColor blueColor];
     verticalGuideline.backgroundColor = [UIColor blueColor];
 }
-
 
 
 @end

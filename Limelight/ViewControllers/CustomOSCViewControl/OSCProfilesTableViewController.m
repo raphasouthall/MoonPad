@@ -43,8 +43,8 @@ const double NAV_BAR_HEIGHT = 50;
 }
 
 - (void) viewDidDisappear:(BOOL)animated{
-    [super viewWillDisappear:animated];
     [[NSNotificationCenter defaultCenter] postNotificationName:@"OscLayoutTableViewCloseNotification" object:self]; // notify other view that oscLayoutManager is closing
+    [super viewDidDisappear:animated];
 }
 
 

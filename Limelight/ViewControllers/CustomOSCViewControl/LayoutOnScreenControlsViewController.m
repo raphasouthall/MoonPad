@@ -79,6 +79,7 @@
 }
 
 - (void) reloadOnScreenWidgetViews {
+    NSLog(@"reloadOnScreenWidgets %f", CACurrentMediaTime());
     OnScreenWidgetView.editMode = true;
     [self->selectedWidgetView.stickBallLayer removeFromSuperlayer];
     [self->selectedWidgetView.crossMarkLayer removeFromSuperlayer];
@@ -101,6 +102,7 @@
         OnScreenButtonState* buttonState = [profilesManager unarchiveButtonStateEncoded:buttonStateEncoded];
         if(buttonState.buttonType == CustomOnScreenWidget){
             OnScreenWidgetView* widgetView = [[OnScreenWidgetView alloc] initWithCmdString:buttonState.name buttonLabel:buttonState.alias shape:buttonState.widgetShape]; //reconstruct widgetView
+            widgetView.guidelineDelegate = (id<OnScreenWidgetGuidelineUpdateDelegate>)self;
             widgetView.translatesAutoresizingMaskIntoConstraints = NO; // weird but this is mandatory, or you will find no key views added to the right place
             widgetView.widthFactor = buttonState.widthFactor;
             widgetView.heightFactor = buttonState.heightFactor;
@@ -166,38 +168,7 @@
     if (![profilesManager profileName:DEFAULT_TEMPLATE_NAME alreadyExistIn:allProfiles]){
         [profilesManager importDefaultTemplates];
     }
-    
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(legacyOscLayerTapped:)
-                                                 name:@"LegacyOscCALayerSelectedNotification"
-                                               object:nil];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(handleProfileTablViewDismiss)
-                                                 name:@"OscLayoutTableViewCloseNotification"
-                                               object:nil];
-    
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(reloadOnScreenWidgetViews)
-                                                 name:@"OscLayoutProfileSelctedInTableView"   // This is a special notification for reloading the on screen keyboard buttons. which can't be executed by _oscProfilesTableViewController.needToUpdateOscLayoutTVC code block, and has to be triggered by a notification
-                                               object:nil];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(widgetViewTapped:)
-                                                 name:@"OnScreenWidgetViewSelected"
-                                               object:nil];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(handleMovingOnScreenWidgetNotification:)
-                                                 name:@"OnScreenWidgetMovedByTouch"
-                                               object:nil];
-    
-    
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(OSCLayoutChanged) name:@"OSCLayoutChanged" object:nil];    // used to notifiy this view controller that the user made a change to the OSC layout so that the VC can either fade in or out its 'Undo button' which will signify to the user whether there are any OSC layout changes to undo
-    
+        
     /* This will animate the toolbar with a subtle up and down motion intended to telegraph to the user that they can hide the toolbar if they wish*/
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         
@@ -230,15 +201,42 @@
     vibrationGenerator = [[UIImpactFeedbackGenerator alloc] initWithStyle:UIImpactFeedbackStyleMedium];
 }
 
+- (void)viewDidDisappear:(BOOL)animated{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
 
-- (void) viewDidAppear:(BOOL)animated {
+- (void)viewDidAppear:(BOOL)animated {
     OnScreenWidgetView.editMode = true;
     selectedWidgetView = nil;
     widgetPanelStoredCenter = self.widgetPanelStack.center;
     [super viewDidAppear:animated];
 }
 
-- (void) viewWillAppear:(BOOL)animated{
+- (void)viewWillAppear:(BOOL)animated{
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(legacyOscLayerTapped:)
+                                                 name:@"LegacyOscCALayerSelectedNotification"
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(handleProfileTablViewDismiss)
+                                                 name:@"OscLayoutTableViewCloseNotification"
+                                               object:nil];
+    
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(reloadOnScreenWidgetViews)
+                                                 name:@"OscLayoutProfileSelctedInTableView"   // This is a special notification for reloading the on screen keyboard buttons. which can't be executed by _oscProfilesTableViewController.needToUpdateOscLayoutTVC code block, and has to be triggered by a notification
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(widgetViewTapped:)
+                                                 name:@"OnScreenWidgetViewSelected"
+                                               object:nil];
+        
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(OSCLayoutChanged) name:@"OSCLayoutChanged" object:nil];    // used to notifiy this view controller that the user made a change to the OSC layout so that the VC can either fade in or out its 'Undo button' which will signify to the user whether there are any OSC layout changes to undo
+
     OnScreenWidgetView.editMode = true;
     [self handleMissingToolBarIcon:toolbarRootView];
     [self profileRefresh];
@@ -830,8 +828,7 @@
 
 
 - (void)setupWidgetPanel{
-    //[self handleMissingToolBarIcon];
-    self.widgetPanelStack.hidden = NO;
+    self.widgetPanelStack.hidden = _quickSwitchEnabled;
     self.loadConfigTipLabel.hidden = NO;
 
     self.widgetPanelStack.layoutMargins = UIEdgeInsetsMake(10, 10, 10, 10);
@@ -1020,13 +1017,13 @@
 
 #pragma mark - Touch
 
-- (void) handleMovingOnScreenWidgetNotification: (NSNotification *)notification{
-    OnScreenWidgetView* widget = notification.object;
+- (void)updateGuidelinesForOnScreenWidget:(id)sender{
+    OnScreenWidgetView* widget = (OnScreenWidgetView* )sender;
+    [self.layoutOSC updateGuidelinesForOnScreenWidget:widget];
     [self.view bringSubviewToFront:widget];
     trashCanButton.tintColor = [self layerOverlapWithTrashcanButton:widget.layer] ? [UIColor redColor] : trashCanStoryBoardColor;
     self.undoButton.alpha = 1.0;
 }
-
 
 - (BOOL) widgetPanelTouched:(UITouch *)touch{
     CGPoint touchPoint = [touch locationInView:_widgetPanelStack];

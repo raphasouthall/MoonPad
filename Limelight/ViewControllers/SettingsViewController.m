@@ -305,18 +305,6 @@ BOOL isCustomResolution(CGSize res) {
 }
 
 
-- (void)deviceOrientationDidChange{
-    double delayInSeconds = 1.0;
-    // Convert the delay into a dispatch_time_t value
-    dispatch_time_t delayTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
-    // Perform some task after the delay
-    dispatch_after(delayTime, dispatch_get_main_queue(), ^{
-        // Code to execute after the delay
-        // [self updateResolutionTable];
-        // since we have viewWillTransitionToSize being called back both when orientation changed & app window size changed, resoltion update is dprecated here
-    });
-}
-
 - (void)viewDidDisappear:(BOOL)animated{
     [super viewDidDisappear:NO];
     [[NSNotificationCenter defaultCenter] postNotificationName:@"SettingsViewClosedNotification" object:self]; // notify other view that settings view just closed
@@ -1174,10 +1162,6 @@ BOOL isCustomResolution(CGSize res) {
     [self.view addGestureRecognizer:slideToCloseSettingsViewRecognizer];
 
     justEnteredSettingsViewDoNotOpenOscLayoutTool = true;
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(deviceOrientationDidChange) // handle orientation change since i made portrait mode available
-                                                 name:UIDeviceOrientationDidChangeNotification
-                                               object:nil];
 
     // Always run settings in dark mode because we want the light fonts
     if (@available(iOS 13.0, tvOS 13.0, *)) {
@@ -1411,7 +1395,7 @@ BOOL isCustomResolution(CGSize res) {
 
     // init CustomOSC stuff
     /* sets a reference to the correct 'LayoutOnScreenControlsViewController' depending on whether the user is on an iPhone or iPad */
-    self.layoutOnScreenControlsVC = [[LayoutOnScreenControlsViewController alloc] init];
+    // self.layoutOnScreenControlsVC = [[LayoutOnScreenControlsViewController alloc] init];
     BOOL isIPhone = ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPhone);
     if (isIPhone) {
         UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"iPhone" bundle:nil];

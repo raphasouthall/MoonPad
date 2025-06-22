@@ -107,7 +107,7 @@
         
         [self.view addGestureRecognizer:_oscLayoutTapRecoginizer]; //
         /* sets a reference to the correct 'LayoutOnScreenControlsViewController' depending on whether the user is on an iPhone or iPad */
-        _layoutOnScreenControlsVC = [[LayoutOnScreenControlsViewController alloc] init];
+        // _layoutOnScreenControlsVC = [[LayoutOnScreenControlsViewController alloc] init];
         BOOL isIPhone = ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPhone);
         if (isIPhone) {
             UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"iPhone" bundle:nil];
@@ -267,6 +267,17 @@
                                              selector:@selector(expandSettingsView) // //force expand settings view to update resolution table, and all setting includes current fullscreen resolution will be updated.
                                                  name:@"SettingsOverlayButtonPressedNotification"
                                                object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWillShow:)
+                                                 name:UIKeyboardWillShowNotification
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWillHide)
+                                                 name:UIKeyboardWillHideNotification
+                                               object:nil];
+    
     #endif
 }
 
@@ -433,12 +444,12 @@
                                                  name:UIApplicationWillResignActiveNotification
                                                object:nil];
     
-    [[NSNotificationCenter defaultCenter] addObserver: self
+    [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector: @selector(applicationDidBecomeActive:)
                                                  name: UIApplicationDidBecomeActiveNotification
                                                object: nil];
     
-    [[NSNotificationCenter defaultCenter] addObserver: self
+    [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector: @selector(applicationDidEnterBackground:)
                                                  name: UIApplicationDidEnterBackgroundNotification
                                                object: nil];
@@ -467,6 +478,15 @@
     [self.view addSubview:_spinner];
     [self.view addSubview:_tipLabel];
 }
+
+- (void)keyboardWillShow:(NSNotification *)notification{
+    [_streamView keyboardWillShow:notification];
+}
+
+- (void)keyboardWillHide{
+    [_streamView keyboardWillHide];
+}
+
 
 - (void)openWidgetLayoutTool{
     [self->_streamView disableOnScreenControls];
