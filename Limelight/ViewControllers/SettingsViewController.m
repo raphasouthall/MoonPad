@@ -527,10 +527,6 @@ BOOL isCustomResolution(CGSize res) {
     [touchControlSection setExpanded:YES];
 
     
-    
-    
-    
-    
     MenuSectionView *gesturesSection = [[MenuSectionView alloc] init];
     gesturesSection.delegate = self;
     gesturesSection.sectionTitle = [LocalizationHelper localizedStringForKey:@"Gestures"];
@@ -559,6 +555,19 @@ BOOL isCustomResolution(CGSize res) {
     [peripheralSection setExpanded:YES];
 
     
+    
+    MenuSectionView *audioSection = [[MenuSectionView alloc] init];
+    audioSection.delegate = self;
+    audioSection.sectionTitle = [LocalizationHelper localizedStringForKey:@"Audio"];
+    if (@available(iOS 13.0, *)) {
+        [audioSection setSectionWithIcon:[UIImage systemImageNamed:@"speaker.wave.2"] andSize:23];
+    }
+    
+    [self addSetting:self.audioOnPcStack ofId:@"audioOnPcStack" withInfoTag:NO withDynamicLabel:NO to:audioSection];
+    [audioSection addToParentStack:_parentStack];
+    [audioSection setExpanded:YES];
+
+    
     MenuSectionView *otherSection = [[MenuSectionView alloc] init];
     otherSection.delegate = self;
     otherSection.sectionTitle = [LocalizationHelper localizedStringForKey:@"Others"];
@@ -568,7 +577,6 @@ BOOL isCustomResolution(CGSize res) {
     [self addSetting:self.statsOverlayStack ofId:@"statsOverlayStack" withInfoTag:NO withDynamicLabel:NO to:otherSection];
     [self addSetting:self.unlockDisplayOrientationStack ofId:@"unlockDisplayOrientationStack" withInfoTag:YES withDynamicLabel:NO to:otherSection];
     [self addSetting:self.optimizeGamesStack ofId:@"optimizeGamesStack" withInfoTag:YES withDynamicLabel:NO to:otherSection];
-    [self addSetting:self.audioOnPcStack ofId:@"audioOnPcStack" withInfoTag:NO withDynamicLabel:NO to:otherSection];
     [self addSetting:self.multiControllerStack ofId:@"multiControllerStack" withInfoTag:YES withDynamicLabel:NO to:otherSection];
     [self addSetting:self.softKeyboardToolbarStack ofId:@"softKeyboardToolbarStack" withInfoTag:YES withDynamicLabel:NO to:otherSection];
     [otherSection addToParentStack:_parentStack];
