@@ -128,7 +128,12 @@
 }
 
 - (void)presentCommandManagerViewController{
-    [self presentViewController:toolBoxViewController animated:YES completion:nil];
+    toolBoxViewController = [[ToolBoxViewController alloc] init];
+    toolBoxViewController.specialEntryDelegate = self;
+    [self configOscLayoutTool];
+    [self presentViewController:toolBoxViewController animated:YES completion:^{
+        //[self->toolBoxViewController setupConstraints];
+    }];
 }
 
 - (void)configSwipeGestures{

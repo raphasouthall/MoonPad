@@ -169,7 +169,7 @@
     
     
     [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(setControllerCALayerSliderValues:)
+                                             selector:@selector(legacyOscLayerTapped:)
                                                  name:@"LegacyOscCALayerSelectedNotification"
                                                object:nil];
     
@@ -624,10 +624,20 @@
     if([self isIPhone]) [self updateClippedMaskForView:view];
 }
 
+- (void)enableCommonWidgetTools{
+    self.loadConfigTipLabel.hidden = YES;
+    self.widgetSizeStack.hidden = NO;
+    self.widgetHeightStack.hidden = NO;
+    self.borderWidthAlphaStack.hidden = NO;
+    if([self isIPhone]) self.vibrationStyleStack.hidden = NO;
+}
+
 - (void)widgetViewTapped: (NSNotification *)notification{
     //self.undoButton.alpha = selectedWidgetView.layoutChanges.count>1 && !CGPointEqualToPoint(selectedWidgetView.layoutChanges.lastObject.CGPointValue, selectedWidgetView.initialCenter)? 1.0 : 0.3;
 
     // receive the selected widgetView obj passed from the notification
+    [self enableCommonWidgetTools];
+
     OnScreenWidgetView* widgetView = (OnScreenWidgetView* )notification.object;
     
     
@@ -676,8 +686,8 @@
     }
 }
 
-- (void)setControllerCALayerSliderValues: (NSNotification *)notification{
-    // receive the selected widgetView obj passed from the notification
+- (void)legacyOscLayerTapped: (NSNotification *)notification{
+    [self enableCommonWidgetTools];
     CALayer* controllerLayer = (CALayer* )notification.object;
     [self->selectedWidgetView.stickBallLayer removeFromSuperlayer];
     [self->selectedWidgetView.crossMarkLayer removeFromSuperlayer];
@@ -705,6 +715,7 @@
         NSNumber *style = [OnScreenControls.layerVibrationStyleDic objectForKey:selectedControllerLayer.name];
         self.vibrationStyleSelector.selectedSegmentIndex = [style unsignedCharValue];
     }
+    [self autoFitView:_widgetPanelStack];
 }
 
 - (void)widgetSizeSliderMoved:(UISlider* )sender{
@@ -821,6 +832,8 @@
 - (void)setupWidgetPanel{
     //[self handleMissingToolBarIcon];
     self.widgetPanelStack.hidden = NO;
+    self.loadConfigTipLabel.hidden = NO;
+
     self.widgetPanelStack.layoutMargins = UIEdgeInsetsMake(10, 10, 10, 10);
     self.widgetPanelStack.layoutMarginsRelativeArrangement = YES;
     self.widgetPanelStack.layer.cornerRadius = 16;
@@ -844,19 +857,19 @@
     
     [self.widgetSizeSlider addTarget:self action:@selector(widgetSizeSliderMoved:) forControlEvents:(UIControlEventValueChanged)];
     self.widgetSizeLabel.text = [LocalizationHelper localizedStringForKey:@"Size"];
-    self.widgetSizeStack.hidden = _quickSwitchEnabled;
+    self.widgetSizeStack.hidden = YES;
 
     [self.widgetHeightSlider addTarget:self action:@selector(widgetHeightSliderMoved:) forControlEvents:(UIControlEventValueChanged)];
 
     self.widgetHeightLabel.text = [LocalizationHelper localizedStringForKey:@"Height"];
-    self.widgetHeightStack.hidden = _quickSwitchEnabled;
+    self.widgetHeightStack.hidden = YES;
 
     [self.widgetAlphaSlider addTarget:self action:@selector(widgetAlphaSliderMoved:) forControlEvents:(UIControlEventValueChanged)];
     self.widgetAlphaLabel.text = [LocalizationHelper localizedStringForKey:@"Alpha"];
    
     [self.widgetBorderWidthSlider addTarget:self action:@selector(widgetBorderWidthSliderMoved:) forControlEvents:(UIControlEventValueChanged)];
     self.widgetBorderWidthLabel.text = [LocalizationHelper localizedStringForKey:@"Border Width"];
-    self.borderWidthAlphaStack.hidden = _quickSwitchEnabled;
+    self.borderWidthAlphaStack.hidden = YES;
   
     [self.sensitivitySlider addTarget:self action:@selector(sensitivitySliderMoved:) forControlEvents:(UIControlEventValueChanged)];
     self.sensitivityLabel.text = [LocalizationHelper localizedStringForKey:@"Sensitivity"];
@@ -871,7 +884,7 @@
     
     if([self isIPhone]){
         [self.vibrationStyleSelector addTarget:self action:@selector(vibrationStyleChanged:) forControlEvents:(UIControlEventValueChanged)];
-        self.vibrationStyleStack.hidden = NO;
+        self.vibrationStyleStack.hidden = YES;
         NSDictionary *normalAttributes = @{
             NSForegroundColorAttributeName: [UIColor whiteColor]
         };
@@ -888,6 +901,8 @@
     //frame.origin = CGPointMake(self.view.bounds.size.width/2, 100);
     frame.origin = CGPointMake(self.view.bounds.size.width/2-self.widgetPanelStack.frame.size.width/2, 100);
     self.widgetPanelStack.frame = frame;
+    
+    
     [self autoFitView:self.widgetPanelStack];
     
     if([self isIPhone]) {

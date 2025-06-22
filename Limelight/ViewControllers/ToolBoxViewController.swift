@@ -31,7 +31,7 @@ import UIKit
         "widgetSwitchTool":SwiftLocalizationHelper.localizedString(forKey: "[ Switch among on-screen widget profiles ]"),
         "widgetLayoutTool":SwiftLocalizationHelper.localizedString(forKey: "[ Open on-screen widget tool ]")
     ]
-
+    
     private var viewPinned: Bool = false
     private var isEditingMode: Bool = false {
         didSet {
@@ -57,9 +57,16 @@ import UIKit
     
     override public func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        setupConstraints()
+        //setupConstraints()
         reloadTableView()
     }
+    
+    public override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
+        //setupConstraints()
+    }
+
     
     private func setupViews() {
         
@@ -76,7 +83,7 @@ import UIKit
         
         view.backgroundColor = viewBackgroundColor
         tableView.backgroundColor = .clear
-        tableView.rowHeight = 60
+        tableView.rowHeight = isIPhone() ? 47 : 60
         tableView.separatorColor = highlightColor
         // Configure buttons
         addButton.setTitle(SwiftLocalizationHelper.localizedString(forKey: "Add / Duplicate"), for: .normal)
@@ -108,12 +115,23 @@ import UIKit
 
     }
     
-    private func setupConstraints() {
+    public override func updateViewConstraints() {
+        self.setupConstraints()
+        super.updateViewConstraints()
+    }
+
+    private func isIPhone()->Bool {
+        return UIDevice.current.userInterfaceIdiom == .phone
+    }
+    
+    @objc public func setupConstraints() {
         
         guard view.superview != nil else {
             return
         }
-        
+                
+        NSLayoutConstraint.deactivate(view.constraints)
+
         view.translatesAutoresizingMaskIntoConstraints = false
         
         tableView.translatesAutoresizingMaskIntoConstraints = false
@@ -127,9 +145,13 @@ import UIKit
         NSLayoutConstraint.activate([
             
             // Set the width and height of the view
-            view.widthAnchor.constraint(equalTo: view.superview!.widthAnchor, multiplier: 1),
-            view.heightAnchor.constraint(equalTo: view.superview!.heightAnchor, multiplier: 1),
             
+            view.widthAnchor.constraint(equalTo: view.superview!.widthAnchor, multiplier: isIPhone() ? 0.7 : 0.8),
+            view.heightAnchor.constraint(equalTo: view.superview!.heightAnchor, multiplier: 0.99),
+            // Set the width and height of the view
+            //view.leadingAnchor.constraint(equalTo: view.superview!.leadingAnchor, constant: 60),
+            //view.trailingAnchor.constraint(equalTo: view.superview!.trailingAnchor, constant: -60),
+
             // Center the view horizontally and vertically
             view.centerXAnchor.constraint(equalTo: view.superview!.centerXAnchor),
             view.centerYAnchor.constraint(equalTo: view.superview!.centerYAnchor),

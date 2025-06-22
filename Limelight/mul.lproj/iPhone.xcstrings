@@ -679,6 +679,36 @@
         }
       }
     },
+    "9Gg-66-UdB.text" : {
+      "comment" : "Class = \"UILabel\"; text = \"Tap any widget to load configuration (per widget)\"; ObjectID = \"9Gg-66-UdB\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Tap any widget to load configuration (per widget)"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "轻按任意控件加载配置 (各控件独立)"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "轻按任意控件加载配置 (各控件独立)"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "轻按任意控件加载配置 (各控件独立)"
+          }
+        }
+      }
+    },
     "885-w2-VAD.text" : {
       "comment" : "Class = \"UILabel\"; text = \"Swap A/B and X/Y Buttons\"; ObjectID = \"885-w2-VAD\";",
       "extractionState" : "extracted_with_value",

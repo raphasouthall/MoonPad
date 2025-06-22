@@ -78,6 +78,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (strong, nonatomic) IBOutlet UISegmentedControl *vibrationStyleSelector;
 @property (strong, nonatomic) IBOutlet UIStackView *vibrationStyleStack;
 
+@property (strong, nonatomic) IBOutlet UILabel *loadConfigTipLabel;
 
 
 

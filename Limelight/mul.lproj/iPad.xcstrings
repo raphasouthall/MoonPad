@@ -2485,6 +2485,36 @@
         }
       }
     },
+    "xfv-K0-1CO.text" : {
+      "comment" : "Class = \"UILabel\"; text = \"Tap any widget to load configuration (per widget)\"; ObjectID = \"xfv-K0-1CO\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Tap any widget to load configuration (per widget)"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "轻按任意控件加载配置 (各控件独立)"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "轻按任意控件加载配置 (各控件独立)"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "轻按任意控件加载配置 (各控件独立)"
+          }
+        }
+      }
+    },
     "yY7-Sf-Zes.segmentTitles[0]" : {
       "comment" : "Class = \"UISegmentedControl\"; yY7-Sf-Zes.segmentTitles[0] = \"Slide From Left Edge\"; ObjectID = \"yY7-Sf-Zes\";",
       "extractionState" : "extracted_with_value",
