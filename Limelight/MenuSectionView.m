@@ -49,7 +49,7 @@
     _sectionTitle = @"Section";
     _expanded = YES;
     _backgroundColor = [UIColor clearColor];
-    _rootStackViewSpacing = 18;
+    _rootStackViewSpacing = [self isIPhone] ? 10 : 16;
     _subStackViews = [NSMutableArray array];
     _headerViewHeight = 37;
     _headerViewVerticalSpacing = 25;
@@ -302,6 +302,10 @@
 }
 
 #pragma mark - Private Methods
+
+- (BOOL)isIPhone {
+    return [UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPhone;
+}
 
 - (void)toggleFold {
     self.expanded = !self.expanded;
