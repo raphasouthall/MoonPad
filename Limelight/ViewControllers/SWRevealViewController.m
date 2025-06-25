@@ -795,7 +795,7 @@ const int FrontViewPositionNone = 0xff;
     [self setupMenuSeparator];
 }
 
-- (bool)isIphone{
+- (bool)isIPhone{
     return ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPhone);
 }
 
@@ -807,22 +807,20 @@ const int FrontViewPositionNone = 0xff;
     else return UIInterfaceOrientationMaskPortrait|UIInterfaceOrientationMaskPortraitUpsideDown;
 }
 
+- (BOOL)menuExpanded{
+    return _frontViewPosition != FrontViewPositionLeft;
+}
+
 // tested on iOS17.
 - (UIInterfaceOrientationMask)supportedInterfaceOrientations {
-    // Return the supported interface orientations acoordingly
-    if(!_isStreaming){
-        if([self isIphone]) return UIInterfaceOrientationMaskAll;  //always try to lock orientaion to landscape in mainFrameView.
-        else return UIInterfaceOrientationMaskAll; //always try to lock current orientaion in mainFrameView for iPad in order to prevent bug.
-    }
     
-    //lock the orientation accordingly after streaming is started
     DataManager* dataMan = [[DataManager alloc] init];
     Settings *currentSettings = [dataMan retrieveSettings];
 
-    if(currentSettings.unlockDisplayOrientation){
-        return UIInterfaceOrientationMaskAll; // 90 Degree rotation will be allowed in streaming or app view
-    }
-    else return [self getCurrentOrientation]; // 90 Degree rotation not allowed in streaming or app view
+    NSLog(@"orientation unlocked: %d", currentSettings.unlockDisplayOrientation);
+
+    if(currentSettings.unlockDisplayOrientation) return UIInterfaceOrientationMaskAll;
+    else return [self isIPhone] ? UIInterfaceOrientationMaskLandscape : [self getCurrentOrientation];
 }
 
 - (void)viewDidLayoutSubviews{

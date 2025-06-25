@@ -1310,7 +1310,8 @@ BOOL isCustomResolution(CGSize res) {
     [self updateResolutionDisplayLabel];
 
     // Unlock Display Orientation setting
-    bool unlockDisplayOrientationSelectorEnabled = [self isFullScreenRequired];//need "requires fullscreen" enabled in the app bunddle to make runtime orientation limitation woring
+    // bool unlockDisplayOrientationSelectorEnabled = [self isFullScreenRequired];//need "requires fullscreen" enabled in the app bunddle to make runtime orientation limitation woring
+    bool unlockDisplayOrientationSelectorEnabled = true;
     if(unlockDisplayOrientationSelectorEnabled) [self.unlockDisplayOrientationSelector setSelectedSegmentIndex:currentSettings.unlockDisplayOrientation ? 1 : 0];
     else [self.unlockDisplayOrientationSelector setSelectedSegmentIndex:1]; // can't lock screen orientation in this mode = Display Orientation always unlocked
     [self.unlockDisplayOrientationSelector setEnabled:unlockDisplayOrientationSelectorEnabled];
@@ -1959,7 +1960,6 @@ BOOL isCustomResolution(CGSize res) {
         [self updateThemeForSliders:self.view];
     }
 }
-
 
 - (void) saveSettings {
     DataManager* dataMan = [[DataManager alloc] init];

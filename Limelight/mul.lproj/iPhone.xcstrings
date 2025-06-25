@@ -2174,31 +2174,31 @@
       }
     },
     "tO4-eD-VHF.text" : {
-      "comment" : "Class = \"UILabel\"; text = \"90° Display Rotation in Steaming\"; ObjectID = \"tO4-eD-VHF\";",
+      "comment" : "Class = \"UILabel\"; text = \"90° Display Rotation\"; ObjectID = \"tO4-eD-VHF\";",
       "extractionState" : "extracted_with_value",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "90° Display Rotation in Steaming"
+            "value" : "90° Display Rotation"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "串流中90°转屏"
+            "state" : "needs_review",
+            "value" : "90°转屏"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "串流中90°转屏"
+            "state" : "needs_review",
+            "value" : "90°转屏"
           }
         },
         "zh-HK" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "串流中90°转屏"
+            "state" : "needs_review",
+            "value" : "90°转屏"
           }
         }
       }
