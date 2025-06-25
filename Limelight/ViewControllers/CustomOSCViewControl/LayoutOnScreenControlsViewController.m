@@ -108,6 +108,7 @@
             widgetView.heightFactor = buttonState.heightFactor;
             widgetView.borderWidth = buttonState.borderWidth;
             [widgetView setVibrationWithStyle:buttonState.vibrationStyle];
+            widgetView.mouseButtonAction = buttonState.mouseButtonAction;
             widgetView.sensitivityFactor = buttonState.sensitivityFactor;
             widgetView.stickIndicatorOffset = buttonState.stickIndicatorOffset;
             widgetView.minStickOffset = buttonState.minStickOffset;
@@ -555,6 +556,7 @@
 - (void) updateWidget:(OnScreenWidgetView* )widget byParams:(NSMutableDictionary* )widgetInitParams createNew:(bool)createNew{
     if(![self isWidgetParamsValid:widgetInitParams]) return;
     OnScreenWidgetView* newWidget = [[OnScreenWidgetView alloc] initWithCmdString:widgetInitParams[@"cmdString"] buttonLabel:widgetInitParams[@"buttonLabel"] shape:widgetInitParams[@"shape"]]; //reconstruct widgetView
+    newWidget.guidelineDelegate = (id<OnScreenWidgetGuidelineUpdateDelegate>)self;
     newWidget.translatesAutoresizingMaskIntoConstraints = NO; // weird but this is mandatory, or you will find no key views added to the right place
     newWidget.widthFactor = widget.widthFactor;
     newWidget.heightFactor = widget.heightFactor;
@@ -563,7 +565,7 @@
     newWidget.stickIndicatorOffset = widget.stickIndicatorOffset;
     newWidget.minStickOffset = [widgetInitParams[@"minStickOffsetString"] floatValue];
     [newWidget setVibrationWithStyle:widget.vibrationStyle];
-    // Add the widgetView to the view controller's view
+    newWidget.mouseButtonAction = widget.mouseButtonAction;
     [self.view insertSubview:newWidget belowSubview:self.widgetPanelStack];
 
     if(createNew) [newWidget setLocationWithPosition:CGPointMake(90, 130)];
@@ -571,7 +573,6 @@
     [newWidget resizeWidgetView]; // resize must be called after relocation
     [newWidget adjustTransparencyWithAlpha:widget.backgroundAlpha];
     [newWidget adjustBorderWithWidth:widget.borderWidth];
-    [newWidget setVibrationWithStyle:widget.vibrationStyle];
     [self.OnScreenWidgetViews addObject:newWidget];
     self->selectedWidgetView = newWidget;
     if(!createNew){
@@ -585,6 +586,7 @@
     if(![self isWidgetParamsValid:widgetInitParams]) return;
     //saving & present the keyboard button:
     OnScreenWidgetView* widgetView = [[OnScreenWidgetView alloc] initWithCmdString:widgetInitParams[@"cmdString"] buttonLabel:widgetInitParams[@"buttonLabel"] shape:widgetInitParams[@"shape"]];
+    widgetView.guidelineDelegate = (id<OnScreenWidgetGuidelineUpdateDelegate>)self;
     widgetView.translatesAutoresizingMaskIntoConstraints = NO; // weird but this is mandatory, or you will find no key views added to the right place
     widgetView.minStickOffset = [widgetInitParams[@"minStickOffsetString"] floatValue];
     [self.OnScreenWidgetViews addObject:widgetView];
@@ -659,6 +661,7 @@
         
     self.sensitivityStack.hidden = !showSensitivityFactorSlider;
     self.stickIndicatorOffsetStack.hidden = !showStickIndicatorOffsetSlider;
+    self.mouseDownButtonStack.hidden = !([selectedWidgetView.cmdString containsString:@"MOUSEPAD"] && selectedWidgetView.widgetType == WidgetTypeEnumTouchPad);
     [self autoFitView:self.widgetPanelStack];
 
     if(showSensitivityFactorSlider){
@@ -679,7 +682,12 @@
     [self.widgetHeightLabel setText:[LocalizationHelper localizedStringForKey:@"Height: %.2f", self->selectedWidgetView.heightFactor]];
     [self.widgetAlphaLabel setText:[LocalizationHelper localizedStringForKey:@"Alpha: %.2f", self->selectedWidgetView.backgroundAlpha]];
     [self.widgetBorderWidthLabel setText:[LocalizationHelper localizedStringForKey:@"Border Width: %.2f", self->selectedWidgetView.borderWidth]];
+    
+    self.mouseButtonDownSelector.selectedSegmentIndex = selectedWidgetView.mouseButtonAction;
+    
     if([self isIPhone]){
+        self.vibrationStyleStack.hidden = [widgetView.cmdString containsString:@"MOUSEPAD"];
+        [self autoFitView:self.widgetPanelStack];
         self.vibrationStyleSelector.selectedSegmentIndex = self->selectedWidgetView.vibrationStyle;
     }
 }
@@ -710,6 +718,7 @@
     [self.widgetHeightLabel setText:[LocalizationHelper localizedStringForKey:@"Height: %.2f", sizeFactor]];
     [self.widgetAlphaLabel setText:[LocalizationHelper localizedStringForKey:@"Alpha: %.2f", alpha]];
     if([self isIPhone]){
+        self.vibrationStyleStack.hidden = NO;
         NSNumber *style = [OnScreenControls.layerVibrationStyleDic objectForKey:selectedControllerLayer.name];
         self.vibrationStyleSelector.selectedSegmentIndex = [style unsignedCharValue];
     }
@@ -760,6 +769,12 @@
         [self->selectedWidgetView adjustBorderWithWidth:sender.value];
     }
     return;
+}
+
+- (void)mouseDownButtonChanged:(UISegmentedControl* )sender{
+    if(self->selectedWidgetView != nil && self->widgetViewSelected){
+        selectedWidgetView.mouseButtonAction = _mouseButtonDownSelector.selectedSegmentIndex;
+    }
 }
 
 - (void)vibrationStyleChanged:(UISegmentedControl* )sender{
@@ -878,14 +893,18 @@
     self.stickIndicatorOffsetLabel.text = [LocalizationHelper localizedStringForKey:@"Indicator Offset"];
     self.stickIndicatorOffsetStack.hidden = YES;
     
+    [self.mouseButtonDownSelector addTarget:self action:@selector(mouseDownButtonChanged:) forControlEvents:(UIControlEventValueChanged)];
+    NSDictionary *whiteFontAttributes = @{
+        NSForegroundColorAttributeName: [UIColor whiteColor]
+    };
+    [self.mouseButtonDownSelector setTitleTextAttributes:whiteFontAttributes forState:UIControlStateNormal];
+    self.mouseDownButtonStack.hidden = YES;
+
     
     if([self isIPhone]){
         [self.vibrationStyleSelector addTarget:self action:@selector(vibrationStyleChanged:) forControlEvents:(UIControlEventValueChanged)];
         self.vibrationStyleStack.hidden = YES;
-        NSDictionary *normalAttributes = @{
-            NSForegroundColorAttributeName: [UIColor whiteColor]
-        };
-        [self.vibrationStyleSelector setTitleTextAttributes:normalAttributes forState:UIControlStateNormal];
+        [self.vibrationStyleSelector setTitleTextAttributes:whiteFontAttributes forState:UIControlStateNormal];
 
     }
     

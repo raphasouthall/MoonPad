@@ -366,6 +366,7 @@ static CGRect streamViewBounds;
         buttonState.backgroundAlpha = widgetView.backgroundAlpha;
         buttonState.borderWidth = widgetView.borderWidth;
         buttonState.vibrationStyle = widgetView.vibrationStyle;
+        buttonState.mouseButtonAction = widgetView.mouseButtonAction;
         buttonState.sensitivityFactor = widgetView.sensitivityFactor;
         buttonState.stickIndicatorOffset = widgetView.stickIndicatorOffset;
         buttonState.widgetShape = widgetView.shape;

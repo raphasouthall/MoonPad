@@ -1807,6 +1807,36 @@
         }
       }
     },
+    "ozU-7C-qKE.text" : {
+      "comment" : "Class = \"UILabel\"; text = \"Button Down\"; ObjectID = \"ozU-7C-qKE\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Button Down"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "鼠标按下"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "鼠标按下"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "鼠标按下"
+          }
+        }
+      }
+    },
     "Pdb-Bs-kMJ.text" : {
       "comment" : "Class = \"UILabel\"; text = \"Statistics Overlay\"; ObjectID = \"Pdb-Bs-kMJ\";",
       "extractionState" : "extracted_with_value",
@@ -2145,6 +2175,126 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "串流分辨率"
+          }
+        }
+      }
+    },
+    "tE5-Bm-4OB.segmentTitles[0]" : {
+      "comment" : "Class = \"UISegmentedControl\"; tE5-Bm-4OB.segmentTitles[0] = \"hovering\"; ObjectID = \"tE5-Bm-4OB\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "hovering"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "悬浮"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "悬浮"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "悬浮"
+          }
+        }
+      }
+    },
+    "tE5-Bm-4OB.segmentTitles[1]" : {
+      "comment" : "Class = \"UISegmentedControl\"; tE5-Bm-4OB.segmentTitles[1] = \"left button\"; ObjectID = \"tE5-Bm-4OB\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "left button"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "左键"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "左键"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "左键"
+          }
+        }
+      }
+    },
+    "tE5-Bm-4OB.segmentTitles[2]" : {
+      "comment" : "Class = \"UISegmentedControl\"; tE5-Bm-4OB.segmentTitles[2] = \"middle button\"; ObjectID = \"tE5-Bm-4OB\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "middle button"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "中键"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "中键"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "中键"
+          }
+        }
+      }
+    },
+    "tE5-Bm-4OB.segmentTitles[3]" : {
+      "comment" : "Class = \"UISegmentedControl\"; tE5-Bm-4OB.segmentTitles[3] = \"right button\"; ObjectID = \"tE5-Bm-4OB\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "right button"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "右键"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "右键"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "右键"
           }
         }
       }

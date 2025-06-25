@@ -38,6 +38,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) CGFloat oscLayerSizeFactor; // for OnScreenController CALayer
 @property (nonatomic, assign) CGFloat backgroundAlpha; // for OnScreenController CALayer
 @property (nonatomic, assign) uint8_t vibrationStyle; // for OnScreenController CALayer
+@property (nonatomic, assign) uint8_t mouseButtonAction; // for OnScreenController CALayer
 
 // @property (nonatomic, assign) BOOL hasValidPosition;
 
@@ -45,6 +46,14 @@ typedef NS_ENUM(NSInteger, OnScreenButtonType) {
     LegacyOscButton,
     CustomOnScreenWidget
 };
+
+typedef NS_ENUM(NSInteger, MouseButtonAction) {
+    hovering,
+    leftButtonDown,
+    middleButtonDown,
+    rightButtonDown,
+};
+
 
 - (id) initWithButtonName:(NSString*)name buttonType:(uint8_t)buttonType andPosition:(CGPoint)position;
 

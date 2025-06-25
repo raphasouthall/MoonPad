@@ -1164,7 +1164,7 @@
                                 </constraints>
                             </view>
                             <stackView opaque="NO" contentMode="scaleToFill" ambiguous="YES" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="z5Q-bW-WQ8" userLabel="widgetPanelStack" customClass="WidgetPanelStackView">
-                                <rect key="frame" x="325" y="156" width="650" height="267.5"/>
+                                <rect key="frame" x="325" y="156" width="650" height="308.5"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Profile:" textAlignment="center" lineBreakMode="tailTruncation" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iel-xl-xd9">
                                         <rect key="frame" x="0.0" y="0.0" width="650" height="37"/>
@@ -1296,6 +1296,31 @@
                                             </slider>
                                         </subviews>
                                     </stackView>
+                                    <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GMQ-EQ-Hum" userLabel="mouseDownButtonStack">
+                                        <rect key="frame" x="0.0" y="277.5" width="650" height="31"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Down Button" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="c1r-Hf-b7t" userLabel="mouseDownButtonLabel">
+                                                <rect key="frame" x="0.0" y="0.0" width="160" height="31"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" constant="160" id="eNs-gl-lQc"/>
+                                                </constraints>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="H8S-aI-EBo">
+                                                <rect key="frame" x="160" y="0.0" width="490" height="32"/>
+                                                <segments>
+                                                    <segment title="hovering"/>
+                                                    <segment title="left button"/>
+                                                    <segment title="middle button"/>
+                                                    <segment title="right button"/>
+                                                </segments>
+                                                <color key="tintColor" systemColor="systemGray2Color"/>
+                                                <color key="selectedSegmentTintColor" red="0.23136288839999999" green="0.45776400810000001" blue="0.5149240678" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                            </segmentedControl>
+                                        </subviews>
+                                    </stackView>
                                 </subviews>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="650" id="Rav-Dp-9pI"/>
@@ -1322,6 +1347,8 @@
                         <outlet property="exitButton" destination="7bp-Wn-j9n" id="Kku-3T-RSO"/>
                         <outlet property="loadButton" destination="OId-gk-Wkg" id="adP-54-1ir"/>
                         <outlet property="loadConfigTipLabel" destination="xfv-K0-1CO" id="GeX-Qc-CLA"/>
+                        <outlet property="mouseButtonDownSelector" destination="H8S-aI-EBo" id="em1-fK-Cpb"/>
+                        <outlet property="mouseDownButtonStack" destination="GMQ-EQ-Hum" id="sxb-40-3NI"/>
                         <outlet property="saveButton" destination="uda-zt-xrG" id="FyB-WY-rri"/>
                         <outlet property="sensitivityLabel" destination="vJs-pg-hHe" id="RRw-Zq-LUa"/>
                         <outlet property="sensitivitySlider" destination="DiG-XX-r8c" id="fz5-Et-1WV"/>
@@ -1449,6 +1476,9 @@
         </systemColor>
         <systemColor name="systemBrownColor">
             <color red="0.63529411759999999" green="0.51764705879999995" blue="0.36862745099999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="systemGray2Color">
+            <color red="0.68235294120000001" green="0.68235294120000001" blue="0.69803921570000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemTealColor">
             <color red="0.18823529410000001" green="0.69019607839999997" blue="0.78039215689999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

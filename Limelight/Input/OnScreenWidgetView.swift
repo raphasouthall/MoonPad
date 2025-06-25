@@ -19,19 +19,19 @@ import UIKit
         }
     }
     
+    @objc public weak var guidelineDelegate: OnScreenWidgetGuidelineUpdateDelegate?
+    
     @objc protocol OnScreenWidgetGuidelineUpdateDelegate: AnyObject {
         func updateGuidelinesForOnScreenWidget(_ sender: Any)
     }
-    @objc public weak var guidelineDelegate: OnScreenWidgetGuidelineUpdateDelegate?
-
     
-    enum WidgetTypeEnum: UInt8 {
-        case uninitialized = 0
-        case button = 1
-        case touchPad = 2
+    @objc enum WidgetTypeEnum: UInt8 {
+        case uninitialized
+        case button
+        case touchPad
     }
     
-    private var widgetType: WidgetTypeEnum = WidgetTypeEnum.uninitialized
+    @objc public var widgetType: WidgetTypeEnum = WidgetTypeEnum.uninitialized
     
     @objc static public var editMode: Bool = false
     @objc public var buttonLabel: String
@@ -54,7 +54,7 @@ import UIKit
     @objc public var storedCenter: CGPoint = .zero // location from persisted data
     @objc public var initialCenter: CGPoint = .zero // location from persisted data
     @objc public var layoutChanges: [CGPoint] = []
-
+    @objc public var mouseButtonAction: MouseButtonAction = .hovering;
     
     private let appWindow: UIView
     
@@ -1034,6 +1034,21 @@ import UIKit
                 default:
                     break
                 }
+                
+                if self.widgetType == WidgetTypeEnum.touchPad && self.touchPadString == "MOUSEPAD" && allCapturedTouchesCount == 1 && !twoTouchesDetected {
+                    switch mouseButtonAction{
+                    case .leftButtonDown:
+                        LiSendMouseButtonEvent(CChar(BUTTON_ACTION_PRESS), BUTTON_LEFT)
+                    case .middleButtonDown:
+                        LiSendMouseButtonEvent(CChar(BUTTON_ACTION_PRESS), BUTTON_MIDDLE)
+                    case .rightButtonDown:
+                        LiSendMouseButtonEvent(CChar(BUTTON_ACTION_PRESS), BUTTON_RIGHT)
+                    case .hovering:
+                        break
+                    default:
+                        break
+                    }
+                }
             }
             
             /*
@@ -1178,14 +1193,28 @@ import UIKit
         
         // deal with pure MOUSPAD first
         if !OnScreenWidgetView.editMode && self.widgetType == WidgetTypeEnum.touchPad && self.touchPadString == "MOUSEPAD" && allCapturedTouchesCount == 1 && !twoTouchesDetected {
-            if !mousePointerMoved && !quickDoubleTapDetected {self.sendLongMouseLeftButtonClickEvent()} // deal with single tap(click)
-            if quickDoubleTapDetected { //deal with quick double tap
-                LiSendMouseButtonEvent(CChar(BUTTON_ACTION_RELEASE), BUTTON_LEFT) //must release the button anyway, because the button is likely being held down since the long click turned into a dragging event.
-                if !mousePointerMoved {self.sendShortMouseLeftButtonClickEvent()}
-                quickDoubleTapDetected = false
-            }
-            mousePointerMoved = false // reset this flag
+            
+                switch mouseButtonAction{
+                case .leftButtonDown:
+                    LiSendMouseButtonEvent(CChar(BUTTON_ACTION_RELEASE), BUTTON_LEFT)
+                case .middleButtonDown:
+                    LiSendMouseButtonEvent(CChar(BUTTON_ACTION_RELEASE), BUTTON_MIDDLE)
+                case .rightButtonDown:
+                    LiSendMouseButtonEvent(CChar(BUTTON_ACTION_RELEASE), BUTTON_RIGHT)
+                case .hovering:
+                    if !mousePointerMoved && !quickDoubleTapDetected {self.sendLongMouseLeftButtonClickEvent()} // deal with single tap(click)
+                    if quickDoubleTapDetected { //deal with quick double tap
+                        LiSendMouseButtonEvent(CChar(BUTTON_ACTION_RELEASE), BUTTON_LEFT) //must release the button anyway, because the button is likely being held down since the long click turned into a dragging event.
+                        if !mousePointerMoved {self.sendShortMouseLeftButtonClickEvent()}
+                        quickDoubleTapDetected = false
+                    }
+                    mousePointerMoved = false // reset this flag
+                default:
+                    break
+                }
         }
+        
+        
         if !OnScreenWidgetView.editMode && self.widgetType == WidgetTypeEnum.touchPad && self.touchPadString == "MOUSEPAD" && twoTouchesDetected && touches.count == allCapturedTouchesCount { // need to enable multi-touch first
             // touches.count == allCapturedTouchesCount means allfingers are lifting
             self.sendMouseRightButtonClickEvent()

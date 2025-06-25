@@ -643,6 +643,36 @@
         }
       }
     },
+    "c1r-Hf-b7t.text" : {
+      "comment" : "Class = \"UILabel\"; text = \"Down Button\"; ObjectID = \"c1r-Hf-b7t\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Down Button"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "鼠标按下"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "鼠标按下"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "鼠标按下"
+          }
+        }
+      }
+    },
     "ckc-Dm-8ex.segmentTitles[0]" : {
       "comment" : "Class = \"UISegmentedControl\"; ckc-Dm-8ex.segmentTitles[0] = \"360p\"; ObjectID = \"ckc-Dm-8ex\";",
       "extractionState" : "extracted_with_value",
@@ -1093,6 +1123,126 @@
         }
       }
     },
+    "H8S-aI-EBo.segmentTitles[0]" : {
+      "comment" : "Class = \"UISegmentedControl\"; H8S-aI-EBo.segmentTitles[0] = \"hovering\"; ObjectID = \"H8S-aI-EBo\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "hovering"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "悬浮"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "悬浮"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "悬浮"
+          }
+        }
+      }
+    },
+    "H8S-aI-EBo.segmentTitles[1]" : {
+      "comment" : "Class = \"UISegmentedControl\"; H8S-aI-EBo.segmentTitles[1] = \"left button\"; ObjectID = \"H8S-aI-EBo\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "left button"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "左键"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "左键"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "左键"
+          }
+        }
+      }
+    },
+    "H8S-aI-EBo.segmentTitles[2]" : {
+      "comment" : "Class = \"UISegmentedControl\"; H8S-aI-EBo.segmentTitles[2] = \"middle button\"; ObjectID = \"H8S-aI-EBo\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "middle button"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "中键"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "中键"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "中键"
+          }
+        }
+      }
+    },
+    "H8S-aI-EBo.segmentTitles[3]" : {
+      "comment" : "Class = \"UISegmentedControl\"; H8S-aI-EBo.segmentTitles[3] = \"right button\"; ObjectID = \"H8S-aI-EBo\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "right button"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "右键"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "右键"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "右键"
+          }
+        }
+      }
+    },
     "hAo-1k-oYF.text" : {
       "comment" : "Class = \"UILabel\"; text = \"90° Display Rotation\"; ObjectID = \"hAo-1k-oYF\";",
       "extractionState" : "extracted_with_value",
@@ -1105,19 +1255,19 @@
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "90°转屏"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "90°转屏"
           }
         },
         "zh-HK" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "90°转屏"
           }
         }

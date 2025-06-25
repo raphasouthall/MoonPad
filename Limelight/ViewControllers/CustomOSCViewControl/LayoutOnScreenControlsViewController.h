@@ -80,6 +80,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (strong, nonatomic) IBOutlet UILabel *loadConfigTipLabel;
 
+@property (strong, nonatomic) IBOutlet UIStackView *mouseDownButtonStack;
+@property (strong, nonatomic) IBOutlet UISegmentedControl *mouseButtonDownSelector;
 
 
 
