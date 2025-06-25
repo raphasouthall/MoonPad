@@ -161,13 +161,13 @@ static const float REFRESH_CYCLE = 2.0f;
 - (void)setupUI {
     self.userInteractionEnabled = YES;
     self.backgroundColor = [ThemeManager widgetBackgroundColor];  // theme
-    self.layer.cornerRadius = 16;
     self.cardContentpadding = 13 * _sizeFactor;
     self.clipsToBounds = YES;
     self.translatesAutoresizingMaskIntoConstraints = NO;
     CGFloat appButtonWidth = 100*_sizeFactor;
     CGFloat launchButtonWidth = 120*_sizeFactor;
     CGFloat cardWidth = _cardContentpadding*2 + appButtonWidth + 15*_sizeFactor + launchButtonWidth;
+    self.layer.cornerRadius = 2*(uint16_t)(cardWidth*0.0603/2) ;
     /*
      NSLayoutConstraint *topAnchorConstraint;
      topAnchorConstraint = [self.topAnchor constraintEqualToAnchor:self.superview.topAnchor constant:500];
@@ -182,7 +182,7 @@ static const float REFRESH_CYCLE = 2.0f;
     // 图标背景
     self.iconBackgroundView = [[UIView alloc] initWithFrame:CGRectMake(_cardContentpadding, _cardContentpadding, 80*_sizeFactor, 80*_sizeFactor)];
     self.iconBackgroundView.backgroundColor = defaultBlue;
-    self.iconBackgroundView.layer.cornerRadius = 20*_sizeFactor;
+    self.iconBackgroundView.layer.cornerRadius = 2*(uint16_t)(20*_sizeFactor/2);
     [self addSubview:self.iconBackgroundView];
     
     // 图标图片
@@ -308,7 +308,8 @@ static const float REFRESH_CYCLE = 2.0f;
     self.launchButton.translatesAutoresizingMaskIntoConstraints = NO;
     self.launchButton.frame = CGRectMake(0, 0, 150, 50);
     self.launchButton.backgroundColor = defaultBlue;
-    self.launchButton.layer.cornerRadius = 10;
+    
+    self.launchButton.layer.cornerRadius = 2*(uint16_t)(cardWidth*0.0377/2);
     [self.launchButton setTitle:[LocalizationHelper localizedStringForKey:@"  Launch"] forState:UIControlStateNormal];
     [self.launchButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal]; // theme
     self.launchButton.titleLabel.font = [UIFont boldSystemFontOfSize:buttonLabelFontSize];
@@ -316,7 +317,7 @@ static const float REFRESH_CYCLE = 2.0f;
     [self.launchButton addTarget:self action:@selector(launchButtonTapped) forControlEvents:UIControlEventPrimaryActionTriggered];
     [self addSubview:self.launchButton];
     if (@available(iOS 13.0, *)) {
-        UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithPointSize:self.launchButton.frame.size.height*_sizeFactor];
+        UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithPointSize:buttonHeight*0.263];
         [self.launchButton setImage:[UIImage systemImageNamed:@"play.fill" withConfiguration:config] forState:UIControlStateNormal];
         
     } else {
@@ -337,12 +338,12 @@ static const float REFRESH_CYCLE = 2.0f;
     self.pairButton.translatesAutoresizingMaskIntoConstraints = NO;
     self.pairButton.frame = CGRectMake(0, 0, 150, 50);
     self.pairButton.backgroundColor = [ThemeManager textTintColorWithAlpha];
-    self.pairButton.layer.cornerRadius = 10;
+    self.pairButton.layer.cornerRadius =  2*(uint16_t)(cardWidth*0.0377/2);
     [self.pairButton setTitle:[LocalizationHelper localizedStringForKey:@"  Pair with PIN"] forState:UIControlStateNormal];
     [self.pairButton setTitleColor:defaultBlue forState:UIControlStateNormal]; // theme
     self.pairButton.titleLabel.font = [UIFont boldSystemFontOfSize:buttonLabelFontSize];
     if (@available(iOS 13.0, *)) {
-        UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithPointSize:self.pairButton.frame.size.height/3.5*_sizeFactor weight:UIImageSymbolWeightBold];
+        UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithPointSize:buttonHeight/3.4 weight:UIImageSymbolWeightBold];
         UIImage *templateImage = [UIImage systemImageNamed:@"lock.open.fill" withConfiguration:config];
         UIImage *coloredImage = [templateImage imageWithTintColor:defaultBlue renderingMode:UIImageRenderingModeAlwaysOriginal];
         [self.pairButton setImage:coloredImage forState:UIControlStateNormal];
@@ -371,7 +372,7 @@ static const float REFRESH_CYCLE = 2.0f;
     self.wakeupButton.translatesAutoresizingMaskIntoConstraints = NO;
     self.wakeupButton.frame = CGRectMake(0, 0, 150, 50);
     self.wakeupButton.backgroundColor = [ThemeManager textTintColorWithAlpha];
-    self.wakeupButton.layer.cornerRadius = 10;
+    self.wakeupButton.layer.cornerRadius = 2*(uint16_t)(cardWidth*0.0377/2);
     [self.wakeupButton setTitle:[LocalizationHelper localizedStringForKey:@"  Wake-on-LAN"] forState:UIControlStateNormal];
     [self.wakeupButton setTitleColor:defaultBlue forState:UIControlStateNormal]; // theme
     self.wakeupButton.titleLabel.font = [UIFont boldSystemFontOfSize:buttonLabelFontSize];
@@ -531,7 +532,7 @@ static const float REFRESH_CYCLE = 2.0f;
                                 
                 [_appButton setTitleColor:defaultBlue forState:UIControlStateNormal]; // theme
                 if (@available(iOS 13.0, *)) {
-                    UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithPointSize:self.launchButton.frame.size.height/4*_sizeFactor];
+                    UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithPointSize:buttonHeight*0.263];
                     [self.launchButton setImage:[UIImage systemImageNamed:@"play.fill" withConfiguration:config] forState:UIControlStateNormal];
                 } else {
                 }
@@ -567,7 +568,7 @@ static const float REFRESH_CYCLE = 2.0f;
             _wakeupButton.hidden = NO;
             
             if (@available(iOS 13.0, *)) {
-                UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithPointSize:self.wakeupButton.frame.size.height/3.2*_sizeFactor weight:UIImageSymbolWeightBold];
+                UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithPointSize:buttonHeight/3.45 weight:UIImageSymbolWeightBold];
                 UIImage *templateImage = [UIImage systemImageNamed:@"power" withConfiguration:config];
                 UIImage *coloredImage = [templateImage imageWithTintColor:defaultBlue renderingMode:UIImageRenderingModeAlwaysOriginal];
                 [self.wakeupButton setImage:coloredImage forState:UIControlStateNormal];
@@ -600,7 +601,7 @@ static const float REFRESH_CYCLE = 2.0f;
             
             [_wakeupButton setTitleColor:[ThemeManager textColorGray] forState:UIControlStateNormal]; // theme
             if (@available(iOS 13.0, *)) {
-                UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithPointSize:self.wakeupButton.frame.size.height/3.2*_sizeFactor weight:UIImageSymbolWeightBold];
+                UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithPointSize:buttonHeight/3.45 weight:UIImageSymbolWeightBold];
                 UIImage *templateImage = [UIImage systemImageNamed:@"power" withConfiguration:config];
                 UIImage *coloredImage = [templateImage imageWithTintColor:[ThemeManager textColorGray] renderingMode:UIImageRenderingModeAlwaysOriginal];
                 [self.wakeupButton setImage:coloredImage forState:UIControlStateNormal];
