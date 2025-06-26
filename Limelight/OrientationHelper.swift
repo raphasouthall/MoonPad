@@ -1,6 +1,6 @@
 //
 //  OrientationHelper.swift
-//  Voidex
+//  VoidLink
 //
 //  Created by True砖家 on 2024/7/12.
 //  Copyright © 2024 True砖家 on Bilibili. All rights reserved.
