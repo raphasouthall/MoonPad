@@ -160,7 +160,7 @@
 		84351B592C29ADBE00A77989 /* ProfileTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProfileTableViewCell.m; sourceTree = "<group>"; };
 		84351B5A2C29ADBE00A77989 /* ProfileTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProfileTableViewCell.h; sourceTree = "<group>"; };
 		84351B5B2C29ADBE00A77989 /* ProfileTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ProfileTableViewCell.xib; sourceTree = "<group>"; };
-		843667EF2D9D7173004A7D7F /* widgetTemplates.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; name = widgetTemplates.bin; path = Limelight/PresetConfigs/widgetTemplates.bin; sourceTree = SOURCE_ROOT; };
+		843667EF2D9D7173004A7D7F /* widgetTemplates.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; name = widgetTemplates.bin; path = PresetConfigs/widgetTemplates.bin; sourceTree = "<group>"; };
 		843CC7EE2C1E757D00BBC475 /* NativeTouchPointer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NativeTouchPointer.h; sourceTree = "<group>"; };
 		843CC7EF2C1E757D00BBC475 /* NativeTouchPointer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NativeTouchPointer.m; sourceTree = "<group>"; };
 		843CC7F42C1E778000BBC475 /* NativeTouchHandler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NativeTouchHandler.h; sourceTree = "<group>"; };
@@ -178,7 +178,7 @@
 		847D2FDA2DDA015F00937A62 /* MenuSectionView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MenuSectionView.m; sourceTree = "<group>"; };
 		848F45682DDCD0D600581E36 /* HostCardView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HostCardView.h; sourceTree = "<group>"; };
 		848F45692DDCD12500581E36 /* HostCardView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HostCardView.m; sourceTree = "<group>"; };
-		84D8EB932C5146AD00FC10A9 /* Moonlight-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Moonlight-Bridging-Header.h"; sourceTree = "<group>"; };
+		84D8EB932C5146AD00FC10A9 /* VoidLink-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "VoidLink-Bridging-Header.h"; sourceTree = "<group>"; };
 		84E1CDEB2C4F67D300547904 /* CommandManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommandManager.swift; sourceTree = "<group>"; };
 		84E1CDEE2C4F688E00547904 /* ToolBoxViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolBoxViewController.swift; sourceTree = "<group>"; };
 		84E1CDF92C4FE83400547904 /* SwiftLocalizationHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftLocalizationHelper.swift; sourceTree = "<group>"; };
@@ -437,7 +437,7 @@
 			children = (
 				9896219423D15C2900211983 /* X1Kit */,
 				98AB2E7F1CAD46830089BB98 /* moonlight-common.xcodeproj */,
-				FB290CF919B2C406004C83CF /* Moonlight */,
+				FB290CF919B2C406004C83CF /* VoidLink */,
 				FB1A67542132419700507771 /* Moonlight TV */,
 				FB290CF019B2C406004C83CF /* Frameworks */,
 				FB290CEF19B2C406004C83CF /* Products */,
@@ -479,10 +479,10 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		FB290CF919B2C406004C83CF /* Moonlight */ = {
+		FB290CF919B2C406004C83CF /* VoidLink */ = {
 			isa = PBXGroup;
 			children = (
-				84D8EB932C5146AD00FC10A9 /* Moonlight-Bridging-Header.h */,
+				84D8EB932C5146AD00FC10A9 /* VoidLink-Bridging-Header.h */,
 				84FD0B492C312C0B006B5BE5 /* Localization */,
 				8454AC682C31907F00F0A302 /* iPad.storyboard */,
 				8454AC6C2C319BDA00F0A302 /* iPhone.storyboard */,
@@ -517,8 +517,7 @@
 				FB1D59991BBCCD7E00F482CA /* AppCollectionView.m */,
 				843E93BD2C41528700B1651F /* OrientationHelper.swift */,
 			);
-			name = Moonlight;
-			path = Limelight;
+			path = VoidLink;
 			sourceTree = "<group>";
 		};
 		FB290CFA19B2C406004C83CF /* Supporting Files */ = {
@@ -1101,7 +1100,7 @@
 				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = FRL23UV4N9;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Limelight/Limelight-Prefix.pch";
+				GCC_PREFIX_HEADER = "VoidLink/Limelight-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
@@ -1115,8 +1114,8 @@
 					"$(PROJECT_DIR)/Limelight/Localization",
 					"$(PROJECT_DIR)/Limelight/Database",
 				);
-				INFOPLIST_FILE = "Limelight/Limelight-Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = MoonlightZWM;
+				INFOPLIST_FILE = "VoidLink/Limelight-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = VoidLink;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.games";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1141,7 +1140,7 @@
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = NO;
-				SWIFT_OBJC_BRIDGING_HEADER = "Limelight/Moonlight-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "VoidLink/VoidLink-Bridging-Header.h";
 				SWIFT_OBJC_INTERFACE_HEADER_NAME = "Moonlight-Swift.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
@@ -1160,7 +1159,7 @@
 				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = FRL23UV4N9;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Limelight/Limelight-Prefix.pch";
+				GCC_PREFIX_HEADER = "VoidLink/Limelight-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
@@ -1174,8 +1173,8 @@
 					"$(PROJECT_DIR)/Limelight/Localization",
 					"$(PROJECT_DIR)/Limelight/Database",
 				);
-				INFOPLIST_FILE = "Limelight/Limelight-Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = MoonlightZWM;
+				INFOPLIST_FILE = "VoidLink/Limelight-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = VoidLink;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.games";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1200,7 +1199,7 @@
 				PROVISIONING_PROFILE = "";
 				SKIP_INSTALL = NO;
 				SWIFT_COMPILATION_MODE = wholemodule;
-				SWIFT_OBJC_BRIDGING_HEADER = "Limelight/Moonlight-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "VoidLink/VoidLink-Bridging-Header.h";
 				SWIFT_OBJC_INTERFACE_HEADER_NAME = "Moonlight-Swift.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
