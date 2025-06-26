@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIGestureRecognizerSubclass.h>
 #import "CustomTapGestureRecognizer.h"
-#import "Moonlight-Swift.h"
+#import "VoidLink-Swift.h"
 
 // The most accurate & reliable tap gesture recognizer of iOS:
 // - Almost 100% recoginition rate. UITapGestureRecognizer of Apple API fails frequently, just a piece of crap.

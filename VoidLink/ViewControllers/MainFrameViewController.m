@@ -34,7 +34,7 @@
 #import "DataManager.h"
 #import "ThemeManager.h"
 #import "FixedTintImageView.h"
-#import "Moonlight-Swift.h" // not used yet.
+#import "VoidLink-Swift.h" // not used yet.
 
 #if !TARGET_OS_TV
 #import "SettingsViewController.h"

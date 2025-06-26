@@ -11,7 +11,7 @@
 
 #import "OSCProfilesManager.h"
 #import "OnScreenButtonState.h"
-#import "Moonlight-Swift.h"
+#import "VoidLink-Swift.h"
 #import "LayoutOnScreenControlsViewController.h"
 #import "OnScreenControls.h"
 

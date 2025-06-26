@@ -18,7 +18,7 @@
 #import "CustomEdgeSlideGestureRecognizer.h"
 #import "CustomTapGestureRecognizer.h"
 #import "LocalizationHelper.h"
-#import "Moonlight-Swift.h"
+#import "VoidLink-Swift.h"
 #import "OSCProfilesManager.h"
 
 #include <sys/socket.h>

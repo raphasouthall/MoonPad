@@ -15,7 +15,7 @@
 //#import "OnScreenControls.h"
 #import "OSCProfilesManager.h"
 #import "LocalizationHelper.h"
-#import "Moonlight-Swift.h"
+#import "VoidLink-Swift.h"
 #import "ThemeManager.h"
 
 @interface LayoutOnScreenControlsViewController ()

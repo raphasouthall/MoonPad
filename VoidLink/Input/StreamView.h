@@ -13,7 +13,7 @@
 
 #import "ControllerSupport.h"
 #import "OnScreenControls.h"
-#import "Moonlight-Swift.h"
+#import "VoidLink-Swift.h"
 #import "StreamConfiguration.h"
 
 @protocol UserInteractionDelegate <NSObject>
