@@ -1,6 +1,6 @@
 [submodule "moonlight-common/moonlight-common-c"]
 	path = moonlight-common/moonlight-common-c
-url=https://github.com/The-Fried-Fish/common-c-module.git
+url=https://TrueZhuangJia@github.com/TrueZhuangJia/voidlink-common-c.git
 [submodule "X1Kit"]
 	path = X1Kit
 	url = https://github.com/cgutman/X1Kit.git
