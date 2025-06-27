@@ -1097,7 +1097,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = x;
 				DEVELOPMENT_TEAM = FRL23UV4N9;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "VoidLink/Limelight-Prefix.pch";
@@ -1115,7 +1115,7 @@
 					"$(PROJECT_DIR)/Limelight/Database",
 				);
 				INFOPLIST_FILE = "VoidLink/Limelight-Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = VoidLink;
+				INFOPLIST_KEY_CFBundleDisplayName = "VoidLink - beta";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.games";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1134,7 +1134,7 @@
 					"$(PROJECT_DIR)/libs/SDL2/lib/iOS-Sim",
 					"$(PROJECT_DIR)/libs/FFmpeg/lib/iOS-Sim",
 				);
-				MARKETING_VERSION = 9.0.263;
+				MARKETING_VERSION = 0.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.voidlink.tf.iOS;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
@@ -1156,7 +1156,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = x;
 				DEVELOPMENT_TEAM = FRL23UV4N9;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "VoidLink/Limelight-Prefix.pch";
@@ -1174,7 +1174,7 @@
 					"$(PROJECT_DIR)/Limelight/Database",
 				);
 				INFOPLIST_FILE = "VoidLink/Limelight-Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = VoidLink;
+				INFOPLIST_KEY_CFBundleDisplayName = "VoidLink - beta";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.games";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1193,8 +1193,8 @@
 					"$(PROJECT_DIR)/libs/SDL2/lib/iOS-Sim",
 					"$(PROJECT_DIR)/libs/FFmpeg/lib/iOS-Sim",
 				);
-				MARKETING_VERSION = 9.0.263;
-				PRODUCT_BUNDLE_IDENTIFIER = com.voidlink.iOS;
+				MARKETING_VERSION = 0.0.1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.voidlink.tf.iOS;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SKIP_INSTALL = NO;
