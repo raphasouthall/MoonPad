@@ -7,11 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		18341A042DEB662C0094E5F2 /* FixedTintImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 18341A032DEB662C0094E5F2 /* FixedTintImageView.m */; };
-		187F4B282E04658A00EECC59 /* WidgetPanelStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = 187F4B272E04658A00EECC59 /* WidgetPanelStackView.m */; };
-		189AD29A2DE7446000E24B88 /* HostCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 189AD2992DE7446000E24B88 /* HostCollectionViewController.m */; };
 		840751B32BF49C050096B657 /* CustomTapGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 840751B22BF49C050096B657 /* CustomTapGestureRecognizer.m */; };
-		841BAC922DE35D6B00DA639E /* ThemeManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 841BAC912DE35D6B00DA639E /* ThemeManager.m */; };
 		84203F232C5F24C00032EEED /* OnScreenWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84203F222C5F24C00032EEED /* OnScreenWidgetView.swift */; };
 		84351B0E2C29ACCB00A77989 /* LayoutOnScreenControls.m in Sources */ = {isa = PBXBuildFile; fileRef = 84351B072C29ACCA00A77989 /* LayoutOnScreenControls.m */; };
 		84351B0F2C29ACCB00A77989 /* OnScreenButtonState.m in Sources */ = {isa = PBXBuildFile; fileRef = 84351B092C29ACCA00A77989 /* OnScreenButtonState.m */; };
@@ -22,7 +18,6 @@
 		84351B2D2C29AD6100A77989 /* ToolBarContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 84351B292C29AD6000A77989 /* ToolBarContainerView.m */; };
 		84351B5C2C29ADBE00A77989 /* ProfileTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 84351B592C29ADBE00A77989 /* ProfileTableViewCell.m */; };
 		84351B5D2C29ADBE00A77989 /* ProfileTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 84351B5B2C29ADBE00A77989 /* ProfileTableViewCell.xib */; };
-		843667F02D9D7173004A7D7F /* widgetTemplates.bin in Resources */ = {isa = PBXBuildFile; fileRef = 843667EF2D9D7173004A7D7F /* widgetTemplates.bin */; };
 		843CC7F02C1E757D00BBC475 /* NativeTouchPointer.m in Sources */ = {isa = PBXBuildFile; fileRef = 843CC7EF2C1E757D00BBC475 /* NativeTouchPointer.m */; };
 		843CC7F62C1E7A1700BBC475 /* NativeTouchHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 843CC7F52C1E7A1700BBC475 /* NativeTouchHandler.m */; };
 		843E93BE2C41528700B1651F /* OrientationHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 843E93BD2C41528700B1651F /* OrientationHelper.swift */; };
@@ -30,10 +25,8 @@
 		8454AC662C31907F00F0A302 /* iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8454AC682C31907F00F0A302 /* iPad.storyboard */; };
 		8454AC6A2C319BDA00F0A302 /* iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8454AC6C2C319BDA00F0A302 /* iPhone.storyboard */; };
 		84591A512BE1625E006AAB10 /* CustomEdgeSlideGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 84591A502BE1625E006AAB10 /* CustomEdgeSlideGestureRecognizer.m */; };
-		847D2FDB2DDA015F00937A62 /* MenuSectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 847D2FDA2DDA015F00937A62 /* MenuSectionView.m */; };
-		848F456A2DDCD12500581E36 /* HostCardView.m in Sources */ = {isa = PBXBuildFile; fileRef = 848F45692DDCD12500581E36 /* HostCardView.m */; };
 		84E1CDEC2C4F67D300547904 /* CommandManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84E1CDEB2C4F67D300547904 /* CommandManager.swift */; };
-		84E1CDEF2C4F688E00547904 /* ToolBoxViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84E1CDEE2C4F688E00547904 /* ToolBoxViewController.swift */; };
+		84E1CDEF2C4F688E00547904 /* CommandManagerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84E1CDEE2C4F688E00547904 /* CommandManagerViewController.swift */; };
 		84E1CDFA2C4FE83400547904 /* SwiftLocalizationHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84E1CDF92C4FE83400547904 /* SwiftLocalizationHelper.swift */; };
 		84FD0B512C31338D006B5BE5 /* LocalizationHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 84FD0B502C31338D006B5BE5 /* LocalizationHelper.m */; };
 		84FD0B542C3134A6006B5BE5 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 84FD0B532C3134A6006B5BE5 /* Localizable.xcstrings */; };
@@ -50,11 +43,11 @@
 		9890CF6B203B7EE1006C4B06 /* libxml2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 9890CF6A203B7EE1006C4B06 /* libxml2.tbd */; };
 		9896219723D15C7000211983 /* X1Kit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9896219623D15C7000211983 /* X1Kit.swift */; };
 		9897B6A1221260EF00966419 /* Controller.m in Sources */ = {isa = PBXBuildFile; fileRef = 9897B6A0221260EF00966419 /* Controller.m */; };
+		98A2E31229B5256E00CA17A7 /* OpenSSL.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 98A2E31029B5256200CA17A7 /* OpenSSL.xcframework */; };
 		98CFB82F1CAD481B0048EF74 /* libmoonlight-common.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 98AB2E841CAD46840089BB98 /* libmoonlight-common.a */; };
 		98D5856D1C0EA79600F6CC00 /* TemporaryHost.m in Sources */ = {isa = PBXBuildFile; fileRef = 98D5856C1C0EA79600F6CC00 /* TemporaryHost.m */; };
 		98D585701C0ED0E800F6CC00 /* TemporarySettings.m in Sources */ = {isa = PBXBuildFile; fileRef = 98D5856F1C0ED0E800F6CC00 /* TemporarySettings.m */; };
 		DC1F5A07206436B20037755F /* ConnectionHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = DC1F5A06206436B20037755F /* ConnectionHelper.m */; };
-		F74BEF9C2C1A705600224667 /* OpenSSL in Frameworks */ = {isa = PBXBuildFile; productRef = F74BEF9B2C1A705600224667 /* OpenSSL */; };
 		FB1A674D2131E65900507771 /* KeyboardSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = FB1A674C2131E65900507771 /* KeyboardSupport.m */; };
 		FB1D59971BBCCB6400F482CA /* ComputerScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = FB1D59961BBCCB6400F482CA /* ComputerScrollView.m */; };
 		FB1D599A1BBCCD7E00F482CA /* AppCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = FB1D59991BBCCD7E00F482CA /* AppCollectionView.m */; };
@@ -130,18 +123,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		18341A022DEB65AB0094E5F2 /* FixedTintImageView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FixedTintImageView.h; sourceTree = "<group>"; };
-		18341A032DEB662C0094E5F2 /* FixedTintImageView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FixedTintImageView.m; sourceTree = "<group>"; };
-		187F4B232E04633100EECC59 /* WidgetPanelStackView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WidgetPanelStackView.h; sourceTree = "<group>"; };
-		187F4B272E04658A00EECC59 /* WidgetPanelStackView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WidgetPanelStackView.m; sourceTree = "<group>"; };
-		189AD2962DE743B700E24B88 /* HostCollectionViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HostCollectionViewController.h; sourceTree = "<group>"; };
-		189AD2992DE7446000E24B88 /* HostCollectionViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HostCollectionViewController.m; sourceTree = "<group>"; };
-		18BF141D2E0D7A00009DEE4F /* VoidLink v1.0.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "VoidLink v1.0.xcdatamodel"; sourceTree = "<group>"; };
+		566E9D2B2770B23A00EF7BFE /* Moonlight v1.7.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Moonlight v1.7.xcdatamodel"; sourceTree = "<group>"; };
 		693B3A9A218638CD00982F7B /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		840751B12BF49B5A0096B657 /* CustomTapGestureRecognizer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CustomTapGestureRecognizer.h; sourceTree = "<group>"; };
 		840751B22BF49C050096B657 /* CustomTapGestureRecognizer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CustomTapGestureRecognizer.m; sourceTree = "<group>"; };
-		841BAC8F2DE35BEC00DA639E /* ThemeManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ThemeManager.h; sourceTree = "<group>"; };
-		841BAC912DE35D6B00DA639E /* ThemeManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ThemeManager.m; sourceTree = "<group>"; };
 		84203F222C5F24C00032EEED /* OnScreenWidgetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnScreenWidgetView.swift; sourceTree = "<group>"; };
 		84351B062C29ACCA00A77989 /* OnScreenButtonState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OnScreenButtonState.h; sourceTree = "<group>"; };
 		84351B072C29ACCA00A77989 /* LayoutOnScreenControls.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LayoutOnScreenControls.m; sourceTree = "<group>"; };
@@ -160,7 +145,6 @@
 		84351B592C29ADBE00A77989 /* ProfileTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProfileTableViewCell.m; sourceTree = "<group>"; };
 		84351B5A2C29ADBE00A77989 /* ProfileTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProfileTableViewCell.h; sourceTree = "<group>"; };
 		84351B5B2C29ADBE00A77989 /* ProfileTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ProfileTableViewCell.xib; sourceTree = "<group>"; };
-		843667EF2D9D7173004A7D7F /* widgetTemplates.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; name = widgetTemplates.bin; path = PresetConfigs/widgetTemplates.bin; sourceTree = "<group>"; };
 		843CC7EE2C1E757D00BBC475 /* NativeTouchPointer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NativeTouchPointer.h; sourceTree = "<group>"; };
 		843CC7EF2C1E757D00BBC475 /* NativeTouchPointer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NativeTouchPointer.m; sourceTree = "<group>"; };
 		843CC7F42C1E778000BBC475 /* NativeTouchHandler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NativeTouchHandler.h; sourceTree = "<group>"; };
@@ -174,18 +158,15 @@
 		8454AC6D2C319BDA00F0A302 /* mul */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; name = mul; path = mul.lproj/iPhone.xcstrings; sourceTree = "<group>"; };
 		84591A4F2BE16240006AAB10 /* CustomEdgeSlideGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomEdgeSlideGestureRecognizer.h; sourceTree = "<group>"; };
 		84591A502BE1625E006AAB10 /* CustomEdgeSlideGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomEdgeSlideGestureRecognizer.m; sourceTree = "<group>"; };
-		847D2FD82DDA00C800937A62 /* MenuSectionView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MenuSectionView.h; sourceTree = "<group>"; };
-		847D2FDA2DDA015F00937A62 /* MenuSectionView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MenuSectionView.m; sourceTree = "<group>"; };
-		848F45682DDCD0D600581E36 /* HostCardView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HostCardView.h; sourceTree = "<group>"; };
-		848F45692DDCD12500581E36 /* HostCardView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HostCardView.m; sourceTree = "<group>"; };
-		84D8EB932C5146AD00FC10A9 /* VoidLink-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "VoidLink-Bridging-Header.h"; sourceTree = "<group>"; };
+		84D8EB932C5146AD00FC10A9 /* Moonlight-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Moonlight-Bridging-Header.h"; sourceTree = "<group>"; };
 		84E1CDEB2C4F67D300547904 /* CommandManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommandManager.swift; sourceTree = "<group>"; };
-		84E1CDEE2C4F688E00547904 /* ToolBoxViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolBoxViewController.swift; sourceTree = "<group>"; };
+		84E1CDEE2C4F688E00547904 /* CommandManagerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommandManagerViewController.swift; sourceTree = "<group>"; };
 		84E1CDF92C4FE83400547904 /* SwiftLocalizationHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftLocalizationHelper.swift; sourceTree = "<group>"; };
 		84FD0B4F2C313343006B5BE5 /* LocalizationHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LocalizationHelper.h; sourceTree = "<group>"; };
 		84FD0B502C31338D006B5BE5 /* LocalizationHelper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LocalizationHelper.m; sourceTree = "<group>"; };
 		84FD0B532C3134A6006B5BE5 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		9803CCAB254F9EAF00EE185E /* ConnectionCallbacks.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ConnectionCallbacks.h; sourceTree = "<group>"; };
+		98132E8C20BC9A62007A053F /* Moonlight v1.1.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Moonlight v1.1.xcdatamodel"; sourceTree = "<group>"; };
 		98181BE82791275D00E43572 /* libSDL2.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libSDL2.a; path = libs/SDL2/lib/iOS/libSDL2.a; sourceTree = "<group>"; };
 		98181BEA2791278300E43572 /* libSDL2.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libSDL2.a; path = libs/SDL2/lib/tvOS/libSDL2.a; sourceTree = "<group>"; };
 		98181BEC2791281100E43572 /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
@@ -193,11 +174,19 @@
 		9819CC13254F107A008A7C8E /* RelativeTouchHandler.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RelativeTouchHandler.m; sourceTree = "<group>"; };
 		9819CC20254F180F008A7C8E /* AbsoluteTouchHandler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AbsoluteTouchHandler.h; sourceTree = "<group>"; };
 		9819CC21254F180F008A7C8E /* AbsoluteTouchHandler.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AbsoluteTouchHandler.m; sourceTree = "<group>"; };
+		9819CC25254F2734008A7C8E /* Moonlight v1.6.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Moonlight v1.6.xcdatamodel"; sourceTree = "<group>"; };
 		9827E7A22514366900F25707 /* HapticContext.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HapticContext.m; sourceTree = "<group>"; };
 		9827E7A7251436EA00F25707 /* HapticContext.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HapticContext.h; sourceTree = "<group>"; };
 		9832D1341BBCD5C50036EF48 /* TemporaryApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TemporaryApp.h; path = Database/TemporaryApp.h; sourceTree = "<group>"; };
 		9832D1351BBCD5C50036EF48 /* TemporaryApp.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TemporaryApp.m; path = Database/TemporaryApp.m; sourceTree = "<group>"; };
+		984CD023288A310D0097D2D4 /* Moonlight v1.8.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Moonlight v1.8.xcdatamodel"; sourceTree = "<group>"; };
+		98517B1B21CE0A9000481377 /* Moonlight v1.3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Moonlight v1.3.xcdatamodel"; sourceTree = "<group>"; };
+		98608BDD22DC0C2C000E5672 /* Moonlight v1.4.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Moonlight v1.4.xcdatamodel"; sourceTree = "<group>"; };
 		9865DC3B2132922E0005B9B9 /* GameController.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameController.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS11.4.sdk/System/Library/Frameworks/GameController.framework; sourceTree = DEVELOPER_DIR; };
+		986CCE6C2133E45300168291 /* Moonlight v1.2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Moonlight v1.2.xcdatamodel"; sourceTree = "<group>"; };
+		986E28A528EA989100758361 /* Moonlight v1.9.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Moonlight v1.9.xcdatamodel"; sourceTree = "<group>"; };
+		9874E8962AE95E1D00130A3C /* Moonlight v1.10.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Moonlight v1.10.xcdatamodel"; sourceTree = "<group>"; };
+		98783FEA242EAC5D00F00EF4 /* Moonlight v1.5.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Moonlight v1.5.xcdatamodel"; sourceTree = "<group>"; };
 		98882A032AF60F5300C5A11C /* libavcodec.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libavcodec.a; path = libs/FFmpeg/lib/iOS/libavcodec.a; sourceTree = "<group>"; };
 		98882A042AF60F5300C5A11C /* libavutil.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libavutil.a; path = libs/FFmpeg/lib/iOS/libavutil.a; sourceTree = "<group>"; };
 		98882A052AF60F5300C5A11C /* libavformat.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libavformat.a; path = libs/FFmpeg/lib/iOS/libavformat.a; sourceTree = "<group>"; };
@@ -210,6 +199,7 @@
 		9896219623D15C7000211983 /* X1Kit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = X1Kit.swift; path = X1Kit/Sources/X1Kit/X1Kit.swift; sourceTree = "<group>"; };
 		9897B6A0221260EF00966419 /* Controller.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Controller.m; sourceTree = "<group>"; };
 		9897B6A32212610800966419 /* Controller.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Controller.h; sourceTree = "<group>"; };
+		98A2E31029B5256200CA17A7 /* OpenSSL.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = OpenSSL.xcframework; path = libs/OpenSSL.xcframework; sourceTree = "<group>"; };
 		98AB2E7F1CAD46830089BB98 /* moonlight-common.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "moonlight-common.xcodeproj"; path = "moonlight-common/moonlight-common.xcodeproj"; sourceTree = "<group>"; };
 		98B9CE6C27B2144B00B473C4 /* AVKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVKit.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS15.2.sdk/System/Library/Frameworks/AVKit.framework; sourceTree = DEVELOPER_DIR; };
 		98D5856B1C0EA79600F6CC00 /* TemporaryHost.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TemporaryHost.h; path = Database/TemporaryHost.h; sourceTree = "<group>"; };
@@ -230,7 +220,7 @@
 		FB1D59961BBCCB6400F482CA /* ComputerScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ComputerScrollView.m; sourceTree = "<group>"; };
 		FB1D59981BBCCD7E00F482CA /* AppCollectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppCollectionView.h; sourceTree = "<group>"; };
 		FB1D59991BBCCD7E00F482CA /* AppCollectionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppCollectionView.m; sourceTree = "<group>"; };
-		FB290CEE19B2C406004C83CF /* VoidLink.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VoidLink.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		FB290CEE19B2C406004C83CF /* Moonlight-ZWM.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Moonlight-ZWM.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		FB290CF119B2C406004C83CF /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		FB290CF319B2C406004C83CF /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		FB290CF519B2C406004C83CF /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -245,6 +235,7 @@
 		FB290D0819B2C406004C83CF /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		FB4678EB1A50C40900377732 /* OnScreenControls.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OnScreenControls.h; sourceTree = "<group>"; };
 		FB4678EC1A50C40900377732 /* OnScreenControls.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OnScreenControls.m; sourceTree = "<group>"; };
+		FB4678F21A51BDCB00377732 /* Limelight 0.3.0.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Limelight 0.3.0.xcdatamodel"; sourceTree = "<group>"; };
 		FB4678F81A55FFAD00377732 /* DiscoveryManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DiscoveryManager.h; sourceTree = "<group>"; };
 		FB4678F91A55FFAD00377732 /* DiscoveryManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DiscoveryManager.m; sourceTree = "<group>"; };
 		FB4678FD1A565DAC00377732 /* WakeOnLanManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WakeOnLanManager.h; sourceTree = "<group>"; };
@@ -254,8 +245,10 @@
 		FB4A23B71A9D3637004D2EF2 /* LoadingFrameViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoadingFrameViewController.m; sourceTree = "<group>"; };
 		FB53E1411BE5DC4400CD6ECE /* IdManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IdManager.h; sourceTree = "<group>"; };
 		FB53E1421BE5DC4400CD6ECE /* IdManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IdManager.m; sourceTree = "<group>"; };
+		FB53E1441BE5DCBC00CD6ECE /* Moonlight v1.0-2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Moonlight v1.0-2.xcdatamodel"; sourceTree = "<group>"; };
 		FB6549541A57907E001C8F39 /* DiscoveryWorker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DiscoveryWorker.h; sourceTree = "<group>"; };
 		FB6549551A57907E001C8F39 /* DiscoveryWorker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DiscoveryWorker.m; sourceTree = "<group>"; };
+		FB6549621A60B4A9001C8F39 /* Limelight 0.3.1.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Limelight 0.3.1.xcdatamodel"; sourceTree = "<group>"; };
 		FB89460519F646E200339C8A /* CryptoManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CryptoManager.h; sourceTree = "<group>"; };
 		FB89460619F646E200339C8A /* CryptoManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CryptoManager.m; sourceTree = "<group>"; };
 		FB89460719F646E200339C8A /* mkcert.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mkcert.c; sourceTree = "<group>"; };
@@ -285,6 +278,83 @@
 		FB89462619F646E200339C8A /* StreamFrameViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StreamFrameViewController.h; sourceTree = "<group>"; };
 		FB89462719F646E200339C8A /* StreamFrameViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StreamFrameViewController.m; sourceTree = "<group>"; };
 		FB89463719F6473800339C8A /* Launch Screen.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "Launch Screen.xib"; sourceTree = SOURCE_ROOT; };
+		FB89469419F6AFB800339C8A /* aes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = aes.h; sourceTree = "<group>"; };
+		FB89469519F6AFB800339C8A /* asn1.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = asn1.h; sourceTree = "<group>"; };
+		FB89469619F6AFB800339C8A /* asn1_mac.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = asn1_mac.h; sourceTree = "<group>"; };
+		FB89469719F6AFB800339C8A /* asn1t.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = asn1t.h; sourceTree = "<group>"; };
+		FB89469819F6AFB800339C8A /* bio.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = bio.h; sourceTree = "<group>"; };
+		FB89469919F6AFB800339C8A /* blowfish.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = blowfish.h; sourceTree = "<group>"; };
+		FB89469A19F6AFB800339C8A /* bn.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = bn.h; sourceTree = "<group>"; };
+		FB89469B19F6AFB800339C8A /* buffer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = buffer.h; sourceTree = "<group>"; };
+		FB89469C19F6AFB800339C8A /* camellia.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = camellia.h; sourceTree = "<group>"; };
+		FB89469D19F6AFB800339C8A /* cast.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = cast.h; sourceTree = "<group>"; };
+		FB89469E19F6AFB800339C8A /* cmac.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = cmac.h; sourceTree = "<group>"; };
+		FB89469F19F6AFB800339C8A /* cms.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = cms.h; sourceTree = "<group>"; };
+		FB8946A019F6AFB800339C8A /* comp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = comp.h; sourceTree = "<group>"; };
+		FB8946A119F6AFB800339C8A /* conf.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = conf.h; sourceTree = "<group>"; };
+		FB8946A219F6AFB800339C8A /* conf_api.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = conf_api.h; sourceTree = "<group>"; };
+		FB8946A319F6AFB800339C8A /* crypto.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = crypto.h; sourceTree = "<group>"; };
+		FB8946A419F6AFB800339C8A /* des.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = des.h; sourceTree = "<group>"; };
+		FB8946A519F6AFB800339C8A /* des_old.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = des_old.h; sourceTree = "<group>"; };
+		FB8946A619F6AFB800339C8A /* dh.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = dh.h; sourceTree = "<group>"; };
+		FB8946A719F6AFB800339C8A /* dsa.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = dsa.h; sourceTree = "<group>"; };
+		FB8946A819F6AFB800339C8A /* dso.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = dso.h; sourceTree = "<group>"; };
+		FB8946A919F6AFB800339C8A /* dtls1.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = dtls1.h; sourceTree = "<group>"; };
+		FB8946AA19F6AFB800339C8A /* e_os2.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = e_os2.h; sourceTree = "<group>"; };
+		FB8946AB19F6AFB800339C8A /* ebcdic.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ebcdic.h; sourceTree = "<group>"; };
+		FB8946AC19F6AFB800339C8A /* ec.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ec.h; sourceTree = "<group>"; };
+		FB8946AD19F6AFB800339C8A /* ecdh.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ecdh.h; sourceTree = "<group>"; };
+		FB8946AE19F6AFB800339C8A /* ecdsa.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ecdsa.h; sourceTree = "<group>"; };
+		FB8946AF19F6AFB800339C8A /* engine.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = engine.h; sourceTree = "<group>"; };
+		FB8946B019F6AFB800339C8A /* err.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = err.h; sourceTree = "<group>"; };
+		FB8946B119F6AFB800339C8A /* evp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = evp.h; sourceTree = "<group>"; };
+		FB8946B219F6AFB800339C8A /* hmac.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = hmac.h; sourceTree = "<group>"; };
+		FB8946B319F6AFB800339C8A /* idea.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = idea.h; sourceTree = "<group>"; };
+		FB8946B419F6AFB800339C8A /* krb5_asn.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = krb5_asn.h; sourceTree = "<group>"; };
+		FB8946B519F6AFB800339C8A /* kssl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = kssl.h; sourceTree = "<group>"; };
+		FB8946B619F6AFB800339C8A /* lhash.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = lhash.h; sourceTree = "<group>"; };
+		FB8946B719F6AFB800339C8A /* md4.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = md4.h; sourceTree = "<group>"; };
+		FB8946B819F6AFB800339C8A /* md5.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = md5.h; sourceTree = "<group>"; };
+		FB8946B919F6AFB800339C8A /* mdc2.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = mdc2.h; sourceTree = "<group>"; };
+		FB8946BA19F6AFB800339C8A /* modes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = modes.h; sourceTree = "<group>"; };
+		FB8946BB19F6AFB800339C8A /* obj_mac.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = obj_mac.h; sourceTree = "<group>"; };
+		FB8946BC19F6AFB800339C8A /* objects.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = objects.h; sourceTree = "<group>"; };
+		FB8946BD19F6AFB800339C8A /* ocsp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ocsp.h; sourceTree = "<group>"; };
+		FB8946BE19F6AFB800339C8A /* opensslconf.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = opensslconf.h; sourceTree = "<group>"; };
+		FB8946BF19F6AFB800339C8A /* opensslv.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = opensslv.h; sourceTree = "<group>"; };
+		FB8946C019F6AFB800339C8A /* ossl_typ.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ossl_typ.h; sourceTree = "<group>"; };
+		FB8946C119F6AFB800339C8A /* pem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = pem.h; sourceTree = "<group>"; };
+		FB8946C219F6AFB800339C8A /* pem2.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = pem2.h; sourceTree = "<group>"; };
+		FB8946C319F6AFB800339C8A /* pkcs12.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = pkcs12.h; sourceTree = "<group>"; };
+		FB8946C419F6AFB800339C8A /* pkcs7.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = pkcs7.h; sourceTree = "<group>"; };
+		FB8946C519F6AFB800339C8A /* pqueue.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = pqueue.h; sourceTree = "<group>"; };
+		FB8946C619F6AFB800339C8A /* rand.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = rand.h; sourceTree = "<group>"; };
+		FB8946C719F6AFB800339C8A /* rc2.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = rc2.h; sourceTree = "<group>"; };
+		FB8946C819F6AFB800339C8A /* rc4.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = rc4.h; sourceTree = "<group>"; };
+		FB8946C919F6AFB800339C8A /* ripemd.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ripemd.h; sourceTree = "<group>"; };
+		FB8946CA19F6AFB800339C8A /* rsa.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = rsa.h; sourceTree = "<group>"; };
+		FB8946CB19F6AFB800339C8A /* safestack.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = safestack.h; sourceTree = "<group>"; };
+		FB8946CC19F6AFB800339C8A /* seed.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = seed.h; sourceTree = "<group>"; };
+		FB8946CD19F6AFB800339C8A /* sha.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = sha.h; sourceTree = "<group>"; };
+		FB8946CE19F6AFB800339C8A /* srp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = srp.h; sourceTree = "<group>"; };
+		FB8946CF19F6AFB800339C8A /* srtp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = srtp.h; sourceTree = "<group>"; };
+		FB8946D019F6AFB800339C8A /* ssl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ssl.h; sourceTree = "<group>"; };
+		FB8946D119F6AFB800339C8A /* ssl2.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ssl2.h; sourceTree = "<group>"; };
+		FB8946D219F6AFB800339C8A /* ssl23.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ssl23.h; sourceTree = "<group>"; };
+		FB8946D319F6AFB800339C8A /* ssl3.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ssl3.h; sourceTree = "<group>"; };
+		FB8946D419F6AFB800339C8A /* stack.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = stack.h; sourceTree = "<group>"; };
+		FB8946D519F6AFB800339C8A /* symhacks.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = symhacks.h; sourceTree = "<group>"; };
+		FB8946D619F6AFB800339C8A /* tls1.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = tls1.h; sourceTree = "<group>"; };
+		FB8946D719F6AFB800339C8A /* ts.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ts.h; sourceTree = "<group>"; };
+		FB8946D819F6AFB800339C8A /* txt_db.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = txt_db.h; sourceTree = "<group>"; };
+		FB8946D919F6AFB800339C8A /* ui.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ui.h; sourceTree = "<group>"; };
+		FB8946DA19F6AFB800339C8A /* ui_compat.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ui_compat.h; sourceTree = "<group>"; };
+		FB8946DB19F6AFB800339C8A /* whrlpool.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = whrlpool.h; sourceTree = "<group>"; };
+		FB8946DC19F6AFB800339C8A /* x509.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = x509.h; sourceTree = "<group>"; };
+		FB8946DD19F6AFB800339C8A /* x509_vfy.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = x509_vfy.h; sourceTree = "<group>"; };
+		FB8946DE19F6AFB800339C8A /* x509v3.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = x509v3.h; sourceTree = "<group>"; };
+		FB8946E019F6AFB800339C8A /* libcrypto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libcrypto.a; sourceTree = "<group>"; };
+		FB8946E119F6AFB800339C8A /* libssl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libssl.a; sourceTree = "<group>"; };
 		FB8946E519F6AFB800339C8A /* opus.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = opus.h; sourceTree = "<group>"; };
 		FB8946E619F6AFB800339C8A /* opus_defines.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = opus_defines.h; sourceTree = "<group>"; };
 		FB8946E719F6AFB800339C8A /* opus_multistream.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = opus_multistream.h; sourceTree = "<group>"; };
@@ -302,6 +372,7 @@
 		FB9AFD3C1A7E111600872C98 /* AppAssetResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppAssetResponse.m; sourceTree = "<group>"; };
 		FB9AFD3E1A7E127D00872C98 /* AppListResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppListResponse.h; sourceTree = "<group>"; };
 		FB9AFD3F1A7E127D00872C98 /* AppListResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppListResponse.m; sourceTree = "<group>"; };
+		FBB460391B50ACE400F3099C /* Moonlight v1.0.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Moonlight v1.0.xcdatamodel"; sourceTree = "<group>"; };
 		FBD1C8E01A8AD69E00C6703C /* Logger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Logger.h; sourceTree = "<group>"; };
 		FBD1C8E11A8AD71400C6703C /* Logger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Logger.m; sourceTree = "<group>"; };
 		FBD3494119FC9C04002D2A60 /* AppAssetManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppAssetManager.h; sourceTree = "<group>"; };
@@ -323,6 +394,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				98A2E31229B5256E00CA17A7 /* OpenSSL.xcframework in Frameworks */,
 				9890CF6B203B7EE1006C4B06 /* libxml2.tbd in Frameworks */,
 				98CFB82F1CAD481B0048EF74 /* libmoonlight-common.a in Frameworks */,
 				FB8946ED19F6AFE800339C8A /* libopus.a in Frameworks */,
@@ -330,7 +402,6 @@
 				FB290CF419B2C406004C83CF /* CoreGraphics.framework in Frameworks */,
 				FB290CF819B2C406004C83CF /* CoreData.framework in Frameworks */,
 				98181BED2791281100E43572 /* CoreMotion.framework in Frameworks */,
-				F74BEF9C2C1A705600224667 /* OpenSSL in Frameworks */,
 				98882A072AF60F7200C5A11C /* libavformat.a in Frameworks */,
 				FB290CF619B2C406004C83CF /* UIKit.framework in Frameworks */,
 				FB290CF219B2C406004C83CF /* Foundation.framework in Frameworks */,
@@ -364,8 +435,6 @@
 				84351B2E2C29AD6600A77989 /* Cells */,
 				84351B282C29AD6000A77989 /* LayoutOnScreenControlsViewController.h */,
 				84351B252C29AD6000A77989 /* LayoutOnScreenControlsViewController.m */,
-				187F4B232E04633100EECC59 /* WidgetPanelStackView.h */,
-				187F4B272E04658A00EECC59 /* WidgetPanelStackView.m */,
 				84351B262C29AD6000A77989 /* OSCProfilesTableViewController.h */,
 				84351B272C29AD6000A77989 /* OSCProfilesTableViewController.m */,
 				84351B2A2C29AD6000A77989 /* ToolBarContainerView.h */,
@@ -382,14 +451,6 @@
 				84351B5B2C29ADBE00A77989 /* ProfileTableViewCell.xib */,
 			);
 			path = Cells;
-			sourceTree = "<group>";
-		};
-		843667ED2D9D70A3004A7D7F /* PresetConfigs */ = {
-			isa = PBXGroup;
-			children = (
-				843667EF2D9D7173004A7D7F /* widgetTemplates.bin */,
-			);
-			name = PresetConfigs;
 			sourceTree = "<group>";
 		};
 		84FD0B492C312C0B006B5BE5 /* Localization */ = {
@@ -437,7 +498,7 @@
 			children = (
 				9896219423D15C2900211983 /* X1Kit */,
 				98AB2E7F1CAD46830089BB98 /* moonlight-common.xcodeproj */,
-				FB290CF919B2C406004C83CF /* VoidLink */,
+				FB290CF919B2C406004C83CF /* Moonlight */,
 				FB1A67542132419700507771 /* Moonlight TV */,
 				FB290CF019B2C406004C83CF /* Frameworks */,
 				FB290CEF19B2C406004C83CF /* Products */,
@@ -447,7 +508,7 @@
 		FB290CEF19B2C406004C83CF /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				FB290CEE19B2C406004C83CF /* VoidLink.app */,
+				FB290CEE19B2C406004C83CF /* Moonlight-ZWM.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -461,6 +522,7 @@
 				98882A0B2AF60F9000C5A11C /* libavformat.a */,
 				98882A042AF60F5300C5A11C /* libavutil.a */,
 				98882A092AF60F9000C5A11C /* libavutil.a */,
+				98A2E31029B5256200CA17A7 /* OpenSSL.xcframework */,
 				98B9CE6C27B2144B00B473C4 /* AVKit.framework */,
 				98181BEC2791281100E43572 /* CoreMotion.framework */,
 				98181BE82791275D00E43572 /* libSDL2.a */,
@@ -479,10 +541,10 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		FB290CF919B2C406004C83CF /* VoidLink */ = {
+		FB290CF919B2C406004C83CF /* Moonlight */ = {
 			isa = PBXGroup;
 			children = (
-				84D8EB932C5146AD00FC10A9 /* VoidLink-Bridging-Header.h */,
+				84D8EB932C5146AD00FC10A9 /* Moonlight-Bridging-Header.h */,
 				84FD0B492C312C0B006B5BE5 /* Localization */,
 				8454AC682C31907F00F0A302 /* iPad.storyboard */,
 				8454AC6C2C319BDA00F0A302 /* iPhone.storyboard */,
@@ -495,15 +557,7 @@
 				FBD3495F1A004453002D2A60 /* Database */,
 				FB290CFA19B2C406004C83CF /* Supporting Files */,
 				FB290D0219B2C406004C83CF /* AppDelegate.h */,
-				18341A022DEB65AB0094E5F2 /* FixedTintImageView.h */,
-				18341A032DEB662C0094E5F2 /* FixedTintImageView.m */,
 				FB290D0319B2C406004C83CF /* AppDelegate.m */,
-				848F45682DDCD0D600581E36 /* HostCardView.h */,
-				848F45692DDCD12500581E36 /* HostCardView.m */,
-				841BAC8F2DE35BEC00DA639E /* ThemeManager.h */,
-				841BAC912DE35D6B00DA639E /* ThemeManager.m */,
-				847D2FD82DDA00C800937A62 /* MenuSectionView.h */,
-				847D2FDA2DDA015F00937A62 /* MenuSectionView.m */,
 				FBDE86DE19F7A837001C18A8 /* UIComputerView.h */,
 				FBDE86DF19F7A837001C18A8 /* UIComputerView.m */,
 				FBDE86E419F82297001C18A8 /* UIAppView.h */,
@@ -517,13 +571,13 @@
 				FB1D59991BBCCD7E00F482CA /* AppCollectionView.m */,
 				843E93BD2C41528700B1651F /* OrientationHelper.swift */,
 			);
-			path = VoidLink;
+			name = Moonlight;
+			path = Limelight;
 			sourceTree = "<group>";
 		};
 		FB290CFA19B2C406004C83CF /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				843667ED2D9D70A3004A7D7F /* PresetConfigs */,
 				FB290CFB19B2C406004C83CF /* Limelight-Info.plist */,
 				FB290CFC19B2C406004C83CF /* InfoPlist.strings */,
 				FB290CFF19B2C406004C83CF /* main.m */,
@@ -634,15 +688,13 @@
 				FBD3495219FF36FB002D2A60 /* SWRevealViewController.m */,
 				FB89462419F646E200339C8A /* MainFrameViewController.h */,
 				FB89462519F646E200339C8A /* MainFrameViewController.m */,
-				189AD2962DE743B700E24B88 /* HostCollectionViewController.h */,
-				189AD2992DE7446000E24B88 /* HostCollectionViewController.m */,
 				FB89462619F646E200339C8A /* StreamFrameViewController.h */,
 				FB89462719F646E200339C8A /* StreamFrameViewController.m */,
 				FBD3494E19FF2174002D2A60 /* SettingsViewController.h */,
 				FBD3494F19FF2174002D2A60 /* SettingsViewController.m */,
 				FB4A23B61A9D3637004D2EF2 /* LoadingFrameViewController.h */,
 				FB4A23B71A9D3637004D2EF2 /* LoadingFrameViewController.m */,
-				84E1CDEE2C4F688E00547904 /* ToolBoxViewController.swift */,
+				84E1CDEE2C4F688E00547904 /* CommandManagerViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -650,9 +702,118 @@
 		FB89468F19F6AFB800339C8A /* libs */ = {
 			isa = PBXGroup;
 			children = (
+				FB89469119F6AFB800339C8A /* openssl */,
 				FB8946E219F6AFB800339C8A /* opus */,
 			);
 			path = libs;
+			sourceTree = "<group>";
+		};
+		FB89469119F6AFB800339C8A /* openssl */ = {
+			isa = PBXGroup;
+			children = (
+				FB89469219F6AFB800339C8A /* include */,
+				FB8946DF19F6AFB800339C8A /* lib */,
+			);
+			path = openssl;
+			sourceTree = "<group>";
+		};
+		FB89469219F6AFB800339C8A /* include */ = {
+			isa = PBXGroup;
+			children = (
+				FB89469319F6AFB800339C8A /* openssl */,
+			);
+			path = include;
+			sourceTree = "<group>";
+		};
+		FB89469319F6AFB800339C8A /* openssl */ = {
+			isa = PBXGroup;
+			children = (
+				FB89469419F6AFB800339C8A /* aes.h */,
+				FB89469519F6AFB800339C8A /* asn1.h */,
+				FB89469619F6AFB800339C8A /* asn1_mac.h */,
+				FB89469719F6AFB800339C8A /* asn1t.h */,
+				FB89469819F6AFB800339C8A /* bio.h */,
+				FB89469919F6AFB800339C8A /* blowfish.h */,
+				FB89469A19F6AFB800339C8A /* bn.h */,
+				FB89469B19F6AFB800339C8A /* buffer.h */,
+				FB89469C19F6AFB800339C8A /* camellia.h */,
+				FB89469D19F6AFB800339C8A /* cast.h */,
+				FB89469E19F6AFB800339C8A /* cmac.h */,
+				FB89469F19F6AFB800339C8A /* cms.h */,
+				FB8946A019F6AFB800339C8A /* comp.h */,
+				FB8946A119F6AFB800339C8A /* conf.h */,
+				FB8946A219F6AFB800339C8A /* conf_api.h */,
+				FB8946A319F6AFB800339C8A /* crypto.h */,
+				FB8946A419F6AFB800339C8A /* des.h */,
+				FB8946A519F6AFB800339C8A /* des_old.h */,
+				FB8946A619F6AFB800339C8A /* dh.h */,
+				FB8946A719F6AFB800339C8A /* dsa.h */,
+				FB8946A819F6AFB800339C8A /* dso.h */,
+				FB8946A919F6AFB800339C8A /* dtls1.h */,
+				FB8946AA19F6AFB800339C8A /* e_os2.h */,
+				FB8946AB19F6AFB800339C8A /* ebcdic.h */,
+				FB8946AC19F6AFB800339C8A /* ec.h */,
+				FB8946AD19F6AFB800339C8A /* ecdh.h */,
+				FB8946AE19F6AFB800339C8A /* ecdsa.h */,
+				FB8946AF19F6AFB800339C8A /* engine.h */,
+				FB8946B019F6AFB800339C8A /* err.h */,
+				FB8946B119F6AFB800339C8A /* evp.h */,
+				FB8946B219F6AFB800339C8A /* hmac.h */,
+				FB8946B319F6AFB800339C8A /* idea.h */,
+				FB8946B419F6AFB800339C8A /* krb5_asn.h */,
+				FB8946B519F6AFB800339C8A /* kssl.h */,
+				FB8946B619F6AFB800339C8A /* lhash.h */,
+				FB8946B719F6AFB800339C8A /* md4.h */,
+				FB8946B819F6AFB800339C8A /* md5.h */,
+				FB8946B919F6AFB800339C8A /* mdc2.h */,
+				FB8946BA19F6AFB800339C8A /* modes.h */,
+				FB8946BB19F6AFB800339C8A /* obj_mac.h */,
+				FB8946BC19F6AFB800339C8A /* objects.h */,
+				FB8946BD19F6AFB800339C8A /* ocsp.h */,
+				FB8946BE19F6AFB800339C8A /* opensslconf.h */,
+				FB8946BF19F6AFB800339C8A /* opensslv.h */,
+				FB8946C019F6AFB800339C8A /* ossl_typ.h */,
+				FB8946C119F6AFB800339C8A /* pem.h */,
+				FB8946C219F6AFB800339C8A /* pem2.h */,
+				FB8946C319F6AFB800339C8A /* pkcs12.h */,
+				FB8946C419F6AFB800339C8A /* pkcs7.h */,
+				FB8946C519F6AFB800339C8A /* pqueue.h */,
+				FB8946C619F6AFB800339C8A /* rand.h */,
+				FB8946C719F6AFB800339C8A /* rc2.h */,
+				FB8946C819F6AFB800339C8A /* rc4.h */,
+				FB8946C919F6AFB800339C8A /* ripemd.h */,
+				FB8946CA19F6AFB800339C8A /* rsa.h */,
+				FB8946CB19F6AFB800339C8A /* safestack.h */,
+				FB8946CC19F6AFB800339C8A /* seed.h */,
+				FB8946CD19F6AFB800339C8A /* sha.h */,
+				FB8946CE19F6AFB800339C8A /* srp.h */,
+				FB8946CF19F6AFB800339C8A /* srtp.h */,
+				FB8946D019F6AFB800339C8A /* ssl.h */,
+				FB8946D119F6AFB800339C8A /* ssl2.h */,
+				FB8946D219F6AFB800339C8A /* ssl23.h */,
+				FB8946D319F6AFB800339C8A /* ssl3.h */,
+				FB8946D419F6AFB800339C8A /* stack.h */,
+				FB8946D519F6AFB800339C8A /* symhacks.h */,
+				FB8946D619F6AFB800339C8A /* tls1.h */,
+				FB8946D719F6AFB800339C8A /* ts.h */,
+				FB8946D819F6AFB800339C8A /* txt_db.h */,
+				FB8946D919F6AFB800339C8A /* ui.h */,
+				FB8946DA19F6AFB800339C8A /* ui_compat.h */,
+				FB8946DB19F6AFB800339C8A /* whrlpool.h */,
+				FB8946DC19F6AFB800339C8A /* x509.h */,
+				FB8946DD19F6AFB800339C8A /* x509_vfy.h */,
+				FB8946DE19F6AFB800339C8A /* x509v3.h */,
+			);
+			path = openssl;
+			sourceTree = "<group>";
+		};
+		FB8946DF19F6AFB800339C8A /* lib */ = {
+			isa = PBXGroup;
+			children = (
+				FB8946E019F6AFB800339C8A /* libcrypto.a */,
+				FB8946E119F6AFB800339C8A /* libssl.a */,
+			);
+			path = lib;
 			sourceTree = "<group>";
 		};
 		FB8946E219F6AFB800339C8A /* opus */ = {
@@ -752,9 +913,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		FB290CED19B2C406004C83CF /* VoidLink */ = {
+		FB290CED19B2C406004C83CF /* Moonlight-ZWM */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = FB290D2019B2C406004C83CF /* Build configuration list for PBXNativeTarget "VoidLink" */;
+			buildConfigurationList = FB290D2019B2C406004C83CF /* Build configuration list for PBXNativeTarget "Moonlight-ZWM" */;
 			buildPhases = (
 				FB290CEA19B2C406004C83CF /* Sources */,
 				FB290CEB19B2C406004C83CF /* Frameworks */,
@@ -765,9 +926,9 @@
 			dependencies = (
 				98AB2E861CAD468B0089BB98 /* PBXTargetDependency */,
 			);
-			name = VoidLink;
+			name = "Moonlight-ZWM";
 			productName = Limelight;
-			productReference = FB290CEE19B2C406004C83CF /* VoidLink.app */;
+			productReference = FB290CEE19B2C406004C83CF /* Moonlight-ZWM.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -785,7 +946,7 @@
 					};
 				};
 			};
-			buildConfigurationList = FB290CE919B2C406004C83CF /* Build configuration list for PBXProject "VoidLink" */;
+			buildConfigurationList = FB290CE919B2C406004C83CF /* Build configuration list for PBXProject "Moonlight" */;
 			compatibilityVersion = "Xcode 8.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -797,9 +958,6 @@
 				"zh-HK",
 			);
 			mainGroup = FB290CE519B2C406004C83CF;
-			packageReferences = (
-				F74BEF9A2C1A705600224667 /* XCRemoteSwiftPackageReference "OpenSSL-Package" */,
-			);
 			productRefGroup = FB290CEF19B2C406004C83CF /* Products */;
 			projectDirPath = "";
 			projectReferences = (
@@ -810,7 +968,7 @@
 			);
 			projectRoot = "";
 			targets = (
-				FB290CED19B2C406004C83CF /* VoidLink */,
+				FB290CED19B2C406004C83CF /* Moonlight-ZWM */,
 			);
 		};
 /* End PBXProject section */
@@ -842,7 +1000,6 @@
 				FB89463819F6473800339C8A /* Launch Screen.xib in Resources */,
 				8454AC662C31907F00F0A302 /* iPad.storyboard in Resources */,
 				8454AC6A2C319BDA00F0A302 /* iPhone.storyboard in Resources */,
-				843667F02D9D7173004A7D7F /* widgetTemplates.bin in Resources */,
 				84FD0B542C3134A6006B5BE5 /* Localizable.xcstrings in Resources */,
 				84351B5D2C29ADBE00A77989 /* ProfileTableViewCell.xib in Resources */,
 			);
@@ -871,9 +1028,7 @@
 				843E93BE2C41528700B1651F /* OrientationHelper.swift in Sources */,
 				FB4678FF1A565DAC00377732 /* WakeOnLanManager.m in Sources */,
 				84E1CDEC2C4F67D300547904 /* CommandManager.swift in Sources */,
-				847D2FDB2DDA015F00937A62 /* MenuSectionView.m in Sources */,
 				FB53E1431BE5DC4400CD6ECE /* IdManager.m in Sources */,
-				189AD29A2DE7446000E24B88 /* HostCollectionViewController.m in Sources */,
 				9897B6A1221260EF00966419 /* Controller.m in Sources */,
 				84351B112C29ACCB00A77989 /* OSCProfilesManager.m in Sources */,
 				FB89462919F646E200339C8A /* mkcert.c in Sources */,
@@ -891,18 +1046,15 @@
 				84351B0F2C29ACCB00A77989 /* OnScreenButtonState.m in Sources */,
 				FB89462B19F646E200339C8A /* StreamView.m in Sources */,
 				840751B32BF49C050096B657 /* CustomTapGestureRecognizer.m in Sources */,
-				187F4B282E04658A00EECC59 /* WidgetPanelStackView.m in Sources */,
 				FB4678FA1A55FFAD00377732 /* DiscoveryManager.m in Sources */,
-				841BAC922DE35D6B00DA639E /* ThemeManager.m in Sources */,
 				98D5856D1C0EA79600F6CC00 /* TemporaryHost.m in Sources */,
 				FB89463519F646E200339C8A /* MainFrameViewController.m in Sources */,
 				FBD1C8E21A8AD71400C6703C /* Logger.m in Sources */,
 				FB1D599A1BBCCD7E00F482CA /* AppCollectionView.m in Sources */,
-				848F456A2DDCD12500581E36 /* HostCardView.m in Sources */,
 				FB89463619F646E200339C8A /* StreamFrameViewController.m in Sources */,
 				9827E7A32514366900F25707 /* HapticContext.m in Sources */,
 				9832D1361BBCD5C50036EF48 /* TemporaryApp.m in Sources */,
-				84E1CDEF2C4F688E00547904 /* ToolBoxViewController.swift in Sources */,
+				84E1CDEF2C4F688E00547904 /* CommandManagerViewController.swift in Sources */,
 				844CD0EB2C7F8500004861A7 /* PureNativeTouchHandler.m in Sources */,
 				84351B102C29ACCB00A77989 /* OSCProfile.m in Sources */,
 				84351B2C2C29AD6100A77989 /* OSCProfilesTableViewController.m in Sources */,
@@ -925,7 +1077,6 @@
 				FB9AFD3A1A7E05CE00872C98 /* ServerInfoResponse.m in Sources */,
 				84351B2B2C29AD6100A77989 /* LayoutOnScreenControlsViewController.m in Sources */,
 				84351B5C2C29ADBE00A77989 /* ProfileTableViewCell.m in Sources */,
-				18341A042DEB662C0094E5F2 /* FixedTintImageView.m in Sources */,
 				FB89463119F646E200339C8A /* StreamManager.m in Sources */,
 				84351B2D2C29AD6100A77989 /* ToolBarContainerView.m in Sources */,
 				988FCD41293B091B003050E2 /* KeyboardInputField.m in Sources */,
@@ -984,7 +1135,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -1040,7 +1190,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -1097,10 +1246,10 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = x;
-				DEVELOPMENT_TEAM = FRL23UV4N9;
+				CURRENT_PROJECT_VERSION = 2;
+				DEVELOPMENT_TEAM = 476L3GD396;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "VoidLink/Limelight-Prefix.pch";
+				GCC_PREFIX_HEADER = "Limelight/Limelight-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
@@ -1114,10 +1263,9 @@
 					"$(PROJECT_DIR)/Limelight/Localization",
 					"$(PROJECT_DIR)/Limelight/Database",
 				);
-				INFOPLIST_FILE = "VoidLink/Limelight-Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = "VoidLink - beta";
+				INFOPLIST_FILE = "Limelight/Limelight-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = MoonlightZWM;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.games";
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1134,14 +1282,14 @@
 					"$(PROJECT_DIR)/libs/SDL2/lib/iOS-Sim",
 					"$(PROJECT_DIR)/libs/FFmpeg/lib/iOS-Sim",
 				);
-				MARKETING_VERSION = 0.0.1;
-				PRODUCT_BUNDLE_IDENTIFIER = com.voidlink.tf.debug7.iOS;
+				MARKETING_VERSION = 9.0.263;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.moonlight-stream.Moonlight-ios-gyro-zwm";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = NO;
-				SWIFT_OBJC_BRIDGING_HEADER = "VoidLink/VoidLink-Bridging-Header.h";
-				SWIFT_OBJC_INTERFACE_HEADER_NAME = "VoidLink-Swift.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "Limelight/Moonlight-Bridging-Header.h";
+				SWIFT_OBJC_INTERFACE_HEADER_NAME = "Moonlight-Swift.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
 				SWIFT_VERSION = 5.0;
@@ -1156,10 +1304,10 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = x;
-				DEVELOPMENT_TEAM = FRL23UV4N9;
+				CURRENT_PROJECT_VERSION = 2;
+				DEVELOPMENT_TEAM = 476L3GD396;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "VoidLink/Limelight-Prefix.pch";
+				GCC_PREFIX_HEADER = "Limelight/Limelight-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
@@ -1173,10 +1321,9 @@
 					"$(PROJECT_DIR)/Limelight/Localization",
 					"$(PROJECT_DIR)/Limelight/Database",
 				);
-				INFOPLIST_FILE = "VoidLink/Limelight-Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = "VoidLink - beta";
+				INFOPLIST_FILE = "Limelight/Limelight-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = MoonlightZWM;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.games";
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1193,14 +1340,14 @@
 					"$(PROJECT_DIR)/libs/SDL2/lib/iOS-Sim",
 					"$(PROJECT_DIR)/libs/FFmpeg/lib/iOS-Sim",
 				);
-				MARKETING_VERSION = 0.0.1;
-				PRODUCT_BUNDLE_IDENTIFIER = com.voidlink.tf.iOS;
+				MARKETING_VERSION = 9.0.263;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.moonlight-stream.Moonlight-ios-gyro-zwm";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SKIP_INSTALL = NO;
 				SWIFT_COMPILATION_MODE = wholemodule;
-				SWIFT_OBJC_BRIDGING_HEADER = "VoidLink/VoidLink-Bridging-Header.h";
-				SWIFT_OBJC_INTERFACE_HEADER_NAME = "VoidLink-Swift.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "Limelight/Moonlight-Bridging-Header.h";
+				SWIFT_OBJC_INTERFACE_HEADER_NAME = "Moonlight-Swift.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
 				SWIFT_VERSION = 5.0;
@@ -1211,7 +1358,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		FB290CE919B2C406004C83CF /* Build configuration list for PBXProject "VoidLink" */ = {
+		FB290CE919B2C406004C83CF /* Build configuration list for PBXProject "Moonlight" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				FB290D1E19B2C406004C83CF /* Debug */,
@@ -1220,7 +1367,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		FB290D2019B2C406004C83CF /* Build configuration list for PBXNativeTarget "VoidLink" */ = {
+		FB290D2019B2C406004C83CF /* Build configuration list for PBXNativeTarget "Moonlight-ZWM" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				FB290D2119B2C406004C83CF /* Debug */,
@@ -1231,33 +1378,27 @@
 		};
 /* End XCConfigurationList section */
 
-/* Begin XCRemoteSwiftPackageReference section */
-		F74BEF9A2C1A705600224667 /* XCRemoteSwiftPackageReference "OpenSSL-Package" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/krzyzanowskim/OpenSSL-Package.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 3.1.5004;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		F74BEF9B2C1A705600224667 /* OpenSSL */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = F74BEF9A2C1A705600224667 /* XCRemoteSwiftPackageReference "OpenSSL-Package" */;
-			productName = OpenSSL;
-		};
-/* End XCSwiftPackageProductDependency section */
-
 /* Begin XCVersionGroup section */
 		FB290D0519B2C406004C83CF /* Limelight.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
-				18BF141D2E0D7A00009DEE4F /* VoidLink v1.0.xcdatamodel */,
+				9874E8962AE95E1D00130A3C /* Moonlight v1.10.xcdatamodel */,
+				986E28A528EA989100758361 /* Moonlight v1.9.xcdatamodel */,
+				984CD023288A310D0097D2D4 /* Moonlight v1.8.xcdatamodel */,
+				566E9D2B2770B23A00EF7BFE /* Moonlight v1.7.xcdatamodel */,
+				9819CC25254F2734008A7C8E /* Moonlight v1.6.xcdatamodel */,
+				98783FEA242EAC5D00F00EF4 /* Moonlight v1.5.xcdatamodel */,
+				98608BDD22DC0C2C000E5672 /* Moonlight v1.4.xcdatamodel */,
+				98517B1B21CE0A9000481377 /* Moonlight v1.3.xcdatamodel */,
+				986CCE6C2133E45300168291 /* Moonlight v1.2.xcdatamodel */,
+				98132E8C20BC9A62007A053F /* Moonlight v1.1.xcdatamodel */,
+				FB53E1441BE5DCBC00CD6ECE /* Moonlight v1.0-2.xcdatamodel */,
+				FBB460391B50ACE400F3099C /* Moonlight v1.0.xcdatamodel */,
+				FB6549621A60B4A9001C8F39 /* Limelight 0.3.1.xcdatamodel */,
+				FB4678F21A51BDCB00377732 /* Limelight 0.3.0.xcdatamodel */,
 				FB290D0619B2C406004C83CF /* Limelight.xcdatamodel */,
 			);
-			currentVersion = 18BF141D2E0D7A00009DEE4F /* VoidLink v1.0.xcdatamodel */;
+			currentVersion = 9874E8962AE95E1D00130A3C /* Moonlight v1.10.xcdatamodel */;
 			path = Limelight.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
