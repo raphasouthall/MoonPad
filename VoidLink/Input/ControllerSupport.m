@@ -99,6 +99,7 @@ static const double MOUSE_SPEED_DIVISOR = 1.25;
         Controller* controller = [_controllers objectForKey:[NSNumber numberWithInteger:controllerNumber]];
         #if !TARGET_OS_TV //tvOS has no device motion
             NSInteger motionMode = _motionMode; //motionMode 0 = auto | 1 = always device | 2 = always controller
+        NSLog(@"motionMode: %ld", (long)motionMode);
             if(motionMode !=2 && controllerNumber < 2){
                 if(controller == nil || controller.gamepad.motion == nil || motionMode == 1){
                     //Player has no controller *or* no motion for controller 1 *or* wants to override controller 1 motion with device motion
@@ -136,6 +137,7 @@ static const double MOUSE_SPEED_DIVISOR = 1.25;
                                     controller.lastDeviceAccelSample = deviceAccelSample;
 
                                     // Convert g to m/s^2
+                                    NSLog(@"gyro input no.1 %f", CACurrentMediaTime());
                                     if(UIApplication.sharedApplication.windows.firstObject.windowScene.interfaceOrientation == 4){ //check for landscape left or landscape right
                                         LiSendControllerMotionEvent((uint8_t)controllerNumber,
                                                                     LI_MOTION_TYPE_ACCEL,
@@ -175,6 +177,7 @@ static const double MOUSE_SPEED_DIVISOR = 1.25;
                                     controller.lastDeviceGyroSample = deviceGyroSample;
 
                                     // Convert rad/s to deg/s
+                                    NSLog(@"gyro input no.2 %f", CACurrentMediaTime());
                                     if(UIApplication.sharedApplication.windows.firstObject.windowScene.interfaceOrientation == 4){//check for landscape left or landscape right
                                         LiSendControllerMotionEvent((uint8_t)controllerNumber,
                                                                     LI_MOTION_TYPE_GYRO,
@@ -220,6 +223,7 @@ static const double MOUSE_SPEED_DIVISOR = 1.25;
                             controller.lastAccelSample = accelSample;
                             
                             // Convert g to m/s^2
+                            NSLog(@"gyro input no.3 %f", CACurrentMediaTime());
                             LiSendControllerMotionEvent((uint8_t)controllerNumber,
                                                         LI_MOTION_TYPE_ACCEL,
                                                         accelSample.x * -9.80665f,
@@ -250,6 +254,7 @@ static const double MOUSE_SPEED_DIVISOR = 1.25;
                             controller.lastGyroSample = gyroSample;
                             
                             // Convert rad/s to deg/s
+                            NSLog(@"gyro input no.4 %f", CACurrentMediaTime());
                             LiSendControllerMotionEvent((uint8_t)controllerNumber,
                                                         LI_MOTION_TYPE_GYRO,
                                                         gyroSample.x * 57.2957795f,

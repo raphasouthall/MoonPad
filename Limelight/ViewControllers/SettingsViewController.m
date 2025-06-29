@@ -1090,6 +1090,7 @@ BOOL isCustomResolution(CGSize res) {
     NSInteger resolutionSelected = [self.resolutionSelector selectedSegmentIndex];
     NSInteger externalDisplayMode = [self.externalDisplayModeSelector selectedSegmentIndex];
     NSInteger localMousePointerMode = [self.localMousePointerModeSelector selectedSegmentIndex];
+    NSLog(@"saving motionMode: %ld", motionMode);
     [dataMan saveSettingsWithBitrate:_bitrate
                            framerate:framerate
                               height:height
