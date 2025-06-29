@@ -52,4 +52,6 @@
 
 -(NSUInteger) getConnectedGamepadCount;
 
+-(void)updateConfig:(StreamConfiguration*)streamConfig delegate:(id<ControllerSupportDelegate>)delegate;
+
 @end

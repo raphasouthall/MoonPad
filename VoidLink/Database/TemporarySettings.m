@@ -89,7 +89,7 @@
     self.multiController = settings.multiController;
     self.swapABXYButtons = settings.swapABXYButtons;
     self.onscreenControls = settings.onscreenControls;
-    self.motionMode = settings.motionMode;
+    self.gyroMode = settings.gyroMode;
     self.reverseMouseWheelDirection = settings.reverseMouseWheelDirection;
     self.asyncNativeTouchPriority = settings.asyncNativeTouchPriority;
     self.btMouseSupport = settings.btMouseSupport;

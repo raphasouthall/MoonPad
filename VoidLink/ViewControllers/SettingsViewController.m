@@ -501,7 +501,7 @@ BOOL isCustomResolution(CGSize res) {
 
     touchControlSection = [[MenuSectionView alloc] init];
     touchControlSection.delegate = self;
-    touchControlSection.sectionTitle = [LocalizationHelper localizedStringForKey:@"Touch Control"];
+    touchControlSection.sectionTitle = [LocalizationHelper localizedStringForKey:@"Touch & Control"];
     if (@available(iOS 13.0, *)) {
         [touchControlSection setSectionWithIcon:[UIImage imageNamed:@"arcade.stick.console"] andSize:20.5];
     }
@@ -511,6 +511,9 @@ BOOL isCustomResolution(CGSize res) {
     [self addSetting:self.mousePointerVelocityStack ofId:@"mousePointerVelocityStack" withInfoTag:NO withDynamicLabel:YES to:touchControlSection];
     [self addSetting:self.onScreenWidgetStack ofId:@"onScreenWidgetStack" withInfoTag:YES withDynamicLabel:YES to:touchControlSection];
     [self addSetting:self.swapAbaxyStack ofId:@"swapAbaxyStack" withInfoTag:NO withDynamicLabel:NO to:touchControlSection];
+    [self addSetting:self.gyroModeStack ofId:@"gyroModeStack" withInfoTag:YES withDynamicLabel:NO to:touchControlSection];
+    [self addSetting:self.gyroSensitivityStack ofId:@"gyroSensitivityStack" withInfoTag:NO withDynamicLabel:YES to:touchControlSection];
+
     [touchControlSection addToParentStack:_parentStack];
     [touchControlSection setExpanded:YES];
 
@@ -977,10 +980,52 @@ BOOL isCustomResolution(CGSize res) {
 
 -  (void)infoButtonTapped:(UIButton* )sender{
     
-    NSString* tipText = [NSString stringWithFormat:@"dummy text for setting stack: %@", sender.superview.accessibilityIdentifier];
+    NSString* tipText = @"";
+    bool showOnlineDocAction = false;
+    tipText = sender.superview.accessibilityIdentifier;
+    if([sender.superview.accessibilityIdentifier isEqualToString: @"bitrateStack"]){
+        tipText = [LocalizationHelper localizedStringForKey:@"bitrateStackTip"];
+        showOnlineDocAction = false;
+    }
+    if([sender.superview.accessibilityIdentifier isEqualToString: @"yuv444Stack"]){
+        tipText = [LocalizationHelper localizedStringForKey:@"yuv444StackTip"];
+        showOnlineDocAction = true;
+    }
+    if([sender.superview.accessibilityIdentifier isEqualToString: @"touchModeStack"]){
+        tipText = [LocalizationHelper localizedStringForKey:@"touchModeStackTip"];
+        showOnlineDocAction = false;
+    }
+    if([sender.superview.accessibilityIdentifier isEqualToString: @"pointerVelocityDividerStack"]){
+        tipText = [LocalizationHelper localizedStringForKey:@"pointerVelocityDividerStackTip"];
+        showOnlineDocAction = true;
+    }
+    if([sender.superview.accessibilityIdentifier isEqualToString: @"pointerVelocityFactorStack"]){
+        tipText = [LocalizationHelper localizedStringForKey:@"pointerVelocityFactorStackTip"];
+        showOnlineDocAction = true;
+    }
+
+    
+    
     
     UIAlertController *tipsAlertController = [UIAlertController alertControllerWithTitle: [LocalizationHelper localizedStringForKey:@"Tips"] message: [LocalizationHelper localizedStringForKey:@"%@", tipText] preferredStyle:UIAlertControllerStyleAlert];
 
+    
+    
+    NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+    paragraphStyle.alignment = NSTextAlignmentLeft;
+
+    NSDictionary *attributes = @{
+        NSParagraphStyleAttributeName: paragraphStyle,
+        NSFontAttributeName: [UIFont systemFontOfSize:14]
+    };
+
+    NSAttributedString *attributedMessage = [[NSAttributedString alloc] initWithString:tipText
+                                                                             attributes:attributes];
+
+    // 使用 KVC 设置 attributedMessage（注意审核风险）
+    [tipsAlertController setValue:attributedMessage forKey:@"attributedMessage"];
+
+    
     UIAlertAction *readInstruction = [UIAlertAction actionWithTitle:[LocalizationHelper localizedStringForKey:@"Online Documentation"]
                                                            style:UIAlertActionStyleDefault
                                                          handler:^(UIAlertAction *action){
@@ -989,11 +1034,15 @@ BOOL isCustomResolution(CGSize res) {
             [[UIApplication sharedApplication] openURL:url options:@{} completionHandler:nil];
         }
     }];
+
+    
     
     UIAlertAction *okAction = [UIAlertAction actionWithTitle:[LocalizationHelper localizedStringForKey:@"OK"]
                                                            style:UIAlertActionStyleDefault
                                                      handler:nil];
-    [tipsAlertController addAction:readInstruction];
+    
+    
+    if(showOnlineDocAction) [tipsAlertController addAction:readInstruction];
     [tipsAlertController addAction:okAction];
     [self presentViewController:tipsAlertController animated:YES completion:nil];
 }
@@ -1292,6 +1341,8 @@ BOOL isCustomResolution(CGSize res) {
     [self.framePacingSelector setSelectedSegmentIndex:currentSettings.useFramePacing ? 1 : 0];
     [self.multiControllerSwitch setOn:currentSettings.multiController];
     [self.swapABXYButtonsSelector setSelectedSegmentIndex:currentSettings.swapABXYButtons ? 1 : 0];
+    [self.gyroModeSelector setSelectedSegmentIndex:currentSettings.gyroMode.intValue];
+
     [self.audioOnPcSwitch setOn:currentSettings.playAudioOnPC];
     _lastSelectedResolutionIndex = resolution;
     [self.resolutionSelector setSelectedSegmentIndex:resolution];
@@ -1986,6 +2037,7 @@ BOOL isCustomResolution(CGSize res) {
     BOOL optimizeGames = self.optimizeGamesSwitch.isOn;
     BOOL multiController = self.multiControllerSwitch.isOn;
     BOOL swapABXYButtons = [self.swapABXYButtonsSelector selectedSegmentIndex] == 1;
+    NSInteger gyroMode = self.gyroModeSelector.selectedSegmentIndex;
     BOOL audioOnPC = self.audioOnPcSwitch.isOn;
     uint32_t preferredCodec = [self getChosenCodecPreference];
     BOOL enableYUV444 = self.yuv444Switch.isOn;
@@ -2005,6 +2057,7 @@ BOOL isCustomResolution(CGSize res) {
                                width:width
                          audioConfig:2 // Stereo
                     onscreenControls:onscreenControls
+                          gyroMode:gyroMode
                keyboardToggleFingers:keyboardToggleFingers
                 oscLayoutToolFingers:oscLayoutToolFingers
            slideToSettingsScreenEdge:slideToSettingsScreenEdge

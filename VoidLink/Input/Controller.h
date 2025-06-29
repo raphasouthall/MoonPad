@@ -59,4 +59,9 @@ typedef struct {
 @property (nonatomic)                   BOOL reportedArrival;
 @property (nonatomic)                   Controller* _Nullable mergedWithController;
 
+@property(nonatomic, assign) uint8_t motionType;
+@property(nonatomic, assign) uint16_t reportRateHz;
+@property(nonatomic, assign) uint16_t controllerNumber;
+
+
 @end

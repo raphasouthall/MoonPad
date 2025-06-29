@@ -703,6 +703,35 @@
         }
       }
     },
+    "bitrateStackTip" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Only increase the bitrate if your network is capable, be particularly careful above 50 Mbps."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "调高码率, 尤其是超过50Mbps时, 请确保具备相应网络条件."
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "调高码率, 尤其是超过50Mbps时, 请确保具备相应网络条件."
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "调高码率, 尤其是超过50Mbps时, 请确保具备相应网络条件."
+          }
+        }
+      }
+    },
     "Border Width" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2717,6 +2746,64 @@
         }
       }
     },
+    "pointerVelocityDividerStackTip" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sensitivity divider line: used to separate the pass-through zone from the adjustment zone for touch-point movement speed in multi-touch games (e.g. Genshin Impact, Honkai: Star Rail). For details, see the online documentation."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "灵敏度分割线, 用于划分多点触控游戏(原神/崩坏星穹铁道)中触点移速的透传区域和调整区域. 详见在线文档."
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "灵敏度分割线, 用于划分多点触控游戏(原神/崩坏星穹铁道)中触点移速的透传区域和调整区域. 详见在线文档."
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "灵敏度分割线, 用于划分多点触控游戏(原神/崩坏星穹铁道)中触点移速的透传区域和调整区域. 详见在线文档."
+          }
+        }
+      }
+    },
+    "pointerVelocityFactorStackTip" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Touch Sensitivity: Adjusts the movement speed of touch points on the right half of the screen, allowing you to control in-game camera sensitivity (for Genshin Impact & Honkai: Star Rail). See the online documentation for details."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "触点灵敏度,  用于调节右半屏触点的移速, 进而实现(原神/崩坏星穹铁道)游戏内视角转动的灵敏度调节.详见在线文档."
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "触点灵敏度,  用于调节右半屏触点的移速, 进而实现(原神/崩坏星穹铁道)游戏内视角转动的灵敏度调节.详见在线文档."
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "触点灵敏度,  用于调节右半屏触点的移速, 进而实现(原神/崩坏星穹铁道)游戏内视角转动的灵敏度调节.详见在线文档."
+          }
+        }
+      }
+    },
     "Poor connection to PC" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -3672,6 +3759,29 @@
         }
       }
     },
+    "Tips" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "提示"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "提示"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "提示"
+          }
+        }
+      }
+    },
     "To Toggle Local Keyboard: Tap %d Fingers" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -3701,25 +3811,25 @@
         }
       }
     },
-    "Touch Control" : {
+    "Touch & Control" : {
       "extractionState" : "manual",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "触控"
+            "value" : "触屏与控制"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "触控"
+            "value" : "触屏与控制"
           }
         },
         "zh-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "触控"
+            "value" : "触屏与控制"
           }
         }
       }
@@ -3858,6 +3968,35 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "调节屏幕靠右 %d%%区域的触点灵敏度"
+          }
+        }
+      }
+    },
+    "touchModeStackTip" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "- Touchpad: Dragging works exactly like on Windows laptop touchpad. A quick double-tap, starting from the second tap, enters drag mode.\n\n- Native Touch: Aka multi-touch passthrough, not supported on macOS.\n\n- Absolute Touch: Provides a touchscreen-like experience on macOS."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "- 触控板: 拖移方式与Windows笔记本电脑触控板相同, 快速双击的第2下开始进入拖动状态.\n\n- 多点触控: 不支持macOS.\n\n- 单点鼠标: 可为macOS提供类触屏体验."
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "- 触控板: 拖移方式与Windows笔记本电脑触控板相同, 快速双击的第2下开始进入拖动状态.\n\n- 多点触控: 不支持macOS.\n\n- 单点鼠标: 可为macOS提供类触屏体验."
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "- 触控板: 拖移方式与Windows笔记本电脑触控板相同, 快速双击的第2下开始进入拖动状态.\n\n- 多点触控: 不支持macOS.\n\n- 单点鼠标: 可为macOS提供类触屏体验."
           }
         }
       }
@@ -4071,6 +4210,35 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "网络状态较差. 请降低码率或更换可靠的网络连接."
+          }
+        }
+      }
+    },
+    "yuv444StackTip" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "- Enabling the YUV 4:4:4 option provides higher color fidelity but also requires greater bandwidth.\n\n- Since Apple does not provide an API to determine whether a device supports hardware decoding of YUV 4:4:4 video, you will need to enable this option manually to verify compatibility. On some devices, this may cause issues such as loss of video brightness."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "- 开启YUV 4:4:4 选项可提供更高色彩保真度, 但对带宽要求也更高. \n\n- 由于Apple并未提供API判断设备是否支持YUV 4:4:4视频硬解码, 您需要自行打开该选项确认是否可用. 某些设备会因此产生视频亮度丢失的问题."
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "- 开启YUV 4:4:4 选项可提供更高色彩保真度, 但对带宽要求也更高. \n\n- 由于Apple并未提供API判断设备是否支持YUV 4:4:4视频硬解码, 您需要自行打开该选项确认是否可用. 某些设备会因此产生视频亮度丢失的问题."
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "- 开启YUV 4:4:4 选项可提供更高色彩保真度, 但对带宽要求也更高. \n\n- 由于Apple并未提供API判断设备是否支持YUV 4:4:4视频硬解码, 您需要自行打开该选项确认是否可用. 某些设备会因此产生视频亮度丢失的问题."
           }
         }
       }

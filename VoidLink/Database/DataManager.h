@@ -35,6 +35,14 @@ typedef NS_ENUM(NSInteger, TouchEventPriorityEnum) {
     TouchMovePriority// deprecated by GUI
 };
 
+typedef NS_ENUM(NSInteger, GyroMode) {
+    GyroModeOff,
+    GyroModeAuto,
+    AlwaysDevice,
+    AlwaysController
+};
+
+
 typedef NS_ENUM(NSInteger, SettingsMenuMode) {
     AllSettings,
     FavoriteSettings,
@@ -47,7 +55,7 @@ typedef NS_ENUM(NSInteger, SettingsMenuMode) {
                            width:(NSInteger)width
                      audioConfig:(NSInteger)audioConfig
                 onscreenControls:(NSInteger)onscreenControls
-                      motionMode:(NSInteger)motionMode
+                      gyroMode:(NSInteger)gyroMode
            keyboardToggleFingers:(NSInteger)keyboardToggleFingers
             oscLayoutToolFingers:(NSInteger)oscLayoutToolFingers
        slideToSettingsScreenEdge:(NSInteger)slideToSettingsScreenEdge

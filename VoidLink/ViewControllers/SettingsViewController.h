@@ -98,6 +98,13 @@
 @property (strong, nonatomic) IBOutlet UISegmentedControl *externalDisplayModeSelector;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *localMousePointerModeSelector;
 
+@property (strong, nonatomic) IBOutlet UIStackView *gyroModeStack;
+@property (strong, nonatomic) IBOutlet UISegmentedControl *gyroModeSelector;
+@property (strong, nonatomic) IBOutlet UIStackView *gyroSensitivityStack;
+@property (strong, nonatomic) IBOutlet UISlider *gyroSensitivitySlider;
+
+
+
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wunguarded-availability"
 
