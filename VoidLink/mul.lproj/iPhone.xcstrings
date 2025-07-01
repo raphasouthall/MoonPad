@@ -1237,6 +1237,36 @@
         }
       }
     },
+    "Ecj-KO-Jim.text" : {
+      "comment" : "Class = \"UILabel\"; text = \"Gyro Sensitivity\"; ObjectID = \"Ecj-KO-Jim\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Gyro Sensitivity"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "陀螺仪灵敏度"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "陀螺仪灵敏度"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "陀螺仪灵敏度"
+          }
+        }
+      }
+    },
     "eiL-iX-G3Z.text" : {
       "comment" : "Class = \"UILabel\"; text = \"test\"; ObjectID = \"eiL-iX-G3Z\";",
       "extractionState" : "extracted_with_value",
@@ -1579,6 +1609,36 @@
         }
       }
     },
+    "jWW-mN-TwW.text" : {
+      "comment" : "Class = \"UILabel\"; text = \"Gyro Mode\"; ObjectID = \"jWW-mN-TwW\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Gyro Mode"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "陀螺仪"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "陀螺仪"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "陀螺仪"
+          }
+        }
+      }
+    },
     "kva-gQ-CZh.text" : {
       "comment" : "Class = \"UILabel\"; text = \"test\"; ObjectID = \"kva-gQ-CZh\";",
       "extractionState" : "extracted_with_value",
@@ -1893,6 +1953,126 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "打开软键盘"
+          }
+        }
+      }
+    },
+    "PIo-LV-9Gt.segmentTitles[0]" : {
+      "comment" : "Class = \"UISegmentedControl\"; PIo-LV-9Gt.segmentTitles[0] = \"Off\"; ObjectID = \"PIo-LV-9Gt\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Off"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "关闭"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "关闭"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "关闭"
+          }
+        }
+      }
+    },
+    "PIo-LV-9Gt.segmentTitles[1]" : {
+      "comment" : "Class = \"UISegmentedControl\"; PIo-LV-9Gt.segmentTitles[1] = \"Auto\"; ObjectID = \"PIo-LV-9Gt\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Auto"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "自动"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "自动"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "自动"
+          }
+        }
+      }
+    },
+    "PIo-LV-9Gt.segmentTitles[2]" : {
+      "comment" : "Class = \"UISegmentedControl\"; PIo-LV-9Gt.segmentTitles[2] = \"Built-in\"; ObjectID = \"PIo-LV-9Gt\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Built-in"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "内置"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "内置"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "内置"
+          }
+        }
+      }
+    },
+    "PIo-LV-9Gt.segmentTitles[3]" : {
+      "comment" : "Class = \"UISegmentedControl\"; PIo-LV-9Gt.segmentTitles[3] = \"Controller\"; ObjectID = \"PIo-LV-9Gt\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Controller"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "手柄"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "手柄"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "手柄"
           }
         }
       }

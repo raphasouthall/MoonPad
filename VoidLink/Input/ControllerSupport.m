@@ -89,7 +89,6 @@ static const double MOUSE_SPEED_DIVISOR = 1.25;
         // No connected controller for this player
         return;
     }
-    
     [controller.leftTriggerMotor setMotorAmplitude:leftTrigger];
     [controller.rightTriggerMotor setMotorAmplitude:rightTrigger];
 }
