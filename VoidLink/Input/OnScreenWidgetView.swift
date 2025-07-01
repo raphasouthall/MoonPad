@@ -1014,6 +1014,10 @@ import UIKit
         super.touchesBegan(touches, with: event)
         self.isMultipleTouchEnabled = self.touchPadString == "MOUSEPAD" // only enable multi-touch in mousePad mode
 
+        if !OnScreenWidgetView.editMode && self.touchPadString == "TRACKBALL" {
+            stopTrackballMomentum()
+        }
+        
         if touches.count == 1 { // to make sure touchBegan location captured properly, don't use event.alltouches.count here
             let currentTime = CACurrentMediaTime()
             touchTapTimeInterval = currentTime - touchTapTimeStamp
@@ -1194,6 +1198,14 @@ import UIKit
                     LiSendMouseMoveEvent(Int16(truncatingIfNeeded: Int(self.deltaX * 1.7 * self.sensitivityFactorX)), Int16(truncatingIfNeeded: Int(self.deltaY * 1.7 * self.sensitivityFactorY)))
                 }
                 break
+            case "TRACKBALL":
+                DispatchQueue.global(qos: .userInteractive).async {
+                    self.updateTouchLocation(touch: touches.first!)
+                    LiSendMouseMoveEvent(Int16(truncatingIfNeeded: Int(self.deltaX * 1.7 * self.sensitivityFactorX)), Int16(truncatingIfNeeded: Int(self.deltaY * 1.7 * self.sensitivityFactorY)))
+                    self.trackballVelocity = CGPoint(x: self.deltaX * 1.7 * self.sensitivityFactorX, y: self.deltaY * 1.7 * self.sensitivityFactorY)
+                    self.stopTrackballMomentum()
+                }
+                break
             case "LSPAD":
                 self.updateTouchLocation(touch: touches.first!)
                 DispatchQueue.global(qos: .userInteractive).async {
@@ -1259,6 +1271,9 @@ import UIKit
                 }
         }
         
+        if !OnScreenWidgetView.editMode && self.widgetType == WidgetTypeEnum.touchPad && self.touchPadString == "TRACKBALL" && allCapturedTouchesCount == 1 && !twoTouchesDetected {
+            self.startTrackballMomentum()
+        }
         
         if !OnScreenWidgetView.editMode && self.widgetType == WidgetTypeEnum.touchPad && self.touchPadString == "MOUSEPAD" && twoTouchesDetected && touches.count == allCapturedTouchesCount { // need to enable multi-touch first
             // touches.count == allCapturedTouchesCount means allfingers are lifting
