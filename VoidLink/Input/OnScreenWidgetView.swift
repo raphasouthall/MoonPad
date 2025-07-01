@@ -117,6 +117,7 @@ import UIKit
     // for mousePad
     private var touchLockedForMoveEvent: UITouch
     private var touchBegan: Bool = false
+    private var firstTouchMoved: Bool = false
     private var mousePointerMoved: Bool
     private var twoTouchesDetected: Bool
     
@@ -975,6 +976,7 @@ import UIKit
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         
         self.touchBegan = true
+        self.firstTouchMoved = false
         super.touchesBegan(touches, with: event)
         self.isMultipleTouchEnabled = self.touchPadString == "MOUSEPAD" // only enable multi-touch in mousePad mode
 
@@ -1134,6 +1136,11 @@ import UIKit
     private func updateTouchLocation (touch: UITouch) {
         self.mousePointerMoved = true
         let currentTouchLocation: CGPoint = (touch.location(in: self))
+        if !firstTouchMoved {
+            // First move event
+            self.latestTouchLocation = currentTouchLocation
+            self.firstTouchMoved = true
+        }
         self.deltaX = currentTouchLocation.x - self.latestTouchLocation.x
         self.deltaY = currentTouchLocation.y - self.latestTouchLocation.y
         self.offSetX = currentTouchLocation.x - self.touchBeganLocation.x
