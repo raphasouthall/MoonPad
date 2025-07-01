@@ -22,7 +22,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) CADisplayLink *displayLink;
 
 
-+ (void) testMethod;
 - (id)initWithView:(StreamView*)view andSettings:(TemporarySettings*)settings;
 
 @end

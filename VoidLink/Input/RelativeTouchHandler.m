@@ -23,6 +23,7 @@ static const float QUICK_TAP_TIME_INTERVAL = 0.2;
     CGPoint twoFingerTouchLocation;
     NSTimeInterval mousePointerTimestamp;
     CGRect streamViewBounds;
+    BOOL firstTouchMoved;
     BOOL mousePointerMoved;
     BOOL quickTapDetected;
     BOOL isInMouseWheelScrollingMode;
@@ -57,6 +58,7 @@ static const float QUICK_TAP_TIME_INTERVAL = 0.2;
     [self->streamView.streamFrameTopLayerView addGestureRecognizer:_mouseRightClickTapRecognizer]; // add all additional gestures to the streamFrameTopLayerView instead of the streamview.
     
     isInMouseWheelScrollingMode = false;
+    firstTouchMoved = false;
     mousePointerMoved = false;
     mousePointerTimestamp = 0;
     
@@ -141,6 +143,7 @@ static const float QUICK_TAP_TIME_INTERVAL = 0.2;
         return;
     }
     
+    firstTouchMoved = false;
     touchPointSpawnedAtUpperScreenEdge = false; // reset this flag immediately if we get a touch event passing the check above, this fixes irresponsive touch after closing the command tool menu.
     
     if([[event allTouches] count] == 2 && ![self isOnScreenWidgetViewBeingPressed] && ![self isOnScreenControllerBeingPressed:[event allTouches]]){
@@ -246,11 +249,16 @@ static const float QUICK_TAP_TIME_INTERVAL = 0.2;
         
         CGPoint currentLocation = [touch locationInView:self->streamView];
         
+        if (!self->firstTouchMoved) {
+            self->latestMousePointerLocation = currentLocation;
+            self->firstTouchMoved = true;
+        }
+        
         if (self->latestMousePointerLocation.x != currentLocation.x ||
             self->latestMousePointerLocation.y != currentLocation.y)
         {
-            int deltaX = (currentLocation.x - self->latestMousePointerLocation.x) * (REFERENCE_WIDTH / self->streamViewBounds.size.width) * self->currentSettings.mousePointerVelocityFactor.floatValue;
-            int deltaY = (currentLocation.y - self->latestMousePointerLocation.y) * (REFERENCE_HEIGHT / self->streamViewBounds.size.height) * self->currentSettings.mousePointerVelocityFactor.floatValue;
+            int deltaX = (currentLocation.x - self->latestMousePointerLocation.x) * 1.35 * self->currentSettings.mousePointerVelocityFactor.floatValue;
+            int deltaY = (currentLocation.y - self->latestMousePointerLocation.y) * 1.35 * self->currentSettings.mousePointerVelocityFactor.floatValue;
             
             if (deltaX != 0 || deltaY != 0) {
                 LiSendMouseMoveEvent(deltaX, deltaY);
