@@ -1136,11 +1136,13 @@ import UIKit
     private func updateTouchLocation (touch: UITouch) {
         self.mousePointerMoved = true
         let currentTouchLocation: CGPoint = (touch.location(in: self))
+        
         if !firstTouchMoved {
             // First move event
             self.latestTouchLocation = currentTouchLocation
             self.firstTouchMoved = true
         }
+        
         self.deltaX = currentTouchLocation.x - self.latestTouchLocation.x
         self.deltaY = currentTouchLocation.y - self.latestTouchLocation.y
         self.offSetX = currentTouchLocation.x - self.touchBeganLocation.x
