@@ -511,9 +511,6 @@ BOOL isCustomResolution(CGSize res) {
     [self addSetting:self.mousePointerVelocityStack ofId:@"mousePointerVelocityStack" withInfoTag:NO withDynamicLabel:YES to:touchControlSection];
     [self addSetting:self.onScreenWidgetStack ofId:@"onScreenWidgetStack" withInfoTag:YES withDynamicLabel:YES to:touchControlSection];
     [self addSetting:self.swapAbaxyStack ofId:@"swapAbaxyStack" withInfoTag:NO withDynamicLabel:NO to:touchControlSection];
-    [self addSetting:self.gyroModeStack ofId:@"gyroModeStack" withInfoTag:YES withDynamicLabel:YES to:touchControlSection];
-    [self addSetting:self.gyroSensitivityStack ofId:@"gyroSensitivityStack" withInfoTag:NO withDynamicLabel:YES to:touchControlSection];
-
     [touchControlSection addToParentStack:_parentStack];
     [touchControlSection setExpanded:YES];
 
@@ -580,8 +577,9 @@ BOOL isCustomResolution(CGSize res) {
     if (@available(iOS 13.0, *)) {
         [experimentalSection setSectionWithIcon:[UIImage imageNamed:@"flask"] andSize:20];
     }
-    // [self addSetting:self.asyncTouchStack ofId:@"asyncTouchStack" withInfoTag:YES withDynamicLabel:NO to:experimentalSection];
     [self addSetting:self.touchMoveEventIntervalStack ofId:@"touchMoveEventIntervalStack" withInfoTag:YES withDynamicLabel:YES to:experimentalSection];
+    [self addSetting:self.gyroModeStack ofId:@"gyroModeStack" withInfoTag:YES withDynamicLabel:YES to:experimentalSection];
+    [self addSetting:self.gyroSensitivityStack ofId:@"gyroSensitivityStack" withInfoTag:NO withDynamicLabel:YES to:experimentalSection];
     [experimentalSection addToParentStack:_parentStack];
     [experimentalSection setExpanded:YES];
 }
