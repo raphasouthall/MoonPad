@@ -511,7 +511,7 @@ BOOL isCustomResolution(CGSize res) {
     [self addSetting:self.mousePointerVelocityStack ofId:@"mousePointerVelocityStack" withInfoTag:NO withDynamicLabel:YES to:touchControlSection];
     [self addSetting:self.onScreenWidgetStack ofId:@"onScreenWidgetStack" withInfoTag:YES withDynamicLabel:YES to:touchControlSection];
     [self addSetting:self.swapAbaxyStack ofId:@"swapAbaxyStack" withInfoTag:NO withDynamicLabel:NO to:touchControlSection];
-    [self addSetting:self.gyroModeStack ofId:@"gyroModeStack" withInfoTag:YES withDynamicLabel:NO to:touchControlSection];
+    [self addSetting:self.gyroModeStack ofId:@"gyroModeStack" withInfoTag:YES withDynamicLabel:YES to:touchControlSection];
     [self addSetting:self.gyroSensitivityStack ofId:@"gyroSensitivityStack" withInfoTag:NO withDynamicLabel:YES to:touchControlSection];
 
     [touchControlSection addToParentStack:_parentStack];
@@ -1341,7 +1341,12 @@ BOOL isCustomResolution(CGSize res) {
     [self.framePacingSelector setSelectedSegmentIndex:currentSettings.useFramePacing ? 1 : 0];
     [self.multiControllerSwitch setOn:currentSettings.multiController];
     [self.swapABXYButtonsSelector setSelectedSegmentIndex:currentSettings.swapABXYButtons ? 1 : 0];
+    
     [self.gyroModeSelector setSelectedSegmentIndex:currentSettings.gyroMode.intValue];
+    [self.gyroSensitivitySlider setValue: (uint16_t)(currentSettings.gyroSensitivity.floatValue * 100) animated:YES]; // Load old setting.
+    [self.gyroSensitivitySlider addTarget:self action:@selector(gyroSensitivitySliderMoved:) forControlEvents:(UIControlEventValueChanged)]; // Update label display when slider is being moved.
+    [self gyroSensitivitySliderMoved:self.gyroSensitivitySlider];
+
 
     [self.audioOnPcSwitch setOn:currentSettings.playAudioOnPC];
     _lastSelectedResolutionIndex = resolution;
@@ -1590,7 +1595,11 @@ BOOL isCustomResolution(CGSize res) {
 }
 
 - (void) touchPointerVelocityFactorSliderMoved:(UISlider* )sender {
-    [self findDynamicLabelFromStack:self.pointerVelocityFactorStack].text = [NSString stringWithFormat:@"  %d%%  ", [self map_velocFactorDisplay_fromSliderValue: self.touchPointerVelocityFactorSlider.value]]; // Update label display
+    [self findDynamicLabelFromStack:self.pointerVelocityFactorStack].text = [NSString stringWithFormat:@"  %d%%  ", [self map_velocFactorDisplay_fromSliderValue:sender.value]]; // Update label display
+}
+
+- (void) gyroSensitivitySliderMoved:(UISlider* )sender {
+    [self findDynamicLabelFromStack:self.gyroSensitivityStack].text = [NSString stringWithFormat:@"  %d%%  ", (uint16_t)sender.value]; // Update label display
 }
 
 
@@ -2026,6 +2035,7 @@ BOOL isCustomResolution(CGSize res) {
     CGFloat pointerVelocityModeDivider = (CGFloat)(uint8_t)self.pointerVelocityModeDividerSlider.value/100;
     CGFloat touchPointerVelocityFactor = (CGFloat)(uint16_t)[self map_velocFactorDisplay_fromSliderValue:self.touchPointerVelocityFactorSlider.value]/100;
     CGFloat mousePointerVelocityFactor = (CGFloat)(uint16_t)[self map_velocFactorDisplay_fromSliderValue:self.mousePointerVelocityFactorSlider.value]/100;
+    CGFloat gyroSensitivity = (CGFloat)(uint16_t)self.gyroSensitivitySlider.value/100;
 
     uint16_t touchMoveEventInterval = (uint16_t)self.touchMoveEventIntervalSlider.value;
 
@@ -2057,17 +2067,18 @@ BOOL isCustomResolution(CGSize res) {
                                width:width
                          audioConfig:2 // Stereo
                     onscreenControls:onscreenControls
-                          gyroMode:gyroMode
+                            gyroMode:gyroMode
                keyboardToggleFingers:keyboardToggleFingers
                 oscLayoutToolFingers:oscLayoutToolFingers
            slideToSettingsScreenEdge:slideToSettingsScreenEdge
-                 slideToSettingsDistance:slideToSettingsDistance
+             slideToSettingsDistance:slideToSettingsDistance
           pointerVelocityModeDivider:pointerVelocityModeDivider
           touchPointerVelocityFactor:touchPointerVelocityFactor
           mousePointerVelocityFactor:mousePointerVelocityFactor
+                     gyroSensitivity:gyroSensitivity
               touchMoveEventInterval:touchMoveEventInterval
           reverseMouseWheelDirection:reverseMouseWheelDirection
-                   asyncNativeTouchPriority:asyncNativeTouchPriority
+            asyncNativeTouchPriority:asyncNativeTouchPriority
            liftStreamViewForKeyboard:liftStreamViewForKeyboard
                  showKeyboardToolbar:showKeyboardToolbar
                        optimizeGames:optimizeGames
@@ -2075,14 +2086,14 @@ BOOL isCustomResolution(CGSize res) {
                      swapABXYButtons:swapABXYButtons
                            audioOnPC:audioOnPC
                       preferredCodec:preferredCodec
-                           enableYUV444:enableYUV444
+                        enableYUV444:enableYUV444
                       useFramePacing:useFramePacing
                            enableHdr:enableHdr
                       btMouseSupport:btMouseSupport
                            touchMode:touchMode
                    statsOverlayLevel:statsOverlayLevel
-                        statsOverlayEnabled:statsOverlayEnabled
-                       unlockDisplayOrientation:unlockDisplayOrientation
+                 statsOverlayEnabled:statsOverlayEnabled
+            unlockDisplayOrientation:unlockDisplayOrientation
                   resolutionSelected:resolutionSelected
                  externalDisplayMode:externalDisplayMode
                localMousePointerMode:localMousePointerMode];

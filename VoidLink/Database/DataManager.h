@@ -63,6 +63,7 @@ typedef NS_ENUM(NSInteger, SettingsMenuMode) {
       pointerVelocityModeDivider:(CGFloat)pointerVelocityModeDivider
       touchPointerVelocityFactor:(CGFloat)touchPointerVelocityFactor
       mousePointerVelocityFactor:(CGFloat)mousePointerVelocityFactor
+                 gyroSensitivity:(CGFloat)gyroSensitivity
           touchMoveEventInterval:(NSInteger)touchMoveEventInterval
       reverseMouseWheelDirection:(BOOL)reverseMouseWheelDirection
                   asyncNativeTouchPriority:(NSInteger)asyncNativeTouchPriority

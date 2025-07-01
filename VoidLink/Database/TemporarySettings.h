@@ -32,6 +32,7 @@
 @property (nonatomic, retain) NSNumber * slideToSettingsDistance;
 @property (nonatomic, retain) NSNumber * touchMoveEventInterval;
 @property (nonatomic, retain) NSNumber * touchPointerVelocityFactor;
+@property (nonatomic, retain) NSNumber * gyroSensitivity;
 @property (nonatomic, retain) NSNumber * mousePointerVelocityFactor;
 @property (nonatomic, retain) NSNumber * pointerVelocityModeDivider;
 @property (nonatomic, retain) NSString * uniqueId;

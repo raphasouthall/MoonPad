@@ -65,10 +65,11 @@
            keyboardToggleFingers:(NSInteger)keyboardToggleFingers
             oscLayoutToolFingers:(NSInteger)oscLayoutToolFingers
        slideToSettingsScreenEdge:(NSInteger)slideToSettingsScreenEdge
-             slideToSettingsDistance:(CGFloat)slideToSettingsDistance
+         slideToSettingsDistance:(CGFloat)slideToSettingsDistance
       pointerVelocityModeDivider:(CGFloat)pointerVelocityModeDivider
       touchPointerVelocityFactor:(CGFloat)touchPointerVelocityFactor
       mousePointerVelocityFactor:(CGFloat)mousePointerVelocityFactor
+                 gyroSensitivity:(CGFloat)gyroSensitivity
           touchMoveEventInterval:(NSInteger)touchMoveEventInterval
       reverseMouseWheelDirection:(BOOL)reverseMouseWheelDirection
                   asyncNativeTouchPriority:(NSInteger)asyncNativeTouchPriority
@@ -108,6 +109,7 @@
         settingsToSave.pointerVelocityModeDivider = [NSNumber numberWithFloat:pointerVelocityModeDivider];
         settingsToSave.touchPointerVelocityFactor = [NSNumber numberWithFloat:touchPointerVelocityFactor];
         settingsToSave.mousePointerVelocityFactor = [NSNumber numberWithFloat:mousePointerVelocityFactor];
+        settingsToSave.gyroSensitivity = [NSNumber numberWithFloat:gyroSensitivity];
         settingsToSave.touchMoveEventInterval = [NSNumber numberWithInteger:touchMoveEventInterval];
         settingsToSave.reverseMouseWheelDirection = reverseMouseWheelDirection;
         settingsToSave.asyncNativeTouchPriority = [NSNumber numberWithInteger:asyncNativeTouchPriority];

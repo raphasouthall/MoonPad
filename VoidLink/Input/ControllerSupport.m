@@ -54,6 +54,7 @@ static const double MOUSE_SPEED_DIVISOR = 1.25;
     bool _multiController;
     bool _swapABXYButtons;
     int _gyroMode;
+    CGFloat _gyroSensitivity;
     bool _captureMouse;
 }
 
@@ -130,9 +131,9 @@ static const double MOUSE_SPEED_DIVISOR = 1.25;
                                 CMAcceleration lastDeviceAccelSample = controller.lastDeviceAccelSample;
                                 CMAcceleration deviceAccelSample = controller.motionManager.deviceMotion.userAcceleration;
                                 //userAcceleration does not contain gravity, add gravity to x, y and z values:
-                                deviceAccelSample.x += controller.motionManager.deviceMotion.gravity.x;
-                                deviceAccelSample.y += controller.motionManager.deviceMotion.gravity.y;
-                                deviceAccelSample.z += controller.motionManager.deviceMotion.gravity.z;
+                                deviceAccelSample.x += controller.motionManager.deviceMotion.gravity.x * self->_gyroSensitivity;
+                                deviceAccelSample.y += controller.motionManager.deviceMotion.gravity.y * self->_gyroSensitivity;
+                                deviceAccelSample.z += controller.motionManager.deviceMotion.gravity.z * self->_gyroSensitivity;
                                 
                                 if (memcmp(&deviceAccelSample, &lastDeviceAccelSample, sizeof(deviceAccelSample)) == 0) {
                                     return;
@@ -143,16 +144,16 @@ static const double MOUSE_SPEED_DIVISOR = 1.25;
                                 if(UIApplication.sharedApplication.windows.firstObject.windowScene.interfaceOrientation == 4){ //check for landscape left or landscape right
                                     LiSendControllerMotionEvent((uint8_t)controller.controllerNumber,
                                                                 LI_MOTION_TYPE_ACCEL,
-                                                                deviceAccelSample.y * -9.80665f,
-                                                                deviceAccelSample.z * -9.80665f,
-                                                                deviceAccelSample.x * -9.80665f);
+                                                                deviceAccelSample.y * -9.80665f * self->_gyroSensitivity,
+                                                                deviceAccelSample.z * -9.80665f * self->_gyroSensitivity,
+                                                                deviceAccelSample.x * -9.80665f * self->_gyroSensitivity);
                                 }
                                 else{
                                     LiSendControllerMotionEvent((uint8_t)controller.controllerNumber,
                                                                 LI_MOTION_TYPE_ACCEL,
-                                                                deviceAccelSample.y * +9.80665f,
-                                                                deviceAccelSample.z * -9.80665f,
-                                                                deviceAccelSample.x * +9.80665f);
+                                                                deviceAccelSample.y * +9.80665f * self->_gyroSensitivity,
+                                                                deviceAccelSample.z * -9.80665f * self->_gyroSensitivity,
+                                                                deviceAccelSample.x * +9.80665f * self->_gyroSensitivity);
                                 }
                             }];
                         });}
@@ -181,18 +182,17 @@ static const double MOUSE_SPEED_DIVISOR = 1.25;
                                 if(UIApplication.sharedApplication.windows.firstObject.windowScene.interfaceOrientation == 4){//check for landscape left or landscape right
                                     LiSendControllerMotionEvent((uint8_t)controller.controllerNumber,
                                                                 LI_MOTION_TYPE_GYRO,
-                                                                deviceGyroSample.y * 57.2957795f,
-                                                                deviceGyroSample.z * 57.2957795f,
-                                                                deviceGyroSample.x * 57.2957795f);
+                                                                deviceGyroSample.y * 57.2957795f * self->_gyroSensitivity,
+                                                                deviceGyroSample.z * 57.2957795f * self->_gyroSensitivity,
+                                                                deviceGyroSample.x * 57.2957795f * self->_gyroSensitivity);
                                 }
                                 else{
                                     LiSendControllerMotionEvent((uint8_t)controller.controllerNumber,
                                                                 LI_MOTION_TYPE_GYRO,
-                                                                deviceGyroSample.y * -57.2957795f,
-                                                                deviceGyroSample.z * 57.2957795f,
-                                                                deviceGyroSample.x * -57.2957795f);
+                                                                deviceGyroSample.y * -57.2957795f * self->_gyroSensitivity,
+                                                                deviceGyroSample.z * 57.2957795f * self->_gyroSensitivity,
+                                                                deviceGyroSample.x * -57.2957795f * self->_gyroSensitivity);
                                 }
-                                
                             }];
                             break;
                     }
@@ -223,9 +223,9 @@ static const double MOUSE_SPEED_DIVISOR = 1.25;
                                 // Convert g to m/s^2
                                 LiSendControllerMotionEvent((uint8_t)controller.controllerNumber,
                                                             LI_MOTION_TYPE_ACCEL,
-                                                            accelSample.x * -9.80665f,
-                                                            accelSample.y * -9.80665f,
-                                                            accelSample.z * -9.80665f);
+                                                            accelSample.x * -9.80665f * self->_gyroSensitivity,
+                                                            accelSample.y * -9.80665f * self->_gyroSensitivity,
+                                                            accelSample.z * -9.80665f * self->_gyroSensitivity);
                             }];
                         }
                         break;
@@ -251,9 +251,9 @@ static const double MOUSE_SPEED_DIVISOR = 1.25;
                                 // Convert rad/s to deg/s
                                 LiSendControllerMotionEvent((uint8_t)controller.controllerNumber,
                                                             LI_MOTION_TYPE_GYRO,
-                                                            gyroSample.x * 57.2957795f,
-                                                            gyroSample.z * 57.2957795f,
-                                                            gyroSample.y * -57.2957795f);
+                                                            gyroSample.x * 57.2957795f * self->_gyroSensitivity,
+                                                            gyroSample.z * 57.2957795f * self->_gyroSensitivity,
+                                                            gyroSample.y * -57.2957795f * self->_gyroSensitivity);
                             }];
                         }
                         break;
@@ -1221,8 +1221,11 @@ static const double MOUSE_SPEED_DIVISOR = 1.25;
     _oscController.playerIndex = 0;
 
     DataManager* dataMan = [[DataManager alloc] init];
-    _oscEnabled = (OnScreenControlsLevel)[[dataMan getSettings].onscreenControls integerValue] != OnScreenControlsLevelOff;
+    //_oscEnabled = (OnScreenControlsLevel)[[dataMan getSettings].onscreenControls integerValue] != OnScreenControlsLevelOff;
+    TemporarySettings* currentSettings = [dataMan getSettings];
     _oscEnabled = true;
+    _gyroSensitivity = currentSettings.gyroSensitivity.floatValue;
+    
     
     Log(LOG_I, @"Number of supported controllers connected: %d", [ControllerSupport getGamepadCount]);
     Log(LOG_I, @"Multi-controller: %d", _multiController);
