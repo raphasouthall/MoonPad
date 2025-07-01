@@ -86,8 +86,9 @@ import UIKit
     @objc public var stickBallLayer = CAShapeLayer()
 
     // this is for all stick pads and mouse Pad
-    @objc public var sensitivityFactor: CGFloat = 1.0
-    
+    @objc public var sensitivityFactorX: CGFloat = 1.0
+    @objc public var sensitivityFactorY: CGFloat = 1.0
+
     // check quick double tap:
     private var quickDoubleTapDetected: Bool
     private var touchTapTimeInterval: TimeInterval
@@ -213,7 +214,8 @@ import UIKit
         self.touchLockedForMoveEvent = UITouch()
         self.twoTouchesDetected = false
         self.stickIndicatorOffset = 95
-        self.sensitivityFactor = 1.0
+        self.sensitivityFactorX = 1.0
+        self.sensitivityFactorY = 1.0
         super.init(frame: .zero)
         
         upIndicator = createLrudDirectionLayer()
@@ -564,8 +566,8 @@ import UIKit
         CATransaction.setDisableActions(true)
         self.stickBallLayer.removeAllAnimations()
         if !OnScreenWidgetView.editMode {
-            let realOffsetX = touchInputToStickBallCoord(input: offSetX*sensitivityFactor)
-            let realOffsetY = touchInputToStickBallCoord(input: offSetY*sensitivityFactor)
+            let realOffsetX = touchInputToStickBallCoord(input: offSetX*sensitivityFactorX)
+            let realOffsetY = touchInputToStickBallCoord(input: offSetY*sensitivityFactorY)
             self.stickBallLayer.position = CGPointMake(CGRectGetMidX(self.crossMarkLayer.frame) + realOffsetX, CGRectGetMidY(self.crossMarkLayer.frame) + realOffsetY)
             if fabs(realOffsetX) == stickBallMaxOffset || fabs(realOffsetY) == stickBallMaxOffset {
                 handleStickBallReachingBorder()
@@ -676,7 +678,7 @@ import UIKit
             case down = 8
         }
         
-        let nearZeroPoint = abs(offSetX) < 16/sensitivityFactor && abs(offSetY) < 16/sensitivityFactor
+        let nearZeroPoint = abs(offSetX) < 16/sensitivityFactorX && abs(offSetY) < 16/sensitivityFactorY
         // NSLog("deltaX: %f, detalY: %f", deltaX, deltaY)
         
         var buttonPressed = 0;
@@ -1058,7 +1060,7 @@ import UIKit
                     self.sendOscButtonDownEvent(keyString: self.cmdString)
                 }
                 if CommandManager.keyboardButtonMappings.keys.contains(self.cmdString) {
-                    LiSendKeyboardEvent(CommandManager.keyboardButtonMappings[self.cmdString]!,Int8(KEY_ACTION_DOWN), 0)
+                    LiSendLiSendKeyboardEvent(CommandManager.keyboardButtonMappings[self.cmdString]!,Int8(KEY_ACTION_DOWN), 0)
                 }
                 if CommandManager.mouseButtonMappings.keys.contains(self.cmdString) {
                     LiSendMouseButtonEvent(CChar(BUTTON_ACTION_PRESS), Int32(CommandManager.mouseButtonMappings[self.cmdString]!))
@@ -1146,30 +1148,30 @@ import UIKit
             case "MOUSEPAD":
                 DispatchQueue.global(qos: .userInteractive).async {
                     self.updateTouchLocation(touch: touches.first!)
-                    LiSendMouseMoveEvent(Int16(truncatingIfNeeded: Int(self.deltaX * 1.7 * self.sensitivityFactor)), Int16(truncatingIfNeeded: Int(self.deltaY * 1.7 * self.sensitivityFactor)))
+                    LiSendMouseMoveEvent(Int16(truncatingIfNeeded: Int(self.deltaX * 1.7 * self.sensitivityFactorX)), Int16(truncatingIfNeeded: Int(self.deltaY * 1.7 * self.sensitivityFactorY)))
                 }
                 break
             case "LSPAD":
                 self.updateTouchLocation(touch: touches.first!)
                 DispatchQueue.global(qos: .userInteractive).async {
-                    self.sendLeftStickTouchPadEvent(inputX: self.offSetX * self.sensitivityFactor, inputY: self.offSetY * self.sensitivityFactor)
+                    self.sendLeftStickTouchPadEvent(inputX: self.offSetX * self.sensitivityFactorX, inputY: self.offSetY * self.sensitivityFactorY)
                 }
                 if widgetType == WidgetTypeEnum.touchPad {updateStickIndicator()}
             case "RSPAD":
                 self.updateTouchLocation(touch: touches.first!)
                 DispatchQueue.global(qos: .userInteractive).async {
-                    self.sendRightStickTouchPadEvent(inputX: self.offSetX * self.sensitivityFactor, inputY: self.offSetY * self.sensitivityFactor)
+                    self.sendRightStickTouchPadEvent(inputX: self.offSetX * self.sensitivityFactorX, inputY: self.offSetY * self.sensitivityFactorY)
                 }
                 if widgetType == WidgetTypeEnum.touchPad {updateStickIndicator()}
             case "LSVPAD":
                 DispatchQueue.global(qos: .userInteractive).async {
                     self.updateTouchLocation(touch: touches.first!)
-                    self.sendLeftStickTouchPadEvent(inputX: self.deltaX*1.5167*self.sensitivityFactor, inputY: self.deltaY*1.5167*self.sensitivityFactor)
+                    self.sendLeftStickTouchPadEvent(inputX: self.deltaX*1.5167*self.sensitivityFactorX, inputY: self.deltaY*1.5167*self.sensitivityFactorY)
                 }
             case "RSVPAD":
                 DispatchQueue.global(qos: .userInteractive).async {
                     self.updateTouchLocation(touch: touches.first!)
-                    self.sendRightStickTouchPadEvent(inputX: self.deltaX*1.5167*self.sensitivityFactor, inputY: self.deltaY*1.5167*self.sensitivityFactor)
+                    self.sendRightStickTouchPadEvent(inputX: self.deltaX*1.5167*self.sensitivityFactorX, inputY: self.deltaY*1.5167*self.sensitivityFactorY)
                 }
             case "DPAD", "WASDPAD", "ARROWPAD":
                 self.updateTouchLocation(touch: touches.first!)

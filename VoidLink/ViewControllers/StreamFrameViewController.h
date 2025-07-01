@@ -30,5 +30,6 @@
 
 
 -(void)updatePreferredDisplayMode:(BOOL)streamActive;
+-(void)reConfigStreamViewRealtime;
 
 @end

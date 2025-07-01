@@ -109,7 +109,8 @@
             widgetView.borderWidth = buttonState.borderWidth;
             [widgetView setVibrationWithStyle:buttonState.vibrationStyle];
             widgetView.mouseButtonAction = buttonState.mouseButtonAction;
-            widgetView.sensitivityFactor = buttonState.sensitivityFactor;
+            widgetView.sensitivityFactorX = buttonState.sensitivityFactorX;
+            widgetView.sensitivityFactorY = buttonState.sensitivityFactorY;
             widgetView.stickIndicatorOffset = buttonState.stickIndicatorOffset;
             widgetView.minStickOffset = buttonState.minStickOffset;
             // Add the widgetView to the view controller's view
@@ -561,7 +562,8 @@
     newWidget.widthFactor = widget.widthFactor;
     newWidget.heightFactor = widget.heightFactor;
     newWidget.borderWidth = widget.borderWidth;
-    newWidget.sensitivityFactor = widget.sensitivityFactor;
+    newWidget.sensitivityFactorX = widget.sensitivityFactorX;
+    newWidget.sensitivityFactorY = widget.sensitivityFactorY;
     newWidget.stickIndicatorOffset = widget.stickIndicatorOffset;
     newWidget.minStickOffset = [widgetInitParams[@"minStickOffsetString"] floatValue];
     [newWidget setVibrationWithStyle:widget.vibrationStyle];
@@ -659,14 +661,16 @@
     bool showSensitivityFactorSlider = selectedWidgetView.hasSensitivityTweak;
     bool showStickIndicatorOffsetSlider = selectedWidgetView.hasStickIndicator;
         
-    self.sensitivityStack.hidden = !showSensitivityFactorSlider;
+    self.sensitivityXStack.hidden = self.sensitivityYStack.hidden = !showSensitivityFactorSlider;
     self.stickIndicatorOffsetStack.hidden = !showStickIndicatorOffsetSlider;
     self.mouseDownButtonStack.hidden = !([selectedWidgetView.cmdString containsString:@"MOUSEPAD"] && selectedWidgetView.widgetType == WidgetTypeEnumTouchPad);
     [self autoFitView:self.widgetPanelStack];
 
     if(showSensitivityFactorSlider){
-        [self.sensitivitySlider setValue:self->selectedWidgetView.sensitivityFactor];
-        [self.sensitivityLabel setText:[LocalizationHelper localizedStringForKey:@"Sensitivity: %.2f", self->selectedWidgetView.sensitivityFactor]];
+        [self.sensitivityXSlider setValue:self->selectedWidgetView.sensitivityFactorX];
+        [self.sensitivityXLabel setText:[LocalizationHelper localizedStringForKey:@"SensitivityX: %.2f", self->selectedWidgetView.sensitivityFactorX]];
+        [self.sensitivityYSlider setValue:self->selectedWidgetView.sensitivityFactorY];
+        [self.sensitivityYLabel setText:[LocalizationHelper localizedStringForKey:@"SensitivityY: %.2f", self->selectedWidgetView.sensitivityFactorY]];
     }
     if(showStickIndicatorOffsetSlider){
         // illustrating the indicator offset,
@@ -701,7 +705,8 @@
     self->selectedWidgetView = nil;
     
     self.stickIndicatorOffsetStack.hidden = true;
-    self.sensitivityStack.hidden = true;
+    self.sensitivityXStack.hidden = self.sensitivityYStack.hidden = true;
+    self.mouseDownButtonStack.hidden = true;
     
     self->controllerLayerSelected = true;
     self->selectedControllerLayer = controllerLayer;
@@ -798,9 +803,20 @@
     }
 }
 
-- (void)sensitivitySliderMoved:(UISlider* )sender{
-    [self.sensitivityLabel setText:[LocalizationHelper localizedStringForKey:@"Sensitivity: %.2f", sender.value]];
-    if(self->selectedWidgetView != nil && self->widgetViewSelected) self->selectedWidgetView.sensitivityFactor = sender.value;
+- (void)sensitivityXSliderMoved:(UISlider* )sender{
+    [self.sensitivityXLabel setText:[LocalizationHelper localizedStringForKey:@"SensitivityX: %.2f", sender.value]];
+    [self.sensitivityYLabel setText:[LocalizationHelper localizedStringForKey:@"SensitivityY: %.2f", sender.value]];
+    [self.sensitivityYSlider setValue:sender.value];
+    if(self->selectedWidgetView != nil && self->widgetViewSelected){
+        self->selectedWidgetView.sensitivityFactorX = sender.value;
+        self->selectedWidgetView.sensitivityFactorY = sender.value;
+    }
+    return;
+}
+
+- (void)sensitivityYSliderMoved:(UISlider* )sender{
+    [self.sensitivityYLabel setText:[LocalizationHelper localizedStringForKey:@"SensitivityY: %.2f", sender.value]];
+    if(self->selectedWidgetView != nil && self->widgetViewSelected) self->selectedWidgetView.sensitivityFactorY = sender.value;
     return;
 }
 
@@ -883,10 +899,14 @@
     self.widgetBorderWidthLabel.text = [LocalizationHelper localizedStringForKey:@"Border Width"];
     self.borderWidthAlphaStack.hidden = YES;
   
-    [self.sensitivitySlider addTarget:self action:@selector(sensitivitySliderMoved:) forControlEvents:(UIControlEventValueChanged)];
-    self.sensitivityLabel.text = [LocalizationHelper localizedStringForKey:@"Sensitivity"];
-    self.sensitivityStack.hidden = YES;
+    [self.sensitivityXSlider addTarget:self action:@selector(sensitivityXSliderMoved:) forControlEvents:(UIControlEventValueChanged)];
+    self.sensitivityXLabel.text = [LocalizationHelper localizedStringForKey:@"SensitivityX"];
+    self.sensitivityXStack.hidden = YES;
     
+    [self.sensitivityYSlider addTarget:self action:@selector(sensitivityYSliderMoved:) forControlEvents:(UIControlEventValueChanged)];
+    self.sensitivityYLabel.text = [LocalizationHelper localizedStringForKey:@"SensitivityY"];
+    self.sensitivityYStack.hidden = YES;
+
     // stick indicator offset slider
     //self.stickIndicatorOffsetSlider.hidden = YES;
     [self.stickIndicatorOffsetSlider addTarget:self action:@selector(stickIndicatorOffsetSliderMoved:) forControlEvents:(UIControlEventValueChanged)];

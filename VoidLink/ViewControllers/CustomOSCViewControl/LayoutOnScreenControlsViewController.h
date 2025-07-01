@@ -71,9 +71,13 @@ NS_ASSUME_NONNULL_BEGIN
 @property (weak, nonatomic) IBOutlet UISlider *stickIndicatorOffsetSlider;
 @property (weak, nonatomic) IBOutlet UIStackView *stickIndicatorOffsetStack;
 
-@property (weak, nonatomic) IBOutlet UILabel *sensitivityLabel;
-@property (weak, nonatomic) IBOutlet UISlider *sensitivitySlider;
-@property (weak, nonatomic) IBOutlet UIStackView *sensitivityStack;
+@property (weak, nonatomic) IBOutlet UILabel *sensitivityXLabel;
+@property (weak, nonatomic) IBOutlet UISlider *sensitivityXSlider;
+@property (weak, nonatomic) IBOutlet UIStackView *sensitivityXStack;
+@property (strong, nonatomic) IBOutlet UILabel *sensitivityYLabel;
+@property (strong, nonatomic) IBOutlet UISlider *sensitivityYSlider;
+@property (strong, nonatomic) IBOutlet UIStackView *sensitivityYStack;
+
 
 @property (strong, nonatomic) IBOutlet UISegmentedControl *vibrationStyleSelector;
 @property (strong, nonatomic) IBOutlet UIStackView *vibrationStyleStack;

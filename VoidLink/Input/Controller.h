@@ -53,13 +53,13 @@ typedef struct {
 #endif
 
 @property (nonatomic)                   NSTimer* _Nullable batteryTimer;
-@property (nonatomic)                   GCDeviceBatteryState lastBatteryState;
+@property (nonatomic)                   GCDeviceBatteryState lastBatteryState; // to be wrapped for compatibility
 @property (nonatomic)                   float lastBatteryLevel;
 
 @property (nonatomic)                   BOOL reportedArrival;
 @property (nonatomic)                   Controller* _Nullable mergedWithController;
 
-@property(nonatomic, assign) uint8_t motionType;
+@property(nonatomic, strong) NSMutableSet* _Nullable motionTypes;
 @property(nonatomic, assign) uint16_t reportRateHz;
 @property(nonatomic, assign) uint16_t controllerNumber;
 

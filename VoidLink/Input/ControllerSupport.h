@@ -13,9 +13,10 @@
 
 @protocol ControllerSupportDelegate <NSObject>
 
-- (void) gamepadPresenceChanged;
-- (void) mousePresenceChanged;
-- (void) streamExitRequested;
+- (void)gamepadPresenceChanged;
+- (void)mousePresenceChanged;
+- (void)streamExitRequested;
+- (void)automaticallyStartSendingBuiltinGyroEvents;
 
 @end
 

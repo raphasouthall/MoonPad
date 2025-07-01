@@ -2077,6 +2077,18 @@
         }
       }
     },
+    "NZO-BM-nef.text" : {
+      "comment" : "Class = \"UILabel\"; text = \"test\"; ObjectID = \"NZO-BM-nef\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "test"
+          }
+        }
+      }
+    },
     "OOg-A3-DdM.segmentTitles[0]" : {
       "comment" : "Class = \"UISegmentedControl\"; OOg-A3-DdM.segmentTitles[0] = \"Lowest Latency\"; ObjectID = \"OOg-A3-DdM\";",
       "extractionState" : "extracted_with_value",
