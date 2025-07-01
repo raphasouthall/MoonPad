@@ -124,7 +124,7 @@ import UIKit
     // trackball
     private var trackballVelocity: CGPoint = .zero
     private var trackballDecelerationTimer: Timer?
-    private let trackballDecelerationRate: CGFloat = 0.90
+    private let trackballDecelerationRate: CGFloat = 1.0
     private let trackballVelocityThreshold: CGFloat = 0.1
     
     
@@ -828,7 +828,7 @@ import UIKit
      private func startTrackballMomentum() {
          stopTrackballMomentum()
 
-         trackballDecelerationTimer = Timer.scheduledTimer(withTimeInterval: 0.016, repeats: true) { [weak self] _ in
+         trackballDecelerationTimer = Timer.scheduledTimer(withTimeInterval: 1/60, repeats: true) { [weak self] _ in
              guard let self = self else { return }
 
              LiSendMouseMoveEvent(
@@ -1272,7 +1272,13 @@ import UIKit
         }
         
         if !OnScreenWidgetView.editMode && self.widgetType == WidgetTypeEnum.touchPad && self.touchPadString == "TRACKBALL" && allCapturedTouchesCount == 1 && !twoTouchesDetected {
-            self.startTrackballMomentum()
+            if(mousePointerMoved){
+                self.startTrackballMomentum()
+                mousePointerMoved = false //reset flag
+            }
+            else{
+                self.stopTrackballMomentum()
+            }
         }
         
         if !OnScreenWidgetView.editMode && self.widgetType == WidgetTypeEnum.touchPad && self.touchPadString == "MOUSEPAD" && twoTouchesDetected && touches.count == allCapturedTouchesCount { // need to enable multi-touch first
