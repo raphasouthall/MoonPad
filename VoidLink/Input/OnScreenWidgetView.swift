@@ -121,6 +121,12 @@ import UIKit
     private var mousePointerMoved: Bool
     private var twoTouchesDetected: Bool
     
+    // trackball
+    private var trackballVelocity: CGPoint = .zero
+    private var trackballDecelerationTimer: Timer?
+    private let trackballDecelerationRate: CGFloat = 0.90
+    private let trackballVelocityThreshold: CGFloat = 0.1
+    
     
     // border & visual effect
     private var minimumBorderAlpha: CGFloat = 0.19
@@ -817,6 +823,34 @@ import UIKit
             LiSendMouseButtonEvent(CChar(BUTTON_ACTION_RELEASE), BUTTON_RIGHT)
         }
     }
+    
+    //mousepad-trackball behavior========================================================
+     private func startTrackballMomentum() {
+         stopTrackballMomentum()
+
+         trackballDecelerationTimer = Timer.scheduledTimer(withTimeInterval: 0.016, repeats: true) { [weak self] _ in
+             guard let self = self else { return }
+
+             LiSendMouseMoveEvent(
+                 Int16(truncatingIfNeeded: Int(self.trackballVelocity.x)),
+                 Int16(truncatingIfNeeded: Int(self.trackballVelocity.y))
+             )
+
+             self.trackballVelocity.x *= self.trackballDecelerationRate
+             self.trackballVelocity.y *= self.trackballDecelerationRate
+
+             if abs(self.trackballVelocity.x) < self.trackballVelocityThreshold &&
+                abs(self.trackballVelocity.y) < self.trackballVelocityThreshold {
+                 self.stopTrackballMomentum()
+             }
+         }
+     }
+
+     private func stopTrackballMomentum() {
+         trackballDecelerationTimer?.invalidate()
+         trackballDecelerationTimer = nil
+     }
+
     
     //==== wholeButtonPress visual effect=============================================
     private func buttonDownEffect() {
