@@ -35,6 +35,8 @@
 
 @property (assign, nonatomic) UIView* streamFrameTopLayerView;
 @property (assign, nonatomic) CGFloat streamAspectRatio;
+@property (assign, nonatomic) CGRect originalFrame;
+
 
 - (void) setupStreamView:(ControllerSupport*)controllerSupport
      interactionDelegate:(id<UserInteractionDelegate>)interactionDelegate
@@ -57,6 +59,7 @@
 
 - (OnScreenControlsLevel) getCurrentOscState;
 
+-(void)readyToBringUpSoftKeyboardByToolbox;
 - (void)keyboardWillShow:(NSNotification *)notification;
 - (void)keyboardWillHide;
 

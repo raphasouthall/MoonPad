@@ -53,6 +53,7 @@ static CGFloat screenWidthInPoints;
         } */
         
         _lowestTouchPointHeight = screenHeightInPoints - lowestTouchPointYCoord;
+        NSLog(@"gen _lowestTouchPointHeight %f markmark", _lowestTouchPointHeight);
         if(_immediateTriggering){
             lowestTouchPointYCoord = 0.0; //reset for next recoginition
             self.state = UIGestureRecognizerStateRecognized;
@@ -68,6 +69,7 @@ static CGFloat screenWidthInPoints;
 
 - (void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
     // [super touchesEnded:touches withEvent:event];
+    
     if(_immediateTriggering) return;
     uint8_t allTouchesCount = [[event allTouches] count];
     if(allTouchesCount > _numberOfTouchesRequired) {
@@ -79,6 +81,7 @@ static CGFloat screenWidthInPoints;
         if((CACurrentMediaTime() - _gestureCapturedTime) < _tapDownTimeThreshold){
             lowestTouchPointYCoord = 0.0; //reset for next recognition
             self.state = UIGestureRecognizerStateRecognized;
+            NSLog(@"gen _lowestTouchPointHeight %f markmark touchesEnd", _lowestTouchPointHeight);
         }
     }
     if (allTouchesCount == [touches count]) _isOnScreenControllerBeingPressed = false; // need to reset this flag anyway, when all fingers are lefting

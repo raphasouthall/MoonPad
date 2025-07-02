@@ -11,6 +11,7 @@ import UIKit
 @objc protocol ToolBoxSpecialEntryDelegate: NSObjectProtocol {
     @objc optional func openWidgetLayoutTool()
     @objc optional func switchWidgetProfile()
+    @objc optional func bringUpSoftKeyboard()
 }
 
 
@@ -26,10 +27,11 @@ import UIKit
     private let viewBackgroundColor = UIColor(white: 0.2, alpha: 0.8);
     private let highlightColor = UIColor(white: 0.39, alpha: 0.8);
     private let titleLabel = UILabel()
-    @objc public var specialEntries : NSMutableArray = ["widgetLayoutTool"]
+    @objc public var specialEntries : NSMutableArray = ["widgetSwitchTool", "widgetLayoutTool", "bringUpSoftKeyboard"]
     private let specialEntryAliasDic : [String:String] = [
         "widgetSwitchTool":SwiftLocalizationHelper.localizedString(forKey: "[ Switch among on-screen widget profiles ]"),
-        "widgetLayoutTool":SwiftLocalizationHelper.localizedString(forKey: "[ Open on-screen widget tool ]")
+        "widgetLayoutTool":SwiftLocalizationHelper.localizedString(forKey: "[ Open on-screen widget tool ]"),
+        "bringUpSoftKeyboard":SwiftLocalizationHelper.localizedString(forKey: "[ Bring up soft keyboard ]")
     ]
     
     private var viewPinned: Bool = false
@@ -370,6 +372,8 @@ import UIKit
             specialEntryDelegate?.openWidgetLayoutTool!()
         case "widgetSwitchTool":
             specialEntryDelegate?.switchWidgetProfile?()
+        case "bringUpSoftKeyboard":
+            specialEntryDelegate?.bringUpSoftKeyboard?()
         default: break
         }
     }

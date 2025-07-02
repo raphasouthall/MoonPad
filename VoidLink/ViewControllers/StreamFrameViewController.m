@@ -226,7 +226,7 @@
     [super viewDidAppear:animated];
     
     _deviceWindow = self.view.window;
-
+    
     if (UIScreen.screens.count > 1 && [self isAirPlayEnabled]) {
         [self prepExtScreen:UIScreen.screens.lastObject];
     }
@@ -241,6 +241,8 @@
             if(self->_settings.externalDisplayMode.intValue != 2) [self->_streamView insertSubview:self->_streamVideoRenderView atIndex:0];
         });
     }
+    
+    self->_streamView.originalFrame = self->_streamView.frame;
 
     // check to see if external screen is connected/disconnected
 
@@ -509,6 +511,10 @@
     [self presentViewController:_layoutOnScreenControlsVC animated:NO completion:^{
         [self->_layoutOnScreenControlsVC presentProfilesTableView];
     }];
+}
+
+- (void)bringUpSoftKeyboard{
+    [self->_streamView readyToBringUpSoftKeyboardByToolbox];
 }
 
 - (void)oscLayoutClosed{

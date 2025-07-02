@@ -23,6 +23,7 @@
 #import "AbsoluteTouchHandler.h"
 #import "KeyboardInputField.h"
 #import "CustomTapGestureRecognizer.h"
+#import "LocalizationHelper.h"
 
 
 static const double X1_MOUSE_SPEED_DIVISOR = 2.5;
@@ -70,6 +71,7 @@ static const double X1_MOUSE_SPEED_DIVISOR = 2.5;
     UIHoverGestureRecognizer *stylusHoverRecognizer;
 #endif
     CGFloat HeightViewLiftedTo;
+    UILabel* keyboardToggleTip;
     
     UIKeyModifierFlags comboKeyModifierFlags;
 }
@@ -99,17 +101,19 @@ static const double X1_MOUSE_SPEED_DIVISOR = 2.5;
     [self addSubview:keyInputField];
     
     isInputingText = false;
-    keyboardToggleRecognizer = [[CustomTapGestureRecognizer alloc] initWithTarget:self action:@selector(toggleKeyboard)];
-    keyboardToggleRecognizer.numberOfTouchesRequired = settings.keyboardToggleFingers.intValue; //will be changed accordinly by touch modes.
-    keyboardToggleRecognizer.tapDownTimeThreshold = 0.2; // tap down time threshold in seconds.
-    keyboardToggleRecognizer.delaysTouchesBegan = NO;
-    keyboardToggleRecognizer.delaysTouchesEnded = NO;
+    [self refreshKeyboardToggleRecognizer:settings.keyboardToggleFingers.intValue]; //will be
+    keyboardToggleTip = [[UILabel alloc] init];
+    keyboardToggleTip.frame = CGRectMake(0, 0, 35, 100);
+    keyboardToggleTip.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.5];
+    keyboardToggleTip.text = [LocalizationHelper localizedStringForKey:@"Tap where you're going to input text"];
+    keyboardToggleTip.font = [UIFont systemFontOfSize:28];
+    keyboardToggleTip.userInteractionEnabled = false;
     NSLog(@"setup streamView %f", CACurrentMediaTime());
     
     // if(settings.touchMode.intValue == NativeTouchOnly) [self addGestureRecognizer:keyboardToggleRecognizer]; //keep legacy approach in pure native mode
     // else [self->streamFrameTopLayerView addGestureRecognizer:keyboardToggleRecognizer]; //add to the superview in other modes
     
-    [self->streamFrameTopLayerView addGestureRecognizer:keyboardToggleRecognizer]; //add to the superview in other modes
+    // [self->streamFrameTopLayerView addGestureRecognizer:keyboardToggleRecognizer]; //add to the superview in other modes
     
 #if TARGET_OS_TV
     // tvOS requires RelativeTouchHandler to manage Apple Remote input
@@ -212,11 +216,23 @@ static const double X1_MOUSE_SPEED_DIVISOR = 2.5;
     [self becomeFirstResponder];
 }
 
+- (void)refreshKeyboardToggleRecognizer:(uint8_t)numberOfTouches{
+    [self->_streamFrameTopLayerView removeGestureRecognizer:keyboardToggleRecognizer];
+    keyboardToggleRecognizer = [[CustomTapGestureRecognizer alloc] initWithTarget:self action:@selector(toggleKeyboard)];
+    keyboardToggleRecognizer.numberOfTouchesRequired = numberOfTouches; //will be changed accordinly by touch modes.
+    keyboardToggleRecognizer.tapDownTimeThreshold = 0.2; // tap down time threshold in seconds.
+    keyboardToggleRecognizer.delaysTouchesBegan = NO;
+    keyboardToggleRecognizer.delaysTouchesEnded = NO;
+    [self->_streamFrameTopLayerView addGestureRecognizer:keyboardToggleRecognizer];
+}
+
 - (void)keyboardWillShow:(NSNotification *)notification{
+    NSLog(@"keyboard will show markmark %f", CACurrentMediaTime());
     if(settings.liftStreamViewForKeyboard && !isInputingText){
         NSDictionary *userInfo = notification.userInfo;
         // Get the keyboard size from the notification
         CGRect keyboardFrame = [userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue];
+        NSLog(@"keyboard will show markmark, lowest height %f", keyboardToggleRecognizer.lowestTouchPointHeight);
         if(keyboardFrame.size.height < CGRectGetHeight([[UIScreen mainScreen] bounds]) * 0.25) return; // return in case of abnormal keyboard height
         HeightViewLiftedTo = keyboardFrame.size.height - keyboardToggleRecognizer.lowestTouchPointHeight + CGRectGetHeight([[UIScreen mainScreen] bounds]) * 0.1; // lift the StreamView to the height of lowest touch point of multi-finger tap gesture, while reserving the view of 1/10 screen height for remote typing.
         if(HeightViewLiftedTo < 0) HeightViewLiftedTo = 0;  // set HeightViewLiftedTo to 0 if it is high enough and not going to be covered by keyboard.
@@ -224,24 +240,52 @@ static const double X1_MOUSE_SPEED_DIVISOR = 2.5;
         liftedStreamFrame.origin.y -= HeightViewLiftedTo;
         self.frame = liftedStreamFrame;
         isInputingText = true;
+        [self refreshKeyboardToggleRecognizer:settings.keyboardToggleFingers.intValue];
     }
     NSLog(@"keyboard will show %f", CACurrentMediaTime());
 }
 
 // this method also deals with recovering streamview when local keyboard is turned off
 - (void)keyboardWillHide{
-    
+    NSLog(@"keyboard will hide markmark %f", CACurrentMediaTime());
+
+    keyboardToggleRecognizer.numberOfTouchesRequired = settings.keyboardToggleFingers.intValue; // reset this number
     if(isInputingText){
+        /*
         CGRect liftedStreamFrame = self.frame;
         // recover view position in keyboard hiding.
         liftedStreamFrame.origin.y += HeightViewLiftedTo;
         self.frame = liftedStreamFrame;
         isInputingText = false;
+         */
+
+        self.frame = _originalFrame;
+        isInputingText = NO;
+
     }
+}
+
+-(void)readyToBringUpSoftKeyboardByToolbox{
+    NSLog(@"change num of fingers required");
+    [self refreshKeyboardToggleRecognizer:1];
+    keyboardToggleTip.translatesAutoresizingMaskIntoConstraints = NO;
+    NSLog(@"tip obj: %@", keyboardToggleTip);
+    /*[self addSubview:keyboardToggleTip];
+    [NSLayoutConstraint activateConstraints:@[
+        [keyboardToggleTip.centerXAnchor constraintEqualToAnchor:self.centerXAnchor constant:0],
+        //[keyboardToggleTip.centerYAnchor constraintEqualToAnchor:self.centerYAnchor constant:-self.bounds.size.height*0.75],
+        [keyboardToggleTip.centerYAnchor constraintEqualToAnchor:self.centerYAnchor constant:0],
+        [keyboardToggleTip.widthAnchor constraintEqualToConstant:100],
+        [keyboardToggleTip.heightAnchor constraintEqualToConstant:30]
+
+        // reserve height for navigation bar
+    ]];
+     */
 }
 
 
 - (void)toggleKeyboard{
+    NSLog(@"toggleKeyboard markmark, %d", isInputingText);
     if (isInputingText) {
         Log(LOG_D, @"Closing the keyboard");
         [keyInputField resignFirstResponder];
@@ -272,6 +316,8 @@ static const double X1_MOUSE_SPEED_DIVISOR = 2.5;
         [keyInputField addTarget:self action:@selector(onKeyboardPressed:) forControlEvents:UIControlEventEditingChanged];
         // Undo causes issues for our state management, so turn it off
         [keyInputField.undoManager disableUndoRegistration];
+        
+        //[keyboardToggleTip removeFromSuperview];
     }
 }
 
