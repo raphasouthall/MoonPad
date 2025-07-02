@@ -8,16 +8,16 @@
 
 import UIKit
 
-@objc protocol ToolBoxSpecialEntryDelegate: NSObjectProtocol {
+@objc protocol ToolboxSpecialEntryDelegate: NSObjectProtocol {
     @objc optional func openWidgetLayoutTool()
     @objc optional func switchWidgetProfile()
     @objc optional func bringUpSoftKeyboard()
 }
 
 
-@objc public class ToolBoxViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+@objc public class ToolboxViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
-    @objc weak var specialEntryDelegate: ToolBoxSpecialEntryDelegate?
+    @objc weak var specialEntryDelegate: ToolboxSpecialEntryDelegate?
     public let tableView = UITableView()
     private let addButton = UIButton(type: .system)
     private let deleteButton = UIButton(type: .system)
@@ -77,7 +77,7 @@ import UIKit
         view.layer.masksToBounds = true
         
         // Set up the title label
-        titleLabel.text = SwiftLocalizationHelper.localizedString(forKey: "Command Tool")
+        titleLabel.text = SwiftLocalizationHelper.localizedString(forKey: "Toolbox")
         titleLabel.font = UIFont.boldSystemFont(ofSize: 20)  // Adjust font size as needed
         titleLabel.textColor = UIColor.white  // Adjust color as needed
         titleLabel.textAlignment = .center

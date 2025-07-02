@@ -191,6 +191,29 @@
         }
       }
     },
+    "[ Bring up soft keyboard ]" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "[ 打开本地软键盘 ]"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "[ 打开本地软键盘 ]"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "[ 打开本地软键盘 ]"
+          }
+        }
+      }
+    },
     "[ Open on-screen widget tool ]" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -889,29 +912,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "命令"
-          }
-        }
-      }
-    },
-    "Command Tool" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "命令工具"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "命令工具"
-          }
-        },
-        "zh-HK" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "命令工具"
           }
         }
       }
@@ -3736,6 +3736,29 @@
         }
       }
     },
+    "Tap where you're going to input text, view will be lifted automatically  " : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "点击需要输入文字的位置, 自动抬升视图  "
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "点击需要输入文字的位置, 自动抬升视图  "
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "点击需要输入文字的位置, 自动抬升视图  "
+          }
+        }
+      }
+    },
     "Test Network" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -3876,6 +3899,29 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "轻按%d根手指, 切换本地软键盘"
+          }
+        }
+      }
+    },
+    "Toolbox" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "工具箱"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "工具箱"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "工具箱"
           }
         }
       }

@@ -103,11 +103,16 @@ static const double X1_MOUSE_SPEED_DIVISOR = 2.5;
     isInputingText = false;
     [self refreshKeyboardToggleRecognizer:settings.keyboardToggleFingers.intValue]; //will be
     keyboardToggleTip = [[UILabel alloc] init];
-    keyboardToggleTip.frame = CGRectMake(0, 0, 35, 100);
+    // keyboardToggleTip.frame = CGRectMake(0, 0, 35, 100);
     keyboardToggleTip.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.5];
-    keyboardToggleTip.text = [LocalizationHelper localizedStringForKey:@"Tap where you're going to input text"];
-    keyboardToggleTip.font = [UIFont systemFontOfSize:28];
+    keyboardToggleTip.text = [LocalizationHelper localizedStringForKey:@"Tap where you're going to input text, view will be lifted automatically  "];
+    keyboardToggleTip.font = [UIFont systemFontOfSize:25];
+    keyboardToggleTip.textAlignment = NSTextAlignmentCenter;
+    keyboardToggleTip.textColor = [[UIColor whiteColor] colorWithAlphaComponent:0.9];
     keyboardToggleTip.userInteractionEnabled = false;
+    keyboardToggleTip.numberOfLines = 1;
+    keyboardToggleTip.layer.cornerRadius = 10;
+    keyboardToggleTip.clipsToBounds = true;
     NSLog(@"setup streamView %f", CACurrentMediaTime());
     
     // if(settings.touchMode.intValue == NativeTouchOnly) [self addGestureRecognizer:keyboardToggleRecognizer]; //keep legacy approach in pure native mode
@@ -241,6 +246,7 @@ static const double X1_MOUSE_SPEED_DIVISOR = 2.5;
         self.frame = liftedStreamFrame;
         isInputingText = true;
         [self refreshKeyboardToggleRecognizer:settings.keyboardToggleFingers.intValue];
+        [keyboardToggleTip removeFromSuperview];
     }
     NSLog(@"keyboard will show %f", CACurrentMediaTime());
 }
@@ -261,17 +267,15 @@ static const double X1_MOUSE_SPEED_DIVISOR = 2.5;
     [self refreshKeyboardToggleRecognizer:1];
     keyboardToggleTip.translatesAutoresizingMaskIntoConstraints = NO;
     NSLog(@"tip obj: %@", keyboardToggleTip);
-    /*[self addSubview:keyboardToggleTip];
+    [self addSubview:keyboardToggleTip];
     [NSLayoutConstraint activateConstraints:@[
         [keyboardToggleTip.centerXAnchor constraintEqualToAnchor:self.centerXAnchor constant:0],
-        //[keyboardToggleTip.centerYAnchor constraintEqualToAnchor:self.centerYAnchor constant:-self.bounds.size.height*0.75],
-        [keyboardToggleTip.centerYAnchor constraintEqualToAnchor:self.centerYAnchor constant:0],
-        [keyboardToggleTip.widthAnchor constraintEqualToConstant:100],
-        [keyboardToggleTip.heightAnchor constraintEqualToConstant:30]
+        [keyboardToggleTip.centerYAnchor constraintEqualToAnchor:self.centerYAnchor constant:-self.bounds.size.height*0.35],
+        [keyboardToggleTip.heightAnchor constraintEqualToConstant:50]
 
         // reserve height for navigation bar
     ]];
-     */
+
 }
 
 

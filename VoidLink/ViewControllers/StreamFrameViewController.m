@@ -73,7 +73,7 @@
     CustomEdgeSlideGestureRecognizer *_slideToCmdToolRecognizer;
     CustomTapGestureRecognizer *_oscLayoutTapRecoginizer;
     LayoutOnScreenControlsViewController *_layoutOnScreenControlsVC;
-    ToolBoxViewController* toolBoxViewController;
+    ToolboxViewController* toolBoxViewController;
 #endif
 }
 
@@ -128,7 +128,7 @@
 }
 
 - (void)presentCommandManagerViewController{
-    toolBoxViewController = [[ToolBoxViewController alloc] init];
+    toolBoxViewController = [[ToolboxViewController alloc] init];
     toolBoxViewController.specialEntryDelegate = self;
     [self configOscLayoutTool];
     [self presentViewController:toolBoxViewController animated:YES completion:^{
@@ -380,7 +380,7 @@
     
     _streamView = [[StreamView alloc] initWithFrame:self.view.frame];
     
-    toolBoxViewController = [[ToolBoxViewController alloc] init];
+    toolBoxViewController = [[ToolboxViewController alloc] init];
     toolBoxViewController.specialEntryDelegate = self;
     
     /*
