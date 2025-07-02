@@ -21,6 +21,13 @@ typedef struct {
     float lastY;
 } controller_touch_context_t;
 
+typedef NS_ENUM(NSInteger, ControllerDeviceBatteryState) {
+    ControllerDeviceBatteryStateUnknown = -1,
+    ControllerDeviceBatteryStateDischarging,
+    ControllerDeviceBatteryStateCharging,
+    ControllerDeviceBatteryStateFull
+};
+
 @property (nullable, nonatomic, retain) GCController* gamepad;
 @property (nonatomic)                   int playerIndex;
 @property (nonatomic)                   int lastButtonFlags;
@@ -53,7 +60,7 @@ typedef struct {
 #endif
 
 @property (nonatomic)                   NSTimer* _Nullable batteryTimer;
-@property (nonatomic)                   GCDeviceBatteryState lastBatteryState; // to be wrapped for compatibility
+@property (nonatomic)                   ControllerDeviceBatteryState lastBatteryState; // self defined enum for compatibility
 @property (nonatomic)                   float lastBatteryLevel;
 
 @property (nonatomic)                   BOOL reportedArrival;

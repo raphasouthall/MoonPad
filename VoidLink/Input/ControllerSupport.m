@@ -569,7 +569,7 @@ static const double MOUSE_SPEED_DIVISOR = 1.25;
         if (controller.gamepad.battery) {
             // Poll for updated battery status every 30 seconds
             controller.batteryTimer = [NSTimer scheduledTimerWithTimeInterval:30 repeats:YES block:^(NSTimer *timer) {
-                if (controller.lastBatteryState != controller.gamepad.battery.batteryState ||
+                if ((GCDeviceBatteryState)controller.lastBatteryState != controller.gamepad.battery.batteryState ||
                     controller.lastBatteryLevel != controller.gamepad.battery.batteryLevel) {
                     uint8_t batteryState;
                     
@@ -591,7 +591,7 @@ static const double MOUSE_SPEED_DIVISOR = 1.25;
                     
                     LiSendControllerBatteryEvent(controller.playerIndex, batteryState, (uint8_t)(controller.gamepad.battery.batteryLevel * 100));
                     
-                    controller.lastBatteryState = controller.gamepad.battery.batteryState;
+                    controller.lastBatteryState = (ControllerDeviceBatteryState)controller.gamepad.battery.batteryState;
                     controller.lastBatteryLevel = controller.gamepad.battery.batteryLevel;
                 }
             }];
