@@ -244,8 +244,8 @@
                                                     <action selector="addTapped:" destination="ZYS-Zm-PJs" eventType="touchUpInside" id="Yzn-KO-PS9"/>
                                                 </connections>
                                             </button>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4pE-po-Zn1">
-                                                <rect key="frame" x="600" y="0.0" width="50" height="50"/>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4pE-po-Zn1" userLabel="Edit">
+                                                <rect key="frame" x="600" y="0.0" width="150" height="50"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="50" id="oFn-jm-orG"/>
                                                     <constraint firstAttribute="height" constant="50" id="sls-Vh-uxz"/>
@@ -261,9 +261,6 @@
                                                     <action selector="editTapped:" destination="ZYS-Zm-PJs" eventType="touchUpInside" id="bd9-hf-0gN"/>
                                                 </connections>
                                             </button>
-                                            <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="RDI-on-aPY">
-                                                <rect key="frame" x="720" y="0.0" width="30" height="50"/>
-                                            </stackView>
                                         </subviews>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="750" id="6BK-sG-WTH"/>
@@ -287,11 +284,7 @@
                                             <constraint firstItem="76O-3K-aa8" firstAttribute="leading" secondItem="Zll-IP-PFt" secondAttribute="leading" id="xdb-MV-O2f"/>
                                         </constraints>
                                     </view>
-                                    <stackView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="rFV-gg-hGO">
-                                        <rect key="frame" x="595" y="-78" width="128" height="70"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                    </stackView>
-                                    <button opaque="NO" tag="40" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="fill" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nHH-6h-4D1">
+                                    <button opaque="NO" tag="40" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="fill" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nHH-6h-4D1" userLabel="Exit">
                                         <rect key="frame" x="18" y="10" width="50" height="31"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="50" id="sBF-hd-nF8"/>
@@ -1599,16 +1592,16 @@
         <image name="trash.fill" catalog="system" width="117" height="128"/>
         <image name="tray.full.fill" catalog="system" width="128" height="88"/>
         <systemColor name="linkColor">
-            <color red="0.0" green="0.47843137254901963" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemBrownColor">
-            <color red="0.63529411764705879" green="0.51764705882352946" blue="0.36862745098039218" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.63529411759999999" green="0.51764705879999995" blue="0.36862745099999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemGray2Color">
-            <color red="0.68235294117647061" green="0.68235294117647061" blue="0.69803921568627447" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.68235294120000001" green="0.68235294120000001" blue="0.69803921570000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemTealColor">
-            <color red="0.18823529411764706" green="0.69019607843137254" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.18823529410000001" green="0.69019607839999997" blue="0.78039215689999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>
