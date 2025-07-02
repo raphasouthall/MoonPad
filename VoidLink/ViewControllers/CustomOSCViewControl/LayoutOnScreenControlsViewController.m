@@ -650,12 +650,18 @@
 
     OnScreenWidgetView* widgetView = (OnScreenWidgetView* )notification.object;
     
-    
     [self->selectedWidgetView.stickBallLayer removeFromSuperlayer];
     [self->selectedWidgetView.crossMarkLayer removeFromSuperlayer];
     self->widgetViewSelected = true;
     self->controllerLayerSelected = false;
     self->selectedWidgetView = widgetView;
+    
+    [self autoFitLabel:self.currentProfileLabel];
+    self.currentProfileLabel.textAlignment = NSTextAlignmentLeft;
+    [self.currentProfileLabel setText:
+     [LocalizationHelper localizedStringForKey:@"  Profile: %@     Widget: %@",
+      [profilesManager getSelectedProfile].name,
+      selectedWidgetView.buttonLabel]];
     
     self.undoButton.alpha = selectedWidgetView.layoutChanges.count>1 ? 1.0 : 0.3;
     
@@ -738,6 +744,14 @@
     self->controllerLayerSelected = true;
     self->selectedControllerLayer = controllerLayer;
     self->controllerLoadedBounds = controllerLayer.bounds;
+    
+    [self autoFitLabel:self.currentProfileLabel];
+    self.currentProfileLabel.textAlignment = NSTextAlignmentLeft;
+    [self.currentProfileLabel setText:
+     [LocalizationHelper localizedStringForKey:@"  Profile: %@     Widget: %@",
+      [profilesManager getSelectedProfile].name,
+      selectedControllerLayer.name]];
+
     
     // setup slider values
     CGFloat sizeFactor = [OnScreenControls getControllerLayerSizeFactor:controllerLayer]; // calculated sizeFactor from loaded layer bounds.
@@ -906,7 +920,8 @@
     [self.currentProfileLabel setText:[LocalizationHelper localizedStringForKey:@"Profile: %@",[profilesManager getSelectedProfile].name]];
     self.currentProfileLabel.layer.cornerRadius = [self isIPhone] ? 9 : 12;
     self.currentProfileLabel.clipsToBounds = YES;
-    
+    self.currentProfileLabel.textAlignment = NSTextAlignmentCenter;
+
     self.widgetSizeStack.userInteractionEnabled = YES;
     for(UIView* view in _widgetPanelStack.subviews){
         view.userInteractionEnabled = YES;

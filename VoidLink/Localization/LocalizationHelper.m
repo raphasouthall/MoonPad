@@ -13,8 +13,10 @@
 + (NSString *)localizedStringForKey:(NSString *)key, ... {
     va_list args;
     va_start(args, key);
+
     NSString *format = NSLocalizedStringFromTable(key, @"Localizable", nil);
     NSString *result = [[NSString alloc] initWithFormat:format arguments:args];
+
     va_end(args);
     return result;
 }
