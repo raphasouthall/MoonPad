@@ -251,17 +251,8 @@ static const double X1_MOUSE_SPEED_DIVISOR = 2.5;
 
     keyboardToggleRecognizer.numberOfTouchesRequired = settings.keyboardToggleFingers.intValue; // reset this number
     if(isInputingText){
-        /*
-        CGRect liftedStreamFrame = self.frame;
-        // recover view position in keyboard hiding.
-        liftedStreamFrame.origin.y += HeightViewLiftedTo;
-        self.frame = liftedStreamFrame;
-        isInputingText = false;
-         */
-
         self.frame = _originalFrame;
         isInputingText = NO;
-
     }
 }
 
