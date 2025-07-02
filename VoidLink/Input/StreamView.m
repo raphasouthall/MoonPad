@@ -406,6 +406,7 @@ static const double X1_MOUSE_SPEED_DIVISOR = 2.5;
                 widgetView.mouseButtonAction = buttonState.mouseButtonAction;
                 widgetView.sensitivityFactorX = buttonState.sensitivityFactorX;
                 widgetView.sensitivityFactorY = buttonState.sensitivityFactorY;
+                widgetView.trackballDecelerationRate = buttonState.decelerationRate;
                 widgetView.stickIndicatorOffset = buttonState.stickIndicatorOffset;
                 widgetView.minStickOffset = buttonState.minStickOffset;
                 // Add the widgetView to the view controller's view

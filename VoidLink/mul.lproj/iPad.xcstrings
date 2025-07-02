@@ -2317,6 +2317,18 @@
         }
       }
     },
+    "Pbt-Tw-dnV.text" : {
+      "comment" : "Class = \"UILabel\"; text = \"test\"; ObjectID = \"Pbt-Tw-dnV\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "test"
+          }
+        }
+      }
+    },
     "pMN-6T-aYE.text" : {
       "comment" : "Class = \"UILabel\"; text = \"Gesture Slide Distance\"; ObjectID = \"pMN-6T-aYE\";",
       "extractionState" : "extracted_with_value",

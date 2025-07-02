@@ -124,7 +124,7 @@ import UIKit
     // trackball
     private var trackballVelocity: CGPoint = .zero
     private var trackballDecelerationTimer: Timer?
-    private let trackballDecelerationRate: CGFloat = 0.93
+    @objc public var trackballDecelerationRate: CGFloat = 0.93
     private let trackballVelocityThreshold: CGFloat = 0.1
     
     

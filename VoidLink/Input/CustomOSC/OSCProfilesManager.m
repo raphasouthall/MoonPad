@@ -369,6 +369,7 @@ static CGRect streamViewBounds;
         buttonState.mouseButtonAction = widgetView.mouseButtonAction;
         buttonState.sensitivityFactorX = widgetView.sensitivityFactorX;
         buttonState.sensitivityFactorY = widgetView.sensitivityFactorY;
+        buttonState.decelerationRate = widgetView.trackballDecelerationRate;
         buttonState.stickIndicatorOffset = widgetView.stickIndicatorOffset;
         buttonState.widgetShape = widgetView.shape;
         buttonState.minStickOffset = widgetView.minStickOffset;

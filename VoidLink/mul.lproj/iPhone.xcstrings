@@ -3096,6 +3096,18 @@
           }
         }
       }
+    },
+    "znE-Lv-uWV.text" : {
+      "comment" : "Class = \"UILabel\"; text = \"test\"; ObjectID = \"znE-Lv-uWV\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "test"
+          }
+        }
+      }
     }
   },
   "version" : "1.0"

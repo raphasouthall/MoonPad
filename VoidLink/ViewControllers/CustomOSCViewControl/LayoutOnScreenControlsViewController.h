@@ -78,6 +78,12 @@ NS_ASSUME_NONNULL_BEGIN
 @property (strong, nonatomic) IBOutlet UISlider *sensitivityYSlider;
 @property (strong, nonatomic) IBOutlet UIStackView *sensitivityYStack;
 
+@property (strong, nonatomic) IBOutlet UIStackView *decelerationRateStack;
+@property (strong, nonatomic) IBOutlet UILabel *decelerationRateLabel;
+@property (strong, nonatomic) IBOutlet UISlider *decelerationRateSlider;
+
+
+
 
 @property (strong, nonatomic) IBOutlet UISegmentedControl *vibrationStyleSelector;
 @property (strong, nonatomic) IBOutlet UIStackView *vibrationStyleStack;

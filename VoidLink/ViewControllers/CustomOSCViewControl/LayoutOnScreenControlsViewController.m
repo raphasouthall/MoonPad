@@ -111,6 +111,7 @@
             widgetView.mouseButtonAction = buttonState.mouseButtonAction;
             widgetView.sensitivityFactorX = buttonState.sensitivityFactorX;
             widgetView.sensitivityFactorY = buttonState.sensitivityFactorY;
+            widgetView.trackballDecelerationRate = buttonState.decelerationRate;
             widgetView.stickIndicatorOffset = buttonState.stickIndicatorOffset;
             widgetView.minStickOffset = buttonState.minStickOffset;
             // Add the widgetView to the view controller's view
@@ -564,6 +565,7 @@
     newWidget.borderWidth = widget.borderWidth;
     newWidget.sensitivityFactorX = widget.sensitivityFactorX;
     newWidget.sensitivityFactorY = widget.sensitivityFactorY;
+    newWidget.trackballDecelerationRate = widget.trackballDecelerationRate;
     newWidget.stickIndicatorOffset = widget.stickIndicatorOffset;
     newWidget.minStickOffset = [widgetInitParams[@"minStickOffsetString"] floatValue];
     [newWidget setVibrationWithStyle:widget.vibrationStyle];
@@ -634,6 +636,12 @@
     if([self isIPhone]) self.vibrationStyleStack.hidden = NO;
 }
 
+- (void)autoFitLabel:(UILabel* )label{
+    label.adjustsFontSizeToFitWidth = true;
+    label.minimumScaleFactor = 0.3;
+    label.numberOfLines = 1;
+}
+
 - (void)widgetViewTapped: (NSNotification *)notification{
     //self.undoButton.alpha = selectedWidgetView.layoutChanges.count>1 && !CGPointEqualToPoint(selectedWidgetView.layoutChanges.lastObject.CGPointValue, selectedWidgetView.initialCenter)? 1.0 : 0.3;
 
@@ -658,39 +666,57 @@
     [self.widgetAlphaSlider setValue: self->selectedWidgetView.backgroundAlpha];
     [self.widgetBorderWidthSlider setValue:self->selectedWidgetView.borderWidth];
     
-    bool showSensitivityFactorSlider = selectedWidgetView.hasSensitivityTweak;
-    bool showStickIndicatorOffsetSlider = selectedWidgetView.hasStickIndicator;
+    bool showSensitivityFactorStack = selectedWidgetView.hasSensitivityTweak;
+    bool showStickIndicatorOffsetStack = selectedWidgetView.hasStickIndicator;
         
-    self.sensitivityXStack.hidden = self.sensitivityYStack.hidden = !showSensitivityFactorSlider;
-    self.stickIndicatorOffsetStack.hidden = !showStickIndicatorOffsetSlider;
+    self.sensitivityXStack.hidden = self.sensitivityYStack.hidden = !showSensitivityFactorStack;
+    self.stickIndicatorOffsetStack.hidden = !showStickIndicatorOffsetStack;
     self.mouseDownButtonStack.hidden = !([selectedWidgetView.cmdString containsString:@"MOUSEPAD"] && selectedWidgetView.widgetType == WidgetTypeEnumTouchPad);
+    self.decelerationRateStack.hidden = !([selectedWidgetView.cmdString containsString:@"TRACKBALL"] && selectedWidgetView.widgetType == WidgetTypeEnumTouchPad);
+    
     [self autoFitView:self.widgetPanelStack];
 
-    if(showSensitivityFactorSlider){
+    if(showSensitivityFactorStack){
         [self.sensitivityXSlider setValue:self->selectedWidgetView.sensitivityFactorX];
+        [self autoFitLabel:self.sensitivityXLabel];
         [self.sensitivityXLabel setText:[LocalizationHelper localizedStringForKey:@"SensitivityX: %.2f", self->selectedWidgetView.sensitivityFactorX]];
+        [self autoFitLabel:self.sensitivityYLabel];
         [self.sensitivityYSlider setValue:self->selectedWidgetView.sensitivityFactorY];
         [self.sensitivityYLabel setText:[LocalizationHelper localizedStringForKey:@"SensitivityY: %.2f", self->selectedWidgetView.sensitivityFactorY]];
     }
-    if(showStickIndicatorOffsetSlider){
+    if(showStickIndicatorOffsetStack){
         // illustrating the indicator offset,
         [selectedWidgetView.stickBallLayer removeFromSuperlayer];
         [selectedWidgetView.crossMarkLayer removeFromSuperlayer];
         selectedWidgetView.touchBeganLocation = CGPointMake(CGRectGetWidth(selectedWidgetView.frame)/2, CGRectGetHeight(selectedWidgetView.frame)/4);
         [selectedWidgetView showStickIndicator];// this will create the indicator CAShapeLayers
         [self.stickIndicatorOffsetSlider setValue:self->selectedWidgetView.stickIndicatorOffset];
+        [self autoFitLabel:self.stickIndicatorOffsetLabel];
         [self.stickIndicatorOffsetLabel setText:[LocalizationHelper localizedStringForKey:@"Indicator Offset: %.0f", self->selectedWidgetView.stickIndicatorOffset]];
         [self->selectedWidgetView updateStickIndicator];
     }
+    [self autoFitLabel:self.widgetSizeLabel];
     [self.widgetSizeLabel setText:[LocalizationHelper localizedStringForKey:@"Size: %.2f", self->selectedWidgetView.widthFactor]];
+    
+    [self autoFitLabel:self.widgetHeightLabel];
     [self.widgetHeightLabel setText:[LocalizationHelper localizedStringForKey:@"Height: %.2f", self->selectedWidgetView.heightFactor]];
+    
+    [self autoFitLabel:self.widgetAlphaLabel];
     [self.widgetAlphaLabel setText:[LocalizationHelper localizedStringForKey:@"Alpha: %.2f", self->selectedWidgetView.backgroundAlpha]];
+    
+    [self autoFitLabel:self.widgetBorderWidthLabel];
     [self.widgetBorderWidthLabel setText:[LocalizationHelper localizedStringForKey:@"Border Width: %.2f", self->selectedWidgetView.borderWidth]];
     
+    [self.decelerationRateSlider setValue:selectedWidgetView.trackballDecelerationRate];
+    [self autoFitLabel:self.decelerationRateLabel];
+    [self.decelerationRateLabel setText:[LocalizationHelper localizedStringForKey:@"Deceleration Rate: %.3f  ", selectedWidgetView.trackballDecelerationRate]];
     self.mouseButtonDownSelector.selectedSegmentIndex = selectedWidgetView.mouseButtonAction;
+
     
     if([self isIPhone]){
-        self.vibrationStyleStack.hidden = [widgetView.cmdString containsString:@"MOUSEPAD"];
+        self.vibrationStyleStack.hidden =
+        [widgetView.cmdString containsString:@"MOUSEPAD"] ||
+        [widgetView.cmdString containsString:@"TRACKBALL"];
         [self autoFitView:self.widgetPanelStack];
         self.vibrationStyleSelector.selectedSegmentIndex = self->selectedWidgetView.vibrationStyle;
     }
@@ -707,6 +733,7 @@
     self.stickIndicatorOffsetStack.hidden = true;
     self.sensitivityXStack.hidden = self.sensitivityYStack.hidden = true;
     self.mouseDownButtonStack.hidden = true;
+    self.decelerationRateStack.hidden = true;
     
     self->controllerLayerSelected = true;
     self->selectedControllerLayer = controllerLayer;
@@ -820,6 +847,13 @@
     return;
 }
 
+- (void)decelerationRateSliderMoved:(UISlider* )sender{
+    [self.decelerationRateLabel setText:[LocalizationHelper localizedStringForKey:@"Deceleration Rate: %.3f  ", sender.value]];
+    if(self->selectedWidgetView != nil && self->widgetViewSelected) self->selectedWidgetView.trackballDecelerationRate = sender.value;
+    return;
+}
+
+
 - (void)stickIndicatorOffsetSliderMoved:(UISlider* )sender{
     [self.stickIndicatorOffsetLabel setText:[LocalizationHelper localizedStringForKey:@"Indicator Offset: %.0f", sender.value]];
     if(self->selectedWidgetView != nil && self->widgetViewSelected){
@@ -907,6 +941,12 @@
     self.sensitivityYLabel.text = [LocalizationHelper localizedStringForKey:@"SensitivityY"];
     self.sensitivityYStack.hidden = YES;
 
+    
+    [self.decelerationRateSlider addTarget:self action:@selector(decelerationRateSliderMoved:) forControlEvents:(UIControlEventValueChanged)];
+    self.decelerationRateLabel.text = [LocalizationHelper localizedStringForKey:@"Deceleration Rate"];
+    self.decelerationRateStack.hidden = YES;
+
+    
     // stick indicator offset slider
     //self.stickIndicatorOffsetSlider.hidden = YES;
     [self.stickIndicatorOffsetSlider addTarget:self action:@selector(stickIndicatorOffsetSliderMoved:) forControlEvents:(UIControlEventValueChanged)];

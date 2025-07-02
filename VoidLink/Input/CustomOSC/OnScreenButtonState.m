@@ -41,6 +41,7 @@
     [encoder encodeFloat:self.heightFactor forKey:@"heightFactor"];
     [encoder encodeFloat:self.sensitivityFactorX forKey:@"sensitivityFactorX"];
     [encoder encodeFloat:self.sensitivityFactorY forKey:@"sensitivityFactorY"];
+    [encoder encodeFloat:self.decelerationRate forKey:@"decelerationRate"];
     [encoder encodeFloat:self.stickIndicatorOffset forKey:@"stickIndicatorOffset"];
     [encoder encodeFloat:self.oscLayerSizeFactor forKey:@"oscLayerSizeFactor"];
     [encoder encodeFloat:self.backgroundAlpha forKey:@"backgroundAlpha"];
@@ -62,6 +63,7 @@
         self.heightFactor = [decoder decodeFloatForKey:@"heightFactor"];
         self.sensitivityFactorX = [decoder decodeFloatForKey:@"sensitivityFactorX"];
         self.sensitivityFactorY = [decoder decodeFloatForKey:@"sensitivityFactorY"];
+        self.decelerationRate = [decoder decodeFloatForKey:@"decelerationRate"];
         self.stickIndicatorOffset = [decoder decodeFloatForKey:@"stickIndicatorOffset"];
         self.oscLayerSizeFactor = [decoder decodeFloatForKey:@"oscLayerSizeFactor"];
         self.backgroundAlpha = [decoder decodeFloatForKey:@"backgroundAlpha"];
