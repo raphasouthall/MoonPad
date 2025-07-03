@@ -861,11 +861,12 @@ BOOL isCustomResolution(CGSize res) {
     }
 
     if(currentSettingsMenuMode == FavoriteSettings){
+        if(!capturedStack) return;
+        
         switch (gesture.state) {
             case UIGestureRecognizerStateBegan:
                 // 创建快照视图
                 [self findCapturedStackByTouchLocation:locationInParentStack];
-                if(capturedStack == nil) return;
 
                 snapshot = [capturedStack snapshotViewAfterScreenUpdates:YES];
                 //snapshot.center = capturedStack.center;
