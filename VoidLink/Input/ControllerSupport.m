@@ -1327,9 +1327,19 @@ static const double MOUSE_SPEED_DIVISOR = 1.25;
     _gyroSensitivity = currentSettings.gyroSensitivity.floatValue;
 }
 
+- (void)resetGyroInputForController:(VoidController* )voidController{
+    if(voidController.hasAccelerometer) LiSendControllerMotionEvent((uint8_t)voidController.controllerNumber,LI_MOTION_TYPE_ACCEL,0,0,0);
+    if(voidController.hasGyroscope) LiSendControllerMotionEvent((uint8_t)voidController.controllerNumber,LI_MOTION_TYPE_GYRO,0,0,0);
+    if (@available(iOS 14.0, *)) {
+        voidController.gamepad.motion.sensorsActive = false;
+    }
+}
+
 - (void)stopTimerForAllControllers{
     [self stopTimerForController:_oscController];
-    for(VoidController* controller in _voidControllers.allValues) [self stopTimerForController:controller];
+    for(VoidController* controller in _voidControllers.allValues){
+        [self stopTimerForController:controller];
+    }
 }
 
 - (void)updateControllerSupport:(StreamConfiguration*)streamConfig delegate:(id<ControllerSupportDelegate>)delegate {
@@ -1590,6 +1600,7 @@ static const double MOUSE_SPEED_DIVISOR = 1.25;
 }
 
 -(void)stopTimerForController:(VoidController* )voidController{
+    [self resetGyroInputForController:voidController];
     if (@available(iOS 14.0, *)) {
         //NSLog(@"stop controller obj: %@, hasAcc %d, hasGyro %d", voidController, voidController.hasAccelerometer, voidController.hasGyroscope);
         if(voidController.hasAccelerometer){
