@@ -7,7 +7,7 @@
 //
 
 #import "StreamConfiguration.h"
-#import "Controller.h"
+#import "VoidController.h"
 
 @class OnScreenControls;
 
@@ -16,7 +16,7 @@
 - (void)gamepadPresenceChanged;
 - (void)mousePresenceChanged;
 - (void)streamExitRequested;
-- (void)automaticallyStartSendingBuiltinGyroEvents;
+- (void)automaticallyStartSendingGyroEvents;
 
 @end
 
@@ -27,20 +27,20 @@
 
 -(void) initAutoOnScreenControlMode:(OnScreenControls*)osc;
 -(void) cleanup;
--(Controller*) getOscController;
+-(VoidController*) getOscController;
 
--(void) updateLeftStick:(Controller*)controller x:(short)x y:(short)y;
--(void) updateRightStick:(Controller*)controller x:(short)x y:(short)y;
+-(void) updateLeftStick:(VoidController*)controller x:(short)x y:(short)y;
+-(void) updateRightStick:(VoidController*)controller x:(short)x y:(short)y;
 
--(void) updateLeftTrigger:(Controller*)controller left:(unsigned char)left;
--(void) updateRightTrigger:(Controller*)controller right:(unsigned char)right;
--(void) updateTriggers:(Controller*)controller left:(unsigned char)left right:(unsigned char)right;
+-(void) updateLeftTrigger:(VoidController*)controller left:(unsigned char)left;
+-(void) updateRightTrigger:(VoidController*)controller right:(unsigned char)right;
+-(void) updateTriggers:(VoidController*)controller left:(unsigned char)left right:(unsigned char)right;
 
--(void) updateButtonFlags:(Controller*)controller flags:(int)flags;
--(void) setButtonFlag:(Controller*)controller flags:(int)flags;
--(void) clearButtonFlag:(Controller*)controller flags:(int)flags;
+-(void) updateButtonFlags:(VoidController*)controller flags:(int)flags;
+-(void) setButtonFlag:(VoidController*)controller flags:(int)flags;
+-(void) clearButtonFlag:(VoidController*)controller flags:(int)flags;
 
--(void) updateFinished:(Controller*)controller;
+-(void) updateFinished:(VoidController*)controller;
 
 -(void) rumble:(unsigned short)controllerNumber lowFreqMotor:(unsigned short)lowFreqMotor highFreqMotor:(unsigned short)highFreqMotor;
 -(void) rumbleTriggers:(uint16_t)controllerNumber leftTrigger:(uint16_t)leftTrigger rightTrigger:(uint16_t)rightTrigger;
