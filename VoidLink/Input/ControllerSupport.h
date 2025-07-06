@@ -16,7 +16,6 @@
 - (void)gamepadPresenceChanged;
 - (void)mousePresenceChanged;
 - (void)streamExitRequested;
-- (void)automaticallyStartSendingGyroEvents;
 
 @end
 

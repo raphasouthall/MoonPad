@@ -219,11 +219,6 @@
     NSLog(@"streamview gestures: %d", (uint32_t)[_streamView.gestureRecognizers count]);
 }
 
--(void)automaticallyStartSendingGyroEvents{
-    [_controllerSupport updateControllerSupport:self.streamConfig delegate:self];// reload controllerSupport obj, this is mandatory for OSC reload,especially when the stream view is launched without OSC
-}
-
-
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];

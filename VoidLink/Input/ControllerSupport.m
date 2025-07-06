@@ -1379,13 +1379,6 @@ static const double MOUSE_SPEED_DIVISOR = 1.25;
                 for(VoidController* controller in _voidControllers.allValues) [self updateTimerStateForController:controller];
                 break;
         }
-        if(_gyroMode != GyroModeOff){
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)),
-                           dispatch_get_main_queue(), ^{
-            
-            // [self->_delegate automaticallyStartSendingGyroEvents]; // this will discontine any control events sent to the remote side for a instant. anyway it works out as signature describes
-            });
-        }
     }
 
 
@@ -1577,7 +1570,6 @@ static const double MOUSE_SPEED_DIVISOR = 1.25;
     [self updateFinished:self->_oscController];
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)),
                    dispatch_get_main_queue(), ^{
-        //[self->_delegate automaticallyStartSendingGyroEvents]; // this will discontine any control events sent to the remote side for a instant. anyway it works out as signature describes
         [self updateTimerStateForController:self->_oscController];
         
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)),
