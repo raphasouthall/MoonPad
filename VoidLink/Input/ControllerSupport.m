@@ -96,7 +96,6 @@ static const double MOUSE_SPEED_DIVISOR = 1.25;
 
 -(void)updateTimerStateForController:(VoidController* )voidController{
     if (@available(iOS 14.0, tvOS 14.0, *)) {
-        NSLog(@"controller obj timer update");
         if(_gyroMode == GyroModeOff){
             [self stopTimerForController:voidController];
             return;
@@ -104,11 +103,9 @@ static const double MOUSE_SPEED_DIVISOR = 1.25;
         
         if(voidController.gamepad.motion.hasAttitudeAndRotationRate) [voidController.motionTypes addObject:@(LI_MOTION_TYPE_ACCEL)];
         if(voidController.gamepad.motion.hasRotationRate) [voidController.motionTypes addObject:@(LI_MOTION_TYPE_GYRO)];
-        NSLog(@"voidCon reportHz: %d", voidController.reportRateHz);
 
         for(NSNumber* motionTypeObj in voidController.motionTypes){
             uint8_t motionType = motionTypeObj.intValue;
-            NSLog(@"controller obj controllerNumber %d", voidController.controllerNumber);
 
 #if !TARGET_OS_TV //tvOS has no device motion
             if(voidController == _oscController){
@@ -116,8 +113,6 @@ static const double MOUSE_SPEED_DIVISOR = 1.25;
                 if(!voidController.motionManager) {
                     voidController.motionManager = [[CMMotionManager alloc] init];
                 }
-                NSLog(@"device gyro mode 666, motionType: %d", motionType);
-
                 
                 switch (motionType) {
                     case LI_MOTION_TYPE_ACCEL:
@@ -184,7 +179,7 @@ static const double MOUSE_SPEED_DIVISOR = 1.25;
                             voidController.lastDeviceGyroSample = deviceGyroSample;
                             
                             // Convert rad/s to deg/s
-                            NSLog(@"sending built-in gyro data, accelSample data 00: %f, playerIndex: %d",deviceGyroSample.x, voidController.playerIndex);
+                            //NSLog(@"sending built-in gyro data, accelSample data 00: %f, playerIndex: %d",deviceGyroSample.x, voidController.playerIndex);
                             if(UIApplication.sharedApplication.windows.firstObject.windowScene.interfaceOrientation == 4){//check for landscape left or landscape right
                                 LiSendControllerMotionEvent((uint8_t)voidController.controllerNumber,
                                                             LI_MOTION_TYPE_GYRO,
@@ -221,7 +216,6 @@ static const double MOUSE_SPEED_DIVISOR = 1.25;
                                 voidController.hasAccelerometer = YES;
                                 voidController.accelTimer = [NSTimer scheduledTimerWithTimeInterval:1.0 / voidController.reportRateHz repeats:YES block:^(NSTimer *timer) {
                                     // Don't send duplicate samples
-                                    NSLog(@"gyro not returned here, gyro obj:%@", voidController);
                                     GCAcceleration lastAccelSample = voidController.lastAccelSample;
                                     GCAcceleration accelSample = voidController.gamepad.motion.acceleration;
                                     
@@ -231,7 +225,7 @@ static const double MOUSE_SPEED_DIVISOR = 1.25;
                                     voidController.lastAccelSample = accelSample;
                                     
                                     // Convert g to m/s^2
-                                    NSLog(@"sending controller gyro data, accelSample data 00: %f, playerIndex: %ld, obj: %@",accelSample.x, (long)voidController.gamepad.playerIndex, voidController);
+                                    //NSLog(@"sending controller gyro data, accelSample data 00: %f, playerIndex: %ld, obj: %@",accelSample.x, (long)voidController.gamepad.playerIndex, voidController);
                                     LiSendControllerMotionEvent((uint8_t)voidController.controllerNumber,
                                                                 LI_MOTION_TYPE_ACCEL,
                                                                 accelSample.x * -9.80665f * self->_gyroSensitivity,
@@ -250,27 +244,20 @@ static const double MOUSE_SPEED_DIVISOR = 1.25;
                             // Reset the last motion sample
                             GCRotationRate emptyGyroSample = {};
                             voidController.lastGyroSample = emptyGyroSample;
-                            NSLog(@"setup controller gyro gyroTimer, controller obj: %@, reportRate %d", voidController, voidController.reportRateHz);
-                            NSLog(@"setup controller gyro gyroTimer, controller obj num in dict: %lu", (unsigned long)[[_voidControllers allValues] count]);
                             //dispatch_sync(dispatch_get_main_queue(), ^{
                             {dispatch_async(dispatch_get_main_queue(), ^{
-                                
-                                NSLog(@"controller obj: %@", voidController);
-                                
                                 voidController.hasGyroscope = YES;
                                 voidController.gyroTimer = [NSTimer scheduledTimerWithTimeInterval:1.0 / voidController.reportRateHz repeats:YES block:^(NSTimer *timer) {
                                     // Don't send duplicate samples
-                                    NSLog(@"gyro not returned here, voidcon obj:%@, gcCon obj %@", voidController, voidController.gamepad);
                                     GCRotationRate lastGyroSample = voidController.lastGyroSample;
                                     GCRotationRate gyroSample = voidController.gamepad.motion.rotationRate;
                                     if (memcmp(&gyroSample, &lastGyroSample, sizeof(gyroSample)) == 0) {
-                                        NSLog(@"gyro returned here");
                                         return;
                                     }
                                     voidController.lastGyroSample = gyroSample;
                                     
                                     // Convert rad/s to deg/s
-                                    NSLog(@"sending controller gyro data, gyroSample data 00: %f, playerIndex: %ld, obj: %@",gyroSample.x, (long)voidController.gamepad.playerIndex, voidController);
+                                    // NSLog(@"sending controller gyro data, gyroSample data 00: %f, playerIndex: %ld, obj: %@",gyroSample.x, (long)voidController.gamepad.playerIndex, voidController);
                                     LiSendControllerMotionEvent((uint8_t)voidController.controllerNumber,
                                                                 LI_MOTION_TYPE_GYRO,
                                                                 gyroSample.x * 57.2957795f * self->_gyroSensitivity,
@@ -289,7 +276,6 @@ static const double MOUSE_SPEED_DIVISOR = 1.25;
 
         // Set the motion sensor state if they require manual activation
         [self updateSensorSateForController:voidController];
-        //controller.gamepad.motion.sensorsActive = YES;
         NSLog(@"sensor active: %d", voidController.gamepad.motion.sensorsActive);
     }
 }
@@ -326,14 +312,9 @@ static const double MOUSE_SPEED_DIVISOR = 1.25;
             voidController.reportRateHz = reportRateHz;
         }
         
-        
-        
         voidController.controllerNumber = controllerNumber;
-        NSLog(@"device gyro codes, %@, add motion type: %d, gyro obj: %@, is osc: %d", voidController.motionTypes, motionType, voidController, voidController == _oscController);
 
         if(voidController == _oscController) [self updateTimerStateForController:voidController];
-        // [self updateTimerStateForController:voidController];
-        // built-in gyro will be fired somewhere else
     }
 }
 
@@ -1610,8 +1591,7 @@ static const double MOUSE_SPEED_DIVISOR = 1.25;
 
 -(void)stopTimerForController:(VoidController* )voidController{
     if (@available(iOS 14.0, *)) {
-        NSLog(@"stop controller obj: %@, hasAcc %d, hasGyro %d", voidController, voidController.hasAccelerometer, voidController.hasGyroscope);
-       // return;
+        //NSLog(@"stop controller obj: %@, hasAcc %d, hasGyro %d", voidController, voidController.hasAccelerometer, voidController.hasGyroscope);
         if(voidController.hasAccelerometer){
             [voidController.accelTimer invalidate];
             voidController.accelTimer = nil;
