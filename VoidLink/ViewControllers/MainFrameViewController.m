@@ -1451,7 +1451,8 @@ static NSMutableSet* hostList;
 }
 
 - (void)viewDidLoad{
-    [ThemeManager setUserInterfaceStyle:UIUserInterfaceStyleUnspecified];
+    [ThemeManager setUserInterfaceStyle:UIScreen.mainScreen.traitCollection.userInterfaceStyle];
+
     [super viewDidLoad];
     //[OrientationHelper updateOrientationToLandscape];
     // self.navigationController.delegate = self;
