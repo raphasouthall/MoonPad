@@ -525,6 +525,12 @@
     [self->_streamView reloadOnScreenWidgetViews]; //update keyboard buttons here
 }
 
+- (void)setUserInteractionEnabledForStreamView:(bool)enabled{
+    _streamView.userInteractionEnabled = enabled;
+    for(UIView* view in self.view.subviews){
+        if([view isKindOfClass:[OnScreenWidgetView class]]) view.userInteractionEnabled = enabled;
+    }
+}
 
 - (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView {
     return _streamView;
