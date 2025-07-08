@@ -44,7 +44,6 @@
 @property (strong, nonatomic) IBOutlet UISwitch *multiControllerSwitch;
 @property (strong, nonatomic) IBOutlet UIStackView *swapAbaxyStack;
 @property (strong, nonatomic) IBOutlet UIStackView *audioOnPcStack;
-@property (strong, nonatomic) IBOutlet UIStackView *audioConfigStack;
 @property (strong, nonatomic) IBOutlet UISwitch *audioOnPcSwitch;
 @property (strong, nonatomic) IBOutlet UIStackView *codecStack;
 @property (strong, nonatomic) IBOutlet UIStackView *yuv444Stack;
@@ -73,7 +72,6 @@
 @property (strong, nonatomic) IBOutlet UISegmentedControl *codecSelector;
 @property (strong, nonatomic) IBOutlet UISwitch *hdrSwitch;
 @property (strong, nonatomic) IBOutlet UISwitch *yuv444Switch;
-@property (strong, nonatomic) IBOutlet UISegmentedControl *audioConfigSelector;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *framePacingSelector;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *reverseMouseWheelDirectionSelector;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *statsOverlaySelector;
@@ -104,6 +102,9 @@
 @property (strong, nonatomic) IBOutlet UISegmentedControl *gyroModeSelector;
 @property (strong, nonatomic) IBOutlet UIStackView *gyroSensitivityStack;
 @property (strong, nonatomic) IBOutlet UISlider *gyroSensitivitySlider;
+
+@property (strong, nonatomic) IBOutlet UIStackView *audioConfigStack;
+@property (strong, nonatomic) IBOutlet UISegmentedControl *audioConfigSelector;
 
 
 

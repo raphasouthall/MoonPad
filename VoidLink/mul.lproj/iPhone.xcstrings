@@ -1462,29 +1462,83 @@
             "state" : "new",
             "value" : "Stereo"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "双声道"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "兩聲道"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "兩聲道"
+          }
         }
       }
     },
     "hfR-K8-Ti4.segmentTitles[1]" : {
-      "comment" : "Class = \"UISegmentedControl\"; hfR-K8-Ti4.segmentTitles[1] = \"LPCM 5.1\"; ObjectID = \"hfR-K8-Ti4\";",
+      "comment" : "Class = \"UISegmentedControl\"; hfR-K8-Ti4.segmentTitles[1] = \"5.1-channel\"; ObjectID = \"hfR-K8-Ti4\";",
       "extractionState" : "extracted_with_value",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "LPCM 5.1"
+            "value" : "5.1-channel"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "5.1声道"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "5.1聲道"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "5.1聲道"
           }
         }
       }
     },
     "hfR-K8-Ti4.segmentTitles[2]" : {
-      "comment" : "Class = \"UISegmentedControl\"; hfR-K8-Ti4.segmentTitles[2] = \"LPCM 7.1\"; ObjectID = \"hfR-K8-Ti4\";",
+      "comment" : "Class = \"UISegmentedControl\"; hfR-K8-Ti4.segmentTitles[2] = \"7.1-channel\"; ObjectID = \"hfR-K8-Ti4\";",
       "extractionState" : "extracted_with_value",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "LPCM 7.1"
+            "value" : "7.1-channel"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "7.1声道"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "7.1聲道"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "7.1聲道"
           }
         }
       }

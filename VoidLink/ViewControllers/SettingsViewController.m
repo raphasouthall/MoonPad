@@ -538,7 +538,7 @@ BOOL isCustomResolution(CGSize res) {
     }
     
     [self addSetting:self.audioOnPcStack ofId:@"audioOnPcStack" withInfoTag:NO withDynamicLabel:NO to:audioSection];
-    [self addSetting:self.audioConfigStack ofId:@"audioConfigStack" withInfoTag:YES withDynamicLabel:NO to:audioSection];
+    [self addSetting:self.audioConfigStack ofId:@"audioConfigStack" withInfoTag:NO withDynamicLabel:NO to:audioSection];
     [audioSection addToParentStack:_parentStack];
     [audioSection setExpanded:YES];
 
@@ -1276,7 +1276,9 @@ BOOL isCustomResolution(CGSize res) {
     [self updateResolutionDisplayLabel];
     if (@available(iOS 18.0, tvOS 18.0, *)) {}else{
         [self.audioConfigSelector removeSegmentAtIndex:1 animated:false];
-        [self.audioConfigSelector removeSegmentAtIndex:2 animated:false];
+        [self.audioConfigSelector removeSegmentAtIndex:1 animated:false]; // segment 2 goes away when you remove index 2
+        [self.audioConfigSelector setTitle:[LocalizationHelper localizedStringForKey:@"Stereo (surround sound available for iOS18+)"] forSegmentAtIndex:0];
+        [self.audioConfigSelector setEnabled:NO];
     }
     switch ([currentSettings.audioConfig integerValue]) {
         case 2:
