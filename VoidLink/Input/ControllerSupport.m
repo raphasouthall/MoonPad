@@ -1318,9 +1318,8 @@ static const double MOUSE_SPEED_DIVISOR = 1.25;
     _oscController.playerIndex = 0;
 
     DataManager* dataMan = [[DataManager alloc] init];
-    //_oscEnabled = (OnScreenControlsLevel)[[dataMan getSettings].onscreenControls integerValue] != OnScreenControlsLevelOff;
     TemporarySettings* currentSettings = [dataMan getSettings];
-    _oscEnabled = true;
+    _oscEnabled = (OnScreenControlsLevel)[[dataMan getSettings].onscreenControls integerValue] != OnScreenControlsLevelOff;
     _gyroSensitivity = currentSettings.gyroSensitivity.floatValue;
 }
 
@@ -1567,14 +1566,18 @@ static const double MOUSE_SPEED_DIVISOR = 1.25;
 }
 
 -(void)connectionEstablished{
-    [self updateTimerStateForController:self->_oscController];
-    [self setButtonFlag:self->_oscController flags:A_FLAG];
-    [self updateFinished:self->_oscController];
-    [self clearButtonFlag:self->_oscController flags:A_FLAG];
-    [self updateFinished:self->_oscController];
+    if (_oscEnabled) {
+        [self updateTimerStateForController:self->_oscController];
+        [self setButtonFlag:self->_oscController flags:A_FLAG];
+        [self updateFinished:self->_oscController];
+        [self clearButtonFlag:self->_oscController flags:A_FLAG];
+        [self updateFinished:self->_oscController];
+    }
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)),
                    dispatch_get_main_queue(), ^{
-        [self updateTimerStateForController:self->_oscController];
+        if(self->_oscEnabled){
+            [self updateTimerStateForController:self->_oscController];
+        }
         
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)),
                        dispatch_get_main_queue(), ^{
