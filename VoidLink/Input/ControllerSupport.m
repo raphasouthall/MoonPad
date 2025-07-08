@@ -769,16 +769,23 @@ static const double MOUSE_SPEED_DIVISOR = 1.25;
                 capabilities |= LI_CCAP_BATTERY_STATE;
             }
         }
-        else {
-            // This is a virtual controller corresponding to our OSC
+    }
+    else {
+        // This is a virtual controller corresponding to our OSC
 
-            // TODO: Support various layouts and button labels on the OSC
+        if (_streamConfig.gyroMode != GyroModeOff) {
+            type = LI_CTYPE_PS;
+            capabilities = LI_CCAP_GYRO | LI_CCAP_ACCEL;
+        }
+        else {
             type = LI_CTYPE_XBOX;
             capabilities = 0;
-            supportedButtonFlags =
-                PLAY_FLAG | BACK_FLAG | UP_FLAG | DOWN_FLAG | LEFT_FLAG | RIGHT_FLAG |
-                LB_FLAG | RB_FLAG | LS_CLK_FLAG | RS_CLK_FLAG | A_FLAG | B_FLAG | X_FLAG | Y_FLAG;
         }
+
+        // Set the standard supported buttons for the virtual controller.
+        supportedButtonFlags =
+            PLAY_FLAG | BACK_FLAG | UP_FLAG | DOWN_FLAG | LEFT_FLAG | RIGHT_FLAG |
+            LB_FLAG | RB_FLAG | LS_CLK_FLAG | RS_CLK_FLAG | A_FLAG | B_FLAG | X_FLAG | Y_FLAG;
     }
 
     // Report the new controller to the host
