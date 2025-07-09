@@ -1588,25 +1588,33 @@ static const double MOUSE_SPEED_DIVISOR = 1.25;
         
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)),
                        dispatch_get_main_queue(), ^{
-            self->_gyroMode = self->_streamConfig.gyroMode;
+            // Stop all existing timers to ensure a clean state.
+            [self stopTimerForAllControllers];
             
+            // Read the user's final setting from the stream configuration.
+            self->_gyroMode = self->_streamConfig.gyroMode;
+
             switch (self->_gyroMode) {
                 case AlwaysController:
-                    [self stopTimerForAllControllers];
-                    for(VoidController* voidController in self->_voidControllers.allValues) [self updateTimerStateForController:voidController];
-                    break;
-                case GyroModeAuto:
-                    if(self->_voidControllers.count == 0) [self assignControllers];
-                    if(self->_voidControllers.count == 0 || ![self externalControllersHaveGyro]) nil;
-                    else{
-                        [self stopTimerForAllControllers];
-                        for(VoidController* voidController in self->_voidControllers.allValues) [self updateTimerStateForController:voidController];
+                    for (VoidController* voidController in self->_voidControllers.allValues) {
+                        [self updateTimerStateForController:voidController];
                     }
                     break;
-                case GyroModeOff:
-                    [self stopTimerForAllControllers];
+                case GyroModeAuto:
+                    if ([self externalControllersHaveGyro]) {
+                        for (VoidController* voidController in self->_voidControllers.allValues) {
+                            [self updateTimerStateForController:voidController];
+                        }
+                    } else {
+                        [self updateTimerStateForController:self->_oscController];
+                    }
                     break;
-                default:
+
+                case AlwaysDevice:
+                    [self updateTimerStateForController:self->_oscController];
+                    break;
+                    
+                case GyroModeOff:
                     break;
             }
         });
