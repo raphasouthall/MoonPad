@@ -1552,6 +1552,10 @@ static const double MOUSE_SPEED_DIVISOR = 1.25;
 }
 
 -(void)connectionEstablished {
+    for (VoidController* voidController in _voidControllers.allValues) {
+        [self updateFinished:voidController];
+    }
+
     if (_oscEnabled) {
         [self setButtonFlag:self->_oscController flags:A_FLAG];
         [self updateFinished:self->_oscController];
