@@ -1334,7 +1334,7 @@ static const double MOUSE_SPEED_DIVISOR = 1.25;
 
     DataManager* dataMan = [[DataManager alloc] init];
     TemporarySettings* currentSettings = [dataMan getSettings];
-    _oscEnabled = (OnScreenControlsLevel)[[dataMan getSettings].onscreenControls integerValue] != OnScreenControlsLevelOff;
+    _oscEnabled = _oscEnabled || (OnScreenControlsLevel)[currentSettings.onscreenControls integerValue] != OnScreenControlsLevelOff || streamConfig.gyroMode != GyroModeOff;
     _gyroSensitivity = currentSettings.gyroSensitivity.floatValue;
 }
 
