@@ -100,12 +100,26 @@
 
 - (void)pictureInPictureControllerDidStopPictureInPicture:(AVPictureInPictureController *)pictureInPictureController {
     _streamView.hidden = NO;
+
     if (!_isRestoringFromPiP) {
         [self returnToMainFrame];
+        return;
     }
+    
     _isRestoringFromPiP = NO;
+    
+    [self cleanupPiPController];
+    
+    // Immediately set up a new PiP controller.
+    // We cannot wait for a delegate callback that will not fire again.
+    // At this point, we know the stream is active and the renderer is available.
+    if (self->_streamMan && self->_streamMan.videoRenderer) {
+        Log(LOG_I, @"Re-initializing PiP controller immediately after restore.");
+        [self setupPiPControllerWithRenderer:self->_streamMan.videoRenderer];
+    } else {
+        Log(LOG_E, @"Failed to re-initialize PiP controller: renderer was not available.");
+    }
 }
-
 - (void)pictureInPictureController:(AVPictureInPictureController *)pictureInPictureController restoreUserInterfaceForPictureInPictureStopWithCompletionHandler:(void (^)(BOOL restored))completionHandler {
     _isRestoringFromPiP = YES;
     _streamView.hidden = NO;
@@ -836,15 +850,6 @@
 
 // This will fire if the user opens control center or gets a low battery message
 - (void)applicationWillResignActive:(NSNotification *)notification {
-    if (_settings.enablePIP && self.pipController && !self.pipController.isPictureInPictureActive && self.pipController.isPictureInPicturePossible) {
-        VideoDecoderRenderer *renderer = self.streamMan.videoRenderer;
-        if (renderer && renderer.displayLayer && self.view.window) {
-            Log(LOG_I, @"Starting Picture in Picture");
-            [self.pipController startPictureInPicture];
-        } else {
-            Log(LOG_I, @"Skipping PiP start: Renderer/Layer/Window not ready OR PiP not possible.");
-        }
-    }
     if (_inactivityTimer != nil) {
         [_inactivityTimer invalidate];
         _inactivityTimer = nil;
@@ -883,24 +888,24 @@
 
 // This fires when the home button is pressed
 - (void)applicationDidEnterBackground:(UIApplication *)application {
-
-    Log(LOG_I, @"Terminating stream immediately for backgrounding");
+    Log(LOG_I, @"Application entering background.");
 
     if (_inactivityTimer != nil) {
         [_inactivityTimer invalidate];
         _inactivityTimer = nil;
     }
-    
-    // [self returnToMainFrame];
-    // Don't terminate if pip is active
-    if (_settings.enablePIP && self.pipController && self.pipController.isPictureInPictureActive) {
-        Log(LOG_I, @"PIP is active, not terminating stream");
+
+    // To prevent a race condition, check if PiP is POSSIBLE.
+    // This property is true even during the slight delay before `isPictureInPictureActive` becomes true.
+    // If PiP is possible, we should not start a termination timer.
+    if (_settings.enablePIP && self.pipController && self.pipController.isPictureInPicturePossible) {
+        Log(LOG_I, @"PiP is possible, avoiding inactivity timer.");
         return;
     }
 
 #if !TARGET_OS_TV
-    // Terminate the stream if the app is inactive for 60 seconds
-    Log(LOG_I, @"Starting inactivity termination timer");
+    // Only start the timer if PiP is truly not possible.
+    Log(LOG_I, @"PiP not possible, starting inactivity termination timer.");
     _inactivityTimer = [NSTimer scheduledTimerWithTimeInterval:60
                                                       target:self
                                                     selector:@selector(inactiveTimerExpired:)
@@ -908,7 +913,6 @@
                                                      repeats:NO];
 #endif
 }
-
 - (void)expandSettingsView{
     self.mainFrameViewcontroller.settingsExpandedInStreamView = true; //notify mainFrameViewContorller that this is a setting expansion in stream view, some settings shall be disabled.
     [self.mainFrameViewcontroller expandSettingsView];
