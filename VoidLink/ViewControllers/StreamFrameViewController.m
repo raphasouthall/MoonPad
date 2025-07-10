@@ -670,6 +670,10 @@
     }
 }
 
+- (bool)shallDisableGyroHotSwitch{
+    return _controllerSupport.shallDisableGyroHotSwitch;
+}
+
 - (BOOL) isAirPlaying{
     return _extWindow != nil && _extWindow.hidden == NO;
 }

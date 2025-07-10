@@ -25,6 +25,13 @@
 
 static const double MOUSE_SPEED_DIVISOR = 1.25;
 
+@interface ControllerSupport()
+
+@property (assign,nonatomic) bool shallDisableGyroHotSwitch;
+
+@end
+
+
 @implementation ControllerSupport {
     id _controllerConnectObserver;
     id _controllerDisconnectObserver;
@@ -1388,7 +1395,6 @@ static const double MOUSE_SPEED_DIVISOR = 1.25;
     _activeGCControllers = [[NSMutableSet alloc] init];
     _controllerNumbers = 0;
     
-    
     _captureMouse = (streamConfig.localMousePointerMode == 0);
     if (@available(iOS 14.0, tvOS 14.0, *)) {
             for (GCMouse* mouse in [GCMouse mice]) {
@@ -1538,8 +1544,8 @@ static const double MOUSE_SPEED_DIVISOR = 1.25;
 
     [self assignControllers];
     
-    //[self updateConfig:streamConfig delegate:delegate];
-
+    _shallDisableGyroHotSwitch = streamConfig.gyroMode == GyroModeOff && _voidControllers.allValues.count == 0;
+    NSLog(@"shallDisableGyroHotSwitch %d", _shallDisableGyroHotSwitch);
     
     return self;
 }
@@ -1550,6 +1556,7 @@ static const double MOUSE_SPEED_DIVISOR = 1.25;
     }
     return false;
 }
+
 
 -(void)connectionEstablished {
     for (VoidController* voidController in _voidControllers.allValues) {
