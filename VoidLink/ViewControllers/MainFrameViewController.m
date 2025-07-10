@@ -1147,21 +1147,6 @@ static NSMutableSet* hostList;
         // If we moved back to the center position, we should save the settings
     SettingsViewController* settingsViewController = (SettingsViewController*)[revealController rearViewController];
     settingsViewController.mainFrameViewController = self;
-    // enable / disable widgets acoordingly: in streamview, disable, outside of streamview, enable.
-    [settingsViewController.resolutionSelector setEnabled:!self.settingsExpandedInStreamView];
-    [settingsViewController.framerateSelector setEnabled:!self.settingsExpandedInStreamView];
-    [settingsViewController widget:settingsViewController.bitrateSlider setEnabled:!self.settingsExpandedInStreamView];
-    [settingsViewController.optimizeSettingsSelector setEnabled:!self.settingsExpandedInStreamView];
-    [settingsViewController.audioOnPCSelector setEnabled:!self.settingsExpandedInStreamView];
-    [settingsViewController.codecSelector setEnabled:!self.settingsExpandedInStreamView];
-    [settingsViewController.yuv444Selector setEnabled:!self.settingsExpandedInStreamView];
-    [settingsViewController.pipSelector setEnabled:!self.settingsExpandedInStreamView];
-    [settingsViewController.hdrSelector setEnabled:!self.settingsExpandedInStreamView];
-    [settingsViewController.framePacingSelector setEnabled:!self.settingsExpandedInStreamView];
-    [settingsViewController.btMouseSelector setEnabled:!self.settingsExpandedInStreamView];
-    [settingsViewController.externalDisplayModeSelector setEnabled:!self.settingsExpandedInStreamView];
-    [settingsViewController.backToStreamingButton setEnabled:self.settingsExpandedInStreamView];
-    // [settingsViewController.unlockDisplayOrientationSelector setEnabled:!self.settingsExpandedInStreamView && [self isFullScreenRequired]];//need "requires fullscreen" enabled in the app bunddle to make runtime orientation limitation woring
 
     if (position == FrontViewPositionLeft) {
         [settingsViewController saveSettings];
