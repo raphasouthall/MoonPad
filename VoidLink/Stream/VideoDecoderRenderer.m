@@ -39,10 +39,11 @@ extern int ff_isom_write_av1c(AVIOContext *pb, const uint8_t *buf, int size,
 
 - (void)reinitializeDisplayLayer
 {
-    CALayer *oldLayer = _displayLayer;
-    
-    _displayLayer = [[AVSampleBufferDisplayLayer alloc] init];
-    _displayLayer.backgroundColor = [UIColor blackColor].CGColor;
+    if (_displayLayer == nil) {
+        _displayLayer = [[AVSampleBufferDisplayLayer alloc] init];
+        _displayLayer.backgroundColor = [UIColor blackColor].CGColor;
+        [_view.layer addSublayer:_displayLayer];
+    }
     
     // Ensure the AVSampleBufferDisplayLayer is sized to preserve the aspect ratio
     // of the video stream. We used to use AVLayerVideoGravityResizeAspect, but that
@@ -62,14 +63,6 @@ extern int ff_isom_write_av1c(AVIOContext *pb, const uint8_t *buf, int size,
     // Hide the layer until we get an IDR frame. This ensures we
     // can see the loading progress label as the stream is starting.
     _displayLayer.hidden = YES;
-    
-    if (oldLayer != nil) {
-        // Switch out the old display layer with the new one
-        [_view.layer replaceSublayer:oldLayer with:_displayLayer];
-    }
-    else {
-        [_view.layer addSublayer:_displayLayer];
-    }
     
     if (formatDesc != nil) {
         CFRelease(formatDesc);
