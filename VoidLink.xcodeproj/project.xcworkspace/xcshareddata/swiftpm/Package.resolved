@@ -1,4 +1,5 @@
 {
+  "originHash" : "351aaff92dec93f04a2fdd631010a46ac6509f5952cc8e4c25eac9b085626d17",
   "pins" : [
     {
       "identity" : "openssl-package",
@@ -10,5 +11,5 @@
       }
     }
   ],
-  "version" : 2
+  "version" : 3
 }
