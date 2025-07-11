@@ -74,6 +74,8 @@
     SettingsViewController* settingsViewController;
     StreamFrameViewController* streamFrameViewController;
     id navBarAppearanceStandard;
+    
+    NSTimer *_foregroundHostUpdateTimer;
 
 #if TARGET_OS_TV
     UITapGestureRecognizer* _menuRecognizer;
@@ -1639,7 +1641,12 @@ static NSMutableSet* hostList;
 {
     if (!_background) {
         // This will kick off box art caching
-        [self updateHosts];
+        
+        
+        _foregroundHostUpdateTimer = [NSTimer scheduledTimerWithTimeInterval:10 repeats:YES block:^(NSTimer *timer) {
+           [self updateHosts];
+        }];
+        
         
         // Reset state first so we can rediscover hosts that were deleted before
         [_discMan resetDiscoveryState];
@@ -1744,7 +1751,12 @@ static NSMutableSet* hostList;
 }
 
 
-
+- (void)viewWillDisappear:(BOOL)animated{
+    NSLog(@"willDisappear");
+    [super viewWillDisappear:animated];
+    [_foregroundHostUpdateTimer invalidate];
+    _foregroundHostUpdateTimer = nil;
+}
 
 - (void)viewWillAppear:(BOOL)animated
 {
@@ -1863,13 +1875,12 @@ static NSMutableSet* hostList;
 }
 
 - (void)updateHosts {
-    Log(LOG_I, @"Updating hosts...");
+    Log(LOG_I, @"Updating hosts %f", CACurrentMediaTime());
     @synchronized (hostList) {
         // Sort the host list in alphabetical order
         NSArray* sortedHostList = [[hostList allObjects] sortedArrayUsingSelector:@selector(compareName:)];
         for (TemporaryHost* comp in sortedHostList) {
-            if(comp.state == StateOnline || comp.pairState == PairStatePaired) [self.hostCollectionVC addHost:comp];
-            
+            if(comp.state == StateOnline || comp.pairState == PairStatePaired || comp.pairState == PairStateUnknown) [self.hostCollectionVC addHost:comp];
             
             // new host card test
             // if([comp.name isEqualToString: @"ASRockPC"]) {
