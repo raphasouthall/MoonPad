@@ -493,15 +493,12 @@
      _settings.externalDisplayMode.intValue:
      0 - stage manager
      1 - airplay
-     2 - disabled
      */
-    if(_settings.externalDisplayMode.intValue == 2) _streamVideoRenderView = _streamView;
-    else {
-        //NSLog(@"renderView separated from streamView");
-        _streamVideoRenderView = (StreamView*)[[UIView alloc] initWithFrame:self.view.frame];
-        _streamVideoRenderView.bounds = _streamView.bounds;
-        _streamVideoRenderView.userInteractionEnabled = false; // this will prevent renderView from intrecepting touchEvents which shall be interacting with streamView
-    }
+    // A separate render view is always created to support external displays.
+    _streamVideoRenderView = (StreamView*)[[UIView alloc] initWithFrame:self.view.frame];
+    _streamVideoRenderView.bounds = _streamView.bounds;
+    _streamVideoRenderView.userInteractionEnabled = false;
+    
     //[_streamView setupStreamView:_controllerSupport interactionDelegate:self config:self.streamConfig];
     [self reConfigStreamViewRealtime]; // call this method again to make sure all gestures are configured & added to the superview(self.view), including the gestures added from inside the streamview.
     
