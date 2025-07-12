@@ -92,7 +92,8 @@
                    unlockDisplayOrientation:(BOOL)unlockDisplayOrientation
               resolutionSelected:(NSInteger)resolutionSelected
              externalDisplayMode:(NSInteger)externalDisplayMode
-                       localMousePointerMode:(NSInteger)localMousePointerMode{
+           localMousePointerMode:(NSInteger)localMousePointerMode
+          backgroundSessionTimer:(NSInteger)backgroundSessionTimer{
     
     [_managedObjectContext performBlockAndWait:^{
         Settings* settingsToSave = [self retrieveSettings];
@@ -134,6 +135,7 @@
         settingsToSave.resolutionSelected = [NSNumber numberWithInteger:resolutionSelected];
         settingsToSave.externalDisplayMode = [NSNumber numberWithInteger:externalDisplayMode];
         settingsToSave.localMousePointerMode = [NSNumber numberWithInteger:localMousePointerMode];
+        settingsToSave.backroundSessionTimer = [NSNumber numberWithInteger:backgroundSessionTimer];
         [self saveData];
     }];
 }

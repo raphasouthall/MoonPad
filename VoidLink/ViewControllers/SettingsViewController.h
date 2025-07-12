@@ -108,6 +108,9 @@
 @property (strong, nonatomic) IBOutlet UIStackView *audioConfigStack;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *audioConfigSelector;
 
+@property (strong, nonatomic) IBOutlet UIStackView *backgroundSessionTimerStack;
+@property (strong, nonatomic) IBOutlet UISlider *backgroundSessionTimerSlider;
+
 
 
 #pragma clang diagnostic push

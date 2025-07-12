@@ -114,6 +114,7 @@
     self.resolutionSelected = settings.resolutionSelected;
     self.externalDisplayMode = settings.externalDisplayMode;
     self.localMousePointerMode = settings.localMousePointerMode;
+    self.backgroundSessionTimer = settings.backroundSessionTimer;
 #endif
     self.uniqueId = settings.uniqueId;
     

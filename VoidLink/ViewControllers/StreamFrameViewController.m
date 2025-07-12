@@ -867,12 +867,12 @@
     
 #if !TARGET_OS_TV
     // Terminate the stream if the app is inactive for 60 seconds
-    Log(LOG_I, @"Starting inactivity termination timer");
-    _inactivityTimer = [NSTimer scheduledTimerWithTimeInterval:18000
-                                                      target:self
-                                                    selector:@selector(inactiveTimerExpired:)
-                                                    userInfo:nil
-                                                     repeats:NO];
+    Log(LOG_I, @"Starting inactivity termination timer with %d min", _settings.backgroundSessionTimer.intValue);
+    _inactivityTimer = [NSTimer scheduledTimerWithTimeInterval:60*(double)_settings.backgroundSessionTimer.intValue
+                                  target:self
+                                selector:@selector(inactiveTimerExpired:)
+                                userInfo:nil
+                                 repeats:NO];
 #endif
 }
 
@@ -894,10 +894,6 @@
     if (self.pipController && self.pipController.isPictureInPictureActive) {
         [self.pipController stopPictureInPicture];
     }
-    
-    //self.pipController = nil;
-    //[self setupPiPControllerWithRenderer:self->_streamMan.videoRenderer];
-    //self->_streamMan.videoRenderer.
 }
 
 // This fires when the home button is pressed

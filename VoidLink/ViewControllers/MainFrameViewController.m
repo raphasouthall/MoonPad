@@ -1866,25 +1866,6 @@ static NSMutableSet* hostList;
         for (TemporaryHost* comp in sortedHostList) {
             
             if(comp.state == StateOnline || comp.pairState == PairStatePaired || comp.pairState == PairStateUnknown) [self.hostCollectionVC addHost:comp];
-            
-            // new host card test
-            // if([comp.name isEqualToString: @"ASRockPC"]) {
-            /*
-            if([comp.name isEqualToString: @"ASRockPC"]) {
-            //if([comp.name isEqualToString: @"PianoServer"]) {
-            //if([comp.name isEqualToString: @"TrueZj"]) {
-                HostCardView *testCard = [[HostCardView alloc] initWithHost:comp];
-
-                [self.view addSubview:testCard];
-                // [testCard resizeBySizeFactor:3];
-                [NSLayoutConstraint activateConstraints:@[
-                    [testCard.centerXAnchor constraintEqualToAnchor:self.view.centerXAnchor constant:0],
-                    [testCard.centerYAnchor constraintEqualToAnchor:self.view.centerYAnchor constant:150],
-                ]];
-
-            }*/
-            //
-
 
             // Start jobs to decode the box art in advance
             for (TemporaryApp* app in comp.appList) {
