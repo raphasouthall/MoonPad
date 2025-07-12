@@ -74,6 +74,7 @@
     SettingsViewController* settingsViewController;
     StreamFrameViewController* streamFrameViewController;
     id navBarAppearanceStandard;
+    bool _viewJustAppeared;
     
     NSTimer *_foregroundHostUpdateTimer;
 
@@ -1625,9 +1626,13 @@ static NSMutableSet* hostList;
 
 -(void)beginForegroundRefresh
 {
-    if (!_background) {
+    if (!_background || _viewJustAppeared) {
         // This will kick off box art caching
         
+        _viewJustAppeared = false;
+        
+        [_foregroundHostUpdateTimer invalidate];
+        _foregroundHostUpdateTimer = nil;
         
         _foregroundHostUpdateTimer = [NSTimer scheduledTimerWithTimeInterval:5 repeats:YES block:^(NSTimer *timer) {
            [self updateHosts];
@@ -1693,7 +1698,11 @@ static NSMutableSet* hostList;
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:NO];
-
+    
+    _viewJustAppeared = true;
+    
+    [self beginForegroundRefresh];
+    
     // [self setupHostViewTitle];
     // [self reloadScrollHostView]; //remove this for proper test
     [self attachWaterMark];
@@ -1774,8 +1783,6 @@ static NSMutableSet* hostList;
     [self retrieveSavedHosts];
 
     _discMan = [[DiscoveryManager alloc] initWithHosts:[hostList allObjects] andCallback:self];
-
-    [self beginForegroundRefresh];
 }
 
 - (void)viewDidDisappear:(BOOL)animated
