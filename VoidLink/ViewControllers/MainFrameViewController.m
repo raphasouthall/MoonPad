@@ -1634,8 +1634,6 @@ static NSMutableSet* hostList;
         }];
         
         
-        // Reset state first so we can rediscover hosts that were deleted before
-        [_discMan resetDiscoveryState];
         [_discMan startDiscovery];
         
         // This will refresh the applist when a paired host is selected
@@ -1902,6 +1900,9 @@ static NSMutableSet* hostList;
     
     // Update the title in case we now have a PC
     [self updateTitle];
+    
+    // Reset state first so we can rediscover hosts that were deleted before
+    [_discMan resetDiscoveryState];
 }
 
 // This function forces immediate decoding of the UIImage, rather
