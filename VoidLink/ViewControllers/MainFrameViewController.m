@@ -1629,7 +1629,7 @@ static NSMutableSet* hostList;
         // This will kick off box art caching
         
         
-        _foregroundHostUpdateTimer = [NSTimer scheduledTimerWithTimeInterval:10 repeats:YES block:^(NSTimer *timer) {
+        _foregroundHostUpdateTimer = [NSTimer scheduledTimerWithTimeInterval:5 repeats:YES block:^(NSTimer *timer) {
            [self updateHosts];
         }];
         
