@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23504" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES" colorMatched="YES" initialViewController="EVd-wq-ego">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23727" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES" colorMatched="YES" initialViewController="EVd-wq-ego">
     <device id="ipad11_0rounded" orientation="portrait" layout="fullscreen" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23506"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23721"/>
         <capability name="Image references" minToolsVersion="12.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -871,7 +871,7 @@
                                 </constraints>
                             </stackView>
                             <stackView opaque="NO" contentMode="scaleToFill" spacing="20" id="12a-Wi-LlL" userLabel="pipStack">
-                                <rect key="frame" x="293" y="1899" width="280" height="31"/>
+                                <rect key="frame" x="382" y="1899" width="280" height="31"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Enable PiP" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3rP-dh-TJi" userLabel="pipLabel">
@@ -896,7 +896,7 @@
                     </view>
                     <size key="freeformSize" width="682" height="2500"/>
                     <connections>
-                        <outlet property="HdrStack" destination="12a-Wi-LlL" id="bbr-VY-n5y"/>
+                        <outlet property="HdrStack" destination="dH7-Sy-EdJ" id="cJm-bj-Aqo"/>
                         <outlet property="audioConfigSelector" destination="iZL-dA-jk9" id="Yja-os-o6g"/>
                         <outlet property="audioConfigStack" destination="qnG-5F-2YY" id="kFX-VK-vuK"/>
                         <outlet property="audioOnPcStack" destination="Bbr-Wj-Z75" id="c2K-3R-whg"/>
