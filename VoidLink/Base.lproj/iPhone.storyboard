@@ -1586,6 +1586,8 @@
                         <outlet property="onscreenControllerLabel" destination="5uF-E5-hpX" id="Ntz-sT-O6S"/>
                         <outlet property="optimizeGamesStack" destination="Col-Dm-lwT" id="ng3-CV-HLd"/>
                         <outlet property="optimizeGamesSwitch" destination="zGD-yR-gUS" id="Gji-vK-txl"/>
+                        <outlet property="pipStack" destination="hvN-TZ-ziV" id="6oL-0b-Bto"/>
+                        <outlet property="pipSwitch" destination="mgR-dj-4gu" id="b8b-7E-wrq"/>
                         <outlet property="pointerVelocityDividerStack" destination="Jp2-5v-Zr0" id="0mB-RI-df8"/>
                         <outlet property="pointerVelocityFactorStack" destination="PAv-Ep-ZJo" id="fxb-uz-e1a"/>
                         <outlet property="pointerVelocityModeDividerSlider" destination="OMw-Ew-fBX" id="Yki-z6-7bh"/>
