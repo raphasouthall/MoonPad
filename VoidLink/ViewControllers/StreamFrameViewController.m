@@ -889,7 +889,7 @@
 #if !TARGET_OS_TV
     // Terminate the stream if the app is inactive for 60 seconds
     Log(LOG_I, @"Starting inactivity termination timer");
-    _inactivityTimer = [NSTimer scheduledTimerWithTimeInterval:60
+    _inactivityTimer = [NSTimer scheduledTimerWithTimeInterval:1800
                                                       target:self
                                                     selector:@selector(inactiveTimerExpired:)
                                                     userInfo:nil
