@@ -39,21 +39,12 @@ extern int ff_isom_write_av1c(AVIOContext *pb, const uint8_t *buf, int size,
 
 - (void)reinitializeDisplayLayer
 {
-    CALayer *oldLayer = _displayLayer;
-    bool pipIsActive = [(StreamView* )_view.superview isPipActive];
-    
-    NSLog(@"pipIsActive: %d,    %f", pipIsActive, CACurrentMediaTime());
-        
-    if (!pipIsActive) {
+    if (_displayLayer == nil) {
         _displayLayer = [[AVSampleBufferDisplayLayer alloc] init];
-        _displayLayer.backgroundColor = [UIColor greenColor].CGColor;
-        //if(pipIsActive) [_view.layer addSublayer:_displayLayer];
+        _displayLayer.backgroundColor = [UIColor blackColor].CGColor;
+        _displayLayer.videoGravity = AVLayerVideoGravityResize;
+        [_view.layer addSublayer:_displayLayer];
     }
-
-
-    
-    //_displayLayer = [[AVSampleBufferDisplayLayer alloc] init];
-    //_displayLayer.backgroundColor = [UIColor blackColor].CGColor;
     
     // Ensure the AVSampleBufferDisplayLayer is sized to preserve the aspect ratio
     // of the video stream. We used to use AVLayerVideoGravityResizeAspect, but that
@@ -66,23 +57,16 @@ extern int ff_isom_write_av1c(AVIOContext *pb, const uint8_t *buf, int size,
     } else {
         videoSize = CGSizeMake(_view.bounds.size.width, _view.bounds.size.width / _streamAspectRatio);
     }
+    
+    [CATransaction begin];
+    [CATransaction setDisableActions:YES];
     _displayLayer.position = CGPointMake(CGRectGetMidX(_view.bounds), CGRectGetMidY(_view.bounds));
     _displayLayer.bounds = CGRectMake(0, 0, videoSize.width, videoSize.height);
-    _displayLayer.videoGravity = AVLayerVideoGravityResize;
+    [CATransaction commit];
 
     // Hide the layer until we get an IDR frame. This ensures we
     // can see the loading progress label as the stream is starting.
     _displayLayer.hidden = YES;
-    
-    if(!pipIsActive){
-        if (oldLayer != nil) {
-            // Switch out the old display layer with the new one
-            [_view.layer replaceSublayer:oldLayer with:_displayLayer];
-        }
-        else {
-            [_view.layer addSublayer:_displayLayer];
-        }
-    }
     
     if (formatDesc != nil) {
         CFRelease(formatDesc);
@@ -90,7 +74,7 @@ extern int ff_isom_write_av1c(AVIOContext *pb, const uint8_t *buf, int size,
     }
 }
 
-- (id)initWithView:(UIView*)view callbacks:(id<ConnectionCallbacks>)callbacks streamAspectRatio:(float)aspectRatio useFramePacing:(BOOL)useFramePacing
+- (id)initWithView:(UIView* )view callbacks:(id<ConnectionCallbacks>)callbacks streamAspectRatio:(float)aspectRatio useFramePacing:(BOOL)useFramePacing
 {
     NSLog(@"initializing video decoder %f", CACurrentMediaTime());
     self = [super init];
@@ -538,6 +522,8 @@ int DrSubmitDecodeUnit(PDECODE_UNIT decodeUnit);
     if (_displayLayer.status == AVQueuedSampleBufferRenderingStatusFailed) {
         Log(LOG_E, @"Display layer rendering failed: %@", _displayLayer.error);
         
+        [self->_displayLayer flushAndRemoveImage];
+
         // Recreate the display layer. We are already on the main thread,
         // so this is safe to do right here.
         [self reinitializeDisplayLayer];

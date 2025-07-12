@@ -881,13 +881,9 @@
         [self.pipController stopPictureInPicture];
     }
     
-    self.pipController = nil;
-    [self setupPiPControllerWithRenderer:self->_streamMan.videoRenderer];
+    //self.pipController = nil;
+    //[self setupPiPControllerWithRenderer:self->_streamMan.videoRenderer];
     //self->_streamMan.videoRenderer.
-}
-
-- (bool)isPipActive{
-    return self.pipController.isPictureInPictureActive;
 }
 
 // This fires when the home button is pressed
@@ -904,6 +900,7 @@
     }
 
 #if !TARGET_OS_TV
+
 #endif
 }
 

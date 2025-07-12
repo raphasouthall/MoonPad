@@ -224,19 +224,19 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "启用画中画观察模式"
+            "value" : "画中画"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "啟用子母畫面觀察模式"
+            "value" : "啟用子母畫面"
           }
         },
         "zh-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "啟用子母畫面觀察模式"
+            "value" : "啟用子母畫面"
           }
         }
       }

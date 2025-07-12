@@ -364,9 +364,6 @@ static const double X1_MOUSE_SPEED_DIVISOR = 2.5;
 #endif
 }
 
-- (bool)isPipActive{
-    return [interactionDelegate isPipActive];
-}
 
 // we'll enable on screen buttons, and disable on screen controllers for absolute touch
 - (bool) isOscEnabled{
