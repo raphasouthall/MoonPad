@@ -200,10 +200,25 @@
     }
 }
 
-- (void)configOscLayoutTool{
+- (void)updateToolboxSpecialEntries{
     if([self isOscLayoutToolEnabled]){
         if(![toolBoxViewController.specialEntries containsObject:@"widgetLayoutTool"]) [toolBoxViewController.specialEntries insertObject:@"widgetLayoutTool" atIndex:0];
         if(![toolBoxViewController.specialEntries containsObject:@"widgetSwitchTool"]) [toolBoxViewController.specialEntries insertObject:@"widgetSwitchTool" atIndex:1];
+    }
+    else{
+        [toolBoxViewController.specialEntries removeObject:@"widgetLayoutTool"];
+        [toolBoxViewController.specialEntries removeObject:@"widgetSwitchTool"];
+    }
+    if(_settings.enablePIP){
+        if(![toolBoxViewController.specialEntries containsObject:@"enterPip"]) [toolBoxViewController.specialEntries addObject:@"enterPip"];
+    }
+    else [toolBoxViewController.specialEntries removeObject:@"enterPip"];
+    
+    NSLog(@"toolBoxViewController.specialEntries %@", toolBoxViewController.specialEntries);
+}
+
+- (void)configOscLayoutTool{
+    if([self isOscLayoutToolEnabled]){
         _oscLayoutTapRecoginizer = [[CustomTapGestureRecognizer alloc] initWithTarget:self action:@selector(openWidgetLayoutTool)];
         _oscLayoutTapRecoginizer.numberOfTouchesRequired = _settings.oscLayoutToolFingers.intValue; //tap a predefined number of fingers to open osc layout tool
         _oscLayoutTapRecoginizer.tapDownTimeThreshold = 0.2;
@@ -227,15 +242,13 @@
         _layoutOnScreenControlsVC.view.backgroundColor = UIColor.clearColor;
         _layoutOnScreenControlsVC.modalPresentationStyle = UIModalPresentationOverCurrentContext;
     }
-    else{
-        [toolBoxViewController.specialEntries removeObject:@"widgetLayoutTool"];
-        [toolBoxViewController.specialEntries removeObject:@"widgetSwitchTool"];
-    }
 }
 
 - (void)presentCommandManagerViewController{
+    ToolboxViewController* oldToolboxVC = toolBoxViewController;
     toolBoxViewController = [[ToolboxViewController alloc] init];
     toolBoxViewController.specialEntryDelegate = self;
+    toolBoxViewController.specialEntries = oldToolboxVC.specialEntries;
     [self configOscLayoutTool];
     [self presentViewController:toolBoxViewController animated:YES completion:^{
         //[self->toolBoxViewController setupConstraints];
@@ -296,6 +309,7 @@
     _settings = [[[DataManager alloc] init] getSettings];  //StreamFrameViewController retrieve the settings here.
     overlayLevel = _settings.statsOverlayLevel.intValue;
     [self configOscLayoutTool];
+    [self updateToolboxSpecialEntries];
     [self configSwipeGestures];
     [self configZoomGestureAndAddStreamView];
     [self->_streamView disableOnScreenControls]; //don't know why but this must be called outside the streamview class, just put it here. execute in streamview class cause hang

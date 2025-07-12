@@ -1521,7 +1521,7 @@
                                 </constraints>
                             </stackView>
                             <stackView opaque="NO" contentMode="scaleToFill" spacing="20" id="hvN-TZ-ziV" userLabel="pipStack">
-                                <rect key="frame" x="382" y="1618" width="280" height="31"/>
+                                <rect key="frame" x="437" y="1618" width="280" height="31"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Enable PiP" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4Ul-P6-eUk" userLabel="pipLabel">
