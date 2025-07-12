@@ -169,7 +169,7 @@
 
     if ([AVPictureInPictureController isPictureInPictureSupported]) {
         if (@available(iOS 15.0, *)) {
-            self.pipContentSource = [[AVPictureInPictureControllerContentSource alloc] initWithSampleBufferDisplayLayer:streamLayer playbackDelegate:self];
+            self.pipContentSource = [[AVPictureInPictureControllerContentSource alloc] initWithSampleBufferDisplayLayer:streamLayer playbackDelegate:(id<AVPictureInPictureSampleBufferPlaybackDelegate>)self];
             self.pipController = [[AVPictureInPictureController alloc] initWithContentSource:self.pipContentSource];
             self.pipController.canStartPictureInPictureAutomaticallyFromInline = YES;
         } else {
@@ -329,20 +329,24 @@
     [super viewDidAppear:animated];
     
     _deviceWindow = self.view.window;
-    UIScreen *currentScreen = self.view.window.windowScene.screen;
-    if (UIScreen.screens.count > 1 && [self isAirPlayEnabled] && currentScreen == UIScreen.mainScreen) {
-        [SceneDelegate setExternalDisplayRenderView:self->_streamVideoRenderView];
-    }
-    else {
-        /*
-         _settings.externalDisplayMode.intValue:
-         0 - stage manager
-         1 - airplay
-         2 - disabled
-         */
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if(self->_settings.externalDisplayMode.intValue != 2) [self->_streamView insertSubview:self->_streamVideoRenderView atIndex:0];
-        });
+    if (@available(iOS 13.0, *)) {
+        UIScreen *currentScreen = self.view.window.windowScene.screen;
+        if (UIScreen.screens.count > 1 && [self isAirPlayEnabled] && currentScreen == UIScreen.mainScreen) {
+            [SceneDelegate setExternalDisplayRenderView:self->_streamVideoRenderView];
+        }
+        else {
+            /*
+             _settings.externalDisplayMode.intValue:
+             0 - stage manager
+             1 - airplay
+             2 - disabled
+             */
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self->_streamView insertSubview:self->_streamVideoRenderView atIndex:0];
+            });
+        }
+    } else {
+        // Fallback on earlier versions
     }
 
     self->_streamView.originalFrame = self->_streamView.frame;
@@ -620,6 +624,10 @@
     [self->_streamView readyToBringUpSoftKeyboardByToolbox];
 }
 
+- (void)enterPip{
+    [self.pipController startPictureInPicture];
+}
+
 - (void)oscLayoutClosed{
     // Handle the callback
     [self->_streamView disableOnScreenControls]; // add this to get realtime back menu working.
@@ -833,10 +841,15 @@
 
 // This will fire if the user opens control center or gets a low battery message
 - (void)applicationWillResignActive:(NSNotification *)notification {
+    
+    //[self.pipController startPictureInPicture];
+    //sleep(1);
+    
     if (_inactivityTimer != nil) {
         [_inactivityTimer invalidate];
         _inactivityTimer = nil;
     }
+    
     
 #if !TARGET_OS_TV
     // Terminate the stream if the app is inactive for 60 seconds
@@ -867,33 +880,30 @@
     if (self.pipController && self.pipController.isPictureInPictureActive) {
         [self.pipController stopPictureInPicture];
     }
+    
+    self.pipController = nil;
+    [self setupPiPControllerWithRenderer:self->_streamMan.videoRenderer];
+    //self->_streamMan.videoRenderer.
+}
+
+- (bool)isPipActive{
+    return self.pipController.isPictureInPictureActive;
 }
 
 // This fires when the home button is pressed
 - (void)applicationDidEnterBackground:(UIApplication *)application {
-
-    Log(LOG_I, @"Terminating stream immediately for backgrounding");
-
-    if (_inactivityTimer != nil) {
-        [_inactivityTimer invalidate];
-        _inactivityTimer = nil;
-    }
     
     // [self returnToMainFrame];
     // Don't terminate if pip is active
+    // [self.pipController startPictureInPicture];
+
+    NSLog(@"did enter background, %d, %@, %d", _settings.enablePIP, self.pipController, self.pipController.isPictureInPictureActive);
     if (_settings.enablePIP && self.pipController && self.pipController.isPictureInPictureActive) {
         Log(LOG_I, @"PIP is active, not terminating stream");
         return;
     }
 
 #if !TARGET_OS_TV
-    // Terminate the stream if the app is inactive for 60 seconds
-    Log(LOG_I, @"Starting inactivity termination timer");
-    _inactivityTimer = [NSTimer scheduledTimerWithTimeInterval:60
-                                                      target:self
-                                                    selector:@selector(inactiveTimerExpired:)
-                                                    userInfo:nil
-                                                     repeats:NO];
 #endif
 }
 
@@ -1173,11 +1183,11 @@
 
 - (void) videoContentShown {
     dispatch_async(dispatch_get_main_queue(), ^{
-        [_spinner stopAnimating];
+        [self->_spinner stopAnimating];
         [self.view setBackgroundColor:[UIColor blackColor]];
 
         if (@available(iOS 15.0, *)) {
-            if (_settings.enablePIP) {
+            if (self->_settings.enablePIP) {
                 if (self->_streamMan && self->_streamMan.videoRenderer) {
                     Log(LOG_I, @"Setting up PiP with renderer: %p", self->_streamMan.videoRenderer);
                     [self setupPiPControllerWithRenderer:self->_streamMan.videoRenderer];

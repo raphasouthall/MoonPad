@@ -24,6 +24,7 @@
 - (void)toggleStatsOverlay;
 - (void)localMousePointerMode;
 - (void)toggleMouseVisible;
+- (bool)isPipActive;
 
 @end
 
@@ -63,6 +64,7 @@
 - (void)keyboardWillShow:(NSNotification *)notification;
 - (void)keyboardWillHide;
 
+- (bool)isPipActive;
 
 #if !TARGET_OS_TV
 - (void) updateCursorLocation:(CGPoint)location isMouse:(BOOL)isMouse;

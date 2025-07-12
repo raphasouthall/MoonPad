@@ -20,7 +20,7 @@ extern int ff_isom_write_av1c(AVIOContext *pb, const uint8_t *buf, int size,
                               int write_seq_header);
 
 @implementation VideoDecoderRenderer {
-    StreamView* _view;
+    UIView* _view;
     id<ConnectionCallbacks> _callbacks;
     float _streamAspectRatio;
     
@@ -39,11 +39,21 @@ extern int ff_isom_write_av1c(AVIOContext *pb, const uint8_t *buf, int size,
 
 - (void)reinitializeDisplayLayer
 {
-    if (_displayLayer == nil) {
+    CALayer *oldLayer = _displayLayer;
+    bool pipIsActive = [(StreamView* )_view.superview isPipActive];
+    
+    NSLog(@"pipIsActive: %d,    %f", pipIsActive, CACurrentMediaTime());
+        
+    if (!pipIsActive) {
         _displayLayer = [[AVSampleBufferDisplayLayer alloc] init];
-        _displayLayer.backgroundColor = [UIColor blackColor].CGColor;
-        [_view.layer addSublayer:_displayLayer];
+        _displayLayer.backgroundColor = [UIColor greenColor].CGColor;
+        //if(pipIsActive) [_view.layer addSublayer:_displayLayer];
     }
+
+
+    
+    //_displayLayer = [[AVSampleBufferDisplayLayer alloc] init];
+    //_displayLayer.backgroundColor = [UIColor blackColor].CGColor;
     
     // Ensure the AVSampleBufferDisplayLayer is sized to preserve the aspect ratio
     // of the video stream. We used to use AVLayerVideoGravityResizeAspect, but that
@@ -64,13 +74,23 @@ extern int ff_isom_write_av1c(AVIOContext *pb, const uint8_t *buf, int size,
     // can see the loading progress label as the stream is starting.
     _displayLayer.hidden = YES;
     
+    if(!pipIsActive){
+        if (oldLayer != nil) {
+            // Switch out the old display layer with the new one
+            [_view.layer replaceSublayer:oldLayer with:_displayLayer];
+        }
+        else {
+            [_view.layer addSublayer:_displayLayer];
+        }
+    }
+    
     if (formatDesc != nil) {
         CFRelease(formatDesc);
         formatDesc = nil;
     }
 }
 
-- (id)initWithView:(StreamView*)view callbacks:(id<ConnectionCallbacks>)callbacks streamAspectRatio:(float)aspectRatio useFramePacing:(BOOL)useFramePacing
+- (id)initWithView:(UIView*)view callbacks:(id<ConnectionCallbacks>)callbacks streamAspectRatio:(float)aspectRatio useFramePacing:(BOOL)useFramePacing
 {
     NSLog(@"initializing video decoder %f", CACurrentMediaTime());
     self = [super init];
