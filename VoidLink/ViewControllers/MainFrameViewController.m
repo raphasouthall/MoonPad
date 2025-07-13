@@ -2020,6 +2020,23 @@ static NSMutableSet* hostList;
     return cell;
 }
 
+- (CGSize)collectionView:(UICollectionView *)collectionView
+                  layout:(UICollectionViewLayout *)collectionViewLayout
+  sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
+    CGSize cellSize;
+    if([self isIPhone]) cellSize.height = 0.365*MIN(CGRectGetHeight([[UIScreen mainScreen] bounds]),CGRectGetWidth([[UIScreen mainScreen] bounds]));
+    else cellSize.height = 0.272*MIN(CGRectGetHeight([[UIScreen mainScreen] bounds]),CGRectGetWidth([[UIScreen mainScreen] bounds]));
+    TemporaryApp* app = _sortedAppList[indexPath.row];
+    UIAppView* appView = [[UIAppView alloc] initWithApp:app cache:_boxArtCache andCallback:self];
+
+    cellSize.width = cellSize.height * (appView
+                                        .bounds.size.width/appView
+                                        .bounds.size.height);
+    // cardSize.width =
+
+    return cellSize;
+}
+
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
     return 1; // App collection only
 }
