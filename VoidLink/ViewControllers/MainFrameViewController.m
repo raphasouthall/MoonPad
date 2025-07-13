@@ -1143,7 +1143,7 @@ static NSMutableSet* hostList;
     [settingsViewController setHidden:_settingsExpandedInStreamView forStack:settingsViewController.citrixX1MouseStack];
     [settingsViewController setHidden:_settingsExpandedInStreamView forStack:settingsViewController.externalDisplayModeStack];
     [settingsViewController setHidden:_settingsExpandedInStreamView forStack:settingsViewController.audioConfigStack];
-
+    [settingsViewController setHidden:_settingsExpandedInStreamView forStack:settingsViewController.pipStack];
 }
 
 - (void)revealController:(SWRevealViewController *)revealController didMoveToPosition:(FrontViewPosition)position {
