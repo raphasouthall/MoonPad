@@ -1431,9 +1431,23 @@ static NSMutableSet* hostList;
         [_settingsButton setTitle:[LocalizationHelper localizedStringForKey:@"Settings"]];
     }
 
+    
+    
+    
     // Set the host name button action. When it's tapped, it'll show the host selection view.
     _upButton = [[UIBarButtonItem alloc] init];
-    [self->_upButton setTitle: [LocalizationHelper localizedStringForKey: @"Select New Host"]];
+    
+    if (@available(iOS 13.0, *)) {
+        [_upButton setTitle:@""];
+        UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithPointSize:23 weight:UIImageSymbolWeightMedium ];
+        UIImage *image = [[UIImage systemImageNamed:@"tv" withConfiguration:config] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+        [_upButton setImage:image];
+        _upButton.imageInsets = UIEdgeInsetsMake(25, 20, 0, 15);
+    } else {
+        [_upButton setTitle:[LocalizationHelper localizedStringForKey:@"Select New Host"]];
+    }
+    
+    //[self->_upButton setTitle: [LocalizationHelper localizedStringForKey: @"Select New Host"]];
     [_upButton setTarget:self];
     [_upButton setAction:@selector(switchToHostView)];
 }
