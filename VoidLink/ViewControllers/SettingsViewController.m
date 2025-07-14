@@ -35,7 +35,7 @@
     CADisplayLink *_autoScrollDisplayLink;
     CGFloat _scrollSpeed;
     CGFloat _currentRefreshRate;
-    MenuSectionView *touchControlSection;
+    MenuSectionView *touchAndControlSection;
     NSMutableSet* hiddenStacks;
 }
 
@@ -150,6 +150,38 @@ static const int bitrateTable[] = {
 const int RESOLUTION_TABLE_SIZE = 6;
 const int RESOLUTION_TABLE_CUSTOM_INDEX = RESOLUTION_TABLE_SIZE - 1;
 CGSize resolutionTable[RESOLUTION_TABLE_SIZE];
+
+-(uint16_t)controllerTypeToSegmentIndex:(uint16_t)type{
+    uint16_t index;
+    switch (type) {
+        case LI_CTYPE_XBOX:
+            index = 0;
+            break;
+        case LI_CTYPE_PS:
+            index = 1;
+            break;
+        default:
+            index = 2;
+            break;
+    }
+    return index;
+}
+
+-(uint16_t)segmentIndexToControllerType:(uint16_t)index{
+    uint16_t type;
+    switch (index) {
+        case 0:
+            type = LI_CTYPE_XBOX;
+            break;
+        case 1:
+            type = LI_CTYPE_PS;
+            break;
+        default:
+            type = LI_CTYPE_UNKNOWN;
+            break;
+    }
+    return type;
+}
 
 -(int)getSliderValueForBitrate:(NSInteger)bitrate {
     int i;
@@ -486,22 +518,24 @@ BOOL isCustomResolution(CGSize res) {
     [videoSection addToParentStack:_parentStack];
     [videoSection setExpanded:YES];
 
-    touchControlSection = [[MenuSectionView alloc] init];
-    touchControlSection.delegate = self;
-    touchControlSection.sectionTitle = [LocalizationHelper localizedStringForKey:@"Touch & Control"];
+    touchAndControlSection = [[MenuSectionView alloc] init];
+    touchAndControlSection.delegate = self;
+    touchAndControlSection.sectionTitle = [LocalizationHelper localizedStringForKey:@"Touch & Control"];
     if (@available(iOS 13.0, *)) {
-        [touchControlSection setSectionWithIcon:[UIImage imageNamed:@"arcade.stick.console"] andSize:20.5];
+        [touchAndControlSection setSectionWithIcon:[UIImage imageNamed:@"arcade.stick.console"] andSize:20.5];
     }
-    [self addSetting:self.touchModeStack ofId:@"touchModeStack" withInfoTag:YES withDynamicLabel:NO to:touchControlSection];
-    [self addSetting:self.pointerVelocityDividerStack ofId:@"pointerVelocityDividerStack" withInfoTag:YES withDynamicLabel:YES to:touchControlSection];
-    [self addSetting:self.pointerVelocityFactorStack ofId:@"pointerVelocityFactorStack" withInfoTag:YES withDynamicLabel:YES to:touchControlSection];
-    [self addSetting:self.mousePointerVelocityStack ofId:@"mousePointerVelocityStack" withInfoTag:NO withDynamicLabel:YES to:touchControlSection];
-    [self addSetting:self.onScreenWidgetStack ofId:@"onScreenWidgetStack" withInfoTag:YES withDynamicLabel:YES to:touchControlSection];
-    [self addSetting:self.swapAbaxyStack ofId:@"swapAbaxyStack" withInfoTag:NO withDynamicLabel:NO to:touchControlSection];
-    [touchControlSection addToParentStack:_parentStack];
-    [touchControlSection setExpanded:YES];
+    [self addSetting:self.touchModeStack ofId:@"touchModeStack" withInfoTag:YES withDynamicLabel:NO to:touchAndControlSection];
+    [self addSetting:self.pointerVelocityDividerStack ofId:@"pointerVelocityDividerStack" withInfoTag:YES withDynamicLabel:YES to:touchAndControlSection];
+    [self addSetting:self.pointerVelocityFactorStack ofId:@"pointerVelocityFactorStack" withInfoTag:YES withDynamicLabel:YES to:touchAndControlSection];
+    [self addSetting:self.mousePointerVelocityStack ofId:@"mousePointerVelocityStack" withInfoTag:NO withDynamicLabel:YES to:touchAndControlSection];
+    [self addSetting:self.onScreenWidgetStack ofId:@"onScreenWidgetStack" withInfoTag:YES withDynamicLabel:YES to:touchAndControlSection];
+    [self addSetting:self.swapAbaxyStack ofId:@"swapAbaxyStack" withInfoTag:NO withDynamicLabel:NO to:touchAndControlSection];
+    [self addSetting:self.emulatedControllerTypeStack ofId:@"emulatedControllerTypeStack" withInfoTag:YES withDynamicLabel:NO to:touchAndControlSection];
+    [self addSetting:self.gyroModeStack ofId:@"gyroModeStack" withInfoTag:YES withDynamicLabel:YES to:touchAndControlSection];
+    [self addSetting:self.gyroSensitivityStack ofId:@"gyroSensitivityStack" withInfoTag:NO withDynamicLabel:YES to:touchAndControlSection];
+    [touchAndControlSection addToParentStack:_parentStack];
+    [touchAndControlSection setExpanded:YES];
 
-    
     MenuSectionView *gesturesSection = [[MenuSectionView alloc] init];
     gesturesSection.delegate = self;
     gesturesSection.sectionTitle = [LocalizationHelper localizedStringForKey:@"Gestures"];
@@ -567,8 +601,6 @@ BOOL isCustomResolution(CGSize res) {
         [experimentalSection setSectionWithIcon:[UIImage imageNamed:@"flask"] andSize:20];
     }
     [self addSetting:self.touchMoveEventIntervalStack ofId:@"touchMoveEventIntervalStack" withInfoTag:YES withDynamicLabel:YES to:experimentalSection];
-    [self addSetting:self.gyroModeStack ofId:@"gyroModeStack" withInfoTag:YES withDynamicLabel:YES to:experimentalSection];
-    [self addSetting:self.gyroSensitivityStack ofId:@"gyroSensitivityStack" withInfoTag:NO withDynamicLabel:YES to:experimentalSection];
     [experimentalSection addToParentStack:_parentStack];
     [experimentalSection setExpanded:YES];
 }
@@ -1266,7 +1298,11 @@ BOOL isCustomResolution(CGSize res) {
     [self.gyroSensitivitySlider setValue: (uint16_t)(currentSettings.gyroSensitivity.floatValue * 100) animated:YES]; // Load old setting.
     [self.gyroSensitivitySlider addTarget:self action:@selector(gyroSensitivitySliderMoved:) forControlEvents:(UIControlEventValueChanged)]; // Update label display when slider is being moved.
     [self gyroSensitivitySliderMoved:self.gyroSensitivitySlider];
-
+    
+    [self.emulatedControllerTypeSelector setSelectedSegmentIndex:[self controllerTypeToSegmentIndex:currentSettings.emulatedControllerType.intValue]];
+    [self.emulatedControllerTypeSelector addTarget:self action:@selector(emulatedControllerTypeChanged:) forControlEvents:(UIControlEventValueChanged)]; // Update label display when slider is being moved.
+    [self emulatedControllerTypeChanged:self.emulatedControllerTypeSelector];
+    
 
     [self.audioOnPcSwitch setOn:currentSettings.playAudioOnPC];
     _lastSelectedResolutionIndex = resolution;
@@ -1609,7 +1645,13 @@ BOOL isCustomResolution(CGSize res) {
     [self setHidden:![self isNotNativeTouchOnly] forStack:self.swapAbaxyStack];
     [self handleOswGestureChange];
 
-    [touchControlSection updateViewForFoldState];
+    [touchAndControlSection updateViewForFoldState];
+}
+
+- (void)emulatedControllerTypeChanged:(UISegmentedControl* )sender{
+    [self setHidden:sender.selectedSegmentIndex == 0 forStack:_gyroModeStack];
+    [self setHidden:sender.selectedSegmentIndex == 0 forStack:_gyroSensitivityStack];
+    [touchAndControlSection updateViewForFoldState];
 }
 
 - (void)setHidden:(BOOL)hidden forStack:(UIStackView* )stack{
@@ -1627,10 +1669,10 @@ BOOL isCustomResolution(CGSize res) {
 - (void)enableOswForNativeTouchSwitchFlipped:(UISwitch *)sender{
     //self.onScreenWidgetStack.hidden = !sender.isOn;
     [self setHidden:!sender.isOn forStack:_onScreenWidgetStack];
-    [self setHidden:!sender.isOn forStack:_swapAbaxyStack];
+    //[self setHidden:!sender.isOn forStack:_swapAbaxyStack];
     [self handleOswGestureChange];
     //self.swapAbaxyStack.hidden = !sender.isOn;
-    [touchControlSection updateViewForFoldState];
+    [touchAndControlSection updateViewForFoldState];
 }
 
 - (void) updateBitrate {
@@ -1975,6 +2017,7 @@ BOOL isCustomResolution(CGSize res) {
     BOOL multiController = self.multiControllerSwitch.isOn;
     BOOL swapABXYButtons = [self.swapABXYButtonsSelector selectedSegmentIndex] == 1;
     NSInteger gyroMode = self.gyroModeSelector.selectedSegmentIndex;
+    NSInteger emulatedControllerType = [self segmentIndexToControllerType:self.emulatedControllerTypeSelector.selectedSegmentIndex]; //self.emulatedControllerTypeSelector.selectedSegmentIndex;
     BOOL audioOnPC = self.audioOnPcSwitch.isOn;
     uint32_t preferredCodec = [self getChosenCodecPreference];
     BOOL enableYUV444 = self.yuv444Switch.isOn;
@@ -1990,6 +2033,7 @@ BOOL isCustomResolution(CGSize res) {
     NSInteger externalDisplayMode = [self.externalDisplayModeSelector selectedSegmentIndex];
     NSInteger localMousePointerMode = [self.localMousePointerModeSelector selectedSegmentIndex];
     NSInteger backgroundSessionTimer = self.backgroundSessionTimerSlider.value == self.backgroundSessionTimerSlider.maximumValue ? (uint32_t) INT16_MAX : (uint32_t)self.backgroundSessionTimerSlider.value;
+    
     [dataMan saveSettingsWithBitrate:_bitrate
                            framerate:framerate
                               height:height
@@ -1997,6 +2041,7 @@ BOOL isCustomResolution(CGSize res) {
                          audioConfig:audioConfig
                     onscreenControls:onscreenControls
                             gyroMode:gyroMode
+              emulatedControllerType:emulatedControllerType
                keyboardToggleFingers:keyboardToggleFingers
                 oscLayoutToolFingers:oscLayoutToolFingers
            slideToSettingsScreenEdge:slideToSettingsScreenEdge
