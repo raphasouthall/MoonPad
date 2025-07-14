@@ -1758,7 +1758,7 @@ static NSMutableSet* hostList;
                                                object: nil];
     //[self simulateSettingsButtonPress]; //force reload resolution table in the setting
     //[self simulateSettingsButtonPress];
-    //[self updateResolutionAccordingly];
+    [self updateResolutionAccordingly];
 }
 
 

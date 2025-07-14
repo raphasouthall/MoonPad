@@ -256,7 +256,7 @@ BOOL isCustomResolution(CGSize res) {
     }
     
     for (int i = 0; i < RESOLUTION_TABLE_CUSTOM_INDEX; i++) {
-        
+        NSLog(@"customRes: %f, %f, isrl: %f, %f", res.width, res.height, resolutionTable[i].width, resolutionTable[i].height);
         if ((res.width == resolutionTable[i].width && res.height == resolutionTable[i].height) || (res.height == resolutionTable[i].width && res.width == resolutionTable[i].height)) {
             return NO;
         }
@@ -286,6 +286,8 @@ BOOL isCustomResolution(CGSize res) {
 
 - (void)updateResolutionTable{
     UIWindow *window = self.view.window;
+    NSLog(@" window %@", window);
+
     CGFloat screenScale = window.screen.scale;
     CGFloat safeAreaWidth = (window.frame.size.width - window.safeAreaInsets.left - window.safeAreaInsets.right) * screenScale;
     CGFloat appWindowWidth = window.frame.size.width * screenScale;
@@ -296,17 +298,17 @@ BOOL isCustomResolution(CGSize res) {
         appWindowWidth = bounds.size.width * screenScale;
         appWindowHeight = bounds.size.height * screenScale;
     }
-    bool needSwapWidthAndHeight = appWindowWidth > appWindowHeight;
     
-    resolutionTable[3] = CGSizeMake(safeAreaWidth, appWindowHeight);
+    bool needSwapWidthAndHeight = appWindowWidth < appWindowHeight;
 
-    for(uint8_t i=0;i<RESOLUTION_TABLE_SIZE;i++){
+    for(uint8_t i=0;i<6;i++){
         CGFloat longSideLen = resolutionTable[i].height > resolutionTable[i].width ? resolutionTable[i].height : resolutionTable[i].width;
         CGFloat shortSideLen = resolutionTable[i].height < resolutionTable[i].width ? resolutionTable[i].height : resolutionTable[i].width;
-        if(needSwapWidthAndHeight) resolutionTable[i] = CGSizeMake(longSideLen, shortSideLen);
-        else resolutionTable[i] = CGSizeMake(shortSideLen, longSideLen);
+        if(needSwapWidthAndHeight) resolutionTable[i] = CGSizeMake(shortSideLen, longSideLen);
+        else resolutionTable[i] = CGSizeMake(longSideLen, shortSideLen);
     }
-
+    
+    resolutionTable[3] = CGSizeMake(safeAreaWidth, appWindowHeight);
     resolutionTable[4] = CGSizeMake(appWindowWidth, appWindowHeight);
 
     [self updateResolutionDisplayLabel];
@@ -315,7 +317,7 @@ BOOL isCustomResolution(CGSize res) {
 // this will also be called back when device orientation changes
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
     [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
-    double delayInSeconds = 0.2;
+    double delayInSeconds = 0.7;
     // Convert the delay into a dispatch_time_t value
     dispatch_time_t delayTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
     // Perform some task after the delay
@@ -325,14 +327,19 @@ BOOL isCustomResolution(CGSize res) {
 }
 
 - (void)viewWillAppear:(BOOL)animated{
-    
-    [self.resolutionSelector setEnabled:!self.customResolutionSwitch.isOn];
-}
+    [super viewWillAppear:NO];
+ }
 
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:NO];
     [self updateResolutionTable];
-    NSLog(@"Resolution table updated");
+    [self.customResolutionSwitch addTarget:self action:@selector(customResolutionSwitched:) forControlEvents:UIControlEventValueChanged];
+    
+    DataManager* dataMan = [[DataManager alloc] init];
+    TemporarySettings *currentSettings = [dataMan getSettings];
+
+    CGSize currentResolution = CGSizeMake(currentSettings.width.intValue, currentSettings.height.intValue);
+    [self.customResolutionSwitch setOn: isCustomResolution(currentResolution)];
     [self.resolutionSelector setEnabled:!self.customResolutionSwitch.isOn];
 }
 
@@ -1200,13 +1207,7 @@ BOOL isCustomResolution(CGSize res) {
     resolutionTable[3] = CGSizeMake(safeAreaWidth, fullScreenHeight);
     resolutionTable[4] = CGSizeMake(fullScreenWidth, fullScreenHeight);
     resolutionTable[5] = CGSizeMake([currentSettings.width integerValue], [currentSettings.height integerValue]); // custom initial value
-    [self updateResolutionTable];
 
-    // Don't populate the custom entry unless we have a custom resolution
-    //self.customResolutionSwitch
-    if (!isCustomResolution(resolutionTable[5])) {
-        resolutionTable[5] = CGSizeMake(0, 0);
-    }
 
     NSInteger framerate;
     switch ([currentSettings.framerate integerValue]) {
@@ -1308,9 +1309,6 @@ BOOL isCustomResolution(CGSize res) {
     _lastSelectedResolutionIndex = resolution;
     [self.resolutionSelector setSelectedSegmentIndex:resolution];
     [self.resolutionSelector addTarget:self action:@selector(newResolutionChosen) forControlEvents:UIControlEventValueChanged];
-    [self.customResolutionSwitch addTarget:self action:@selector(customResolutionSwitched:) forControlEvents:UIControlEventValueChanged];
-    CGSize currentResolution = CGSizeMake(currentSettings.width.intValue, currentSettings.height.intValue);
-    [self.customResolutionSwitch setOn: isCustomResolution(currentResolution)];
 
     [self.framerateSelector setSelectedSegmentIndex:framerate];
     [self.framerateSelector addTarget:self action:@selector(updateBitrate) forControlEvents:UIControlEventValueChanged];
