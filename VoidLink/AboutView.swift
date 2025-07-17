@@ -14,11 +14,11 @@ public struct AboutView: View {
     @Environment(\.presentationMode) var presentationMode
 
     public var body: some View {
-        VStack(spacing: 20) {
+        VStack(spacing: 10) {
             // App 图标
             Image(uiImage: UIImage(named: "AppIconMedium") ?? UIImage())
                 .resizable()
-                .frame(width: 100, height: 100)
+                .frame(width: 80, height: 80)
                 .clipShape(RoundedRectangle(cornerRadius: 36))
 
             // App 名称
@@ -35,11 +35,25 @@ public struct AboutView: View {
 
             // 说明文字
             Text(SwiftLocalizationHelper.localizedString(forKey: "From the player community, to the player community."))
-                .multilineTextAlignment(.leading)
+                .multilineTextAlignment(.center)
                 .lineLimit(nil)
                 .frame(maxWidth: 570) // ✅ 避免 Text 被拉得太宽无法换行
-                .padding()
-
+            
+            if Locale.preferredLanguages.first!.hasPrefix("zh-Hans") {
+                if #available(iOS 14.0, *) {
+                    Text("闽ICP备17012590号-3A\n主办单位：福州创图信息技术有限公司").font(.caption2)
+                        .multilineTextAlignment(.center)
+                        .lineLimit(nil)
+                        .frame(maxWidth: 570) // ✅ 避免 Text 被拉得太宽无法换行
+                        .padding()
+                } else {
+                    Text("闽ICP备17012590号-3A\n主办单位：福州创图信息技术有限公司").font(.caption)
+                        .multilineTextAlignment(.center)
+                        .lineLimit(nil)
+                        .frame(maxWidth: 570) // ✅ 避免 Text 被拉得太宽无法换行
+                        .padding()
+                }
+            }
             // 链接按钮
             if #available(iOS 14.0, *)  {
                 Link(SwiftLocalizationHelper.localizedString(forKey: "Join us"), destination: URL(string: "https://example.com")!)
