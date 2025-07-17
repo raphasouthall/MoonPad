@@ -1346,11 +1346,21 @@ static NSMutableSet* hostList;
     button.frame = CGRectMake(0, 0, buttonHeight, buttonHeight);
 
     // 添加点击事件
-    // [button addTarget:self action:@selector(addDeviceTapped) forControlEvents:UIControlEventTouchUpInside];
+    [button addTarget:self action:@selector(helpButtonTapped) forControlEvents:UIControlEventTouchUpInside];
 
     // 创建 UIBarButtonItem
     UIBarButtonItem *barItem = [[UIBarButtonItem alloc] initWithCustomView:button];
     return barItem;
+}
+
+- (void)helpButtonTapped{
+    if (@available(iOS 13.0, *)) {
+        AboutViewController *aboutVC = [[AboutViewController alloc] init];
+        aboutVC.modalPresentationStyle = UIModalPresentationFormSheet;
+        [self presentViewController:aboutVC animated:YES completion:nil];
+    } else {
+        // Fallback on earlier versions
+    }
 }
 
 - (CGFloat)getStandardNavBarHeight{

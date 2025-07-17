@@ -1802,6 +1802,29 @@
         }
       }
     },
+    "From the player community, to the player community." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "从玩家社区中来，到玩家社区中去。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "從玩家社群中來，到玩家社群中去。"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "從玩家社群中來，到玩家社群中去。"
+          }
+        }
+      }
+    },
     "Gestures" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2074,6 +2097,29 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "無效輸入"
+          }
+        }
+      }
+    },
+    "Join us" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "加入我们"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "加入我們"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "加入我們"
           }
         }
       }
@@ -4253,6 +4299,9 @@
           }
         }
       }
+    },
+    "Version %@" : {
+
     },
     "Video" : {
       "extractionState" : "manual",
