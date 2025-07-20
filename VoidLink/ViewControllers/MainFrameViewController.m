@@ -1544,10 +1544,11 @@ static NSMutableSet* hostList;
     #endif
 
     [self updateTitle];
-    // [self.view addSubview:hostScrollView];
-
-    // if ([hostList count] == 1) [self hostClicked:[hostList anyObject] view:nil]; // auto click for single host
     
+    [self retrieveSavedHosts];
+
+    _discMan = [[DiscoveryManager alloc] initWithHosts:[hostList allObjects] andCallback:self];
+
 
     //if([SettingsViewController isLandscapeNow] != _streamConfig.width > _streamConfig.height)
     //[self simulateSettingsButtonPress]; //force expand setting view if orientation changed since last quit from app.
@@ -1809,11 +1810,6 @@ static NSMutableSet* hostList;
     [self.view addSubview:self.collectionView];
     [self initHostCollection];
     if(!_enteredAppView) [self switchToHostView];
-
-    [self retrieveSavedHosts];
-
-    _discMan = [[DiscoveryManager alloc] initWithHosts:[hostList allObjects] andCallback:self];
-    
 }
 
 - (void)viewDidDisappear:(BOOL)animated
@@ -1903,7 +1899,8 @@ static NSMutableSet* hostList;
         NSArray* sortedHostList = [[hostList allObjects] sortedArrayUsingSelector:@selector(compareName:)];
         for (TemporaryHost* comp in sortedHostList) {
             
-            if(comp.state == StateOnline || comp.pairState == PairStatePaired || comp.pairState == PairStateUnknown) [self.hostCollectionVC addHost:comp];
+            // if(comp.state == StateOnline || comp.pairState == PairStatePaired || comp.pairState == PairStateUnknown) [self.hostCollectionVC addHost:comp];
+            [self.hostCollectionVC addHost:comp];
 
             // Start jobs to decode the box art in advance
             for (TemporaryApp* app in comp.appList) {
