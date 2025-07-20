@@ -387,11 +387,12 @@ static NSMutableSet* hostList;
     //[self applyNavBarAppearance:navBarAppearance];
 }
 
-- (void)appButtonTappedForHost:(TemporaryHost *)host {
+- (void)appButtonTappedForHost:(TemporaryHost *)host{
     if (host.state != StateOnline) return;
     _selectedHost = host;
-    if (host.state == StateOnline && host.pairState == PairStatePaired && host.appList.count > 0) {
-        [self switchToAppView];
+    if(host.state == StateOnline && host.pairState == PairStatePaired){
+        [self updateAppsForHost:host];
+        if(host.appList.count>0) [self switchToAppView];
     }
 }
 
@@ -492,7 +493,7 @@ static NSMutableSet* hostList;
 
 
 - (void) noneUserInitiatedHostAction:(TemporaryHost *)host view:(UIView *)view {
-    Log(LOG_D, @"Clicked host: %@", host.name);
+    NSLog(@"Clicked host: %@", host.name);
     _selectedHost = host;
     //_appManager = [[AppAssetManager alloc] initWithCallback:self];
     [self.collectionView setCollectionViewLayout:self.collectionViewLayout];
@@ -2002,8 +2003,8 @@ static NSMutableSet* hostList;
     [self.collectionView reloadData];
 }
 
-- (bool)isStreaming{
-    return self.revealViewController.isStreaming;
+- (bool)isInAppView{
+    return !self.revealViewController.isStreaming && _enteredAppView;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
