@@ -3851,6 +3851,35 @@
         }
       }
     },
+    "supportLink" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "https://voidlink.yuque.com/org-wiki-voidlink-znirha/fa3tgr/dhmg3h27ls8mwt4a?singleDoc# 《About VoidLink》"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "https://voidlink.yuque.com/org-wiki-voidlink-znirha/fa3tgr/fdi4rxkxykhl5zpp?singleDoc# 《关于 VoidLink》"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "https://voidlink.yuque.com/org-wiki-voidlink-znirha/fa3tgr/fdi4rxkxykhl5zpp?singleDoc# 《关于 VoidLink》"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "https://voidlink.yuque.com/org-wiki-voidlink-znirha/fa3tgr/fdi4rxkxykhl5zpp?singleDoc# 《关于 VoidLink》"
+          }
+        }
+      }
+    },
     "Tap %d Fingers to Change OSC Layout in Stream View" : {
       "extractionState" : "manual",
       "localizations" : {

@@ -1348,7 +1348,7 @@ static NSMutableSet* hostList;
     button.tintColor = [ThemeManager appPrimaryColor];
     [button setTitleColor:button.tintColor forState:UIControlStateNormal];
 
-    button.frame = CGRectMake(0, 0, buttonHeight, buttonHeight);
+    button.frame = CGRectMake(0, 0, buttonHeight*1.3, buttonHeight*1.05);
 
     // 添加点击事件
     [button addTarget:self action:@selector(helpButtonTapped) forControlEvents:UIControlEventTouchUpInside];
