@@ -1,29 +1,6 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
-    "\n1. From %@ edge, slide %d%% screen width to open settings menu\n\n2. From %@ edge, slide %d%% screen width to open command tool\n\n3. Back to Streaming from settings menu: slide from left edge\n\n4. Slide from upper 40%% of screen edge to avoid sending touch events to PC side" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "\n1. 展开设置菜单: 从%@边缘滑动%d%%屏幕宽度\n\n2. 打开命令工具: 从%@边缘滑动%d%%屏幕宽度\n\n3. 返回串流 / 收起设置菜单: 从左边缘滑动\n\n4. 从40%%上半边缘滑动避免触控事件影响PC端"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "\n1. 展開設定選單：從%@邊緣滑動%d%%的螢幕寬度\n\n2. 開啟指令工具：從%@邊緣滑動%d%%的螢幕寬度\n\n3. 從設定選單返回串流：從左側邊緣滑動\n\n4. 從螢幕邊緣上方40%%處滑動以避免將觸控事件傳送到電腦端"
-          }
-        },
-        "zh-HK" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "\n1. 展開設定選單：從%@邊緣滑動%d%%的螢幕寬度\n\n2. 開啟指令工具：從%@邊緣滑動%d%%的螢幕寬度\n\n3. 從設定選單返回串流：從左側邊緣滑動\n\n4. 從螢幕邊緣上方40%%處滑動以避免將觸控事件傳送到電腦端"
-          }
-        }
-      }
-    },
     "\nHost processing latency min/max/avg: %.1f/%.1f/%.1f ms" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1775,6 +1752,35 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "首次啟動提示"
+          }
+        }
+      }
+    },
+    "firstLaunchTip" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "\n1. From %@ edge, slide %d%% screen width to open settings menu\n\n2. From %@ edge, slide %d%% screen width to open toolbox menu\n\n3. Slide from top 40%% of screen edge to avoid sending touch events to PC side"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "\n1. 展开设置菜单: 从%@边缘滑动%d%%屏幕宽度\n\n2. 打开工具箱菜单: 从%@边缘滑动%d%%屏幕宽度\n\n3. 从40%%上半边缘滑动避免触控事件影响PC端"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "\n1. 展開設定選單：從%@邊緣滑動%d%%的螢幕寬度\n\n2. 開啟工具箱選單：從%@邊緣滑動%d%%的螢幕寬度\n\n3. 從螢幕邊緣上方40%%處滑動以避免將觸控事件傳送到電腦端"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "\n1. 展開設定選單：從%@邊緣滑動%d%%的螢幕寬度\n\n2. 開啟工具箱選單：從%@邊緣滑動%d%%的螢幕寬度\n\n3. 從螢幕邊緣上方40%%處滑動以避免將觸控事件傳送到電腦端"
           }
         }
       }
