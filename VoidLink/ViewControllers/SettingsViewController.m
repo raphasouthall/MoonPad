@@ -595,8 +595,8 @@ BOOL isCustomResolution(CGSize res) {
     [self addSetting:self.unlockDisplayOrientationStack ofId:@"unlockDisplayOrientationStack" withInfoTag:YES withDynamicLabel:NO to:otherSection];
     [self addSetting:self.backgroundSessionTimerStack ofId:@"backgroundSessionTimerStack" withInfoTag:NO withDynamicLabel:YES to:otherSection];
     [self addSetting:self.optimizeGamesStack ofId:@"optimizeGamesStack" withInfoTag:YES withDynamicLabel:NO to:otherSection];
-    [self addSetting:self.multiControllerStack ofId:@"multiControllerStack" withInfoTag:YES withDynamicLabel:NO to:otherSection];
-    [self addSetting:self.softKeyboardToolbarStack ofId:@"softKeyboardToolbarStack" withInfoTag:YES withDynamicLabel:NO to:otherSection];
+    [self addSetting:self.multiControllerStack ofId:@"multiControllerStack" withInfoTag:NO withDynamicLabel:NO to:otherSection];
+    [self addSetting:self.softKeyboardToolbarStack ofId:@"softKeyboardToolbarStack" withInfoTag:NO withDynamicLabel:NO to:otherSection];
     [otherSection addToParentStack:_parentStack];
     [otherSection setExpanded:YES];
     
@@ -607,7 +607,7 @@ BOOL isCustomResolution(CGSize res) {
     if (@available(iOS 13.0, *)) {
         [experimentalSection setSectionWithIcon:[UIImage imageNamed:@"flask"] andSize:20];
     }
-    [self addSetting:self.touchMoveEventIntervalStack ofId:@"touchMoveEventIntervalStack" withInfoTag:YES withDynamicLabel:YES to:experimentalSection];
+    [self addSetting:self.touchMoveEventIntervalStack ofId:@"touchMoveEventIntervalStack" withInfoTag:NO withDynamicLabel:YES to:experimentalSection];
     [experimentalSection addToParentStack:_parentStack];
     [experimentalSection setExpanded:YES];
 }
@@ -943,7 +943,7 @@ BOOL isCustomResolution(CGSize res) {
     [stack addSubview:button];
     [NSLayoutConstraint activateConstraints:@[
         [button.trailingAnchor constraintEqualToAnchor:stack.trailingAnchor constant:-4],
-        [button.bottomAnchor constraintEqualToAnchor:stack.arrangedSubviews[0].bottomAnchor constant:0],
+        [button.centerYAnchor constraintEqualToAnchor:stack.arrangedSubviews[0].centerYAnchor constant:0],
     ]];
 }
 
@@ -985,11 +985,31 @@ BOOL isCustomResolution(CGSize res) {
     if([sender.superview.accessibilityIdentifier isEqualToString: @"softKeyboardGestureStack" ]){
         tipText = [LocalizationHelper localizedStringForKey:@"softKeyboardGestureStackTip"];
         showOnlineDocAction = true;
-        onlineDocLink = @"softKeyboardGestureStackDoc";
+        onlineDocLink = [LocalizationHelper localizedStringForKey:@"softKeyboardGestureStackDoc"];
+    }
+    if([sender.superview.accessibilityIdentifier isEqualToString: @"slideToSettingsDistanceStack" ]){
+        tipText = [LocalizationHelper localizedStringForKey:@"slideToSettingsDistanceStackTip"];
+        showOnlineDocAction = false;
+    }
+    if([sender.superview.accessibilityIdentifier isEqualToString: @"unlockDisplayOrientationStack" ]){
+        tipText = [LocalizationHelper localizedStringForKey:@"unlockDisplayOrientationStackTip"];
+        showOnlineDocAction = false;
+    }
+    if([sender.superview.accessibilityIdentifier isEqualToString: @"optimizeGamesStack" ]){
+        tipText = [LocalizationHelper localizedStringForKey:@"optimizeGamesStackTip"];
+        showOnlineDocAction = false;
+    }
+    if([sender.superview.accessibilityIdentifier isEqualToString: @"localMousePointerModeStack"]){
+        tipText = [LocalizationHelper localizedStringForKey:@"localMousePointerModeStackTip"];
+        showOnlineDocAction = true;
+        onlineDocLink = [LocalizationHelper localizedStringForKey:@"localMousePointerModeStackDoc"];
+    }
+    if([sender.superview.accessibilityIdentifier isEqualToString: @"onScreenWidgetStack"]){
+        tipText = [LocalizationHelper localizedStringForKey:@"onScreenWidgetStackTip"];
+        showOnlineDocAction = true;
+        onlineDocLink = [LocalizationHelper localizedStringForKey:@"onScreenWidgetStackDoc"];
     }
 
-    
-    
     
     UIAlertController *tipsAlertController = [UIAlertController alertControllerWithTitle: [LocalizationHelper localizedStringForKey:@"Tips"] message: [LocalizationHelper localizedStringForKey:@"%@", tipText] preferredStyle:UIAlertControllerStyleAlert];
 
