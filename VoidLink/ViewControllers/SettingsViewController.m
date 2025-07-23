@@ -960,7 +960,7 @@ BOOL isCustomResolution(CGSize res) {
     if([sender.superview.accessibilityIdentifier isEqualToString: @"yuv444Stack"]){
         tipText = [LocalizationHelper localizedStringForKey:@"yuv444StackTip"];
         showOnlineDocAction = true;
-        onlineDocLink = @"https://voidlink.yuque.com/org-wiki-voidlink-znirha/fa3tgr/wr4ywd4vatrb3y07?singleDoc#";
+        onlineDocLink = @"https://voidlink.yuque.com/org-wiki-voidlink-znirha/fa3tgr/koeimmrvt4o17auc?singleDoc#";
     }
     if([sender.superview.accessibilityIdentifier isEqualToString: @"touchModeStack"]){
         tipText = [LocalizationHelper localizedStringForKey:@"touchModeStackTip"];
