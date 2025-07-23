@@ -978,10 +978,14 @@ BOOL isCustomResolution(CGSize res) {
         tipText = [LocalizationHelper localizedStringForKey:@"hdrStackTip"];
         showOnlineDocAction = false;
     }
-    
     if([sender.superview.accessibilityIdentifier isEqualToString: @"pipStack"]){
         tipText = [LocalizationHelper localizedStringForKey:@"pipStackTip"];
         showOnlineDocAction = false;
+    }
+    if([sender.superview.accessibilityIdentifier isEqualToString: @"softKeyboardGestureStack" ]){
+        tipText = [LocalizationHelper localizedStringForKey:@"softKeyboardGestureStackTip"];
+        showOnlineDocAction = true;
+        onlineDocLink = @"softKeyboardGestureStackDoc";
     }
 
     
@@ -1526,7 +1530,7 @@ BOOL isCustomResolution(CGSize res) {
         [_softKeyboardGestureSelector setSelectedSegmentIndex:_softKeyboardGestureSelector.selectedSegmentIndex-1];
     }
     for (NSInteger i = 0; i < _softKeyboardGestureSelector.numberOfSegments; i++) {
-        [_softKeyboardGestureSelector setEnabled:![self isCustomOswEnabled] ? true : i+3 != oswLayoutFingers forSegmentAtIndex:i]; // 或 NO 来禁用
+        [_softKeyboardGestureSelector setEnabled:![self isCustomOswEnabled] || i == 3 ? true : i+3 != oswLayoutFingers forSegmentAtIndex:i]; // 或 NO 来禁用
     }
 }
 

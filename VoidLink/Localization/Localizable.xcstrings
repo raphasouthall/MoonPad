@@ -2971,7 +2971,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "- Enable auto picture-in-picture by switching on Settings -> Multitasking & Gestures -> Start PiP Automatically.\n\n- PiP can be manually started in toolbox menu.\n\n- PiP connection timeout also defined by  “Background Session” settings in “Others” section\n\n-PiP is available for iOS15+"
+            "value" : "- Enable auto picture-in-picture by switching on Settings -> Multitasking & Gestures -> Start PiP Automatically.\n\n- PiP can be manually started in toolbox menu.\n\n- PiP connection timeout is also defined by  “Background Session” settings in “Others” section\n\n-PiP is available for iOS15+"
           }
         },
         "zh-Hans" : {
@@ -3888,6 +3888,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "與電腦的連線緩慢，請降低您的位元率"
+          }
+        }
+      }
+    },
+    "softKeyboardGestureStackDoc" : {
+      "extractionState" : "manual"
+    },
+    "softKeyboardGestureStackTip" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Soft keyboard gesture is able to locate the remote typing area by the lowest touch point of your tap gesture to lift the stream view to proper height.\nCheck the online document for details."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "软键盘手势能够根据位置最低的触点定位远程文字输入位置，并将串流视图提升到合适高度。\n详见在线文档。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "軟體鍵盤手勢可根據最低位置的觸控點，定位遠端文字輸入的位置，並將串流畫面提升至適當高度。\n詳情請參閱線上說明文件。"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "軟體鍵盤手勢可根據最低位置的觸控點，定位遠端文字輸入的位置，並將串流畫面提升至適當高度。\n詳情請參閱線上說明文件。"
           }
         }
       }
