@@ -950,6 +950,7 @@ BOOL isCustomResolution(CGSize res) {
 -  (void)infoButtonTapped:(UIButton* )sender{
     
     NSString* tipText = @"";
+    NSString* onlineDocLink = @"";
     bool showOnlineDocAction = false;
     tipText = sender.superview.accessibilityIdentifier;
     if([sender.superview.accessibilityIdentifier isEqualToString: @"bitrateStack"]){
@@ -959,6 +960,7 @@ BOOL isCustomResolution(CGSize res) {
     if([sender.superview.accessibilityIdentifier isEqualToString: @"yuv444Stack"]){
         tipText = [LocalizationHelper localizedStringForKey:@"yuv444StackTip"];
         showOnlineDocAction = true;
+        onlineDocLink = @"https://voidlink.yuque.com/org-wiki-voidlink-znirha/fa3tgr/wr4ywd4vatrb3y07?singleDoc#";
     }
     if([sender.superview.accessibilityIdentifier isEqualToString: @"touchModeStack"]){
         tipText = [LocalizationHelper localizedStringForKey:@"touchModeStackTip"];
@@ -972,9 +974,13 @@ BOOL isCustomResolution(CGSize res) {
         tipText = [LocalizationHelper localizedStringForKey:@"pointerVelocityFactorStackTip"];
         showOnlineDocAction = true;
     }
-
     if([sender.superview.accessibilityIdentifier isEqualToString: @"hdrStack"]){
         tipText = [LocalizationHelper localizedStringForKey:@"hdrStackTip"];
+        showOnlineDocAction = false;
+    }
+    
+    if([sender.superview.accessibilityIdentifier isEqualToString: @"pipStack"]){
+        tipText = [LocalizationHelper localizedStringForKey:@"pipStackTip"];
         showOnlineDocAction = false;
     }
 
@@ -1003,7 +1009,7 @@ BOOL isCustomResolution(CGSize res) {
     UIAlertAction *readInstruction = [UIAlertAction actionWithTitle:[LocalizationHelper localizedStringForKey:@"Online Documentation"]
                                                            style:UIAlertActionStyleDefault
                                                          handler:^(UIAlertAction *action){
-        NSURL *url = [NSURL URLWithString:@"https://b23.tv/J8qEXOr"];
+        NSURL *url = [NSURL URLWithString:onlineDocLink];
         if ([[UIApplication sharedApplication] canOpenURL:url]) {
             [[UIApplication sharedApplication] openURL:url options:@{} completionHandler:nil];
         }
@@ -1868,7 +1874,6 @@ BOOL isCustomResolution(CGSize res) {
 }
 
 - (bool)hdrSupported{
-    return false;
     return !VTIsHardwareDecodeSupported(kCMVideoCodecType_HEVC) || !(AVPlayer.availableHDRModes & AVPlayerHDRModeHDR10);
 }
 

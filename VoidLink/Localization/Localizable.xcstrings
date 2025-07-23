@@ -2804,6 +2804,29 @@
         }
       }
     },
+    "Online Documentation" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在线支持文档"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "線上支援文件"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "線上支援文件"
+          }
+        }
+      }
+    },
     "Open widget tool in streaming by:\nSliding from %@ screen edge to open cmd tool.\nOr tap %d fingers on stream view, number of fingers required:" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2938,6 +2961,35 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "周邊設備"
+          }
+        }
+      }
+    },
+    "pipStackTip" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "- Enable auto picture-in-picture by switching on Settings -> Multitasking & Gestures -> Start PiP Automatically.\n\n- PiP can be manually started in toolbox menu.\n\n- PiP connection timeout also defined by  “Background Session” settings in “Others” section\n\n-PiP is available for iOS15+"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "- App切后台时自动开启画中画， 需要打开 iOS 设置-> 多任务与手势 -> 自动开启画中画。\n\n- 画中画可在工具箱菜单中手动开启。\n\n- 画中画时长由 “其他 -> 后台会话” 设置项控制\n\n- 仅 iOS15+ 支持画中画。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "- App 切到背景時會自動啟用子母畫面，需開啟 iOS 「設定」→「多工與手勢」→「自動啟用子母畫面」。\n\n- 子母畫面也可透過工具箱選單手動啟用。\n\n- 子母畫面顯示時長由「其他」→「背景執行」設定項目控制。\n\n- 子母畫面功能自 iOS 15 起支援。"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "- App 切到背景時會自動啟用子母畫面，需開啟 iOS 「設定」→「多工與手勢」→「自動啟用子母畫面」。\n\n- 子母畫面也可透過工具箱選單手動啟用。\n\n- 子母畫面顯示時長由「其他」→「背景執行」設定項目控制。\n\n- 子母畫面功能自 iOS 15 起支援。"
           }
         }
       }
