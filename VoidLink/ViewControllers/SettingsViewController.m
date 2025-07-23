@@ -519,7 +519,7 @@ BOOL isCustomResolution(CGSize res) {
     [self addSetting:self.bitrateStack ofId:@"bitrateStack" withInfoTag:YES withDynamicLabel:YES to:videoSection];
     [self addSetting:self.framepacingStack ofId:@"framepacingStack" withInfoTag:NO withDynamicLabel:NO to:videoSection];
     [self addSetting:self.codecStack ofId:@"codecStack" withInfoTag:NO withDynamicLabel:NO to:videoSection];
-    [self addSetting:self.HdrStack ofId:@"HdrStack" withInfoTag:NO withDynamicLabel:NO to:videoSection];
+    [self addSetting:self.hdrStack ofId:@"hdrStack" withInfoTag:![self hdrSupported] withDynamicLabel:NO to:videoSection];
     [self addSetting:self.yuv444Stack ofId:@"yuv444Stack" withInfoTag:YES withDynamicLabel:NO to:videoSection];
     [self addSetting:self.pipStack ofId:@"pipStack" withInfoTag:YES withDynamicLabel:NO to:videoSection];
     [videoSection addToParentStack:_parentStack];
@@ -973,6 +973,11 @@ BOOL isCustomResolution(CGSize res) {
         showOnlineDocAction = true;
     }
 
+    if([sender.superview.accessibilityIdentifier isEqualToString: @"hdrStack"]){
+        tipText = [LocalizationHelper localizedStringForKey:@"hdrStackTip"];
+        showOnlineDocAction = false;
+    }
+
     
     
     
@@ -1271,7 +1276,7 @@ BOOL isCustomResolution(CGSize res) {
             break;
     }
 
-    if (!VTIsHardwareDecodeSupported(kCMVideoCodecType_HEVC) || !(AVPlayer.availableHDRModes & AVPlayerHDRModeHDR10)) {
+    if ([self hdrSupported]) {
         [self.hdrSwitch setOn:NO];
         [self.hdrSwitch setEnabled:NO];
     }
@@ -1860,6 +1865,11 @@ BOOL isCustomResolution(CGSize res) {
     assert(self.bitrateSlider.value < (sizeof(bitrateTable) / sizeof(*bitrateTable)));
     _bitrate = bitrateTable[(int)self.bitrateSlider.value];
     [self updateBitrateText];
+}
+
+- (bool)hdrSupported{
+    return false;
+    return !VTIsHardwareDecodeSupported(kCMVideoCodecType_HEVC) || !(AVPlayer.availableHDRModes & AVPlayerHDRModeHDR10);
 }
 
 - (void) updateBitrateText {

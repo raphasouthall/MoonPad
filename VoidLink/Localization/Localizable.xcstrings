@@ -1900,6 +1900,35 @@
         }
       }
     },
+    "hdrStackTip" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "HDR video stream decoding is not supported on current device"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "当前系统不支持HDR视频流解码"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "當前裝置不支援HDR視訊串流解碼"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "當前裝置不支援HDR視訊串流解碼"
+          }
+        }
+      }
+    },
     "Height" : {
       "extractionState" : "manual",
       "localizations" : {
