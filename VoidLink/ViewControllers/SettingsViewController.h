@@ -125,7 +125,7 @@
 - (void)saveSettings;
 + (bool)isLandscapeNow;
 - (void)updateResolutionTable;
-- (void)widget:(UISlider*)widget setEnabled:(bool)enabled;
+- (void)widget:(UIView*)widget setEnabled:(bool)enabled;
 - (void)updateTheme;
 - (void)hideDynamicLabelsWhenOverlapped:(UIView* )view;
 - (void)setHidden:(BOOL)hidden forStack:(UIStackView* )stack;

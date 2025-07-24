@@ -514,13 +514,14 @@ BOOL isCustomResolution(CGSize res) {
     if (@available(iOS 13.0, *)) {
         [videoSection setSectionWithIcon:[UIImage systemImageNamed:@"waveform"] andSize:20];
     }
-    [self addSetting:self.resolutionStack ofId:@"resolutionStack" withInfoTag:YES withDynamicLabel:YES to:videoSection];
+    [self addSetting:self.resolutionStack ofId:@"resolutionStack" withInfoTag:NO withDynamicLabel:YES to:videoSection];
     [self addSetting:self.fpsStack ofId:@"fpsStack" withInfoTag:NO withDynamicLabel:NO to:videoSection];
     [self addSetting:self.bitrateStack ofId:@"bitrateStack" withInfoTag:YES withDynamicLabel:YES to:videoSection];
     [self addSetting:self.framepacingStack ofId:@"framepacingStack" withInfoTag:NO withDynamicLabel:NO to:videoSection];
     [self addSetting:self.codecStack ofId:@"codecStack" withInfoTag:NO withDynamicLabel:NO to:videoSection];
     [self addSetting:self.hdrStack ofId:@"hdrStack" withInfoTag:![self hdrSupported] withDynamicLabel:NO to:videoSection];
     [self addSetting:self.yuv444Stack ofId:@"yuv444Stack" withInfoTag:YES withDynamicLabel:NO to:videoSection];
+    [self addSetting:self.pipStack ofId:@"pipStack" withInfoTag:YES withDynamicLabel:NO to:videoSection];
     [self addSetting:self.pipStack ofId:@"pipStack" withInfoTag:YES withDynamicLabel:NO to:videoSection];
     [videoSection addToParentStack:_parentStack];
     [videoSection setExpanded:YES];
@@ -1014,6 +1015,11 @@ BOOL isCustomResolution(CGSize res) {
         showOnlineDocAction = true;
         onlineDocLink = [LocalizationHelper localizedStringForKey:@"externalDisplayModeStackDoc"];
     }
+    if([sender.superview.accessibilityIdentifier isEqualToString: @"emulatedControllerTypeStack"]){
+        tipText = [LocalizationHelper localizedStringForKey:@"emulatedControllerTypeStackTip"];
+        showOnlineDocAction = true;
+        onlineDocLink = [LocalizationHelper localizedStringForKey:@"emulatedControllerTypeStackDoc"];
+    }
 
     
     UIAlertController *tipsAlertController = [UIAlertController alertControllerWithTitle: [LocalizationHelper localizedStringForKey:@"Tips"] message: [LocalizationHelper localizedStringForKey:@"%@", tipText] preferredStyle:UIAlertControllerStyleAlert];
@@ -1311,9 +1317,9 @@ BOOL isCustomResolution(CGSize res) {
             break;
     }
 
-    if ([self hdrSupported]) {
+    if (![self hdrSupported]) {
         [self.hdrSwitch setOn:NO];
-        [self.hdrSwitch setEnabled:NO];
+        [self widget:self.hdrSwitch setEnabled:NO];
     }
     else {
         [self.hdrSwitch setOn:currentSettings.enableHdr];
@@ -1654,13 +1660,21 @@ BOOL isCustomResolution(CGSize res) {
     return 0;
 }
 
-- (void) widget:(UISlider*)widget setEnabled:(bool)enabled{
-    [widget setEnabled:enabled];
-    if(enabled){
-        widget.alpha = 1.0;
-        [widget setValue:widget.value + 0.0001]; // this is for low iOS version (like iOS14), only setting this minor value change is able to make widget visibility clear
+- (void) widget:(UIView*)widget setEnabled:(bool)enabled{
+    if([widget isKindOfClass:[UISlider class]]){
+        UISlider* widgetPtr = (UISlider* )widget;
+        [widgetPtr setEnabled:enabled];
+        if(enabled){
+            widgetPtr.alpha = 1.0;
+            [widgetPtr setValue:widgetPtr.value + 0.0001]; // this is for low iOS version (like iOS14), only setting this minor value change is able to make widget visibility clear
+        }
+        else widgetPtr.alpha = 0.5; // this is for updating widget visibility on low iOS version like mini5 ios14
     }
-    else widget.alpha = 0.5; // this is for updating widget visibility on low iOS version like mini5 ios14
+    
+    if([widget isKindOfClass:[UISwitch class]]){
+        widget.userInteractionEnabled = enabled;
+        widget.alpha = enabled ? 1 : 0.5;
+    }
 }
 
 /*
@@ -1903,7 +1917,7 @@ BOOL isCustomResolution(CGSize res) {
 }
 
 - (bool)hdrSupported{
-    return !VTIsHardwareDecodeSupported(kCMVideoCodecType_HEVC) || !(AVPlayer.availableHDRModes & AVPlayerHDRModeHDR10);
+    return VTIsHardwareDecodeSupported(kCMVideoCodecType_HEVC) && (AVPlayer.availableHDRModes & AVPlayerHDRModeHDR10);
 }
 
 - (void) updateBitrateText {

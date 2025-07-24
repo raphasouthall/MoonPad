@@ -1451,6 +1451,64 @@
         }
       }
     },
+    "emulatedControllerTypeStackDoc" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "https://voidlink.yuque.com/org-wiki-voidlink-znirha/fa3tgr/uscwmv3vz8g30rmk?singleDoc#"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "https://voidlink.yuque.com/org-wiki-voidlink-znirha/fa3tgr/bz6ggagp0ly4loq3?singleDoc#"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "https://voidlink.yuque.com/org-wiki-voidlink-znirha/fa3tgr/bz6ggagp0ly4loq3?singleDoc#"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "https://voidlink.yuque.com/org-wiki-voidlink-znirha/fa3tgr/bz6ggagp0ly4loq3?singleDoc#"
+          }
+        }
+      }
+    },
+    "emulatedControllerTypeStackTip" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sunshine emulates game controller via VigemBus, which support DS4 & Xbox360. \n\n- Xbox360 does not support gyro.\n\n- When “both” is selected, the app will map built-in gyro as player0 & external game controller as player1"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sunshine 通过 VigemBus 模拟游戏手柄，支持 DS4 和 Xbox 360。\n\n- Xbox 360 不支持陀螺仪。\n\n- 当选择“同时映射”时，app会将内置陀螺仪映射为玩家0，外接手柄映射为玩家1。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sunshine 透過 VigemBus 模擬遊戲控制器，支援 DS4 和 Xbox 360。\n\n- Xbox 360 不支援陀螺儀。\n\n- 當選擇「同時映射」時，app 會將內建陀螺儀對應為玩家0，外接控制器對應為玩家1。"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sunshine 透過 VigemBus 模擬遊戲控制器，支援 DS4 和 Xbox 360。\n\n- Xbox 360 不支援陀螺儀。\n\n- 當選擇「同時映射」時，app 會將內建陀螺儀對應為玩家0，外接控制器對應為玩家1。"
+          }
+        }
+      }
+    },
     "Enter a new command and alias" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2972,25 +3030,25 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "VoidLink supports rich, powerful custom on screen widgets including keyboard buttons, gamepad button & joysticks, mouse touchpad & button. Check online document for detail."
+            "value" : "- VoidLink supports rich, powerful custom on screen widgets including keyboard buttons, gamepad button & joysticks, mouse touchpad & button. Check online document for detail.\n\n- Multi-finger tap gesture is available for launching widget layout tool during streaming."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "VoidLink具备丰富而强大的自定义屏显控件，类型包括：键盘按键、手柄按键和摇杆、鼠标触摸板和按键等。详见在线文档。 "
+            "value" : "- VoidLink具备丰富而强大的自定义屏显控件，类型包括：键盘按键、手柄按键和摇杆、鼠标触摸板和按键等。详见在线文档。 \n\n- 可通过多指轻按手势在串流时打开控件布局工具。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "VoidLink 提供豐富且強大的自訂螢幕顯示元件，類型包含：鍵盤按鍵、手把按鍵與搖桿、滑鼠觸控板及按鍵等。詳細資訊請參考線上說明文件。"
+            "value" : "- VoidLink 提供豐富且強大的自訂螢幕顯示元件，類型包含：鍵盤按鍵、手把按鍵與搖桿、滑鼠觸控板及按鍵等。詳細資訊請參考線上說明文件。\n\n- 可透過多指輕點手勢，在串流時開啟控制元件佈局工具。"
           }
         },
         "zh-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "VoidLink 提供豐富且強大的自訂螢幕顯示元件，類型包含：鍵盤按鍵、手把按鍵與搖桿、滑鼠觸控板及按鍵等。詳細資訊請參考線上說明文件。"
+            "value" : "- VoidLink 提供豐富且強大的自訂螢幕顯示元件，類型包含：鍵盤按鍵、手把按鍵與搖桿、滑鼠觸控板及按鍵等。詳細資訊請參考線上說明文件。\n\n- 可透過多指輕點手勢，在串流時開啟控制元件佈局工具。"
           }
         }
       }
