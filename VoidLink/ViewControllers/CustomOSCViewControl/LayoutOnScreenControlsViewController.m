@@ -627,7 +627,7 @@
         [savedAlertController addAction:[UIAlertAction actionWithTitle:[LocalizationHelper localizedStringForKey:@"Ok"] style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
             [self.oscProfilesTableViewController profileViewRefresh]; // execute this will reset layout in OSC tool!
         }]];
-        [self presentViewController:savedAlertController animated:YES completion:nil];
+        if(sender) [self presentViewController:savedAlertController animated:YES completion:nil];
     }
 }
 
