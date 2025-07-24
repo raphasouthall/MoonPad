@@ -1135,7 +1135,7 @@ static NSMutableSet* hostList;
     else [revealController buttonsNotInStreaming];
     
     DataManager* dataMan = [[DataManager alloc] init];
-    TemporarySettings* currentSettings = [dataMan getSettings];
+    // TemporarySettings* currentSettings = [dataMan getSettings];
 
     [streamFrameViewController setUserInteractionEnabledForStreamView:!_settingsExpandedInStreamView || position == FrontViewPositionLeft];
     [settingsViewController setHidden:_settingsExpandedInStreamView forStack:settingsViewController.resolutionStack];

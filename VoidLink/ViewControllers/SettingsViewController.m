@@ -1009,6 +1009,11 @@ BOOL isCustomResolution(CGSize res) {
         showOnlineDocAction = true;
         onlineDocLink = [LocalizationHelper localizedStringForKey:@"onScreenWidgetStackDoc"];
     }
+    if([sender.superview.accessibilityIdentifier isEqualToString: @"externalDisplayModeStack"]){
+        tipText = [LocalizationHelper localizedStringForKey:@"externalDisplayModeStackTip"];
+        showOnlineDocAction = true;
+        onlineDocLink = [LocalizationHelper localizedStringForKey:@"externalDisplayModeStackDoc"];
+    }
 
     
     UIAlertController *tipsAlertController = [UIAlertController alertControllerWithTitle: [LocalizationHelper localizedStringForKey:@"Tips"] message: [LocalizationHelper localizedStringForKey:@"%@", tipText] preferredStyle:UIAlertControllerStyleAlert];

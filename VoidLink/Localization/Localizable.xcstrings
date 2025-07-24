@@ -1641,6 +1641,64 @@
         }
       }
     },
+    "externalDisplayModeStackDoc" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "https://voidlink.yuque.com/org-wiki-voidlink-znirha/fa3tgr/bu3hki4pezy93g6r?singleDoc# "
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "https://voidlink.yuque.com/org-wiki-voidlink-znirha/fa3tgr/cqbse6t4o6f9hil1?singleDoc#"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "https://voidlink.yuque.com/org-wiki-voidlink-znirha/fa3tgr/cqbse6t4o6f9hil1?singleDoc#"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "https://voidlink.yuque.com/org-wiki-voidlink-znirha/fa3tgr/cqbse6t4o6f9hil1?singleDoc#"
+          }
+        }
+      }
+    },
+    "externalDisplayModeStackTip" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Select “Stage Manager” to enable full screen external display.\n\nKeyboard Shortcuts for VoidLink (Desktop Mode):\n\nCtrl + Alt + Shift + Q — Disconnect the current session\n\nCtrl + Alt + Shift + S — Toggle the statistics overlay style\n\nCtrl + Alt + Shift + M — Toggle mouse capture mode\n\nCtrl + Alt + Shift + C — Toggle mouse pointer visibility\n"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "VoidLink 桌面模式快捷键：\n\n- Ctrl + Alt + Shift + Q — 断开当前会话\n\n- Ctrl + Alt + Shift + S — 切换性能信息叠加样式\n\n- Ctrl + Alt + Shift + M — 切换鼠标指针捕获模式\n\n- Ctrl + Alt + Shift + C — 切换鼠标指针可见性"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "VoidLink 桌面模式快捷鍵：\n\nCtrl + Alt + Shift + Q — 中斷目前連線\n\nCtrl + Alt + Shift + S — 切換統計資訊覆蓋樣式\n\nCtrl + Alt + Shift + M — 切換滑鼠指標捕捉模式\n\nCtrl + Alt + Shift + C — 切換滑鼠指標可見性"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "VoidLink 桌面模式快捷鍵：\n\nCtrl + Alt + Shift + Q — 中斷目前連線\n\nCtrl + Alt + Shift + S — 切換統計資訊覆蓋樣式\n\nCtrl + Alt + Shift + M — 切換滑鼠指標捕捉模式\n\nCtrl + Alt + Shift + C — 切換滑鼠指標可見性"
+          }
+        }
+      }
+    },
     "Failed to import profiles" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -4608,13 +4666,13 @@
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "- 觸控板：拖曳方式與 Windows 筆記型電腦觸控板完全相同。快速輕點兩下，從第二次輕點開始進入拖曳模式。\n\n- 原生觸控：即多點觸控傳遞，macOS 不支援。\n\n- 絕對觸控：在 macOS 上提供類似觸控螢幕的體驗。"
+            "value" : "- 觸控板：拖曳方式與 Windows 筆記型電腦觸控板完全相同。快速輕點兩下，從第二次輕點開始進入拖曳模式。\n\n- 多点觸控：macOS 不支援。\n\n- 單點滑鼠：在 macOS 上提供類似觸控螢幕的體驗。"
           }
         },
         "zh-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "- 觸控板：拖曳方式與 Windows 筆記型電腦觸控板完全相同。快速輕點兩下，從第二次輕點開始進入拖曳模式。\n\n- 原生觸控：即多點觸控傳遞，macOS 不支援。\n\n- 絕對觸控：在 macOS 上提供類似觸控螢幕的體驗。"
+            "value" : "- 觸控板：拖曳方式與 Windows 筆記型電腦觸控板完全相同。快速輕點兩下，從第二次輕點開始進入拖曳模式。\n\n- 多点觸控：macOS 不支援。\n\n- 單點滑鼠：在 macOS 上提供類似觸控螢幕的體驗。"
           }
         }
       }
