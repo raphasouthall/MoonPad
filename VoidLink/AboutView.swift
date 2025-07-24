@@ -17,9 +17,10 @@ public struct AboutView: View {
         VStack(spacing: 10) {
             // App 图标
             Image(uiImage: UIImage(named: "AppIconMedium") ?? UIImage())
-                .resizable()
-                .frame(width: 80, height: 80)
-                .clipShape(RoundedRectangle(cornerRadius: 36))
+                // .resizable()
+                .resizable(capInsets:EdgeInsets(top: 3.5, leading: 3.5, bottom: 3.5, trailing: 3.5))
+                .frame(width: 100, height: 100)
+                .clipShape(RoundedRectangle(cornerRadius: 28))
 
             // App 名称
             Text(Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as? String ?? "App Name")

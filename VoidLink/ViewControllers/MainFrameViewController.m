@@ -2115,7 +2115,7 @@ static NSMutableSet* hostList;
     if(gesture.state == UIGestureRecognizerStateBegan){
         if(locationInView.x < 30) {
             snapshot = [[UIView alloc] init];
-            snapshot.backgroundColor = [ThemeManager appPrimaryColor];
+            snapshot.backgroundColor = [UIColor systemBlueColor];
             screenHeight = [UIScreen mainScreen].bounds.size.height;
             snapshot.frame = CGRectMake(locationInSuperView.x,0, 2, screenHeight);
             [self.revealViewController.view addSubview:snapshot];
