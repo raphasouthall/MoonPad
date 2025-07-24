@@ -81,9 +81,8 @@
 - (void) reloadOnScreenWidgetViews {
     NSLog(@"reloadOnScreenWidgets %f", CACurrentMediaTime());
     OnScreenWidgetView.editMode = true;
-    [self->selectedWidgetView.stickBallLayer removeFromSuperlayer];
-    [self->selectedWidgetView.crossMarkLayer removeFromSuperlayer];
-    
+    [self clearStickIndicator];
+
     for (UIView *subview in self.view.subviews) {
         if ([subview isKindOfClass:[OnScreenWidgetView class]]) {
             [subview removeFromSuperview];
@@ -168,7 +167,7 @@
      [profilesManager saveProfileWithName:@"Default" andButtonLayers:self.layoutOSC.OSCButtonLayers];
      [profilesManager importDefaultTemplates];
      }*/
-    if (![profilesManager profileName:DEFAULT_TEMPLATE_NAME alreadyExistIn:allProfiles]){
+    if (![profilesManager findProfileByName:DEFAULT_TEMPLATE_NAME1 inProfileArray:allProfiles]){
         [profilesManager importDefaultTemplates];
     }
         
@@ -655,6 +654,11 @@
     label.numberOfLines = 1;
 }
 
+- (void)clearStickIndicator{
+    [self->selectedWidgetView.stickBallLayer removeFromSuperlayer];
+    [self->selectedWidgetView.crossMarkLayer removeFromSuperlayer];
+}
+
 - (void)widgetViewTapped: (NSNotification *)notification{
     //self.undoButton.alpha = selectedWidgetView.layoutChanges.count>1 && !CGPointEqualToPoint(selectedWidgetView.layoutChanges.lastObject.CGPointValue, selectedWidgetView.initialCenter)? 1.0 : 0.3;
 
@@ -663,8 +667,7 @@
 
     OnScreenWidgetView* widgetView = (OnScreenWidgetView* )notification.object;
     
-    [self->selectedWidgetView.stickBallLayer removeFromSuperlayer];
-    [self->selectedWidgetView.crossMarkLayer removeFromSuperlayer];
+    [self clearStickIndicator];
     self->widgetViewSelected = true;
     self->controllerLayerSelected = false;
     self->selectedWidgetView = widgetView;
@@ -705,8 +708,7 @@
     }
     if(showStickIndicatorOffsetStack){
         // illustrating the indicator offset,
-        [selectedWidgetView.stickBallLayer removeFromSuperlayer];
-        [selectedWidgetView.crossMarkLayer removeFromSuperlayer];
+        [self clearStickIndicator];
         selectedWidgetView.touchBeganLocation = CGPointMake(CGRectGetWidth(selectedWidgetView.frame)/2, CGRectGetHeight(selectedWidgetView.frame)/4);
         [selectedWidgetView showStickIndicator];// this will create the indicator CAShapeLayers
         [self.stickIndicatorOffsetSlider setValue:self->selectedWidgetView.stickIndicatorOffset];
@@ -743,8 +745,7 @@
 - (void)legacyOscLayerTapped: (NSNotification *)notification{
     [self enableCommonWidgetTools];
     CALayer* controllerLayer = (CALayer* )notification.object;
-    [self->selectedWidgetView.stickBallLayer removeFromSuperlayer];
-    [self->selectedWidgetView.crossMarkLayer removeFromSuperlayer];
+    [self clearStickIndicator];
     self->widgetViewSelected = false;
     self->selectedWidgetView = nil;
     
@@ -1120,6 +1121,8 @@
 
 - (void) presentProfilesTableView{
     [self saveTapped:nil];
+    [self clearStickIndicator];
+    selectedWidgetView = nil;
     UIStoryboard *storyboard;
     BOOL isIPhone = ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPhone);
     if (isIPhone) {
@@ -1144,8 +1147,6 @@
 
     self.widgetPanelStack.hidden = YES;
     
-    [self->selectedWidgetView.stickBallLayer removeFromSuperlayer];
-    [self->selectedWidgetView.crossMarkLayer removeFromSuperlayer];
     _oscProfilesTableViewController.currentOSCButtonLayers = self.layoutOSC.OSCButtonLayers;
     
     [self presentViewController:_oscProfilesTableViewController animated:YES completion:nil];
@@ -1252,8 +1253,7 @@
     if(!isToolbarHidden && self->selectedWidgetView != nil && [self layerIsOverlappingWithTrashcanButton:selectedWidgetView.layer]){
         [self->selectedWidgetView removeFromSuperview];
         [self.OnScreenWidgetViews removeObject:self->selectedWidgetView];
-        [selectedWidgetView.stickBallLayer removeFromSuperlayer];
-        [selectedWidgetView.crossMarkLayer removeFromSuperlayer];
+        [self clearStickIndicator];
         [selectedWidgetView.buttonDownVisualEffectLayer removeFromSuperlayer];
     }
     
