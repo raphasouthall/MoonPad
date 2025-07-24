@@ -1020,6 +1020,11 @@ BOOL isCustomResolution(CGSize res) {
         showOnlineDocAction = true;
         onlineDocLink = [LocalizationHelper localizedStringForKey:@"emulatedControllerTypeStackDoc"];
     }
+    if([sender.superview.accessibilityIdentifier isEqualToString: @"gyroModeStack"]){
+        tipText = [LocalizationHelper localizedStringForKey:@"gyroModeStackTip"];
+        showOnlineDocAction = true;
+        onlineDocLink = [LocalizationHelper localizedStringForKey:@"gyroModeStackDoc"];
+    }
 
     
     UIAlertController *tipsAlertController = [UIAlertController alertControllerWithTitle: [LocalizationHelper localizedStringForKey:@"Tips"] message: [LocalizationHelper localizedStringForKey:@"%@", tipText] preferredStyle:UIAlertControllerStyleAlert];
@@ -1356,6 +1361,7 @@ BOOL isCustomResolution(CGSize res) {
     [self.emulatedControllerTypeSelector addTarget:self action:@selector(emulatedControllerTypeChanged:) forControlEvents:(UIControlEventValueChanged)]; // Update label display when slider is being moved.
     [self emulatedControllerTypeChanged:self.emulatedControllerTypeSelector];
     
+
 
     [self.audioOnPcSwitch setOn:currentSettings.playAudioOnPC];
     _lastSelectedResolutionIndex = resolution;

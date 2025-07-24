@@ -1462,7 +1462,7 @@
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "https://voidlink.yuque.com/org-wiki-voidlink-znirha/fa3tgr/bz6ggagp0ly4loq3?singleDoc#"
           }
         },
@@ -2016,6 +2016,64 @@
         }
       }
     },
+    "gyroModeStackDoc" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "https://voidlink.yuque.com/org-wiki-voidlink-znirha/fa3tgr/uscwmv3vz8g30rmk?singleDoc#"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "https://voidlink.yuque.com/org-wiki-voidlink-znirha/fa3tgr/bz6ggagp0ly4loq3?singleDoc#"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "https://voidlink.yuque.com/org-wiki-voidlink-znirha/fa3tgr/bz6ggagp0ly4loq3?singleDoc#"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "https://voidlink.yuque.com/org-wiki-voidlink-znirha/fa3tgr/bz6ggagp0ly4loq3?singleDoc#"
+          }
+        }
+      }
+    },
+    "gyroModeStackTip" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "- Gyro support for external game controllers is available on iOS 14+.\n\n- If a session is started with gyro mode disabled, it cannot be enabled during streaming."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "- 外接手柄的陀螺仪支持适用于 iOS 14 及以上版本。\n\n- 如果在启动会话时关闭了陀螺仪模式，则在串流过程中无法热切换开启。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "- 外接控制器的陀螺儀支援適用於 iOS 14 以上版本。\n\n- 若在啟動階段時未啟用陀螺儀模式，則無法在串流過程中熱切換開啟。"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "- 外接控制器的陀螺儀支援適用於 iOS 14 以上版本。\n\n- 若在啟動階段時未啟用陀螺儀模式，則無法在串流過程中熱切換開啟。"
+          }
+        }
+      }
+    },
     "hdrStackTip" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2027,7 +2085,7 @@
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "当前系统不支持HDR视频流解码"
           }
         },
@@ -2407,7 +2465,7 @@
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "https://voidlink.yuque.com/org-wiki-voidlink-znirha/fa3tgr/yfao3s5bhl93rs01?singleDoc#"
           }
         },
@@ -2511,7 +2569,7 @@
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "无法执行网络测试. 请检查网络连接后重试."
           }
         },
@@ -2638,7 +2696,7 @@
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "网络测试成功. 如果仍然无法连接远程主机, 请检查主机端防火墙设置."
           }
         },
