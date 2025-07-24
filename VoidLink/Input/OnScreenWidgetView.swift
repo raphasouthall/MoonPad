@@ -361,7 +361,7 @@ import UIKit
         if self.shape == "round"{ // we'll make custom osc buttons round & smaller
             NSLayoutConstraint.activate([
                 self.widthAnchor.constraint(equalToConstant: CGFloat(Int(60 * self.widthFactor / 2) * 2)),
-                self.heightAnchor.constraint(equalToConstant: CGFloat(Int(60 * self.heightFactor / 2) * 2)),])
+                self.heightAnchor.constraint(equalToConstant: CGFloat(Int(60 * self.widthFactor / 2) * 2)),])
         }
         if self.shape == "square" {
             NSLayoutConstraint.activate([
