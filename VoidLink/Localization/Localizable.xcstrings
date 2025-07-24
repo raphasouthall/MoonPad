@@ -283,7 +283,7 @@
         }
       }
     },
-    "[ Open on-screen widget tool ]" : {
+    "[ On-screen widget tool ]" : {
       "extractionState" : "manual",
       "localizations" : {
         "zh-Hans" : {
@@ -306,7 +306,7 @@
         }
       }
     },
-    "[ Switch among on-screen widget profiles ]" : {
+    "[ Switch on-screen widget profile ]" : {
       "extractionState" : "manual",
       "localizations" : {
         "zh-Hans" : {
