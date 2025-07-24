@@ -239,6 +239,11 @@
                                                object:nil];
         
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(OSCLayoutChanged) name:@"OSCLayoutChanged" object:nil];    // used to notifiy this view controller that the user made a change to the OSC layout so that the VC can either fade in or out its 'Undo button' which will signify to the user whether there are any OSC layout changes to undo
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(applicationWillResignActive:)
+                                                 name:UIApplicationWillResignActiveNotification
+                                               object:nil];
 
     OnScreenWidgetView.editMode = true;
     [self handleMissingToolBarIcon:toolbarRootView];
@@ -246,6 +251,11 @@
 }
 
 #pragma mark - Class Helper Functions
+
+- (void)applicationWillResignActive:(NSNotification *)notification {
+    [self saveTapped:nil];
+}
+
 
 /* fades the 'Undo Button' in or out depending on whether the user has any OSC layout changes to undo */
 - (void) OSCLayoutChanged {
@@ -1109,6 +1119,7 @@
 }
 
 - (void) presentProfilesTableView{
+    [self saveTapped:nil];
     UIStoryboard *storyboard;
     BOOL isIPhone = ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPhone);
     if (isIPhone) {
