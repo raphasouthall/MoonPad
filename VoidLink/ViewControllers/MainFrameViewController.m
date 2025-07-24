@@ -1134,7 +1134,7 @@ static NSMutableSet* hostList;
     if(self.settingsExpandedInStreamView) [revealController buttonsInStreaming];
     else [revealController buttonsNotInStreaming];
     
-    DataManager* dataMan = [[DataManager alloc] init];
+    // DataManager* dataMan = [[DataManager alloc] init];
     // TemporarySettings* currentSettings = [dataMan getSettings];
 
     [streamFrameViewController setUserInteractionEnabledForStreamView:!_settingsExpandedInStreamView || position == FrontViewPositionLeft];
@@ -1269,6 +1269,19 @@ static NSMutableSet* hostList;
         ]];
     }
 }
+
+- (BOOL)isFirstLaunch {
+    NSString *key = @"appHasLaunchedBefore";
+    BOOL launchedBefore = [[NSUserDefaults standardUserDefaults] boolForKey:key];
+
+    if (!launchedBefore) {
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:key];
+        [[NSUserDefaults standardUserDefaults] synchronize]; // iOS 12+ 可省略
+        return YES;
+    }
+    return NO;
+}
+
 
 - (bool)isIPhone{
     return ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPhone);
@@ -1775,6 +1788,7 @@ static NSMutableSet* hostList;
     //[self simulateSettingsButtonPress]; //force reload resolution table in the setting
     //[self simulateSettingsButtonPress];
     [self updateResolutionAccordingly];
+    if([self isFirstLaunch])[self helpButtonTapped];
 }
 
 

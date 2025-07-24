@@ -137,11 +137,11 @@
     }
 }
 
-- (BOOL)isFirstLaunch {
-    NSString *key = @"hasLaunchedBefore";
-    BOOL launchedBefore = [[NSUserDefaults standardUserDefaults] boolForKey:key];
+- (BOOL)isFirstStreaming {
+    NSString *key = @"hasStreamedBefore";
+    BOOL streamedBefore = [[NSUserDefaults standardUserDefaults] boolForKey:key];
 
-    if (!launchedBefore) {
+    if (!streamedBefore) {
         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:key];
         [[NSUserDefaults standardUserDefaults] synchronize]; // iOS 12+ 可省略
         return YES;
@@ -419,7 +419,7 @@
 }
 #endif
 
-- (void)popFirstLaunchTip {
+- (void)popFirstStreamingTip {
     // 初始化倒计时秒数
     __block NSInteger remainingSeconds = 16;
 
@@ -535,7 +535,7 @@
     //[_streamView setupStreamView:_controllerSupport interactionDelegate:self config:self.streamConfig];
     [self reConfigStreamViewRealtime]; // call this method again to make sure all gestures are configured & added to the superview(self.view), including the gestures added from inside the streamview.
     
-    if([self isFirstLaunch]) [self popFirstLaunchTip];
+    if([self isFirstStreaming]) [self popFirstStreamingTip];
 
 #if TARGET_OS_TV
     if (!_menuTapGestureRecognizer || !_menuDoubleTapGestureRecognizer || !_playPauseTapGestureRecognizer) {
