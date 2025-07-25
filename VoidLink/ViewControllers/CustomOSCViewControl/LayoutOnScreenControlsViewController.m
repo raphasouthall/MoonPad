@@ -78,7 +78,14 @@
     return position;
 }
 
-- (void) reloadOnScreenWidgetViews {
+- (void)reloadLegacyOnScreenControls{
+    [self.layoutOSC updateControls];  // creates and saves a 'Default' OSC profile or loads the o//ne the user selected on the previous screen
+    [self addInnerAnalogSticksToOuterAnalogLayers];
+    [self.layoutOSC.layoutChanges removeAllObjects];  // since a new OSC profile is being loaded, this will remove all previous layout changes made from the array
+    [self OSCLayoutChanged];    // fades the 'Undo Button' out
+}
+
+- (void)reloadOnScreenWidgetViews{
     NSLog(@"reloadOnScreenWidgets %f", CACurrentMediaTime());
     OnScreenWidgetView.editMode = true;
     [self clearStickIndicator];
@@ -155,8 +162,9 @@
     self.layoutOSC = [[LayoutOnScreenControls alloc] initWithView:self.view controllerSup:nil streamConfig:nil oscLevel:OSCSegmentSelected];
     self.layoutOSC._level = OnScreenControlsLevelCustom;
     self.layoutOSC.layoutToolVC = self;
+    //[self.layoutOSC show];  // draw on screen controls
     [self.layoutOSC show];  // draw on screen controls
-    
+
     [self addInnerAnalogSticksToOuterAnalogLayers]; // allows inner and analog sticks to be dragged together around the screen together as one unit which is the expected behavior
     
     self.undoButton.alpha = 0.3;    // no changes to undo yet, so fade out the undo button a bit
@@ -259,11 +267,19 @@
     [OSCProfilesManager setOnScreenWidgetViewsSet:self.onScreenWidgetViews];   // pass the keyboard button dict to profiles manager
 }
 
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator{
+    [self saveTapped:nil];
+}
+
 - (void)deviceOrientationDidChange{
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        sleep(1);
-        [OSCProfilesManager setOnScreenWidgetViewsSet:self.onScreenWidgetViews];   // pass the keyboard button dict to profiles manager
-    });
+    [self performSelector:@selector(handleOrientationChangeForOnScreenWidgets) withObject:self afterDelay:1];
+}
+
+- (void)handleOrientationChangeForOnScreenWidgets{
+    _oscProfilesTableViewController.layoutViewBounds = self.view.bounds;
+    [OSCProfilesManager setOnScreenWidgetViewsSet:self.onScreenWidgetViews];   // pass the keyboard button dict to profiles manager
+    [self reloadOnScreenWidgetViews];
+    [self reloadLegacyOnScreenControls];
 }
 
 /* fades the 'Undo Button' in or out depending on whether the user has any OSC layout changes to undo */
@@ -1116,12 +1132,9 @@
     
     //this part is just for registration, will not be immediately executed.
     self->_oscProfilesTableViewController.needToUpdateOscLayoutTVC = ^() {   // a block that will be called when the modally presented 'OSCProfilesTableViewController' VC is dismissed. By the time the 'OSCProfilesTableViewController' VC is dismissed the user would have potentially selected a different OSC profile with a different layout and they want to see this layout on this 'LayoutOnScreenControlsViewController.' This block of code will load the profile and then hide/show and move each OSC button to their appropriate position
-        [self.layoutOSC updateControls];  // creates and saves a 'Default' OSC profile or loads the one the user selected on the previous screen
-        [self addInnerAnalogSticksToOuterAnalogLayers];
-        [self.layoutOSC.layoutChanges removeAllObjects];  // since a new OSC profile is being loaded, this will remove all previous layout changes made from the array
-        [self OSCLayoutChanged];    // fades the 'Undo Button' out
+        NSLog(@"profile profile");
+        [self reloadLegacyOnScreenControls];
         self->_oscProfilesTableViewController.currentOSCButtonLayers = self.layoutOSC.OSCButtonLayers; //pass updated OSCLayout to OSCProfileTableView again
-        //[self reloadOnScreenKeyboardButtons];
     };
     
     [self.oscProfilesTableViewController profileViewRefresh]; // execute this will make sure OSCLayout is updated from persisted profile, not any cache.
@@ -1144,16 +1157,10 @@
     }
     
     _oscProfilesTableViewController = [storyboard instantiateViewControllerWithIdentifier:@"OSCProfilesTableViewController"];
-    _oscProfilesTableViewController.streamViewBounds = self.view.bounds;
+    _oscProfilesTableViewController.layoutViewBounds = self.view.bounds;
     
     _oscProfilesTableViewController.needToUpdateOscLayoutTVC = ^() {   // a block that will be called when the modally presented 'OSCProfilesTableViewController' VC is dismissed. By the time the 'OSCProfilesTableViewController' VC is dismissed the user would have potentially selected a different OSC ofile with a different layout and they want to see this layout on this 'LayoutOnScreenControlsViewController.' This block of code will load the proffile and then hide/show and move each OSC button to their appropriate position
-        [self.layoutOSC updateControls];  // creates and saves a 'Default' OSC profile or loads the one the user selected on the previous screen
-        
-        [self addInnerAnalogSticksToOuterAnalogLayers];
-        
-        [self.layoutOSC.layoutChanges removeAllObjects];  // since a new OSC profile is being loaded, this will remove all previous layout changes made from the array
-        
-        [self OSCLayoutChanged];    // fades the 'Undo Button' out
+        [self reloadLegacyOnScreenControls];
     };
 
     self.widgetPanelStack.hidden = YES;

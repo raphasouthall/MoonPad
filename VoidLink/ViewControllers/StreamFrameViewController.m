@@ -640,6 +640,7 @@
 }
 
 - (void)openWidgetLayoutTool{
+    _streamView.widgetToolOpened = true;
     [self->_streamView disableOnScreenControls];
     [self->_streamView clearOnScreenWidgets]; // clear all onScreenKeyboardButtons before entering edit mode
     _layoutOnScreenControlsVC.quickSwitchEnabled = false;
@@ -649,6 +650,7 @@
 }
 
 - (void)switchWidgetProfile{
+    _streamView.widgetToolOpened = true;
     [self->_streamView disableOnScreenControls];
     [self->_streamView clearOnScreenWidgets]; // clear all onScreenKeyboardButtons before entering edit mode
     _layoutOnScreenControlsVC.quickSwitchEnabled = true;
@@ -669,6 +671,7 @@
 
 - (void)oscLayoutClosed{
     // Handle the callback
+    _streamView.widgetToolOpened = false;
     [self->_streamView disableOnScreenControls]; // add this to get realtime back menu working.
     [self->_streamView reloadOnScreenControlsWith:(ControllerSupport*)_controllerSupport
                                         andConfig:(StreamConfiguration*)_streamConfig];

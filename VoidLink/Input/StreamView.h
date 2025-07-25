@@ -36,6 +36,7 @@
 @property (assign, nonatomic) UIView* streamFrameTopLayerView;
 @property (assign, nonatomic) CGFloat streamAspectRatio;
 @property (assign, nonatomic) CGRect originalFrame;
+@property (assign, nonatomic) bool widgetToolOpened;
 
 
 - (void) setupStreamView:(ControllerSupport*)controllerSupport

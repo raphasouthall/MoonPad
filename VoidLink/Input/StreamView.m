@@ -350,7 +350,7 @@ static const double X1_MOUSE_SPEED_DIVISOR = 2.5;
 
 - (void) showOnScreenControls {
 #if !TARGET_OS_TV
-    [onScreenControls show];
+    if(!_widgetToolOpened) [onScreenControls show];
 #endif
 }
 
@@ -411,8 +411,11 @@ static const double X1_MOUSE_SPEED_DIVISOR = 2.5;
 
 - (CGPoint)denormalizeWidgetPosition:(CGPoint)position {
     if(position.x < 1.0 && position.y < 1.0){
-        position.x = position.x * self.bounds.size.width;
-        position.y = position.y * self.bounds.size.height;
+        position.x = position.x * streamFrameTopLayerView.bounds.size.width;
+        position.y = position.y * streamFrameTopLayerView.bounds.size.height;
+    }
+    else{
+        NSLog(@"invalid coords");
     }
     return position;
 }
