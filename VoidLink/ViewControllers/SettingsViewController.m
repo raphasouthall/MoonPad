@@ -528,7 +528,7 @@ BOOL isCustomResolution(CGSize res) {
 
     touchAndControlSection = [[MenuSectionView alloc] init];
     touchAndControlSection.delegate = self;
-    touchAndControlSection.sectionTitle = [LocalizationHelper localizedStringForKey:@"Touch & Control"];
+    touchAndControlSection.sectionTitle = [LocalizationHelper localizedStringForKey:@"Touch & Controller"];
     if (@available(iOS 13.0, *)) {
         [touchAndControlSection setSectionWithIcon:[UIImage imageNamed:@"arcade.stick.console"] andSize:20.5];
     }
@@ -1324,7 +1324,7 @@ BOOL isCustomResolution(CGSize res) {
 
     if (![self hdrSupported]) {
         [self.hdrSwitch setOn:NO];
-        [self widget:self.hdrSwitch setEnabled:NO];
+        [self.hdrSwitch setEnabled:NO];
     }
     else {
         [self.hdrSwitch setOn:currentSettings.enableHdr];
