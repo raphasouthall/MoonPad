@@ -50,7 +50,7 @@
                           andConfig:(StreamConfiguration*)streamConfig;
 - (void) reloadOnScreenControlsWith:(ControllerSupport*)controllerSupport
                           andConfig:(StreamConfiguration*)streamConfig;
-- (void) clearOnScreenKeyboardButtons;
+- (void) clearOnScreenWidgets;
 - (void) reloadOnScreenWidgetViews;
 
 - (CGSize) getVideoAreaSize;

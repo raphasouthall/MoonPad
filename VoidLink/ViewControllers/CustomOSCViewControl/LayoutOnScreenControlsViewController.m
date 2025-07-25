@@ -62,7 +62,7 @@
 
 - (void) viewWillDisappear:(BOOL)animated{
     OnScreenWidgetView.editMode = false;
-    for (OnScreenWidgetView* widgetView in self.OnScreenWidgetViews){
+    for (OnScreenWidgetView* widgetView in self.onScreenWidgetViews){
         [widgetView.stickBallLayer removeFromSuperlayer];
         [widgetView.crossMarkLayer removeFromSuperlayer];
     }
@@ -89,7 +89,7 @@
         }
     }
     
-    [self.OnScreenWidgetViews removeAllObjects];
+    [self.onScreenWidgetViews removeAllObjects];
 
     
     NSLog(@"reload os Key here");
@@ -120,7 +120,7 @@
             [widgetView resizeWidgetView]; // resize must be called after relocation
             [widgetView adjustTransparencyWithAlpha:buttonState.backgroundAlpha];
             [widgetView adjustBorderWithWidth:buttonState.borderWidth];
-            [self.OnScreenWidgetViews addObject:widgetView];
+            [self.onScreenWidgetViews addObject:widgetView];
         }
     }
 }
@@ -128,8 +128,8 @@
 - (void) viewDidLoad {
     [super viewDidLoad];
     profilesManager = [OSCProfilesManager sharedManager:self.view.bounds];
-    self.OnScreenWidgetViews = [[NSMutableSet alloc] init]; // will be revised to read persisted data , somewhere else
-    [OSCProfilesManager setOnScreenWidgetViewsSet:self.OnScreenWidgetViews];   // pass the keyboard button dict to profiles manager
+    self.onScreenWidgetViews = [[NSMutableSet alloc] init]; // will be revised to read persisted data , somewhere else
+    [OSCProfilesManager setOnScreenWidgetViewsSet:self.onScreenWidgetViews];   // pass the keyboard button dict to profiles manager
     
     //isToolbarHidden = NO;   // keeps track if the toolbar is hidden up above the screen so that we know whether to hide or show it when the user taps the toolbar's hide/show button
     _quickSwitchEnabled = false;
@@ -253,7 +253,7 @@
 #pragma mark - Class Helper Functions
 
 - (void)handleReturnToForeground {
-    [OSCProfilesManager setOnScreenWidgetViewsSet:self.OnScreenWidgetViews];   // pass the keyboard button dict to profiles manager
+    [OSCProfilesManager setOnScreenWidgetViewsSet:self.onScreenWidgetViews];   // pass the keyboard button dict to profiles manager
 }
 
 /* fades the 'Undo Button' in or out depending on whether the user has any OSC layout changes to undo */
@@ -588,10 +588,10 @@
     [newWidget resizeWidgetView]; // resize must be called after relocation
     [newWidget adjustTransparencyWithAlpha:widget.backgroundAlpha];
     [newWidget adjustBorderWithWidth:widget.borderWidth];
-    [self.OnScreenWidgetViews addObject:newWidget];
+    [self.onScreenWidgetViews addObject:newWidget];
     self->selectedWidgetView = newWidget;
     if(!createNew){
-        [self.OnScreenWidgetViews removeObject:widget];
+        [self.onScreenWidgetViews removeObject:widget];
         [widget removeFromSuperview];
     }
 }
@@ -604,7 +604,7 @@
     widgetView.guidelineDelegate = (id<OnScreenWidgetGuidelineUpdateDelegate>)self;
     widgetView.translatesAutoresizingMaskIntoConstraints = NO; // weird but this is mandatory, or you will find no key views added to the right place
     widgetView.minStickOffset = [widgetInitParams[@"minStickOffsetString"] floatValue];
-    [self.OnScreenWidgetViews addObject:widgetView];
+    [self.onScreenWidgetViews addObject:widgetView];
     // Add the widgetView to the view controller's view
     [self.view insertSubview:widgetView belowSubview:self.widgetPanelStack];
     [widgetView setLocationWithPosition:CGPointMake(90, 130)];
@@ -1253,7 +1253,7 @@
     
     if(!isToolbarHidden && self->selectedWidgetView != nil && [self layerIsOverlappingWithTrashcanButton:selectedWidgetView.layer]){
         [self->selectedWidgetView removeFromSuperview];
-        [self.OnScreenWidgetViews removeObject:self->selectedWidgetView];
+        [self.onScreenWidgetViews removeObject:self->selectedWidgetView];
         [self clearStickIndicator];
         [selectedWidgetView.buttonDownVisualEffectLayer removeFromSuperlayer];
     }
