@@ -1941,7 +1941,7 @@ static NSMutableSet* hostList;
 // This function forces immediate decoding of the UIImage, rather
 // than the default lazy decoding that results in janky scrolling.
 -(void)deviceOrientationDidChange{
-    if(self.collectionView.superview == nil) return;
+    if(self.revealViewController.isStreaming || self.collectionView.superview == nil) return;
     [NSLayoutConstraint activateConstraints:@[
         [self.collectionView.topAnchor constraintEqualToAnchor:self.view.safeAreaLayoutGuide.topAnchor],
         [self.collectionView.bottomAnchor constraintEqualToAnchor:self.view.safeAreaLayoutGuide.bottomAnchor],

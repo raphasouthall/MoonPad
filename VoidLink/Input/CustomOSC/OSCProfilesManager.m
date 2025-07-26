@@ -26,7 +26,7 @@ static CGRect layoutViewBounds;
     static OSCProfilesManager *_sharedManager = nil;
     static dispatch_once_t onceToken;
     layoutViewBounds = viewBounds;
-    NSLog(@"bounds width: %f, height: %f", layoutViewBounds.size.width, layoutViewBounds.size.height);
+    // NSLog(@"bounds width: %f, height: %f", layoutViewBounds.size.width, layoutViewBounds.size.height);
     dispatch_once(&onceToken, ^{
         _sharedManager = [[self alloc] init];
     });
