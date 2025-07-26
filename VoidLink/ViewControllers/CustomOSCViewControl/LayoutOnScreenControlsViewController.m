@@ -273,8 +273,8 @@
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator{
     viewWillBeResized = true;
-    //if(CGSizeEqualToSize(size, self.view.frame.size)) return;
-    [self saveTapped:nil];
+    [self clearStickIndicator];
+    if(!_quickSwitchEnabled) [self saveTapped:nil];
 }
 
 - (void)deviceOrientationDidChange{
@@ -283,7 +283,12 @@
 
 - (void)handleOrientationChangeForOnScreenWidgets{
     if(!viewWillBeResized) return;
+    [self setupWidgetPanel];
+
     viewWillBeResized = false;
+    selectedWidgetView = nil;
+    selectedControllerLayer = nil;
+
     _oscProfilesTableViewController.layoutViewBounds = self.view.bounds;
     [OSCProfilesManager setOnScreenWidgetViewsSet:self.onScreenWidgetViews];   // pass the keyboard button dict to profiles manager
     [self reloadOnScreenWidgetViews];
