@@ -22,6 +22,7 @@
 #import "LocalizationHelper.h"
 #import "VoidLink-Swift.h"
 #import "OSCProfilesManager.h"
+#import "ThemeManager.h"
 
 #include <sys/socket.h>
 #include <netinet/in.h>
@@ -624,6 +625,15 @@
                                                  name: UIKeyboardWillHideNotification
                                                object: nil];
 #endif
+    
+    // for compatibility of iOS14 & lower
+    self.view.backgroundColor = [UIColor systemGrayColor];
+    _stageLabel.textColor = [UIColor systemGrayColor];
+    _spinner.color = [UIColor systemGrayColor];
+    
+    self.view.backgroundColor = [ThemeManager appBackgroundColor];
+    _stageLabel.textColor = [[ThemeManager textColor] colorWithAlphaComponent:0.9];
+    _spinner.color = [ThemeManager textColor];
     
     [self.view addSubview:_stageLabel];
     [self.view addSubview:_spinner];
