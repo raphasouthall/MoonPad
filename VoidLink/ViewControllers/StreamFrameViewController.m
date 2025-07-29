@@ -811,6 +811,8 @@
     [self.navigationController popToRootViewControllerAnimated:NO];
     
     _extWindow = nil;
+    
+    self.mainFrameViewcontroller.settingsExpandedInStreamView = false; // reset this flag to false
 }
 
 // External Screen connected
@@ -957,7 +959,6 @@
 
 - (void)disconnectRemoteSession {
     Log(LOG_I, @"Settings view disconnect the session in stream view");
-    self.mainFrameViewcontroller.settingsExpandedInStreamView = false; // reset this flag to false
     [self returnToMainFrame];
 }
 
