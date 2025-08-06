@@ -29,7 +29,7 @@ CGFloat startPointX;
     UITouch *touch = [touches anyObject];
     capturedUITouch = touch;
     startPointX = [capturedUITouch locationInView:self.view].x;
-    CGFloat screenWidthInPoints = self.view.frame.size.width;
+    CGFloat streamFrameViewWidthInPoints = self.view.frame.size.width;
     if(_immediateTriggering){
         
         if(self.edges & UIRectEdgeLeft){
@@ -39,7 +39,7 @@ CGFloat startPointX;
             // NSLog(@"startPointX  %f , normalizedGestureDeltaX %f", startPointX,  normalizedGestureDistance);
         }
         if(self.edges & UIRectEdgeRight){
-            if(startPointX > screenWidthInPoints - _EDGE_TOLERANCE){
+            if(startPointX > streamFrameViewWidthInPoints - _EDGE_TOLERANCE){
                 self.state = UIGestureRecognizerStateEnded;
             }
            // NSLog(@"startPointX  %f , normalizedGestureDeltaX %f", startPointX,  normalizedGestureDistance);
