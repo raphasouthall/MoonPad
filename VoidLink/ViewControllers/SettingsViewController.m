@@ -21,6 +21,9 @@
 #import "LocalizationHelper.h"
 
 @implementation SettingsViewController {
+    NSLayoutConstraint *parentStackLeadingConstraint;
+    NSLayoutConstraint *parentStackWidthConstraint;
+    
     NSInteger _bitrate;
     NSInteger _lastSelectedResolutionIndex;
     bool justEnteredSettingsView;
@@ -230,24 +233,11 @@ CGSize resolutionTable[RESOLUTION_TABLE_SIZE];
     dispatch_after(delayTime, dispatch_get_main_queue(), ^{// Code to execute after the delay
         // [self updateResolutionAccordingly];
     });
-    
 }
 
 // Adjust the subviews for the safe area on the iPhone X.
 - (void)viewSafeAreaInsetsDidChange {
     [super viewSafeAreaInsetsDidChange];
-    
-    //if (@available(iOS 11.0, *)) {
-    if (false) { // cancel this for portrait mode
-        for (UIView* view in self.view.subviews) {
-            // HACK: The official safe area is much too large for our purposes
-            // so we'll just use the presence of any safe area to indicate we should
-            // pad by 20.
-            if (self.view.safeAreaInsets.left >= 20 || self.view.safeAreaInsets.right >= 20) {
-                view.frame = CGRectMake(view.frame.origin.x + 20, view.frame.origin.y, view.frame.size.width, view.frame.size.height);
-            }
-        }
-    }
 }
 
 BOOL isCustomResolution(CGSize res) {
@@ -330,6 +320,11 @@ BOOL isCustomResolution(CGSize res) {
 
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:NO];
+    [self updateParentStackHorizontalConstraints];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(deviceOrientationDidChange:) // handle orientation change since i made portrait mode available
+                                                 name:UIDeviceOrientationDidChangeNotification
+                                               object:nil];
  }
 
 - (void)viewDidAppear:(BOOL)animated{
@@ -345,11 +340,16 @@ BOOL isCustomResolution(CGSize res) {
     [self.resolutionSelector setEnabled:!self.customResolutionSwitch.isOn];
 }
 
+- (void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
 
 - (void)viewDidDisappear:(BOOL)animated{
     [super viewDidDisappear:NO];
     [[NSNotificationCenter defaultCenter] postNotificationName:@"SettingsViewClosedNotification" object:self]; // notify other view that settings view just closed
 }
+
 
 - (SettingsMenuMode)getSettingsMenuMode{
     return currentSettingsMenuMode;
@@ -390,13 +390,52 @@ BOOL isCustomResolution(CGSize res) {
     _parentStack.spacing = 0;
     _parentStack.translatesAutoresizingMaskIntoConstraints = NO;
     [self.scrollView addSubview:_parentStack];
+    
     [NSLayoutConstraint activateConstraints:@[
         [_parentStack.topAnchor constraintEqualToAnchor:self.scrollView.contentLayoutGuide.topAnchor constant: currentSettingsMenuMode == AllSettings ? [self getStandardNavBarHeight] : [self getStandardNavBarHeight]+10],
         [_parentStack.bottomAnchor constraintEqualToAnchor:self.scrollView.contentLayoutGuide.bottomAnchor constant:-20],
-        [_parentStack.centerXAnchor constraintEqualToAnchor:self.view.centerXAnchor constant: 0], //mark: settingMenuLayout
-        [_parentStack.widthAnchor constraintEqualToAnchor:self.view.widthAnchor constant:-20] // section width adjusted here //mark: settingMenuLayout
     ]];
+
+    [self updateParentStackHorizontalConstraints];
 }
+
+-(void)deviceOrientationDidChange:(NSNotification *)notification {
+    [self updateParentStackHorizontalConstraints];
+}
+
+- (void)updateParentStackHorizontalConstraints{
+    if(![self isIPhone]){
+        [NSLayoutConstraint activateConstraints:@[
+            [_parentStack.centerXAnchor constraintEqualToAnchor:self.view.centerXAnchor constant: 0], //mark: settingMenuLayout
+            [_parentStack.widthAnchor constraintEqualToAnchor:self.view.widthAnchor constant:-20] // section width adjusted here
+        ]];
+        return;
+    }
+    
+    UIDeviceOrientation orientation = [UIDevice currentDevice].orientation;
+    
+    if(parentStackWidthConstraint && parentStackLeadingConstraint) [NSLayoutConstraint deactivateConstraints:@[parentStackLeadingConstraint, parentStackWidthConstraint]];
+
+    switch (orientation) {
+        case UIDeviceOrientationLandscapeLeft:
+            parentStackLeadingConstraint = [_parentStack.leadingAnchor constraintEqualToAnchor:self.view.safeAreaLayoutGuide.leadingAnchor constant:0];
+            parentStackWidthConstraint = [_parentStack.widthAnchor constraintEqualToAnchor:self.view.safeAreaLayoutGuide.widthAnchor constant:-10];
+            break;
+        default:
+            parentStackLeadingConstraint = [_parentStack.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor constant:10];
+            parentStackWidthConstraint = [_parentStack.widthAnchor constraintEqualToAnchor:self.view.widthAnchor constant:-20];
+            break;
+    }
+    
+    [NSLayoutConstraint activateConstraints:@[parentStackLeadingConstraint, parentStackWidthConstraint]];
+    
+    double delayInSeconds = 0.05;
+    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
+    dispatch_after(popTime, dispatch_get_main_queue(), ^{
+        [self hideOverlappedDynamicLabels];
+    });
+}
+
 
 - (UIButton* )findInfoButtonFromStack:(UIStackView* )stack{
     UIButton* button;
@@ -495,7 +534,6 @@ BOOL isCustomResolution(CGSize res) {
             [label.heightAnchor constraintEqualToAnchor:stack.arrangedSubviews[0].heightAnchor],
             [label.widthAnchor constraintEqualToConstant:150],
         ]];
-
     }
 }
 
@@ -508,8 +546,6 @@ BOOL isCustomResolution(CGSize res) {
 }
     
 - (void)layoutSections{
-    
-    
     MenuSectionView *videoSection = [[MenuSectionView alloc] init];
     videoSection.delegate = self;
     videoSection.sectionTitle = [LocalizationHelper localizedStringForKey:@"Video"];
@@ -713,8 +749,6 @@ BOOL isCustomResolution(CGSize res) {
         objc_setAssociatedObject(link, @"lastTimestamp", @(link.timestamp), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
 }
-
-
 
 
 - (NSInteger)parentStackIndexForLocation:(CGPoint)location {
