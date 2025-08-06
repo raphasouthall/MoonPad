@@ -409,10 +409,13 @@ static NSMutableSet* hostList;
 
 - (void)wakeupButtonTappedForHost:(TemporaryHost *)host{
     _selectedHost = host;
-    if ((host.state == StateOffline || host.state == StateUnknown) && host.pairState == PairStatePaired) {
+    bool hasValidMac = host.mac != nil && ![host.mac isEqualToString:@"00:00:00:00:00:00"];
+
+    if ((host.state == StateOffline || host.state == StateUnknown)) {
         UIAlertController* wolAlert = [UIAlertController alertControllerWithTitle:[LocalizationHelper localizedStringForKey:@"Wake-On-LAN"] message:@"" preferredStyle:UIAlertControllerStyleAlert];
         [wolAlert addAction:[UIAlertAction actionWithTitle:[LocalizationHelper localizedStringForKey:@"Ok"] style:UIAlertActionStyleDefault handler:nil]];
-        if (host.mac == nil || [host.mac isEqualToString:@"00:00:00:00:00:00"]) {
+        
+        if (!hasValidMac) {
             wolAlert.message = [LocalizationHelper localizedStringForKey: @"Host MAC unknown, unable to send WOL Packet"];
         } else {
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{

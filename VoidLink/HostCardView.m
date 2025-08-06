@@ -522,6 +522,7 @@ static const float REFRESH_CYCLE = 2.0f;
     backgroundLayer.hidden = !(host.state == StateOnline && host.pairState == PairStatePaired);
     
     BOOL hostPaired = host.pairState == PairStatePaired;
+    bool hasValidMac = host.mac != nil && ![host.mac isEqualToString:@"00:00:00:00:00:00"];
 
     switch (host.state) {
         case StateOnline:
@@ -628,8 +629,8 @@ static const float REFRESH_CYCLE = 2.0f;
             } else {
                 // Fallback on earlier versions
             }
-            self.wakeupButton.backgroundColor = hostPaired ? [ThemeManager textTintColorWithAlpha] : [[ThemeManager textColorGray] colorWithAlphaComponent:0.2];
-            [self.wakeupButton setTitleColor: hostPaired ? defaultBlue : [ThemeManager textColorGray] forState:UIControlStateNormal];
+            self.wakeupButton.backgroundColor = hasValidMac ? [ThemeManager textTintColorWithAlpha] : [[ThemeManager textColorGray] colorWithAlphaComponent:0.2];
+            [self.wakeupButton setTitleColor: hasValidMac ? defaultBlue : [ThemeManager textColorGray] forState:UIControlStateNormal];
             break;
         default:break;
     }
