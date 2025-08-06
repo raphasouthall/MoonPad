@@ -409,7 +409,7 @@ static NSMutableSet* hostList;
 
 - (void)wakeupButtonTappedForHost:(TemporaryHost *)host{
     _selectedHost = host;
-    if (host.state == StateOffline && host.pairState == PairStatePaired) {
+    if ((host.state == StateOffline || host.state == StateUnknown) && host.pairState == PairStatePaired) {
         UIAlertController* wolAlert = [UIAlertController alertControllerWithTitle:[LocalizationHelper localizedStringForKey:@"Wake-On-LAN"] message:@"" preferredStyle:UIAlertControllerStyleAlert];
         [wolAlert addAction:[UIAlertAction actionWithTitle:[LocalizationHelper localizedStringForKey:@"Ok"] style:UIAlertActionStyleDefault handler:nil]];
         if (host.mac == nil || [host.mac isEqualToString:@"00:00:00:00:00:00"]) {
