@@ -240,19 +240,8 @@ CGSize resolutionTable[RESOLUTION_TABLE_SIZE];
     [super viewSafeAreaInsetsDidChange];
 }
 
-BOOL isCustomResolution(CGSize res) {
-    if (res.width == 0 && res.height == 0) {
-        return NO;
-    }
-    
-    for (int i = 0; i < RESOLUTION_TABLE_CUSTOM_INDEX; i++) {
-        NSLog(@"customRes: %f, %f, isrl: %f, %f", res.width, res.height, resolutionTable[i].width, resolutionTable[i].height);
-        if ((res.width == resolutionTable[i].width && res.height == resolutionTable[i].height) || (res.height == resolutionTable[i].width && res.width == resolutionTable[i].height)) {
-            return NO;
-        }
-    }
-    
-    return YES;
+BOOL isCustomResolution(int resolutionSelected) {
+    return resolutionSelected == RESOLUTION_TABLE_CUSTOM_INDEX;
 }
 
 + (bool)isLandscapeNow {
@@ -276,32 +265,10 @@ BOOL isCustomResolution(CGSize res) {
 
 - (void)updateResolutionTable{
     if(self.mainFrameViewController.settingsExpandedInStreamView) return;
-    
-    UIWindow *window = self.view.window;
-    NSLog(@" window %@", window);
 
-    CGFloat screenScale = window.screen.scale;
-    CGFloat safeAreaWidth = (window.frame.size.width - window.safeAreaInsets.left - window.safeAreaInsets.right) * screenScale;
-    CGFloat appWindowWidth = window.frame.size.width * screenScale;
-    CGFloat appWindowHeight = window.frame.size.height * screenScale;
-    if([self isAirPlayEnabled] && UIScreen.screens.count > 1){
-        CGRect bounds = [UIScreen.screens.lastObject bounds];
-        screenScale = [UIScreen.screens.lastObject scale];
-        appWindowWidth = bounds.size.width * screenScale;
-        appWindowHeight = bounds.size.height * screenScale;
-    }
-    
-    bool needSwapWidthAndHeight = appWindowWidth < appWindowHeight;
-
-    for(uint8_t i=0;i<6;i++){
-        CGFloat longSideLen = resolutionTable[i].height > resolutionTable[i].width ? resolutionTable[i].height : resolutionTable[i].width;
-        CGFloat shortSideLen = resolutionTable[i].height < resolutionTable[i].width ? resolutionTable[i].height : resolutionTable[i].width;
-        if(needSwapWidthAndHeight) resolutionTable[i] = CGSizeMake(shortSideLen, longSideLen);
-        else resolutionTable[i] = CGSizeMake(longSideLen, shortSideLen);
-    }
-    
-    resolutionTable[3] = CGSizeMake(safeAreaWidth, appWindowHeight);
-    resolutionTable[4] = CGSizeMake(appWindowWidth, appWindowHeight);
+    NSInteger externalDisplayMode = [self.externalDisplayModeSelector selectedSegmentIndex];
+    // 调用主界面方法统一填充 resolutionTable
+    [self.mainFrameViewController fillResolutionTable:resolutionTable externalDisplayMode:externalDisplayMode];
 
     [self updateResolutionDisplayLabel];
 }
@@ -335,8 +302,8 @@ BOOL isCustomResolution(CGSize res) {
     DataManager* dataMan = [[DataManager alloc] init];
     TemporarySettings *currentSettings = [dataMan getSettings];
 
-    CGSize currentResolution = CGSizeMake(currentSettings.width.intValue, currentSettings.height.intValue);
-    [self.customResolutionSwitch setOn: isCustomResolution(currentResolution)];
+    //CGSize currentResolution = CGSizeMake(currentSettings.width.intValue, currentSettings.height.intValue);
+    [self.customResolutionSwitch setOn: isCustomResolution(currentSettings.resolutionSelected.intValue)];
     [self.resolutionSelector setEnabled:!self.customResolutionSwitch.isOn];
 }
 
@@ -1326,12 +1293,8 @@ BOOL isCustomResolution(CGSize res) {
     [self.resolutionSelector removeSegmentAtIndex:0 animated:NO]; // remove 360p
     [self.resolutionSelector removeSegmentAtIndex:5 animated:NO]; // remove custom segment
 
-    resolutionTable[0] = CGSizeMake(1280, 720);
-    resolutionTable[1] = CGSizeMake(1920, 1080);
-    resolutionTable[2] = CGSizeMake(3840, 2160);
-    resolutionTable[3] = CGSizeMake(safeAreaWidth, fullScreenHeight);
-    resolutionTable[4] = CGSizeMake(fullScreenWidth, fullScreenHeight);
     resolutionTable[5] = CGSizeMake([currentSettings.width integerValue], [currentSettings.height integerValue]); // custom initial value
+    [self updateResolutionTable];
 
 
     NSInteger framerate;
@@ -2171,6 +2134,9 @@ BOOL isCustomResolution(CGSize res) {
     BOOL enableHdr = self.hdrSwitch.isOn;
     BOOL unlockDisplayOrientation = [self.unlockDisplayOrientationSelector selectedSegmentIndex] == 1;
     NSInteger resolutionSelected = [self.resolutionSelector selectedSegmentIndex];
+    if (self.customResolutionSwitch.isOn) {
+        resolutionSelected = RESOLUTION_TABLE_CUSTOM_INDEX;
+    }
     NSInteger externalDisplayMode = [self.externalDisplayModeSelector selectedSegmentIndex];
     NSInteger localMousePointerMode = [self.localMousePointerModeSelector selectedSegmentIndex];
     NSInteger backgroundSessionTimer = self.backgroundSessionTimerSlider.value == self.backgroundSessionTimerSlider.maximumValue ? (uint32_t) INT16_MAX : (uint32_t)self.backgroundSessionTimerSlider.value;

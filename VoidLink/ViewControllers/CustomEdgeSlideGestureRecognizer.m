@@ -14,11 +14,11 @@
 @implementation CustomEdgeSlideGestureRecognizer
 UITouch* capturedUITouch;
 CGFloat startPointX;
-static CGFloat screenWidthInPoints;
+//static CGFloat screenWidthInPoints;
 
 - (instancetype)initWithTarget:(nullable id)target action:(nullable SEL)action {
     self = [super initWithTarget:target action:action];
-    screenWidthInPoints = CGRectGetWidth([UIApplication.sharedApplication.windows.firstObject.screen bounds]); // Get the screen's bounds (in points)
+//    screenWidthInPoints = CGRectGetWidth([UIApplication.sharedApplication.windows.firstObject.screen bounds]); // Get the screen's bounds (in points)
     _immediateTriggering = false;
     _EDGE_TOLERANCE = 10.0f;
     return self;
@@ -29,6 +29,7 @@ static CGFloat screenWidthInPoints;
     UITouch *touch = [touches anyObject];
     capturedUITouch = touch;
     startPointX = [capturedUITouch locationInView:self.view].x;
+    CGFloat screenWidthInPoints = self.view.frame.size.width;
     if(_immediateTriggering){
         
         if(self.edges & UIRectEdgeLeft){
@@ -52,6 +53,7 @@ static CGFloat screenWidthInPoints;
     
     if([touches containsObject:capturedUITouch]){
         CGFloat _endPointX = [capturedUITouch locationInView:self.view].x;
+        CGFloat screenWidthInPoints = self.view.frame.size.width;
         CGFloat normalizedGestureDistance = fabs(_endPointX - startPointX)/screenWidthInPoints;
         
         if(self.edges & UIRectEdgeLeft){
