@@ -45,6 +45,10 @@ import UIKit
     @objc public var pressed: Bool
     @objc public var widthFactor: CGFloat = 1.0
     @objc public var heightFactor: CGFloat = 1.0
+    
+    @objc public var deNormalizedWidthFactor: CGFloat = 1.0
+    @objc public var deNormalizedHeightFactor: CGFloat = 1.0
+    
     @objc public var borderWidth: CGFloat = 0.0
     @objc public var backgroundAlpha: CGFloat = 0.5
     @objc public var vibrationStyle: Int = 6
@@ -319,7 +323,6 @@ import UIKit
         if self.widthFactor == 0 {self.widthFactor = 1.0}
         if self.heightFactor == 0 {self.heightFactor = 1.0}
         
-
         /*
         NSLayoutConstraint.activate([
             self.centerXAnchor.constraint(equalTo: self.superview!.leadingAnchor, constant: storedLocation.x),
@@ -357,21 +360,46 @@ import UIKit
         }
     }
     
+    func nearestEven(_ value: CGFloat) -> CGFloat {
+        let rounded = round(value)
+        if Int(rounded) % 2 == 0 {
+            return rounded
+        } else {
+            let lowerEven = rounded - 1
+            let upperEven = rounded + 1
+            return abs(value - lowerEven) <= abs(value - upperEven) ? lowerEven : upperEven
+        }
+    }
+    
+    private func denormalizeSize(sizeFactor:CGFloat) -> CGFloat {
+        let screenWidthInPoints = UIScreen.main.bounds.width
+        // return CGFloat(Int(sizeFactor/10000*screenWidthInPoints/2)*2);
+        return nearestEven(sizeFactor/10000*screenWidthInPoints);
+    }
+    
     private func changeAndActivateContraints(){
+        let isNormalizedSizeFactor = self.widthFactor > 6;
+        
         if self.shape == "round"{ // we'll make custom osc buttons round & smaller
             NSLayoutConstraint.activate([
-                self.widthAnchor.constraint(equalToConstant: CGFloat(Int(60 * self.widthFactor / 2) * 2)),
-                self.heightAnchor.constraint(equalToConstant: CGFloat(Int(60 * self.widthFactor / 2) * 2)),])
+                self.widthAnchor.constraint(equalToConstant: isNormalizedSizeFactor ? denormalizeSize(sizeFactor:self.widthFactor) : CGFloat(Int(60 * self.widthFactor / 2) * 2)),
+                self.heightAnchor.constraint(equalToConstant: isNormalizedSizeFactor ? denormalizeSize(sizeFactor:self.widthFactor) : CGFloat(Int(60 * self.widthFactor / 2) * 2)),])
+            self.deNormalizedWidthFactor = isNormalizedSizeFactor ? denormalizeSize(sizeFactor:self.widthFactor)/60 : self.widthFactor;
+            self.deNormalizedHeightFactor = isNormalizedSizeFactor ? denormalizeSize(sizeFactor:self.widthFactor)/60 : self.widthFactor;
         }
         if self.shape == "square" {
             NSLayoutConstraint.activate([
-                self.widthAnchor.constraint(equalToConstant: CGFloat(Int(70 * self.widthFactor / 2) * 2)),
-                self.heightAnchor.constraint(equalToConstant: CGFloat(Int(65 * self.heightFactor / 2) * 2)),])
+                self.widthAnchor.constraint(equalToConstant: isNormalizedSizeFactor ? denormalizeSize(sizeFactor:self.widthFactor) :  CGFloat(Int(70 * self.widthFactor / 2) * 2)),
+                self.heightAnchor.constraint(equalToConstant: isNormalizedSizeFactor ? denormalizeSize(sizeFactor:self.heightFactor) :  CGFloat(Int(65 * self.heightFactor / 2) * 2)),])
+            self.deNormalizedWidthFactor = isNormalizedSizeFactor ? denormalizeSize(sizeFactor:self.widthFactor)/70 : self.widthFactor;
+            self.deNormalizedHeightFactor = isNormalizedSizeFactor ? denormalizeSize(sizeFactor:self.heightFactor)/65 : self.heightFactor;
         }
         if self.shape == "largeSquare" { // override all shape strings
             NSLayoutConstraint.activate([
-                self.widthAnchor.constraint(equalToConstant: CGFloat(Int(170 * self.widthFactor / 2) * 2)),
-                self.heightAnchor.constraint(equalToConstant: CGFloat(Int(150 * self.heightFactor / 2) * 2)),])
+                self.widthAnchor.constraint(equalToConstant:isNormalizedSizeFactor ? denormalizeSize(sizeFactor:self.widthFactor) :  CGFloat(Int(170 * self.widthFactor / 2) * 2)),
+                self.heightAnchor.constraint(equalToConstant:isNormalizedSizeFactor ? denormalizeSize(sizeFactor:self.heightFactor) :  CGFloat(Int(150 * self.heightFactor / 2) * 2)),])
+            self.deNormalizedWidthFactor = isNormalizedSizeFactor ? denormalizeSize(sizeFactor:self.widthFactor)/170 : self.widthFactor;
+            self.deNormalizedHeightFactor = isNormalizedSizeFactor ? denormalizeSize(sizeFactor:self.heightFactor)/150 : self.heightFactor;
         }
 
         NSLayoutConstraint.activate([
@@ -379,6 +407,11 @@ import UIKit
             label.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -10),
             label.centerXAnchor.constraint(equalTo: centerXAnchor),
             label.centerYAnchor.constraint(equalTo: centerYAnchor),])
+        
+        if self.shape != "round"{
+            let shortSideLen = min(self.layer.bounds.size.width, self.layer.bounds.size.height)
+            self.layer.cornerRadius = shortSideLen/2 < 16 ? shortSideLen/3.2 : 16
+        }
     }
     
     private func setupView() {
@@ -882,7 +915,7 @@ import UIKit
     private func setupButtonDownVisualEffectLayer() {
         self.buttonDownVisualEffectWidth = 8
         if self.shape == "round" {
-            if widthFactor < 1.3 {self.buttonDownVisualEffectWidth = 15.3} // wider visual effect for osc buttons
+            if deNormalizedWidthFactor < 1.3 {self.buttonDownVisualEffectWidth = 15.3} // wider visual effect for osc buttons
             else {self.buttonDownVisualEffectWidth = 9}
         }
         

@@ -714,6 +714,13 @@
     [self->selectedWidgetView.crossMarkLayer removeFromSuperlayer];
 }
 
+/*
+- (CGFloat)denormalizeSizeFactor:(CGFloat)sizeFactor{
+    bool isNormalizedSizeFactor = sizeFactor > 6;
+    return isNormalizedSizeFactor ? sizeFactor/10000*[UIScreen mainScreen].bounds.size.width
+}
+ */
+
 - (void)widgetViewTapped: (NSNotification *)notification{
     //self.undoButton.alpha = selectedWidgetView.layoutChanges.count>1 && !CGPointEqualToPoint(selectedWidgetView.layoutChanges.lastObject.CGPointValue, selectedWidgetView.initialCenter)? 1.0 : 0.3;
 
@@ -738,8 +745,8 @@
     
     [self.layoutOSC updateGuidelinesForOnScreenWidget:self->selectedWidgetView]; // shows guideline immediately when widget is tapped
     // setup slider values
-    [self.widgetSizeSlider setValue: self->selectedWidgetView.widthFactor];
-    [self.widgetHeightSlider setValue: self->selectedWidgetView.heightFactor];
+    [self.widgetSizeSlider setValue: self->selectedWidgetView.deNormalizedWidthFactor];
+    [self.widgetHeightSlider setValue: self->selectedWidgetView.deNormalizedHeightFactor];
     [self.widgetAlphaSlider setValue: self->selectedWidgetView.backgroundAlpha];
     [self.widgetBorderWidthSlider setValue:self->selectedWidgetView.borderWidth];
     
@@ -772,10 +779,12 @@
         [self->selectedWidgetView updateStickIndicator];
     }
     [self autoFitLabel:self.widgetSizeLabel];
-    [self.widgetSizeLabel setText:[LocalizationHelper localizedStringForKey:@"Size: %.2f", self->selectedWidgetView.widthFactor]];
+    
+
+    [self.widgetSizeLabel setText:[LocalizationHelper localizedStringForKey:@"Size: %.2f", self->selectedWidgetView.deNormalizedWidthFactor]];
     
     [self autoFitLabel:self.widgetHeightLabel];
-    [self.widgetHeightLabel setText:[LocalizationHelper localizedStringForKey:@"Height: %.2f", self->selectedWidgetView.heightFactor]];
+    [self.widgetHeightLabel setText:[LocalizationHelper localizedStringForKey:@"Height: %.2f", self->selectedWidgetView.deNormalizedHeightFactor]];
     
     [self autoFitLabel:self.widgetAlphaLabel];
     [self.widgetAlphaLabel setText:[LocalizationHelper localizedStringForKey:@"Alpha: %.2f", self->selectedWidgetView.backgroundAlpha]];
@@ -796,6 +805,7 @@
         self.vibrationStyleSelector.selectedSegmentIndex = self->selectedWidgetView.vibrationStyle;
     }
 }
+
 
 - (void)legacyOscLayerTapped: (NSNotification *)notification{
     [self enableCommonWidgetTools];
