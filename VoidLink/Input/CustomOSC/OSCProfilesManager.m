@@ -387,6 +387,7 @@ static CGRect layoutViewBounds;
         buttonState.stickIndicatorOffset = widgetView.stickIndicatorOffset;
         buttonState.widgetShape = widgetView.shape;
         buttonState.minStickOffset = widgetView.minStickOffset;
+        buttonState.isSlidable = widgetView.isSlidable;
         
         NSData *buttonStateEncoded = [NSKeyedArchiver archivedDataWithRootObject:buttonState requiringSecureCoding:YES error:nil];
         [buttonStatesEncoded addObject: buttonStateEncoded];
