@@ -707,7 +707,15 @@ import UIKit
         self.layer.superlayer?.insertSublayer(indicatorLayer, below: self.layer)
         
         // show the indicator based on the touchBeganLocation
-        indicatorLayer.position = CGPointMake(CGRectGetMinX(self.frame)+touchBeganLocation.x, CGRectGetMinY(self.frame)+touchBeganLocation.y)
+        let newPosition = CGPointMake(CGRectGetMinX(self.frame)+touchBeganLocation.x, CGRectGetMinY(self.frame)+touchBeganLocation.y)
+        
+        if indicatorLayer.position != newPosition && vibrationOn {
+            vibrationGenerator.prepare()
+            vibrationGenerator.impactOccurred()
+            // print("vibrationInstance: \(vibrationGenerator)")
+        }
+        
+        indicatorLayer.position = newPosition
     }
     
     private func handleLrudTouchMove(){
@@ -757,6 +765,7 @@ import UIKit
         }
         else{
             self.upIndicator.removeFromSuperlayer()
+            self.upIndicator.position = CGPointMake(0, 0)
             switch touchPadString {
             case "WASDPAD": LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["W"]!,Int8(KEY_ACTION_UP), 0)
             case "ARROWPAD": LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["UP_ARROW"]!,Int8(KEY_ACTION_UP), 0)
@@ -775,6 +784,7 @@ import UIKit
         }
         else{
             self.downIndicator.removeFromSuperlayer()
+            self.downIndicator.position = CGPointMake(0, 0)
             switch touchPadString {
             case "WASDPAD": LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["S"]!,Int8(KEY_ACTION_UP), 0)
             case "ARROWPAD": LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["DOWN_ARROW"]!,Int8(KEY_ACTION_UP), 0)
@@ -793,6 +803,7 @@ import UIKit
         }
         else{
             self.leftIndicator.removeFromSuperlayer()
+            self.leftIndicator.position = CGPointMake(0, 0)
             switch touchPadString {
             case "WASDPAD": LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["A"]!,Int8(KEY_ACTION_UP), 0)
             case "ARROWPAD": LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["LEFT_ARROW"]!,Int8(KEY_ACTION_UP), 0)
@@ -811,6 +822,7 @@ import UIKit
         }
         else{
             self.rightIndicator.removeFromSuperlayer()
+            self.rightIndicator.position = CGPointMake(0, 0)
             switch touchPadString {
             case "WASDPAD": LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["D"]!,Int8(KEY_ACTION_UP), 0)
             case "ARROWPAD": LiSendKeyboardEvent(CommandManager.keyboardButtonMappings["RIGHT_ARROW"]!,Int8(KEY_ACTION_UP), 0)

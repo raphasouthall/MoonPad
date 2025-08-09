@@ -253,7 +253,7 @@ static const double X1_MOUSE_SPEED_DIVISOR = 2.5;
 
 // this method also deals with recovering streamview when local keyboard is turned off
 - (void)keyboardWillHide{
-    NSLog(@"keyboard will hide markmark %f", CACurrentMediaTime());
+    // NSLog(@"keyboard will hide markmark %f", CACurrentMediaTime());
 
     keyboardToggleRecognizer.numberOfTouchesRequired = settings.keyboardToggleFingers.intValue; // reset this number
     if(isInputingText){
@@ -280,7 +280,7 @@ static const double X1_MOUSE_SPEED_DIVISOR = 2.5;
 
 
 - (void)toggleKeyboard{
-    NSLog(@"toggleKeyboard markmark, %d", isInputingText);
+    // NSLog(@"toggleKeyboard markmark, %d", isInputingText);
     if (isInputingText) {
         Log(LOG_D, @"Closing the keyboard");
         [keyInputField resignFirstResponder];
