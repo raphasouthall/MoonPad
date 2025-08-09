@@ -1214,11 +1214,11 @@ import UIKit
                         if widget.capturedTouches.contains(touch) || !widget.isSlidable {continue}
                         widget.capturedTouches.add(touch)
                         widget.handleButtonDown()
-                        print("UIButton: \(widget.buttonLabel) in, \(widget.touchPadString), \(CACurrentMediaTime())")
+                        // print("UIButton: \(widget.buttonLabel) in, \(widget.touchPadString), \(CACurrentMediaTime())")
                     }
                     else{
                         if !widget.capturedTouches.contains(touch) || !widget.isSlidable {continue}
-                        print("UIButton: \(widget.buttonLabel) out test, \(widget.touchPadString), \(CACurrentMediaTime())")
+                        // print("UIButton: \(widget.buttonLabel) out test, \(widget.touchPadString), \(CACurrentMediaTime())")
                         widget.capturedTouches.remove(touch)
                         widget.handlebuttonUp()
                     }

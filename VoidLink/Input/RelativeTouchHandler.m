@@ -127,7 +127,7 @@ static const float QUICK_TAP_TIME_INTERVAL = 0.2;
 }*/
 
 - (BOOL)isAdjacentTouches:(CGPoint)currentPoint from:(CGPoint)originalPoint {
-    return hypotf(originalPoint.x - currentPoint.x, originalPoint.y - currentPoint.y) <= 100;
+    return hypotf(originalPoint.x - currentPoint.x, originalPoint.y - currentPoint.y) <= 300;
 }
 
 
