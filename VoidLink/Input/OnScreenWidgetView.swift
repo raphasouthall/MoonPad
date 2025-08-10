@@ -141,7 +141,11 @@ import UIKit
     //slide buttons
     private var capturedTouches: NSMutableSet
     private let noTouch: UITouch = UITouch()
-
+    
+    //controller touch pad
+    private var pointerIdPool: Set<UInt32>
+    private var pointerIdDict: Dictionary<ObjectIdentifier, UInt32>
+    private var activePointerIds: Set<UInt32>
     
     // whole button press down visual effect
     @objc public let buttonDownVisualEffectLayer = CAShapeLayer()
@@ -189,6 +193,8 @@ import UIKit
                     self.comboButtonStrings = ["OSCL3"]
                 case "RSPAD", "RSVPAD":
                     self.comboButtonStrings = ["OSCR3"]
+                case "DS4TOUCH":
+                    self.comboButtonStrings = ["DS4TOUCH"]
                 default: break
                 }
             }
@@ -233,6 +239,12 @@ import UIKit
         self.sensitivityFactorX = 1.0
         self.sensitivityFactorY = 1.0
         self.capturedTouches = NSMutableSet()
+        self.pointerIdDict = [:]
+        self.pointerIdPool = []
+        for i in 0...10 { // iPadOS supports up to 11 finger touches
+            self.pointerIdPool.insert(UInt32(i))
+        }
+        self.activePointerIds = []
         super.init(frame: .zero)
         
         upIndicator = createLrudDirectionLayer()
@@ -1125,6 +1137,11 @@ import UIKit
                             self.sendComboButtonsUpEvent(comboStrings: self.comboButtonStrings)
                         }
                     }
+                case "DS4TOUCH":
+                    if quickDoubleTapDetected {
+                        self.l3r3Indicator = self.createAndShowl3r3Indicator()
+                        self.sendComboButtonsDownEvent(comboStrings: self.comboButtonStrings)
+                    }
                 default:
                     break
                 }
@@ -1145,21 +1162,10 @@ import UIKit
                 }
             }
             
-            /*
-            if !self.buttonString.isEmpty {
-                // if there's no "+" in the keystring, treat it as a regular button:
-                if CommandManager.oscButtonMappings.keys.contains(self.cmdString) {
-                    self.sendOscButtonDownEvent(keyString: self.cmdString)
-                }
-                if CommandManager.keyboardButtonMappings.keys.contains(self.cmdString) {
-                    LiSendLiSendKeyboardEvent(CommandManager.keyboardButtonMappings[self.cmdString]!,Int8(KEY_ACTION_DOWN), 0)
-                }
-                if CommandManager.mouseButtonMappings.keys.contains(self.cmdString) {
-                    LiSendMouseButtonEvent(CChar(BUTTON_ACTION_PRESS), Int32(CommandManager.mouseButtonMappings[self.cmdString]!))
-                }
+            if self.widgetType == WidgetTypeEnum.touchPad && self.touchPadString == "DS4TOUCH" {
+                self.handleControllerTouchesDown(touches: touches)
             }
-            */
-            
+                        
             // this will also deal with button events
             if self.widgetType == WidgetTypeEnum.button && !self.comboButtonStrings.isEmpty {
                 self.handleButtonDown()
@@ -1203,6 +1209,42 @@ import UIKit
             guidelineDelegate?.updateGuidelinesForOnScreenWidget(self)
         }
     }
+    
+    private func handleControllerTouchesDown(touches: Set<UITouch>) {
+        for touch in touches{
+            let availablePointerIds = pointerIdPool.subtracting(activePointerIds)
+            if let pointerId = availablePointerIds.first {
+                pointerIdDict[ObjectIdentifier(touch)] = pointerId
+                let coordX = touch.location(in: self).x/self.bounds.width
+                let coordY = touch.location(in: self).y/self.bounds.height
+                LiSendControllerTouchEvent(0, UInt8(LI_TOUCH_EVENT_DOWN), pointerId, Float(coordX), Float(coordY), 1)
+                activePointerIds.insert(pointerId)
+            }
+        }
+    }
+    
+    private func handleControllerTouchesMove(touches: Set<UITouch>) {
+        for touch in touches{
+            if let pointerId = pointerIdDict[ObjectIdentifier(touch)] {
+                let coordX = touch.location(in: self).x/self.bounds.width
+                let coordY = touch.location(in: self).y/self.bounds.height
+                LiSendControllerTouchEvent(0, UInt8(LI_TOUCH_EVENT_MOVE), pointerId, Float(coordX), Float(coordY), 1)
+            }
+        }
+    }
+
+    private func handleControllerTouchesUp(touches: Set<UITouch>) {
+        for touch in touches{
+            if let pointerId = pointerIdDict[ObjectIdentifier(touch)] {
+                let coordX = touch.location(in: self).x/self.bounds.width
+                let coordY = touch.location(in: self).y/self.bounds.height
+                LiSendControllerTouchEvent(0, UInt8(LI_TOUCH_EVENT_UP), pointerId, Float(coordX), Float(coordY), 1)
+                activePointerIds.remove(pointerId)
+                pointerIdDict.removeValue(forKey: ObjectIdentifier(touch))
+            }
+        }
+    }
+
     
     private func handleButtonSlidingUp(touches: Set<UITouch>) {
         for touch in touches {
@@ -1296,7 +1338,6 @@ import UIKit
     
     private func handleTouchPadMoveEvent (_ touches: Set<UITouch>, with event: UIEvent?){
         if touches.count == 1{ // don't use event.alltouches.count here, it will counts all touches
-            
             switch self.touchPadString{
             case "MOUSEPAD":
                 DispatchQueue.global(qos: .userInteractive).async {
@@ -1340,6 +1381,9 @@ import UIKit
             default:
                 break
             }
+        }
+        if self.widgetType == WidgetTypeEnum.touchPad && self.touchPadString == "DS4TOUCH" {
+            self.handleControllerTouchesMove(touches: touches)
         }
     }
     
@@ -1421,6 +1465,8 @@ import UIKit
                 self.onScreenControls.releaseControllerButton(RIGHT_FLAG)
                 self.onScreenControls.releaseControllerButton(UP_FLAG)
                 self.onScreenControls.releaseControllerButton(DOWN_FLAG)
+            case "DS4TOUCH":
+                self.handleControllerTouchesUp(touches: touches)
             default:
                 break
             }
