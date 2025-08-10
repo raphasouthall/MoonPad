@@ -45,7 +45,7 @@ import UIKit
     @objc public var pressed: Bool
     @objc public var widthFactor: CGFloat = 1.0
     @objc public var heightFactor: CGFloat = 1.0
-    @objc public var isSlidable: Bool = true
+    @objc public var slideMode: Int = 0
 
     @objc public var deNormalizedWidthFactor: CGFloat = 1.0
     @objc public var deNormalizedHeightFactor: CGFloat = 1.0
@@ -1208,7 +1208,7 @@ import UIKit
         for touch in touches {
             for subview in self.superview?.subviews ?? [] {
                 if let widget = subview as? OnScreenWidgetView{
-                    if !widget.capturedTouches.contains(touch) || !widget.isSlidable {continue}
+                    if !widget.capturedTouches.contains(touch) || widget.slideMode == ButtonSlideMode.disabled.rawValue {continue}
                     widget.handlebuttonUp()
                 }
             }
@@ -1223,16 +1223,21 @@ import UIKit
                     if widget.widgetType != WidgetTypeEnum.button {continue}
                     let pointInSubview = widget.convert(locationInSuperView, from: self.superview)
                     if widget.bounds.contains(pointInSubview){
-                        if widget.capturedTouches.contains(touch) || !widget.isSlidable {continue}
+                        if widget.capturedTouches.contains(touch) || widget.slideMode == ButtonSlideMode.disabled.rawValue {continue}
                         widget.capturedTouches.add(touch)
                         widget.handleButtonDown()
                         // print("UIButton: \(widget.buttonLabel) in, \(widget.touchPadString), \(CACurrentMediaTime())")
                     }
                     else{
-                        if !widget.capturedTouches.contains(touch) || !widget.isSlidable {continue}
+                        if !widget.capturedTouches.contains(touch) || widget.slideMode == ButtonSlideMode.disabled.rawValue {continue}
                         // print("UIButton: \(widget.buttonLabel) out test, \(widget.touchPadString), \(CACurrentMediaTime())")
-                        widget.capturedTouches.remove(touch)
-                        widget.handlebuttonUp()
+                        if(widget.slideMode == ButtonSlideMode.toggle.rawValue){
+                            widget.capturedTouches.remove(touch)
+                            widget.handlebuttonUp()
+                        }
+                        if(widget.slideMode == ButtonSlideMode.slideAndHold.rawValue){
+                            // do nothing here
+                        }
                     }
                 }
             }
@@ -1248,7 +1253,7 @@ import UIKit
             }
             
             if !self.buttonString.isEmpty{
-                if self.isSlidable {self.handleButtonSliding(touches: touches)}
+                if self.slideMode != ButtonSlideMode.disabled.rawValue {self.handleButtonSliding(touches: touches)}
             }
             
             if CommandManager.specialOverlayButtonCmds.contains(self.cmdString){
