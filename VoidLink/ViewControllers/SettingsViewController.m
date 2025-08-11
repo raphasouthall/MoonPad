@@ -941,6 +941,7 @@ BOOL isCustomResolution(int resolutionSelected) {
     } else {
         [button setTitle:@"info" forState:UIControlStateNormal];
         button.titleLabel.font = [UIFont systemFontOfSize:13 weight:UIFontWeightBold];
+        button.titleLabel.accessibilityIdentifier = @"infoButton";
     }
     button.accessibilityIdentifier = @"infoButton";
     button.translatesAutoresizingMaskIntoConstraints = NO;
@@ -1288,14 +1289,17 @@ BOOL isCustomResolution(int resolutionSelected) {
     _bitrate = bitrateTable[[self getSliderValueForBitrate:[currentSettings.bitrate intValue]]];
 
     // Get the size of the screen with and without safe area insets
-    UIWindow *window = UIApplication.sharedApplication.windows.firstObject;
-    CGFloat screenScale = window.screen.scale;
-    CGFloat safeAreaWidth = (window.frame.size.width - window.safeAreaInsets.left - window.safeAreaInsets.right) * screenScale;
-    CGFloat fullScreenWidth = window.frame.size.width * screenScale;
-    CGFloat fullScreenHeight = window.frame.size.height * screenScale;
+    // UIWindow *window = UIApplication.sharedApplication.windows.firstObject;
+    // CGFloat screenScale = window.screen.scale;
+    // CGFloat safeAreaWidth = (window.frame.size.width - window.safeAreaInsets.left - window.safeAreaInsets.right) * screenScale;
+    // CGFloat fullScreenWidth = window.frame.size.width * screenScale;
+    // CGFloat fullScreenHeight = window.frame.size.height * screenScale;
 
     [self.resolutionSelector removeSegmentAtIndex:0 animated:NO]; // remove 360p
     [self.resolutionSelector removeSegmentAtIndex:5 animated:NO]; // remove custom segment
+    // iOS12 compatibility:
+    self.resolutionSelector.selectedSegmentIndex = 3;
+    [self.resolutionSelector setNeedsLayout];
 
     resolutionTable[5] = CGSizeMake([currentSettings.width integerValue], [currentSettings.height integerValue]); // custom initial value
     [self updateResolutionTable];
@@ -1343,7 +1347,7 @@ BOOL isCustomResolution(int resolutionSelected) {
         
         // Only enable the 4K option for "recent" devices. We'll judge that by whether
         // they support HEVC decoding (A9 or later).
-        [self.resolutionSelector setEnabled:NO forSegmentAtIndex:3];
+        [self.resolutionSelector setEnabled:NO forSegmentAtIndex:2];
     }
     switch (currentSettings.preferredCodec) {
         case CODEC_PREF_AUTO:
@@ -2053,7 +2057,16 @@ BOOL isCustomResolution(int resolutionSelected) {
                 label.layer.filters = nil;
                 label.textColor = [ThemeManager textColor];
             } else {
-                // Fallback on earlier versions
+                UIView *view = label;
+                bool isPartOfSelector = false;
+                while (view) {
+                    if ([view isKindOfClass:[UISegmentedControl class]]) {
+                        isPartOfSelector = true;
+                        break;
+                    }
+                    view = view.superview;
+                }
+                if(!isPartOfSelector) label.textColor = [UIColor whiteColor];
             }
         }
         [self updateThemeForLabels:subview];
@@ -2067,7 +2080,7 @@ BOOL isCustomResolution(int resolutionSelected) {
             if (@available(iOS 13.0, *)) {
                 selector.selectedSegmentTintColor = [ThemeManager appSecondaryColor];
             } else {
-                // Fallback on earlier versions
+                selector.tintColor = [ThemeManager appSecondaryColor];
             }
         }
         [self updateThemeForSelectors:subview];
@@ -2088,11 +2101,9 @@ BOOL isCustomResolution(int resolutionSelected) {
 
 - (void)updateTheme{
     self.view.backgroundColor = [ThemeManager appBackgroundColor];
-    if (@available(iOS 13.0, *)) {
-        [self updateThemeForLabels:self.view];
-        [self updateThemeForSelectors:self.view];
-        [self updateThemeForSliders:self.view];
-    }
+    [self updateThemeForLabels:self.view];
+    [self updateThemeForSelectors:self.view];
+    [self updateThemeForSliders:self.view];
 }
 
 - (void) saveSettings {
