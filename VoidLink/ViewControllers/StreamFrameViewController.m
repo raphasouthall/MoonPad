@@ -369,6 +369,7 @@
             });
         }
     } else {
+        [self->_streamView insertSubview:self->_streamVideoRenderView atIndex:0];
         // Fallback on earlier versions
     }
 
