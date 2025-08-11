@@ -810,7 +810,9 @@
 - (void) returnToMainFrame {
     // Reset display mode back to default
     [self updatePreferredDisplayMode:NO];
-    [SceneDelegate clearExternalDisplayRenderView];
+    if (@available(iOS 13.0, *)) {
+        [SceneDelegate clearExternalDisplayRenderView];
+    }
 
     if (_settings.enablePIP) {
         [self cleanupPiPController];
@@ -834,7 +836,9 @@
         if (_streamVideoRenderView) {
              // Remove from current superview before passing it
              [_streamVideoRenderView removeFromSuperview];
-             [SceneDelegate setExternalDisplayRenderView:_streamVideoRenderView];
+             if (@available(iOS 13.0, *)) {
+                 [SceneDelegate setExternalDisplayRenderView:_streamVideoRenderView];
+             }
              NSNotificationCenter* nc = [NSNotificationCenter defaultCenter];
              [nc postNotificationName:@"ScreenChanged" object:self];
         } else {
@@ -847,7 +851,9 @@
 - (void)extScreenDidDisconnect:(NSNotification *)notification {
     Log(LOG_I, @"External Screen Disconnected");
     if(UIScreen.screens.count < 2) {
-        [SceneDelegate clearExternalDisplayRenderView];
+        if (@available(iOS 13.0, *)) {
+            [SceneDelegate clearExternalDisplayRenderView];
+        }
         // Add the render view back to the local StreamView if AirPlay was active
         if ([self isAirPlayEnabled]) {
             if (_streamVideoRenderView && _streamView) {
@@ -878,9 +884,13 @@
 - (void) reloadAirPlayConfig{
     if (UIScreen.screens.count == 1){return;}
     if (![self isAirPlaying] && [self isAirPlayEnabled]){
-        [SceneDelegate setExternalDisplayRenderView:_streamVideoRenderView];
+        if (@available(iOS 13.0, *)) {
+            [SceneDelegate setExternalDisplayRenderView:_streamVideoRenderView];
+        }
     }else if ([self isAirPlaying] && ![self isAirPlayEnabled]){
-        [SceneDelegate clearExternalDisplayRenderView];
+        if (@available(iOS 13.0, *)) {
+            [SceneDelegate clearExternalDisplayRenderView];
+        }
     }
 }
 
