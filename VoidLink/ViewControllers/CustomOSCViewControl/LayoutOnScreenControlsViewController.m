@@ -978,9 +978,11 @@
             UIButton *button = (UIButton *)subview;
             button.imageView.image = [button.imageView.image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
             button.tintColor = [UIColor systemTealColor];
-            if(!button.imageView.image){
+            if(@available(iOS 13.0, *)) nil;
+            else{
                 NSLog(@"missing image %d", button==_saveButton);
                 button.titleLabel.font = [UIFont systemFontOfSize:18 weight:UIFontWeightMedium];
+                [button setImage:nil forState:UIControlStateNormal];
                 if(button==_exitButton) [button setTitle:[LocalizationHelper localizedStringForKey:@"Exit"] forState:UIControlStateNormal];
                 if(button==trashCanButton) [button setTitle:[LocalizationHelper localizedStringForKey:@"Del"] forState:UIControlStateNormal];
                 if(button==undoButton) [button setTitle:[LocalizationHelper localizedStringForKey:@"Undo"] forState:UIControlStateNormal];
@@ -988,6 +990,7 @@
                 if(button==_loadButton) [button setTitle:[LocalizationHelper localizedStringForKey:@"Load"] forState:UIControlStateNormal];
                 if(button==_addButton) [button setTitle:[LocalizationHelper localizedStringForKey:@"Add"] forState:UIControlStateNormal];
                 if(button==_editButton) [button setTitle:[LocalizationHelper localizedStringForKey:@"Edit"] forState:UIControlStateNormal];
+
             }
         }
         [self handleMissingToolBarIcon:subview];
