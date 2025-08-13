@@ -1224,6 +1224,8 @@
     
     _oscProfilesTableViewController.currentOSCButtonLayers = self.layoutOSC.OSCButtonLayers;
     
+    // _oscProfilesTableViewController.modalPresentationStyle = UIModalPresentationCurrentContext;
+    _oscProfilesTableViewController.modalPresentationStyle = UIModalPresentationOverCurrentContext;
     [self presentViewController:_oscProfilesTableViewController animated:YES completion:nil];
 }
 

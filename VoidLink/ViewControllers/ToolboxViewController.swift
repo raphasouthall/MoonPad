@@ -26,7 +26,7 @@ import UIKit
     private let exitButton = UIButton(type: .system)
     private let pinButton = UIButton(type: .system)
     private let viewBackgroundColor = UIColor(white: 0.2, alpha: 0.8);
-    private let highlightColor = UIColor(white: 0.39, alpha: 0.8);
+    private let highlightColor = UIColor(white: 0.55, alpha: 0.8);
     private let titleLabel = UILabel()
     @objc public var specialEntries : NSMutableArray = ["widgetSwitchTool", "widgetLayoutTool", "bringUpSoftKeyboard", "enterPip"]
     private let specialEntryAliasDic : [String:String] = [
@@ -88,7 +88,8 @@ import UIKit
         view.backgroundColor = viewBackgroundColor
         tableView.backgroundColor = .clear
         tableView.rowHeight = isIPhone() ? 47 : 60
-        tableView.separatorColor = highlightColor
+        tableView.separatorColor = .white.withAlphaComponent(0.33)
+        tableView.separatorInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
         // Configure buttons
         addButton.setTitle(SwiftLocalizationHelper.localizedString(forKey: "Add / Duplicate"), for: .normal)
         deleteButton.setTitle(SwiftLocalizationHelper.localizedString(forKey: "Delete"), for: .normal)
