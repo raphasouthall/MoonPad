@@ -1403,6 +1403,8 @@ BOOL isCustomResolution(int resolutionSelected) {
         [self.gyroModeSelector setEnabled:false forSegmentAtIndex:1];
         [self.gyroModeSelector setEnabled:false forSegmentAtIndex:3];
     }
+    CMMotionManager *motionManager = [[CMMotionManager alloc] init];
+    [self.gyroModeSelector setEnabled:[motionManager isGyroAvailable] forSegmentAtIndex:2];
     
     [self.emulatedControllerTypeSelector setSelectedSegmentIndex:[self controllerTypeToSegmentIndex:currentSettings.emulatedControllerType.intValue]];
     [self.emulatedControllerTypeSelector addTarget:self action:@selector(emulatedControllerTypeChanged:) forControlEvents:(UIControlEventValueChanged)]; // Update label display when slider is being moved.
