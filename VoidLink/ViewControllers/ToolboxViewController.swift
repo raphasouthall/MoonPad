@@ -149,8 +149,8 @@ import UIKit
         NSLayoutConstraint.activate([
             
             // Set the width and height of the view
-            view.widthAnchor.constraint(equalTo: view.superview!.widthAnchor, multiplier: isIPhone() ? 0.6 : 0.8),
-            view.heightAnchor.constraint(equalTo: view.superview!.heightAnchor, multiplier: 0.99),
+            view.widthAnchor.constraint(equalTo: view.superview!.widthAnchor, multiplier: isIPhone() ? 0.6 : 0.52),
+            view.heightAnchor.constraint(equalTo: view.superview!.heightAnchor, multiplier: 0.93),
             // Set the width and height of the view
             //view.leadingAnchor.constraint(equalTo: view.superview!.leadingAnchor, constant: 60),
             //view.trailingAnchor.constraint(equalTo: view.superview!.trailingAnchor, constant: -60),
@@ -310,6 +310,7 @@ import UIKit
         // Configure cell appearance
         cell.backgroundColor = .clear // Set background color of the cell
         cell.textLabel?.textColor = UIColor.white // Set font color of the text
+        cell.textLabel?.font = UIFont.systemFont(ofSize: 18.5)
         
         
         // Set selected background view

@@ -247,6 +247,7 @@
     toolBoxViewController = [[ToolboxViewController alloc] init];
     toolBoxViewController.specialEntryDelegate = self;
     toolBoxViewController.specialEntries = oldToolboxVC.specialEntries;
+    toolBoxViewController.modalPresentationStyle = UIModalPresentationOverCurrentContext;
     [self presentViewController:toolBoxViewController animated:YES completion:^{
         //[self->toolBoxViewController setupConstraints];
     }];
