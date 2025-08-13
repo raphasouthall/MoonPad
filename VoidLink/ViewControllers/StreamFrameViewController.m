@@ -834,7 +834,7 @@
 - (void)extScreenDidConnect:(NSNotification *)notification {
     Log(LOG_I, @"External Screen Connected");
     if ([self isAirPlayEnabled] && [notification.object isKindOfClass:[UIScreen class]]) {
-        UIScreen *extScreen = (UIScreen *)notification.object;
+        // UIScreen *extScreen = (UIScreen *)notification.object;
         if (_streamVideoRenderView) {
              // Remove from current superview before passing it
              [_streamVideoRenderView removeFromSuperview];
