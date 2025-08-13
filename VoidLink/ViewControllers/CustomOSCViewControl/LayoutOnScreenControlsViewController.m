@@ -1241,7 +1241,8 @@
     OnScreenWidgetView* widget = (OnScreenWidgetView* )sender;
     [self.layoutOSC updateGuidelinesForOnScreenWidget:widget];
     [self.view bringSubviewToFront:widget];
-    trashCanButton.tintColor = [self layerIsOverlappingWithTrashcanButton:widget.layer] ? [UIColor redColor] : trashCanStoryBoardColor;
+    trashCanButton.tintColor = trashCanButton.titleLabel.textColor = [self layerIsOverlappingWithTrashcanButton:widget.layer] ? [UIColor redColor] : trashCanStoryBoardColor;
+
     self.undoButton.alpha = 1.0;
 }
 
@@ -1292,10 +1293,8 @@
 
     // -------- for OSC buttons
     [self.layoutOSC touchesMoved:touches withEvent:event];
-    if ([self layerIsOverlappingWithTrashcanButton:self.layoutOSC.layerBeingDragged]) { // check if user is dragging around a button and hovering it over the trash can button
-        trashCanButton.tintColor = [UIColor redColor];
-    }
-    else trashCanButton.tintColor = trashCanStoryBoardColor;
+    
+    trashCanButton.tintColor = trashCanButton.tintColor = [self layerIsOverlappingWithTrashcanButton:self.layoutOSC.layerBeingDragged] ? [UIColor redColor] : trashCanStoryBoardColor;
 }
 
 - (bool)touchWithinTashcanButton:(UITouch* )touch {
@@ -1369,7 +1368,7 @@
     }
     
     
-    trashCanButton.tintColor = trashCanStoryBoardColor;
+    trashCanButton.tintColor = trashCanButton.titleLabel.textColor = trashCanStoryBoardColor;
     widgetPanelMovedByTouch = false;
 }
 
