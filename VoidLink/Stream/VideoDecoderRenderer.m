@@ -94,6 +94,9 @@ extern int ff_isom_write_av1c(AVIOContext *pb, const uint8_t *buf, int size,
     _displayLayer.bounds = CGRectMake(0, 0, videoSize.width, videoSize.height);
     [CATransaction commit];
 
+    NSLog(@"MoonPad: reinitializeDisplayLayer _view.bounds=%@ aspect=%.3f videoSize=%@",
+          NSStringFromCGRect(_view.bounds), _streamAspectRatio, NSStringFromCGSize(videoSize));
+
     // Hide the layer until we get an IDR frame. This ensures we
     // can see the loading progress label as the stream is starting.
     _displayLayer.hidden = YES;

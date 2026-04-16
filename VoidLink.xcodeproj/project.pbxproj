@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		09251335EF4D116EE580A567 /* ZIPFoundation in Frameworks */ = {isa = PBXBuildFile; productRef = 8188CE136E37B8D2506E2CFC /* ZIPFoundation */; };
 		180345E12E819877004AF36F /* libopus-sim.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 180345E02E819877004AF36F /* libopus-sim.a */; };
 		180E6E372E93BFDB0067C73A /* AlertControllerUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 180E6E362E93BFDB0067C73A /* AlertControllerUtil.swift */; };
 		1817B61E2E6FD04D000D938D /* SafeTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1817B61D2E6FD04D000D938D /* SafeTimer.swift */; };
@@ -18,7 +19,6 @@
 		18416EA42EBB3DCE00AE0124 /* UITouchUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18416EA32EBB3DCE00AE0124 /* UITouchUtil.swift */; };
 		1850C82A2E667E4000845308 /* MicHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1850C8292E667E4000845308 /* MicHandler.swift */; };
 		18729EDE2E8BD68800101194 /* UUIDHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18729EDD2E8BD68800101194 /* UUIDHelper.swift */; };
-		18780CC72F10D66000B90483 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18780CC62F10D66000B90483 /* StoreKit.framework */; };
 		18780CCA2F10D6CC00B90483 /* IAPManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18780CC92F10D6CC00B90483 /* IAPManager.swift */; };
 		187F4B282E04658A00EECC59 /* WidgetPanelStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = 187F4B272E04658A00EECC59 /* WidgetPanelStackView.m */; };
 		1888C1922E24C33100108730 /* AboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1888C1912E24C33100108730 /* AboutViewController.swift */; };
@@ -40,6 +40,9 @@
 		2AC1E3832F507D80004F76C0 /* GenericUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AC1E3822F507D80004F76C0 /* GenericUtils.swift */; };
 		3A4A3A112F0C000100000001 /* OSCProfilesTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A4A3A102F0C000100000001 /* OSCProfilesTableViewController.swift */; };
 		3A4A3A132F0C000100000003 /* LayoutOnScreenControlsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A4A3A122F0C000100000002 /* LayoutOnScreenControlsViewController.swift */; };
+		44214B9259EE435BF866A6BC /* PS1_FLEX.manicskin in Resources */ = {isa = PBXBuildFile; fileRef = A818274F68D669589E78A7C6 /* PS1_FLEX.manicskin */; };
+		5E936130B2308C28F41CFBA4 /* SkinInputBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77D03485220C03362E2AEF7A /* SkinInputBridge.swift */; };
+		661134F1A87A57FA1EE0D7C7 /* SkinParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB799A6B7C44CBFAC0A2F94D /* SkinParser.swift */; };
 		840751B32BF49C050096B657 /* CustomTapGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 840751B22BF49C050096B657 /* CustomTapGestureRecognizer.m */; };
 		84203F232C5F24C00032EEED /* OnScreenWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84203F222C5F24C00032EEED /* OnScreenWidgetView.swift */; };
 		84351B0E2C29ACCB00A77989 /* LayoutOnScreenControls.m in Sources */ = {isa = PBXBuildFile; fileRef = 84351B072C29ACCA00A77989 /* LayoutOnScreenControls.m */; };
@@ -63,6 +66,7 @@
 		84E1CDFA2C4FE83400547904 /* SwiftLocalizationHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84E1CDF92C4FE83400547904 /* SwiftLocalizationHelper.swift */; };
 		84FD0B512C31338D006B5BE5 /* LocalizationHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 84FD0B502C31338D006B5BE5 /* LocalizationHelper.m */; };
 		84FD0B542C3134A6006B5BE5 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 84FD0B532C3134A6006B5BE5 /* Localizable.xcstrings */; };
+		8ED3725908B130CE6299B5FA /* SkinControllerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 512F4840EEDFB78983DC9FBD /* SkinControllerManager.swift */; };
 		9777AAF32E2CF7A400D7FBAF /* Shaders-Linear.metal in Sources */ = {isa = PBXBuildFile; fileRef = 9777AAF22E2CF7A400D7FBAF /* Shaders-Linear.metal */; };
 		97E20DCF2E21647A000D5DCA /* Shaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = 97E20DCD2E21647A000D5DCA /* Shaders.metal */; };
 		97E20DD02E21647A000D5DCA /* MetalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 97E20DCC2E21647A000D5DCA /* MetalViewController.m */; };
@@ -99,7 +103,11 @@
 		98D5856D1C0EA79600F6CC00 /* TemporaryHost.m in Sources */ = {isa = PBXBuildFile; fileRef = 98D5856C1C0EA79600F6CC00 /* TemporaryHost.m */; };
 		98D585701C0ED0E800F6CC00 /* TemporarySettings.m in Sources */ = {isa = PBXBuildFile; fileRef = 98D5856F1C0ED0E800F6CC00 /* TemporarySettings.m */; };
 		A1B2C3D42F90000100ABCDEF /* AbstractGamepadOverlayWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D32F90000100ABCDEF /* AbstractGamepadOverlayWidgetView.swift */; };
+		A9960AD1363C62CF9EEC870D /* PS1.manicskin in Resources */ = {isa = PBXBuildFile; fileRef = 900AF5C456D0265E94AFEEE8 /* PS1.manicskin */; };
+		DBD17301CDFE30777701EA71 /* SkinThumbstickView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09338A49929FD3CE52DA5A42 /* SkinThumbstickView.swift */; };
 		DC1F5A07206436B20037755F /* ConnectionHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = DC1F5A06206436B20037755F /* ConnectionHelper.m */; };
+		E268F64AAB58F17AD2538EB5 /* SkinRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2283F0728CCA186ECE10A751 /* SkinRenderer.swift */; };
+		EB6D68ABF6D8BF671F3E4B65 /* SkinButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBF1807E44FDDC7843129BF2 /* SkinButtonView.swift */; };
 		F74BEF9C2C1A705600224667 /* OpenSSL in Frameworks */ = {isa = PBXBuildFile; productRef = F74BEF9B2C1A705600224667 /* OpenSSL */; };
 		FB1A674D2131E65900507771 /* KeyboardSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = FB1A674C2131E65900507771 /* KeyboardSupport.m */; };
 		FB1D599A1BBCCD7E00F482CA /* AppCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = FB1D59991BBCCD7E00F482CA /* AppCollectionView.m */; };
@@ -147,6 +155,7 @@
 		FBD3495319FF36FB002D2A60 /* SWRevealViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FBD3495219FF36FB002D2A60 /* SWRevealViewController.m */; };
 		FBD349621A0089F6002D2A60 /* DataManager.m in Sources */ = {isa = PBXBuildFile; fileRef = FBD349611A0089F6002D2A60 /* DataManager.m */; };
 		FBDE86E619F82297001C18A8 /* UIAppView.m in Sources */ = {isa = PBXBuildFile; fileRef = FBDE86E519F82297001C18A8 /* UIAppView.m */; };
+		FEFF138BC3253061A53AD8A2 /* SkinPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9015C981926CD3E0DAC2C08B /* SkinPickerView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -174,6 +183,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		09338A49929FD3CE52DA5A42 /* SkinThumbstickView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SkinThumbstickView.swift; sourceTree = "<group>"; };
 		180345E02E819877004AF36F /* libopus-sim.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libopus-sim.a"; sourceTree = "<group>"; };
 		180E6E362E93BFDB0067C73A /* AlertControllerUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertControllerUtil.swift; sourceTree = "<group>"; };
 		1817B61D2E6FD04D000D938D /* SafeTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafeTimer.swift; sourceTree = "<group>"; };
@@ -201,12 +211,15 @@
 		18D43D7E2F050240008C326F /* PressureCurve.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PressureCurve.swift; sourceTree = "<group>"; };
 		18E4BCE92E891895000A8657 /* MotionHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotionHandler.swift; sourceTree = "<group>"; };
 		18FCADAE2ECAC23200787A96 /* PencilHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PencilHandler.swift; sourceTree = "<group>"; };
+		2283F0728CCA186ECE10A751 /* SkinRenderer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SkinRenderer.swift; sourceTree = "<group>"; };
 		2A039E562F72892B00546768 /* VoidLinkPreview.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VoidLinkPreview.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2A7113FC2F5A6C65001D852D /* ThemeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeManager.swift; sourceTree = "<group>"; };
 		2AC1E3822F507D80004F76C0 /* GenericUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenericUtils.swift; sourceTree = "<group>"; };
 		3A4A3A102F0C000100000001 /* OSCProfilesTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OSCProfilesTableViewController.swift; sourceTree = "<group>"; };
 		3A4A3A122F0C000100000002 /* LayoutOnScreenControlsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayoutOnScreenControlsViewController.swift; sourceTree = "<group>"; };
+		512F4840EEDFB78983DC9FBD /* SkinControllerManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SkinControllerManager.swift; sourceTree = "<group>"; };
 		693B3A9A218638CD00982F7B /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
+		77D03485220C03362E2AEF7A /* SkinInputBridge.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SkinInputBridge.swift; sourceTree = "<group>"; };
 		840751B12BF49B5A0096B657 /* CustomTapGestureRecognizer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CustomTapGestureRecognizer.h; sourceTree = "<group>"; };
 		840751B22BF49C050096B657 /* CustomTapGestureRecognizer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CustomTapGestureRecognizer.m; sourceTree = "<group>"; };
 		84203F222C5F24C00032EEED /* OnScreenWidgetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnScreenWidgetView.swift; sourceTree = "<group>"; };
@@ -246,6 +259,8 @@
 		84FD0B4F2C313343006B5BE5 /* LocalizationHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LocalizationHelper.h; sourceTree = "<group>"; };
 		84FD0B502C31338D006B5BE5 /* LocalizationHelper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LocalizationHelper.m; sourceTree = "<group>"; };
 		84FD0B532C3134A6006B5BE5 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
+		900AF5C456D0265E94AFEEE8 /* PS1.manicskin */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = file; path = PS1.manicskin; sourceTree = "<group>"; };
+		9015C981926CD3E0DAC2C08B /* SkinPickerView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SkinPickerView.swift; sourceTree = "<group>"; };
 		9777AAF22E2CF7A400D7FBAF /* Shaders-Linear.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = "Shaders-Linear.metal"; sourceTree = "<group>"; };
 		97E20DBD2E21637B000D5DCA /* SceneDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SceneDelegate.h; sourceTree = "<group>"; };
 		97E20DBE2E21637B000D5DCA /* SceneDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SceneDelegate.m; sourceTree = "<group>"; };
@@ -316,6 +331,8 @@
 		98D5856E1C0ED0E800F6CC00 /* TemporarySettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TemporarySettings.h; path = Database/TemporarySettings.h; sourceTree = "<group>"; };
 		98D5856F1C0ED0E800F6CC00 /* TemporarySettings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TemporarySettings.m; path = Database/TemporarySettings.m; sourceTree = "<group>"; };
 		A1B2C3D32F90000100ABCDEF /* AbstractGamepadOverlayWidgetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AbstractGamepadOverlayWidgetView.swift; sourceTree = "<group>"; };
+		A818274F68D669589E78A7C6 /* PS1_FLEX.manicskin */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = file; path = PS1_FLEX.manicskin; sourceTree = "<group>"; };
+		BBF1807E44FDDC7843129BF2 /* SkinButtonView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SkinButtonView.swift; sourceTree = "<group>"; };
 		DC1F5A05206436B10037755F /* ConnectionHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConnectionHelper.h; sourceTree = "<group>"; };
 		DC1F5A06206436B20037755F /* ConnectionHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConnectionHelper.m; sourceTree = "<group>"; };
 		FB1A674B2131E65900507771 /* KeyboardSupport.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KeyboardSupport.h; sourceTree = "<group>"; };
@@ -354,6 +371,7 @@
 		FB53E1421BE5DC4400CD6ECE /* IdManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IdManager.m; sourceTree = "<group>"; };
 		FB6549541A57907E001C8F39 /* DiscoveryWorker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DiscoveryWorker.h; sourceTree = "<group>"; };
 		FB6549551A57907E001C8F39 /* DiscoveryWorker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DiscoveryWorker.m; sourceTree = "<group>"; };
+		FB799A6B7C44CBFAC0A2F94D /* SkinParser.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SkinParser.swift; sourceTree = "<group>"; };
 		FB89460519F646E200339C8A /* CryptoManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CryptoManager.h; sourceTree = "<group>"; };
 		FB89460619F646E200339C8A /* CryptoManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CryptoManager.m; sourceTree = "<group>"; };
 		FB89460719F646E200339C8A /* mkcert.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mkcert.c; sourceTree = "<group>"; };
@@ -415,14 +433,14 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		2A93D5662F7D016C00C2207F /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+		2A93D5662F7D016C00C2207F /* Exceptions for "VoidLinkPreview" folder in "VoidLinkPreview" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				WidgetPickerViewController.swift,
 			);
 			target = 2A039E552F72892B00546768 /* VoidLinkPreview */;
 		};
-		2AAA4E862F76BDC6001E20DC /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+		2AAA4E862F76BDC6001E20DC /* Exceptions for "VoidLinkPreview" folder in "VoidLink" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				AbstractGamepadView.swift,
@@ -435,8 +453,30 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		18A0EE282EFBCBFB00BA853A /* SVGs */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = SVGs; sourceTree = "<group>"; };
-		2A039E572F72892B00546768 /* VoidLinkPreview */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (2AAA4E862F76BDC6001E20DC /* PBXFileSystemSynchronizedBuildFileExceptionSet */, 2A93D5662F7D016C00C2207F /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = VoidLinkPreview; sourceTree = "<group>"; };
+		18A0EE282EFBCBFB00BA853A /* SVGs */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+			);
+			explicitFileTypes = {
+			};
+			explicitFolders = (
+			);
+			path = SVGs;
+			sourceTree = "<group>";
+		};
+		2A039E572F72892B00546768 /* VoidLinkPreview */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				2AAA4E862F76BDC6001E20DC /* Exceptions for "VoidLinkPreview" folder in "VoidLink" target */,
+				2A93D5662F7D016C00C2207F /* Exceptions for "VoidLinkPreview" folder in "VoidLinkPreview" target */,
+			);
+			explicitFileTypes = {
+			};
+			explicitFolders = (
+			);
+			path = VoidLinkPreview;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -466,18 +506,26 @@
 				F74BEF9C2C1A705600224667 /* OpenSSL in Frameworks */,
 				98882A072AF60F7200C5A11C /* libavformat.a in Frameworks */,
 				FB290CF619B2C406004C83CF /* UIKit.framework in Frameworks */,
-				18780CC72F10D66000B90483 /* StoreKit.framework in Frameworks */,
 				FB290CF219B2C406004C83CF /* Foundation.framework in Frameworks */,
 				FB4679011A57048000377732 /* CoreFoundation.framework in Frameworks */,
 				182760FA2E83E57D00EC1C5C /* DequeModule in Frameworks */,
 				98181BE92791277400E43572 /* libSDL2.a in Frameworks */,
 				98882A062AF60F7000C5A11C /* libavcodec.a in Frameworks */,
+				09251335EF4D116EE580A567 /* ZIPFoundation in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		272A193049C030EBEC0BBDFF /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				ABD4F7FD91E5FF6536190AB7 /* Skins */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
 		84351B052C29ACAF00A77989 /* CustomOSC */ = {
 			isa = PBXGroup;
 			children = (
@@ -533,6 +581,20 @@
 				84E1CDF92C4FE83400547904 /* SwiftLocalizationHelper.swift */,
 			);
 			path = Localization;
+			sourceTree = "<group>";
+		};
+		90A02CF5CF063734DDC2511A /* SkinController */ = {
+			isa = PBXGroup;
+			children = (
+				FB799A6B7C44CBFAC0A2F94D /* SkinParser.swift */,
+				2283F0728CCA186ECE10A751 /* SkinRenderer.swift */,
+				BBF1807E44FDDC7843129BF2 /* SkinButtonView.swift */,
+				09338A49929FD3CE52DA5A42 /* SkinThumbstickView.swift */,
+				77D03485220C03362E2AEF7A /* SkinInputBridge.swift */,
+				9015C981926CD3E0DAC2C08B /* SkinPickerView.swift */,
+				512F4840EEDFB78983DC9FBD /* SkinControllerManager.swift */,
+			);
+			path = SkinController;
 			sourceTree = "<group>";
 		};
 		97E20DCE2E21647A000D5DCA /* Metal */ = {
@@ -594,6 +656,15 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		ABD4F7FD91E5FF6536190AB7 /* Skins */ = {
+			isa = PBXGroup;
+			children = (
+				900AF5C456D0265E94AFEEE8 /* PS1.manicskin */,
+				A818274F68D669589E78A7C6 /* PS1_FLEX.manicskin */,
+			);
+			path = Skins;
+			sourceTree = "<group>";
+		};
 		FB1A67542132419700507771 /* Moonlight TV */ = {
 			isa = PBXGroup;
 			children = (
@@ -617,6 +688,8 @@
 				2A039E572F72892B00546768 /* VoidLinkPreview */,
 				FB290CF019B2C406004C83CF /* Frameworks */,
 				FB290CEF19B2C406004C83CF /* Products */,
+				90A02CF5CF063734DDC2511A /* SkinController */,
+				272A193049C030EBEC0BBDFF /* Resources */,
 			);
 			sourceTree = "<group>";
 		};
@@ -981,8 +1054,6 @@
 				2A039E572F72892B00546768 /* VoidLinkPreview */,
 			);
 			name = VoidLinkPreview;
-			packageProductDependencies = (
-			);
 			productName = VoidLinkSwiftUI;
 			productReference = 2A039E562F72892B00546768 /* VoidLinkPreview.app */;
 			productType = "com.apple.product-type.application";
@@ -1004,6 +1075,9 @@
 				18A0EE282EFBCBFB00BA853A /* SVGs */,
 			);
 			name = VoidLink;
+			packageProductDependencies = (
+				8188CE136E37B8D2506E2CFC /* ZIPFoundation */,
+			);
 			productName = Limelight;
 			productReference = FB290CEE19B2C406004C83CF /* VoidLink.app */;
 			productType = "com.apple.product-type.application";
@@ -1042,6 +1116,7 @@
 				F74BEF9A2C1A705600224667 /* XCRemoteSwiftPackageReference "OpenSSL-Package" */,
 				182760F52E83E2EA00EC1C5C /* XCRemoteSwiftPackageReference "swift-collections" */,
 				18A0EE232EFB9B5A00BA853A /* XCRemoteSwiftPackageReference "SVGKit" */,
+				EB106DBC12E2856F3D784A8C /* XCRemoteSwiftPackageReference "ZIPFoundation" */,
 			);
 			productRefGroup = FB290CEF19B2C406004C83CF /* Products */;
 			projectDirPath = "";
@@ -1097,6 +1172,8 @@
 				843667F02D9D7173004A7D7F /* widgetTemplates.bin in Resources */,
 				84FD0B542C3134A6006B5BE5 /* Localizable.xcstrings in Resources */,
 				84351B5D2C29ADBE00A77989 /* ProfileTableViewCell.xib in Resources */,
+				A9960AD1363C62CF9EEC870D /* PS1.manicskin in Resources */,
+				44214B9259EE435BF866A6BC /* PS1_FLEX.manicskin in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1224,6 +1301,13 @@
 				84351B2D2C29AD6100A77989 /* ToolBarContainerView.m in Sources */,
 				18E4BCEA2E891895000A8657 /* MotionHandler.swift in Sources */,
 				988FCD41293B091B003050E2 /* KeyboardInputField.m in Sources */,
+				661134F1A87A57FA1EE0D7C7 /* SkinParser.swift in Sources */,
+				E268F64AAB58F17AD2538EB5 /* SkinRenderer.swift in Sources */,
+				EB6D68ABF6D8BF671F3E4B65 /* SkinButtonView.swift in Sources */,
+				DBD17301CDFE30777701EA71 /* SkinThumbstickView.swift in Sources */,
+				5E936130B2308C28F41CFBA4 /* SkinInputBridge.swift in Sources */,
+				FEFF138BC3253061A53AD8A2 /* SkinPickerView.swift in Sources */,
+				8ED3725908B130CE6299B5FA /* SkinControllerManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1290,7 +1374,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_TEAM = FRL23UV4N9;
+				DEVELOPMENT_TEAM = 3M97523V79;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
@@ -1309,7 +1393,7 @@
 				MARKETING_VERSION = 1.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.trzj.VoidLinkPreview;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.trzj.VoidLinkPreview-12012";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
@@ -1339,7 +1423,7 @@
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = FRL23UV4N9;
+				DEVELOPMENT_TEAM = 3M97523V79;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
@@ -1358,7 +1442,7 @@
 				MARKETING_VERSION = 1.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.trzj.VoidLinkPreview;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.trzj.VoidLinkPreview-12012";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
@@ -1489,7 +1573,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = x;
-				DEVELOPMENT_TEAM = FRL23UV4N9;
+				DEVELOPMENT_TEAM = 3M97523V79;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "VoidLink/Limelight-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
@@ -1533,7 +1617,7 @@
 					"$(PROJECT_DIR)/libs/FFmpeg/lib/iOS-Sim",
 				);
 				MARKETING_VERSION = 0.0.1;
-				PRODUCT_BUNDLE_IDENTIFIER = com.voidlink.tf.debug10.iOS;
+				PRODUCT_BUNDLE_IDENTIFIER = com.raphasouthall.moonpad;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1555,7 +1639,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = x;
-				DEVELOPMENT_TEAM = FRL23UV4N9;
+				DEVELOPMENT_TEAM = 3M97523V79;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "VoidLink/Limelight-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
@@ -1599,7 +1683,7 @@
 					"$(PROJECT_DIR)/libs/FFmpeg/lib/iOS-Sim",
 				);
 				MARKETING_VERSION = 0.0.1;
-				PRODUCT_BUNDLE_IDENTIFIER = com.voidlink.tf.iOS;
+				PRODUCT_BUNDLE_IDENTIFIER = com.raphasouthall.moonpad;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SKIP_INSTALL = NO;
@@ -1662,6 +1746,14 @@
 				minimumVersion = 3.0.0;
 			};
 		};
+		EB106DBC12E2856F3D784A8C /* XCRemoteSwiftPackageReference "ZIPFoundation" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/weichsel/ZIPFoundation.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.9.0;
+			};
+		};
 		F74BEF9A2C1A705600224667 /* XCRemoteSwiftPackageReference "OpenSSL-Package" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/krzyzanowskim/OpenSSL-Package.git";
@@ -1697,6 +1789,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 18A0EE232EFB9B5A00BA853A /* XCRemoteSwiftPackageReference "SVGKit" */;
 			productName = SVGKitSwift;
+		};
+		8188CE136E37B8D2506E2CFC /* ZIPFoundation */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = EB106DBC12E2856F3D784A8C /* XCRemoteSwiftPackageReference "ZIPFoundation" */;
+			productName = ZIPFoundation;
 		};
 		F74BEF9B2C1A705600224667 /* OpenSSL */ = {
 			isa = XCSwiftPackageProductDependency;

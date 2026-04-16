@@ -22,6 +22,7 @@
 #import <UIKit/UIKit.h>
 
 @class LayoutOnScreenControlsViewController;
+@class SkinControllerManager;
 
 #if TARGET_OS_TV
 @import GameController;
@@ -42,6 +43,7 @@
 @property (nonatomic, strong) MetalViewController *metalViewController;
 @property (nonatomic, strong) ImGuiRenderer *imguiView;
 @property (nonatomic, strong) UIView* virtualGamepadOverlay;
+@property (nonatomic, strong) SkinControllerManager *skinController;
 
 
 - (void)updatePreferredDisplayMode:(BOOL)streamActive;

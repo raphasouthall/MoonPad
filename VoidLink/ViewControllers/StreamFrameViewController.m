@@ -1212,6 +1212,9 @@
         // [self->_streamView showOnScreenControls];
         
         [self->_controllerSupport connectionEstablished];
+
+        // MoonPad: Load skin controller overlay
+        [self setupSkinController];
         
         if (self->_settings.statsOverlayEnabled) {
             self->_statsUpdateTimer = [NSTimer scheduledTimerWithTimeInterval:1.0f
@@ -1741,6 +1744,15 @@
     }
 
     
+    // MoonPad: Update skin controller for rotation
+    if (self.skinController) {
+        [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context) {
+            [self.skinController handleOrientationChange];
+        } completion:^(id<UIViewControllerTransitionCoordinatorContext> context) {
+            [self repositionVideoForSkin];
+        }];
+    }
+
     dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC));
     dispatch_after(delay, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         [self->_streamMan setNeedRequeuing:true];
@@ -1808,8 +1820,145 @@
 }
 
 
+
+// MARK: - MoonPad Skin Controller
+
+- (void)setupSkinController {
+    if (self.skinController != nil) return;
+
+    SkinControllerManager *skin = [[SkinControllerManager alloc] initWithSkinFilename:@"PS1.manicskin"];
+    if (!skin) {
+        NSLog(@"MoonPad: Failed to load skin PS1.manicskin");
+        return;
+    }
+
+    skin.view.frame = self.view.bounds;
+    skin.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    [self.view addSubview:skin.view];
+    self.skinController = skin;
+
+    // Reposition Metal video layer within the skin's screen area
+    [self repositionVideoForSkin];
+
+    NSLog(@"MoonPad: Skin controller loaded, videoFrame=%@", NSStringFromCGRect(skin.videoFrame));
+}
+
+- (void)repositionVideoForSkin {
+    if (!self.skinController) return;
+
+    CGRect videoFrame = self.skinController.videoFrame;
+    if (CGRectIsEmpty(videoFrame)) {
+        NSLog(@"MoonPad: repositionVideoForSkin skipped — empty videoFrame");
+        return;
+    }
+
+    // Convert from skin-view coordinates to self.view coordinates.
+    CGRect targetFrame = [self.view convertRect:videoFrame fromView:self.skinController.view];
+
+    // Metal backend: resize the Metal view; setFrame: triggers drawable resize.
+    if (self.metalViewController && self.metalViewController.view.superview) {
+        self.metalViewController.view.transform = CGAffineTransformIdentity;
+        self.metalViewController.view.frame = targetFrame;
+        [self.metalViewController.view setNeedsLayout];
+        [self.metalViewController.view layoutIfNeeded];
+    }
+
+    // AVSB backend: the AVSampleBufferDisplayLayer inside _streamVideoRenderView
+    // is positioned/sized against the render view's OLD bounds when the stream
+    // started. Changing the view's frame alone leaves the sublayer drawn at its
+    // old (now off-screen) position, which is why the video disappears.
+    //
+    // Convert the target rect into _streamView coordinates (the render view's
+    // superview) and resize it, then post the same "ScreenChanged" notification
+    // that handleViewResize uses — that triggers reinitializeDisplayLayer which
+    // re-centers and re-sizes the display layer against the new bounds. An IDR
+    // request makes the hidden layer visible again on the next keyframe.
+    if (_streamVideoRenderView) {
+        _streamVideoRenderView.transform = CGAffineTransformIdentity;
+        UIView *renderSuperview = _streamVideoRenderView.superview ?: self.view;
+        CGRect renderTargetFrame = [renderSuperview convertRect:videoFrame fromView:self.skinController.view];
+        _streamVideoRenderView.frame = renderTargetFrame;
+        _streamVideoRenderView.bounds = CGRectMake(0, 0, renderTargetFrame.size.width, renderTargetFrame.size.height);
+        // Clip the display layer to the viewport so aspect-fill overflow is cropped.
+        _streamVideoRenderView.clipsToBounds = YES;
+
+        NSLog(@"MoonPad: _streamVideoRenderView.frame=%@ bounds=%@ superview.bounds=%@",
+              NSStringFromCGRect(_streamVideoRenderView.frame),
+              NSStringFromCGRect(_streamVideoRenderView.bounds),
+              NSStringFromCGRect(renderSuperview.bounds));
+
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"ScreenChanged" object:self];
+        LiRequestIdrFrame();
+
+        // reinitializeDisplayLayer aspect-FITS the video (letterbox). For the
+        // skin viewport we want aspect-FILL (crop) so the video covers the
+        // whole viewport. Override the display layer's bounds/position here.
+        [self applyAspectFillToDisplayLayerForBounds:_streamVideoRenderView.bounds];
+    }
+
+    [_streamMan setNeedRequeuing:true];
+
+    NSLog(@"MoonPad: video repositioned to %@", NSStringFromCGRect(targetFrame));
+}
+
+- (void)applyAspectFillToDisplayLayerForBounds:(CGRect)viewBounds {
+    AVSampleBufferDisplayLayer *layer = _streamMan.videoRenderer.displayLayer;
+    if (!layer) return;
+
+    // Compute the stream aspect from the current config (width/height).
+    CGFloat aspect = (CGFloat)self.streamConfig.width / (CGFloat)self.streamConfig.height;
+    if (aspect <= 0) return;
+
+    CGFloat w = viewBounds.size.width;
+    CGFloat h = viewBounds.size.height;
+
+    // Aspect-FILL: video fully covers viewBounds, overflow is cropped.
+    CGSize videoSize;
+    if (w > h * aspect) {
+        videoSize = CGSizeMake(w, w / aspect);
+    } else {
+        videoSize = CGSizeMake(h * aspect, h);
+    }
+
+    [CATransaction begin];
+    [CATransaction setDisableActions:YES];
+    layer.position = CGPointMake(CGRectGetMidX(viewBounds), CGRectGetMidY(viewBounds));
+    layer.bounds = CGRectMake(0, 0, videoSize.width, videoSize.height);
+    [CATransaction commit];
+
+    NSLog(@"MoonPad: aspect-fill displayLayer bounds=%@ position=%@",
+          NSStringFromCGRect(layer.bounds), NSStringFromCGPoint(layer.position));
+}
+
+- (void)removeSkinController {
+    if (!self.skinController) return;
+    [self.skinController.view removeFromSuperview];
+    self.skinController = nil;
+
+    // Restore full-screen video layout.
+    if (self.metalViewController && self.metalViewController.view.superview) {
+        UIView *metalView = self.metalViewController.view;
+        metalView.transform = CGAffineTransformIdentity;
+        metalView.frame = self.view.bounds;
+        metalView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    }
+    if (_streamVideoRenderView) {
+        _streamVideoRenderView.transform = CGAffineTransformIdentity;
+        UIView *renderSuperview = _streamVideoRenderView.superview ?: self.view;
+        _streamVideoRenderView.frame = renderSuperview.bounds;
+        _streamVideoRenderView.clipsToBounds = NO;
+        _streamVideoRenderView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"ScreenChanged" object:self];
+        LiRequestIdrFrame();
+    }
+
+    [_streamMan setNeedRequeuing:true];
+}
+
 - (void)dealloc {
     NSLog(@"dealloc StreamFrameViewController %f", CACurrentMediaTime());
+    [self removeSkinController];
 }
 
 - (void)setupTimer {
