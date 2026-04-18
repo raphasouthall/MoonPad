@@ -1,42 +1,63 @@
-# VoidLink 已上架App Store.
-# VoidLink is available on App Store
-### [https://apps.apple.com/app/voidlink/id6747717070](https://apps.apple.com/cn/app/voidlink/id6747717070)
+# MoonPad
 
-<br>
+A Moonlight-based game-streaming client for iOS, focused on PC emulator streaming. Forked from [VoidLink](https://github.com/TrueZhuangJia/VoidLink), which was itself forked from the upstream [moonlight-iOS](https://github.com/moonlight-stream/moonlight-ios).
 
-# 代码 Coding
-- 代码提交在`Integration`分支。
-- For latest coding commits, go to branch `Integration`.
+## What MoonPad adds on top of VoidLink
 
-<br>
+- **Platform resolution presets** — in place of the generic 720p/1080p/4K selectors, a `Platform` mode exposes per-console base resolutions (PS1 320×240, 3DS 400×480 stacked) with a 1×–4× scale multiplier. `Safe Area`, `FullScr/Window`, and `Custom` remain for non-emulator use.
+- **Emulator controller skins** — a runtime skin system renders a console-themed overlay on top of the stream, with per-button hit areas, thumbsticks, extended-edge hit testing, and per-screen video regions. Bundled: `PS1.manicskin`, `PS1_FLEX.manicskin`, `ModernBlack.manicskin` (3DS).
+- **Dual-screen rendering for Nintendo 3DS** — the streamed composite frame is split into top and bottom screens using the skin's `screens[]` layout. An auxiliary `AVSampleBufferDisplayLayer` receives the same decoded sample buffer queue as the primary, cropped and positioned to its region.
+- **Per-region touch modes** — top screen acts as a relative-mouse trackpad; bottom screen acts as an absolute-position touchscreen with left-click press/release, so Azahar / Citra / Lime3DS register it as a native 3DS stylus touch.
+- **Canonical source layouts** — MoonPad pins the expected on-wire frame layout per platform, so a third-party skin's `inputFrame` values can't silently mismap when the PC-side capture geometry doesn't match.
 
-# 关于VoidLink. About VoidLink
-- 本项目最初基于开源项目 [moonlight-iOS] fork 而来。在此基础上，True砖家（True Zhuanjia）@ Bilibili 及其他社区开发者对项目进行了大量重构、重新设计与功能扩展，包括全新的用户界面和显著增强的功能特性。<br>我们对 moonlight-iOS 开发者的开创性工作表示衷心感谢。 <br><br>
-- VoidLink was originally forked from the open-source project [moonlight-iOS], but has since been extensively reworked, redesigned, and expanded by True砖家 (True Zhuanjia) @ Bilibili and other community developers. These contributions include a completely new user interface and significant enhancements to the application's functionality.<br>We gratefully acknowledge the foundational work of the moonlight-iOS developers.
+## Quick start — streaming a 3DS emulator
 
-<br>
+1. On the PC, install a virtual display driver (e.g. [VirtualDisplayDriver](https://github.com/itsmikethetech/Virtual-Display-Driver)) and add a 1600×1920 portrait display.
+2. In Azahar / Citra / Lime3DS, enable **Use Custom Layout** under Graphics, with:
+   - Top screen: `x=0, y=0, width=1600, height=960`
+   - Bottom screen: `x=160, y=960, width=1280, height=960`
+3. Move the emulator to the virtual display and fullscreen it.
+4. Configure Sunshine to capture that display.
+5. In MoonPad: **Settings → Resolution → Platform → 3DS → 4×** (or **Custom** with 1600×1920).
 
-# App Store 分发一次性收费声明. 
-# Statement on One-Time App Store Distribution Fee. 
-- VoidLink 的 App Store 安装费用用于覆盖通过 Apple 框架进行安全可靠应用分发的成本。同时也支持项目维护者进行持续的开发、维护，以及公众用户访问并下载官方签名版本。感谢您对项目的支持，帮助我们持续改进和优化。<br><br>
-- The App Store fee for VoidLink covers the cost of secure and trusted distribution using Apple's infrastructure. It supports ongoing development, maintenance, and access to the official signed build. Thank you for supporting the project and helping sustain ongoing improvements.  
+See the [Delta-compatible skin format docs](https://noah978.gitbook.io/delta-docs/skins) for authoring your own skins — MoonPad's loader accepts both `.manicskin` (Manic Emu) and `.deltaskin` (Delta) archives.
 
- <br>
+## Fork chain
 
-# 开发者B站号. Developer on Bilibili
+```
+moonlight-iOS       (Moonlight Game Streaming Project)
+      │ fork
+VoidLink            (True砖家 @ Bilibili + community)
+      │ fork
+MoonPad             (this project)
+```
 
-如果你在用Bilibili， 请关注`True砖家`，了解该fork的最新消息。 <br>
-If you are on Bilibili, subscribe `True砖家` to get the latest news of this fork: <br>
-https://b23.tv/A0F9v7n
+## Attribution
 
-<br>
+- **[moonlight-iOS](https://github.com/moonlight-stream/moonlight-ios)** — the Moonlight Game Streaming Project supplies the core NVIDIA GameStream / Sunshine client, the decoding pipeline, the H.264/HEVC/AV1 path, and the overwhelming majority of the codebase under MoonPad. MoonPad is a derivative work.
+- **[VoidLink](https://github.com/TrueZhuangJia/VoidLink)** — True砖家 (True Zhuanjia) and the VoidLink contributors reworked the UI, added the on-screen controller / widgets / custom-OSC editor, and built the initial skin loader (`SkinController/`) that MoonPad extends. Most of MoonPad's plumbing is their work.
+- **Controller skin format** — inspired by and directly interoperable with the skin format used by [Delta](https://github.com/rileytestut/Delta) (Riley Testut) and [Manic Emu](https://github.com/Manic-EMU/ManicEmu), both iOS emulator front-ends. MoonPad's parser reads their `info.json` layout (including `extendedEdges`, multi-screen `screens`, directional / `touchScreenX/Y` inputs) and PDF/PNG assets natively.
+- **Bundled skins**
+  - `PS1.manicskin`, `PS1_FLEX.manicskin` — shipped with VoidLink.
+  - `ModernBlack.manicskin` — 3DS skin by **stars33k**, originally distributed as a Delta-compatible `.deltaskin`.
+- **Submodules** — `moonlight-common-c`, `ENet`, `ImGui`, `X1Kit` per upstream Moonlight.
 
-# 贡献者 Contributors
-[@TrueZhuangJia](https://github.com/TrueZhuangJia) <br>
-[@All contributors from moonlight-iOS](https://github.com/moonlight-stream/moonlight-ios/graphs/contributors) <br>
-[@stefanilijev97](https://github.com/stefanilijev97/stefanilijev97) <br>
-[@Acaki](https://github.com/Acaki) <br>
-[@seastwood](https://github.com/seastwood) <br>
-[@Danos0100](https://github.com/Danos0100) <br>
-[@xzzpig](https://github.com/xzzpig) <br>
-[@King0fSpace](https://github.com/King0fSpace) <br>
+## License
+
+GPLv3, inherited from moonlight-iOS. See [LICENSE.txt](LICENSE.txt). As a derivative work of a GPLv3 project, MoonPad is itself GPLv3, and any further forks must preserve the license and this attribution chain.
+
+## Contributors
+
+From this fork (MoonPad):
+- [@raphasouthall](https://github.com/raphasouthall)
+
+From the upstream VoidLink fork:
+- [@TrueZhuangJia](https://github.com/TrueZhuangJia)
+- [@stefanilijev97](https://github.com/stefanilijev97)
+- [@Acaki](https://github.com/Acaki)
+- [@seastwood](https://github.com/seastwood)
+- [@Danos0100](https://github.com/Danos0100)
+- [@xzzpig](https://github.com/xzzpig)
+- [@King0fSpace](https://github.com/King0fSpace)
+
+From moonlight-iOS: [full contributor list](https://github.com/moonlight-stream/moonlight-ios/graphs/contributors).
