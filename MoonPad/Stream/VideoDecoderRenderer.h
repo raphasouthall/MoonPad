@@ -24,6 +24,11 @@
 
 @property (nonatomic, strong, readonly) AVSampleBufferDisplayLayer *displayLayer;
 
+/// Secondary display layers that receive every enqueued sample buffer in addition to
+/// the primary `displayLayer`. Used by multi-screen skins (e.g. 3DS top + bottom).
+/// Owner (StreamFrameViewController) is responsible for layer positioning and cleanup.
+@property (nonatomic, strong) NSArray<AVSampleBufferDisplayLayer *> *auxDisplayLayers;
+
 - (id)initWithView:(UIView*)view callbacks:(id<ConnectionCallbacks>)callbacks streamAspectRatio:(float)aspectRatio;
 
 - (void)setupWithVideoFormat:(int)videoFormat width:(int)videoWidth height:(int)videoHeight frameRate:(int)frameRate fullRange:(BOOL)fullRange;

@@ -413,8 +413,15 @@ int DrSubmitDecodeUnit(PDECODE_UNIT decodeUnit);
         Log(LOG_I, @"Setting timebase for stream to %d / %d", pts.value, pts.timescale);
     }
 
-    if(appDidEnterBackgroundWithoutPip) [self->_displayLayer flush];
-    else [self->_displayLayer enqueueSampleBuffer:frame.sampleBuffer];
+    if(appDidEnterBackgroundWithoutPip) {
+        [self->_displayLayer flush];
+        for (AVSampleBufferDisplayLayer *aux in self->_auxDisplayLayers) [aux flush];
+    } else {
+        [self->_displayLayer enqueueSampleBuffer:frame.sampleBuffer];
+        for (AVSampleBufferDisplayLayer *aux in self->_auxDisplayLayers) {
+            [aux enqueueSampleBuffer:frame.sampleBuffer];
+        }
+    }
 
 #ifdef DISPLAYLINK_VERBOSE
     // Some OS-level metrics I'm not sure what to do with
@@ -436,6 +443,7 @@ int DrSubmitDecodeUnit(PDECODE_UNIT decodeUnit);
     if (frame.frameType == FRAME_TYPE_IDR) {
         // Ensure the layer is visible now
         self->_displayLayer.hidden = NO;
+        for (AVSampleBufferDisplayLayer *aux in self->_auxDisplayLayers) aux.hidden = NO;
 
         // Tell our parent VC to hide the progress indicator
         [self->_callbacks videoContentShown];
@@ -927,8 +935,15 @@ int DrSubmitDecodeUnit(PDECODE_UNIT decodeUnit);
 
     if (_framePacingMode == FramePacingModeLegacy || _framePacingMode == FramePacingModeOff) {
         // Enqueue the next frame
-        if(appDidEnterBackgroundWithoutPip) [self->_displayLayer flush];
-        else [self->_displayLayer enqueueSampleBuffer:sampleBuffer];
+        if(appDidEnterBackgroundWithoutPip) {
+            [self->_displayLayer flush];
+            for (AVSampleBufferDisplayLayer *aux in self->_auxDisplayLayers) [aux flush];
+        } else {
+            [self->_displayLayer enqueueSampleBuffer:sampleBuffer];
+            for (AVSampleBufferDisplayLayer *aux in self->_auxDisplayLayers) {
+                [aux enqueueSampleBuffer:sampleBuffer];
+            }
+        }
 
         if (du->frameType == FRAME_TYPE_IDR) {
             // Ensure the layer is visible now

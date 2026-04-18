@@ -37,7 +37,10 @@
 - (void)quitRunningApp;
 - (NSInteger)requestForBitrate:(NSInteger)bitrateKbps;
 #endif
-- (void)fillResolutionTable:(CGSize*)resolutionTable externalDisplayMode:(NSInteger)externalDisplayMode;
+- (void)fillResolutionTable:(CGSize*)resolutionTable
+        externalDisplayMode:(NSInteger)externalDisplayMode
+             platformPreset:(NSInteger)platformPreset
+              platformScale:(NSInteger)platformScale;
 - (bool)isIPhone;
 - (void)setNeedsUpdateAllowedOrientation;
 

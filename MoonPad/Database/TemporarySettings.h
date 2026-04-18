@@ -40,6 +40,8 @@
 @property (nonatomic, retain) NSNumber * pointerVelocityModeDivider;
 @property (nonatomic, retain) NSString * uniqueId;
 @property (nonatomic, retain) NSNumber * resolutionSelected;
+@property (nonatomic, retain) NSNumber * platformPreset;
+@property (nonatomic, retain) NSNumber * platformScale;
 @property (nonatomic, retain) NSNumber * externalDisplayMode;
 @property (nonatomic, retain) NSNumber * localMousePointerMode;
 @property (nonatomic, retain) NSNumber * gyroBiasX;

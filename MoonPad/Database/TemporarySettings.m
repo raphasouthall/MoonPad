@@ -129,6 +129,26 @@
     self.pointerVelocityModeDivider = settings.pointerVelocityModeDivider;
     self.unlockDisplayOrientation = settings.unlockDisplayOrientation;
     self.resolutionSelected = settings.resolutionSelected;
+    self.platformPreset = settings.platformPreset ?: @(0);
+    self.platformScale = settings.platformScale ?: @(4);
+
+    // Migrate legacy resolutionSelected indices (old 6-entry table) to the new
+    // 4-entry table [Platform=0, SafeArea=1, FullScr=2, Custom=3].
+    // Detection: platformPreset attribute absent = pre-Platform-mode install.
+    if (settings.platformPreset == nil && self.resolutionSelected != nil) {
+        int old = self.resolutionSelected.intValue;
+        if (old <= 2) {
+            // 720p / 1080p / 4K — width/height are already set correctly in
+            // the old Settings, so route through Custom to preserve them.
+            self.resolutionSelected = @(3);
+        } else if (old == 3) {
+            self.resolutionSelected = @(1); // Safe Area
+        } else if (old == 4) {
+            self.resolutionSelected = @(2); // FullScr/Window
+        } else if (old == 5) {
+            self.resolutionSelected = @(3); // Custom
+        }
+    }
     self.externalDisplayMode = settings.externalDisplayMode;
     self.localMousePointerMode = settings.localMousePointerMode;
     self.enableGraphs = settings.enableGraphs;

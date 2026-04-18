@@ -33,13 +33,44 @@ struct SkinLayout: Codable {
     let items: [SkinItem]
 }
 
+// Manic-Emu skins use `resizable`; Delta-format skins use `small`/`medium`/`large`.
+// Accept both and expose a single best-available filename via `backgroundAsset`.
 struct SkinAssets: Codable {
-    let resizable: String
+    let resizable: String?
+    let small: String?
+    let medium: String?
+    let large: String?
+
+    var backgroundAsset: String? {
+        return resizable ?? large ?? medium ?? small
+    }
 }
 
+// Delta-format skins include `inputFrame` (source rect within the stream) alongside
+// `outputFrame` (screen rect on device). MoonPad's own .manicskins only specify
+// `outputFrame` and take the full stream. Keep `inputFrame` optional.
 struct SkinScreen: Codable {
     let outputFrame: SkinRect
+    let inputFrame: SkinRect?
 }
+
+// MARK: - Runtime Video Region (ObjC-bridgeable)
+
+#if canImport(UIKit)
+import UIKit
+
+@objc public class SkinVideoRegion: NSObject {
+    /// Source crop in the skin's native source-pixel space (e.g. 400×480 for 3DS Delta skins).
+    @objc public let inputFrame: CGRect
+    /// Position on the skin view, in view points.
+    @objc public let outputFrame: CGRect
+
+    @objc public init(inputFrame: CGRect, outputFrame: CGRect) {
+        self.inputFrame = inputFrame
+        self.outputFrame = outputFrame
+    }
+}
+#endif
 
 // MARK: - Geometry Types (platform-independent Codable)
 
@@ -96,7 +127,9 @@ struct SkinItem: Codable {
     let asset: SkinItemAsset?
     let thumbstick: SkinThumbstickAsset?
     let frame: SkinRect
-    let extendedEdges: SkinEdgeInsets
+    // Delta-format skins sometimes omit `extendedEdges` (thumbsticks, some
+    // landscape items). Treat absence as zero insets.
+    let extendedEdges: SkinEdgeInsets?
     let inputs: SkinInputs
 
     var isThumbstick: Bool { thumbstick != nil }
@@ -166,29 +199,40 @@ enum SkinLoadError: Error {
 class SkinLoader {
 
     static func selectLayout(from skin: ManicSkin, isLandscape: Bool = false) -> SkinLayout? {
-        let deviceLayouts: SkinDeviceLayouts?
-        let form: String
-
-        if UIDevice.current.userInterfaceIdiom == .pad {
-            deviceLayouts = skin.representations.ipad
-            form = "standard"
+        // Prefer a device-matched representation, but fall back the other way if
+        // the skin is single-target (e.g. Delta skins often ship iphone-only).
+        let primary: SkinDeviceLayouts?
+        let fallback: SkinDeviceLayouts?
+        let isPad = UIDevice.current.userInterfaceIdiom == .pad
+        if isPad {
+            primary = skin.representations.ipad
+            fallback = skin.representations.iphone
         } else {
-            deviceLayouts = skin.representations.iphone
-            let hasNotch: Bool = {
-                if #available(iOS 13.0, *) {
-                    guard let window = UIApplication.shared.connectedScenes
-                        .compactMap({ $0 as? UIWindowScene })
-                        .first?.windows.first else { return false }
-                    return window.safeAreaInsets.top > 20
-                }
-                return false
-            }()
-            form = hasNotch ? "edgeToEdge" : "standard"
+            primary = skin.representations.iphone
+            fallback = skin.representations.ipad
         }
 
-        let orientationLayouts = (form == "edgeToEdge" ? deviceLayouts?.edgeToEdge : deviceLayouts?.standard)
-            ?? deviceLayouts?.standard
-            ?? deviceLayouts?.edgeToEdge
+        let hasNotch: Bool = {
+            if #available(iOS 13.0, *) {
+                guard let window = UIApplication.shared.connectedScenes
+                    .compactMap({ $0 as? UIWindowScene })
+                    .first?.windows.first else { return false }
+                return window.safeAreaInsets.top > 20
+            }
+            return false
+        }()
+        let preferEdgeToEdge = hasNotch && !isPad
+
+        // Walk both device reps until one yields an orientation bucket.
+        let orientationLayouts: SkinOrientationLayouts? = {
+            for reps in [primary, fallback] {
+                guard let reps else { continue }
+                if let layout = (preferEdgeToEdge ? reps.edgeToEdge : reps.standard)
+                    ?? reps.standard
+                    ?? reps.edgeToEdge { return layout }
+            }
+            return nil
+        }()
 
         if isLandscape {
             return orientationLayouts?.landscape ?? orientationLayouts?.portrait
@@ -226,16 +270,25 @@ extension SkinLoader {
         }
         let skin = try JSONDecoder().decode(ManicSkin.self, from: infoData)
 
-        // Load PDF assets, rasterize to UIImage
+        // Load PDF assets (rasterize to UIImage) and PNG assets (direct decode).
+        // Delta-format skins use PNG backgrounds; Manic-Emu skins use PDFs.
         var assets: [String: UIImage] = [:]
-        for entry in archive where entry.path.hasSuffix(".pdf") && !entry.path.contains("__MACOSX") {
-            var pdfData = Data()
+        for entry in archive where !entry.path.contains("__MACOSX") {
+            let pathLower = entry.path.lowercased()
+            let isPDF = pathLower.hasSuffix(".pdf")
+            let isPNG = pathLower.hasSuffix(".png")
+            let isJPG = pathLower.hasSuffix(".jpg") || pathLower.hasSuffix(".jpeg")
+            guard isPDF || isPNG || isJPG else { continue }
+
+            var assetData = Data()
             _ = try archive.extract(entry) { chunk in
-                pdfData.append(chunk)
+                assetData.append(chunk)
             }
             let filename = (entry.path as NSString).lastPathComponent
-            if let image = renderPDF(data: pdfData) {
-                assets[filename] = image
+            if isPDF {
+                if let image = renderPDF(data: assetData) { assets[filename] = image }
+            } else {
+                if let image = UIImage(data: assetData) { assets[filename] = image }
             }
         }
 

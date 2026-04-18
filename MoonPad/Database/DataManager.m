@@ -99,6 +99,8 @@
              statsOverlayEnabled:(BOOL)statsOverlayEnabled
         unlockDisplayOrientation:(BOOL)unlockDisplayOrientation
               resolutionSelected:(NSInteger)resolutionSelected
+                  platformPreset:(NSInteger)platformPreset
+                   platformScale:(NSInteger)platformScale
              externalDisplayMode:(NSInteger)externalDisplayMode
            localMousePointerMode:(NSInteger)localMousePointerMode
                   frameQueueSize:(NSInteger)frameQueueSize
@@ -180,6 +182,8 @@
         settingsToSave.statsOverlayLevel = [NSNumber numberWithInteger:(uint16_t)statsOverlayLevel];
         settingsToSave.unlockDisplayOrientation = unlockDisplayOrientation;
         settingsToSave.resolutionSelected = [NSNumber numberWithInteger:resolutionSelected];
+        settingsToSave.platformPreset = [NSNumber numberWithInteger:platformPreset];
+        settingsToSave.platformScale = [NSNumber numberWithInteger:platformScale];
         settingsToSave.externalDisplayMode = [NSNumber numberWithInteger:externalDisplayMode];
         settingsToSave.localMousePointerMode = [NSNumber numberWithInteger:localMousePointerMode];
         settingsToSave.backroundSessionTimer = [NSNumber numberWithInteger:backgroundSessionTimer];

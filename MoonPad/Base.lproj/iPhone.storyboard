@@ -1381,13 +1381,10 @@
                                         <nil key="highlightedColor"/>
                                         <size key="shadowOffset" width="0.0" height="0.0"/>
                                     </label>
-                                    <segmentedControl verifyAmbiguity="off" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" apportionsSegmentWidthsByContent="YES" segmentControlStyle="plain" selectedSegmentIndex="5" translatesAutoresizingMaskIntoConstraints="NO" id="7Sl-WI-zyo">
+                                    <segmentedControl verifyAmbiguity="off" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" apportionsSegmentWidthsByContent="YES" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="7Sl-WI-zyo">
                                         <rect key="frame" x="0.0" y="25.5" width="380" height="35"/>
                                         <segments>
-                                            <segment title="360p" enabled="NO"/>
-                                            <segment title="720p"/>
-                                            <segment title="1080p"/>
-                                            <segment title="4K"/>
+                                            <segment title="Platform"/>
                                             <segment title="Safe Area"/>
                                             <segment title="FullScr/Window"/>
                                             <segment title="Custom"/>
@@ -1395,6 +1392,54 @@
                                         <color key="tintColor" systemColor="linkColor"/>
                                         <color key="selectedSegmentTintColor" systemColor="linkColor"/>
                                     </segmentedControl>
+                                    <stackView verifyAmbiguity="off" opaque="NO" contentMode="scaleToFill" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="Plt-iP-stk" userLabel="PlatformInnerStack">
+                                        <rect key="frame" x="0.0" y="64.5" width="380" height="28"/>
+                                        <subviews>
+                                            <label verifyAmbiguity="off" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Platform" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Plt-iP-lbl">
+                                                <rect key="frame" x="0.0" y="0.0" width="130" height="28"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" constant="130" id="PLw-iP-con"/>
+                                                </constraints>
+                                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <segmentedControl verifyAmbiguity="off" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" apportionsSegmentWidthsByContent="YES" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="Plt-iP-sel">
+                                                <rect key="frame" x="150" y="0.0" width="232" height="28"/>
+                                                <segments>
+                                                    <segment title="PS1"/>
+                                                    <segment title="3DS"/>
+                                                </segments>
+                                                <color key="tintColor" systemColor="linkColor"/>
+                                                <color key="selectedSegmentTintColor" systemColor="linkColor"/>
+                                            </segmentedControl>
+                                        </subviews>
+                                    </stackView>
+                                    <stackView verifyAmbiguity="off" opaque="NO" contentMode="scaleToFill" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="PSc-iP-stk" userLabel="PlatformScaleInnerStack">
+                                        <rect key="frame" x="0.0" y="97.5" width="380" height="28"/>
+                                        <subviews>
+                                            <label verifyAmbiguity="off" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Scale" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PSc-iP-lbl">
+                                                <rect key="frame" x="0.0" y="0.0" width="130" height="28"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" constant="130" id="PSw-iP-con"/>
+                                                </constraints>
+                                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <segmentedControl verifyAmbiguity="off" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" apportionsSegmentWidthsByContent="YES" segmentControlStyle="plain" selectedSegmentIndex="3" translatesAutoresizingMaskIntoConstraints="NO" id="PSc-iP-sel">
+                                                <rect key="frame" x="150" y="0.0" width="232" height="28"/>
+                                                <segments>
+                                                    <segment title="1x"/>
+                                                    <segment title="2x"/>
+                                                    <segment title="3x"/>
+                                                    <segment title="4x"/>
+                                                </segments>
+                                                <color key="tintColor" systemColor="linkColor"/>
+                                                <color key="selectedSegmentTintColor" systemColor="linkColor"/>
+                                            </segmentedControl>
+                                        </subviews>
+                                    </stackView>
                                     <stackView verifyAmbiguity="off" opaque="NO" contentMode="scaleToFill" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="GWt-Kz-lZ9" userLabel="ResolutionInnerStack2">
                                         <rect key="frame" x="0.0" y="64.5" width="380" height="28"/>
                                         <subviews>
@@ -1414,7 +1459,6 @@
                                     </stackView>
                                 </subviews>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="92.5" id="0iy-1K-QwY"/>
                                     <constraint firstAttribute="width" constant="380" id="SB6-UV-nXg"/>
                                 </constraints>
                             </stackView>
@@ -3389,6 +3433,10 @@
                         <outlet property="rememberFoldStateSwitch" destination="o9n-ZA-CVk" id="PMH-eP-l9c"/>
                         <outlet property="renderingBackendSelector" destination="53H-ST-OtY" id="jhu-Pw-Ph2"/>
                         <outlet property="renderingBackendStack" destination="6hG-dw-YSr" id="qqz-lA-EO2"/>
+                        <outlet property="platformScaleSelector" destination="PSc-iP-sel" id="PSs-iP-otl"/>
+                        <outlet property="platformScaleStack" destination="PSc-iP-stk" id="PSk-iP-otl"/>
+                        <outlet property="platformSelector" destination="Plt-iP-sel" id="Pls-iP-otl"/>
+                        <outlet property="platformStack" destination="Plt-iP-stk" id="Plk-iP-otl"/>
                         <outlet property="resolutionSelector" destination="7Sl-WI-zyo" id="YMv-Xy-dF9"/>
                         <outlet property="resolutionStack" destination="sbK-BT-6rK" id="hEi-h6-te9"/>
                         <outlet property="reverseHoldButtonStack" destination="97k-tp-tqF" id="C7z-79-7jb"/>

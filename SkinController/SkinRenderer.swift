@@ -25,12 +25,24 @@ class SkinRenderer: UIView {
 
     override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
         let result = super.hitTest(point, with: event)
-        // Only intercept touches on button/stick subviews.
-        // Background and video area touches pass through to StreamView below.
-        if result === self || result === backgroundImageView {
-            return nil
+        // Button / thumbstick subviews take touches as-is.
+        if result !== self && result !== backgroundImageView {
+            return result
         }
-        return result
+        // Otherwise the touch is on skin background (or an image pixel).
+        // Let it fall through ONLY if it's over a declared video screen
+        // region — those are handled by per-region touch handlers behind
+        // the skin (trackpad on the top screen, touchscreen on the bottom).
+        // Everything else (button gutters, bezel artwork) is absorbed here
+        // so it doesn't leak down to _streamView's relative-touch mode.
+        if let layout {
+            for screen in layout.screens {
+                if scaleRect(screen.outputFrame).contains(point) {
+                    return nil
+                }
+            }
+        }
+        return self
     }
 
     // MARK: - Public API
@@ -41,15 +53,51 @@ class SkinRenderer: UIView {
         self.bridge = bridge
 
         let isLandscape = bounds.width > bounds.height
-        guard let layout = SkinLoader.selectLayout(from: skin, isLandscape: isLandscape) else { return }
+        guard let layout = SkinLoader.selectLayout(from: skin, isLandscape: isLandscape) else {
+            NSLog("MoonPad: SkinRenderer.load — no matching layout (device=%d, landscape=%d, reps iphone=%d ipad=%d)",
+                  UIDevice.current.userInterfaceIdiom.rawValue,
+                  isLandscape ? 1 : 0,
+                  skin.representations.iphone != nil ? 1 : 0,
+                  skin.representations.ipad != nil ? 1 : 0)
+            return
+        }
         self.layout = layout
 
+        NSLog("MoonPad: SkinRenderer.load — layout selected, items=%d screens=%d mapping=%.0fx%.0f bg=%@",
+              layout.items.count,
+              layout.screens.count,
+              layout.mappingSize.width,
+              layout.mappingSize.height,
+              layout.assets.backgroundAsset ?? "<none>")
         rebuildSubviews()
     }
 
     var videoFrame: CGRect? {
         guard let layout, let screen = layout.screens.first else { return nil }
         return scaleRect(screen.outputFrame)
+    }
+
+    /// All video screen regions, in the order declared by the skin.
+    /// - `outputFrame`: position on this view in view-point coordinates.
+    /// - `inputFrame`: source crop in the skin's native source-pixel coordinate system
+    ///   (for 3DS Delta skins this is a 400×480-ish space). If absent we treat it as the
+    ///   full source (i.e. no crop).
+    @objc var videoRegions: [SkinVideoRegion] {
+        guard let layout else { return [] }
+        return layout.screens.map { screen in
+            let output = scaleRect(screen.outputFrame)
+            let input: CGRect
+            if let inputRect = screen.inputFrame {
+                input = inputRect.cgRect
+            } else {
+                // No crop: assume the source fills the skin's mapping coordinate space.
+                // For single-screen skins this mirrors the old full-stream behavior.
+                input = CGRect(x: 0, y: 0,
+                               width: CGFloat(layout.mappingSize.width),
+                               height: CGFloat(layout.mappingSize.height))
+            }
+            return SkinVideoRegion(inputFrame: input, outputFrame: output)
+        }
     }
 
     func handleOrientationChange() {
@@ -101,8 +149,12 @@ class SkinRenderer: UIView {
 
         guard let layout, let bridge else { return }
 
-        // Background
-        backgroundImageView.image = assets[layout.assets.resizable]
+        // Background (supports both "resizable" [Manic-Emu] and "small/medium/large" [Delta])
+        if let bgName = layout.assets.backgroundAsset {
+            backgroundImageView.image = assets[bgName]
+        } else {
+            backgroundImageView.image = nil
+        }
 
         // Create subviews for each item
         for item in layout.items {
@@ -111,13 +163,18 @@ class SkinRenderer: UIView {
                 let view = SkinThumbstickView(item: item, knobImage: knobImage, bridge: bridge)
                 thumbstickViews.append(view)
                 addSubview(view)
-            } else {
+            } else if item.asset != nil {
                 // Button or D-pad — both handled by SkinButtonView
                 let image = item.asset.flatMap { assets[$0.normal] }
                 let view = SkinButtonView(item: item, image: image, bridge: bridge)
                 buttonViews.append(view)
                 addSubview(view)
             }
+            // Asset-less, thumbstick-less items are skipped. These are usually
+            // Delta-format "touchscreen region" markers that declare a hit area
+            // and map it to `touchScreenX`/`touchScreenY`. Creating a button
+            // view for them would eat taps without doing anything, blocking
+            // the per-region SkinRegionTouchHandler MoonPad adds behind the skin.
         }
 
         setNeedsLayout()

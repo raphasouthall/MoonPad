@@ -36,10 +36,10 @@ class SkinButtonView: UIView {
     override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
         let ext = item.extendedEdges
         let hitRect = bounds.inset(by: UIEdgeInsets(
-            top: -ext.top,
-            left: -ext.left,
-            bottom: -ext.bottom,
-            right: -ext.right
+            top: -CGFloat(ext?.top ?? 0),
+            left: -CGFloat(ext?.left ?? 0),
+            bottom: -CGFloat(ext?.bottom ?? 0),
+            right: -CGFloat(ext?.right ?? 0)
         ))
         return hitRect.contains(point)
     }

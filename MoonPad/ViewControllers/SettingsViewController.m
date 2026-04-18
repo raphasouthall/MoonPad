@@ -193,9 +193,29 @@ static const int bitrateTable[] = {
     1000000,*/
 };
 
-const int RESOLUTION_TABLE_SIZE = 6;
+// Resolution table layout: [0]=Platform (emulator native × scale),
+// [1]=Safe Area, [2]=FullScr/Window, [3]=Custom.
+const int RESOLUTION_TABLE_SIZE = 4;
 const int RESOLUTION_TABLE_CUSTOM_INDEX = RESOLUTION_TABLE_SIZE - 1;
+const int RESOLUTION_TABLE_PLATFORM_INDEX = 0;
 CGSize resolutionTable[RESOLUTION_TABLE_SIZE];
+
+// Native base resolution per emulation platform. Order must match the
+// platformSelector segments in the storyboards.
+static const CGSize platformBaseSizeTable[] = {
+    {320, 240},   // PS1
+    {400, 480},   // 3DS (top + bottom screens stacked)
+};
+const int PLATFORM_PRESET_COUNT = sizeof(platformBaseSizeTable) / sizeof(CGSize);
+const int PLATFORM_SCALE_COUNT = 4;
+
+CGSize resolutionForPlatformPreset(int presetIndex, int scale) {
+    if (presetIndex < 0 || presetIndex >= PLATFORM_PRESET_COUNT) presetIndex = 0;
+    if (scale < 1) scale = 1;
+    if (scale > PLATFORM_SCALE_COUNT) scale = PLATFORM_SCALE_COUNT;
+    CGSize base = platformBaseSizeTable[presetIndex];
+    return CGSizeMake(base.width * scale, base.height * scale);
+}
 
 -(uint16_t)controllerTypeToSegmentIndex:(uint16_t)type{
     uint16_t index;
@@ -311,7 +331,10 @@ BOOL isCustomResolution(int resolutionSelected) {
 
     NSInteger externalDisplayMode = [self.externalDisplayModeSelector selectedSegmentIndex];
     // 调用主界面方法统一填充 resolutionTable
-    [self.mainFrameViewController fillResolutionTable:resolutionTable externalDisplayMode:externalDisplayMode];
+    [self.mainFrameViewController fillResolutionTable:resolutionTable
+                                  externalDisplayMode:externalDisplayMode
+                                       platformPreset:[self getSelectedPlatformPreset]
+                                        platformScale:[self getSelectedPlatformScale]];
 
     [self updateResolutionDisplayLabel];
 }
@@ -561,6 +584,7 @@ BOOL isCustomResolution(int resolutionSelected) {
     [self.customResolutionSwitch addTarget:self action:@selector(customResolutionSwitched:) forControlEvents:UIControlEventValueChanged];
     [self.customResolutionSwitch setOn: isCustomResolution(self->tempSettings.resolutionSelected.intValue)];
     [self.resolutionSelector setEnabled:!self.customResolutionSwitch.isOn];
+    [self updatePlatformStackVisibility];
     
     [self touchModeChanged:self.touchModeSelector1]; // a special fix for iOS 14 to set hidden for the "enableOswStack"
     
@@ -1816,13 +1840,7 @@ BOOL isCustomResolution(int resolutionSelected) {
         // CGFloat fullScreenWidth = window.frame.size.width * screenScale;
         // CGFloat fullScreenHeight = window.frame.size.height * screenScale;
 
-        [self.resolutionSelector removeSegmentAtIndex:0 animated:NO]; // remove 360p
-        [self.resolutionSelector removeSegmentAtIndex:5 animated:NO]; // remove custom segment
-        // iOS12 compatibility:
-        self.resolutionSelector.selectedSegmentIndex = 3;
-        [self.resolutionSelector setNeedsLayout];
-
-        resolutionTable[5] = CGSizeMake([self->tempSettings.width integerValue], [self->tempSettings.height integerValue]); // custom initial value
+        resolutionTable[RESOLUTION_TABLE_CUSTOM_INDEX] = CGSizeMake([self->tempSettings.width integerValue], [self->tempSettings.height integerValue]); // custom initial value
         [self updateResolutionTable];
 
 
@@ -1866,10 +1884,6 @@ BOOL isCustomResolution(int resolutionSelected) {
             }
             if (!VTIsHardwareDecodeSupported(kCMVideoCodecType_HEVC)) {
                 [self.codecSelector removeSegmentAtIndex:1 animated:NO];
-                
-                // Only enable the 4K option for "recent" devices. We'll judge that by whether
-                // they support HEVC decoding (A9 or later).
-                [self.resolutionSelector setEnabled:NO forSegmentAtIndex:2];
             }
             
             switch (self->tempSettings.preferredCodec) {
@@ -1999,6 +2013,18 @@ BOOL isCustomResolution(int resolutionSelected) {
         self->_lastSelectedResolutionIndex = resolution;
         [self.resolutionSelector setSelectedSegmentIndex:resolution];
         [self.resolutionSelector addTarget:self action:@selector(newResolutionChosen) forControlEvents:UIControlEventValueChanged];
+
+        NSInteger platformPreset = self->tempSettings.platformPreset.intValue;
+        if (platformPreset < 0 || platformPreset >= PLATFORM_PRESET_COUNT) platformPreset = 0;
+        [self.platformSelector setSelectedSegmentIndex:platformPreset];
+        [self.platformSelector addTarget:self action:@selector(newPlatformChosen) forControlEvents:UIControlEventValueChanged];
+
+        NSInteger platformScale = self->tempSettings.platformScale.intValue;
+        if (platformScale < 1 || platformScale > PLATFORM_SCALE_COUNT) platformScale = PLATFORM_SCALE_COUNT;
+        [self.platformScaleSelector setSelectedSegmentIndex:platformScale - 1];
+        [self.platformScaleSelector addTarget:self action:@selector(newPlatformChosen) forControlEvents:UIControlEventValueChanged];
+
+        [self updatePlatformStackVisibility];
 
         [self.framerateSelector setSelectedSegmentIndex:framerate];
         [self.framerateSelector addTarget:self action:@selector(framerateChanged) forControlEvents:UIControlEventValueChanged];
@@ -3190,12 +3216,47 @@ BOOL isCustomResolution(int resolutionSelected) {
     [self updateResolutionDisplayLabel];
     _lastSelectedResolutionIndex = [self.resolutionSelector selectedSegmentIndex];
     [self updateResolutionTable];
+    [self updatePlatformStackVisibility];
+}
+
+- (void) newPlatformChosen {
+    [self updateResolutionTable];
+    [self updateResolutionDisplayLabel];
+    [self updateBitrate];
+}
+
+- (NSInteger)getSelectedPlatformPreset {
+    NSInteger idx = self.platformSelector.selectedSegmentIndex;
+    if (idx < 0 || idx >= PLATFORM_PRESET_COUNT) idx = 0;
+    return idx;
+}
+
+- (NSInteger)getSelectedPlatformScale {
+    NSInteger idx = self.platformScaleSelector.selectedSegmentIndex;
+    if (idx < 0 || idx >= PLATFORM_SCALE_COUNT) idx = PLATFORM_SCALE_COUNT - 1;
+    return idx + 1; // segment 0..3 -> scale 1..4
+}
+
+- (void)updatePlatformStackVisibility {
+    // Show the Platform (PS1/3DS) selector whenever a platform skin is meaningful:
+    //   - Platform resolution mode (everything is preset)
+    //   - Custom resolution mode (user picks dimensions but still wants the skin)
+    // Hide it for Safe Area / FullScr since those are device-native display modes.
+    NSInteger segIdx = self.resolutionSelector.selectedSegmentIndex;
+    BOOL customOn = self.customResolutionSwitch.isOn;
+    BOOL platformSkinRelevant = customOn || segIdx == RESOLUTION_TABLE_PLATFORM_INDEX;
+    self.platformStack.hidden = !platformSkinRelevant;
+    // The scale selector only makes sense in Platform mode (it multiplies the
+    // base resolution). In Custom the user types dimensions directly, so hide it.
+    BOOL scaleRelevant = !customOn && segIdx == RESOLUTION_TABLE_PLATFORM_INDEX;
+    self.platformScaleStack.hidden = !scaleRelevant;
 }
 
 - (void)customResolutionSwitched:(UISwitch* )sender{
     if(sender.isOn) [self promptCustomResolutionDialog];
     else [self newResolutionChosen];
     [self.resolutionSelector setEnabled:!sender.isOn];
+    [self updatePlatformStackVisibility];
 }
 
 - (void) promptCustomResolutionDialog {
@@ -3763,6 +3824,8 @@ BOOL isCustomResolution(int resolutionSelected) {
     if (self.customResolutionSwitch.isOn) {
         resolutionSelected = RESOLUTION_TABLE_CUSTOM_INDEX;
     }
+    NSInteger platformPreset = [self getSelectedPlatformPreset];
+    NSInteger platformScale = [self getSelectedPlatformScale];
     NSInteger externalDisplayMode = [self.externalDisplayModeSelector selectedSegmentIndex];
     NSInteger localMousePointerMode = [self.localMousePointerModeSelector selectedSegmentIndex];
     BOOL sendDummyEvent = self.sendDummyEventSwitch.isOn;
@@ -3834,6 +3897,8 @@ BOOL isCustomResolution(int resolutionSelected) {
                  statsOverlayEnabled:statsOverlayEnabled
             unlockDisplayOrientation:unlockDisplayOrientation
                   resolutionSelected:resolutionSelected
+                      platformPreset:platformPreset
+                       platformScale:platformScale
                  externalDisplayMode:externalDisplayMode
                localMousePointerMode:localMousePointerMode
                       frameQueueSize:frameQueueSize

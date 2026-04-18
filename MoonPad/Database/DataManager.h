@@ -122,6 +122,8 @@ typedef NS_ENUM(NSInteger, PencilTickMode) {
              statsOverlayEnabled:(BOOL)statsOverlayEnabled
         unlockDisplayOrientation:(BOOL)unlockDisplayOrientation
               resolutionSelected:(NSInteger)resolutionSelected
+                  platformPreset:(NSInteger)platformPreset
+                   platformScale:(NSInteger)platformScale
              externalDisplayMode:(NSInteger)externalDisplayMode
            localMousePointerMode:(NSInteger)localMousePointerMode
                   frameQueueSize:(NSInteger)frameQueueSize

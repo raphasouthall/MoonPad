@@ -41,6 +41,7 @@
 		3A4A3A112F0C000100000001 /* OSCProfilesTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A4A3A102F0C000100000001 /* OSCProfilesTableViewController.swift */; };
 		3A4A3A132F0C000100000003 /* LayoutOnScreenControlsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A4A3A122F0C000100000002 /* LayoutOnScreenControlsViewController.swift */; };
 		44214B9259EE435BF866A6BC /* PS1_FLEX.manicskin in Resources */ = {isa = PBXBuildFile; fileRef = A818274F68D669589E78A7C6 /* PS1_FLEX.manicskin */; };
+		44214B9359EE435BF866A6BD /* ModernBlack.manicskin in Resources */ = {isa = PBXBuildFile; fileRef = A818274F68D669589E78A7C7 /* ModernBlack.manicskin */; };
 		5E936130B2308C28F41CFBA4 /* SkinInputBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77D03485220C03362E2AEF7A /* SkinInputBridge.swift */; };
 		661134F1A87A57FA1EE0D7C7 /* SkinParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB799A6B7C44CBFAC0A2F94D /* SkinParser.swift */; };
 		840751B32BF49C050096B657 /* CustomTapGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 840751B22BF49C050096B657 /* CustomTapGestureRecognizer.m */; };
@@ -332,6 +333,7 @@
 		98D5856F1C0ED0E800F6CC00 /* TemporarySettings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TemporarySettings.m; path = Database/TemporarySettings.m; sourceTree = "<group>"; };
 		A1B2C3D32F90000100ABCDEF /* AbstractGamepadOverlayWidgetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AbstractGamepadOverlayWidgetView.swift; sourceTree = "<group>"; };
 		A818274F68D669589E78A7C6 /* PS1_FLEX.manicskin */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = file; path = PS1_FLEX.manicskin; sourceTree = "<group>"; };
+		A818274F68D669589E78A7C7 /* ModernBlack.manicskin */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = file; path = ModernBlack.manicskin; sourceTree = "<group>"; };
 		BBF1807E44FDDC7843129BF2 /* SkinButtonView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SkinButtonView.swift; sourceTree = "<group>"; };
 		DC1F5A05206436B10037755F /* ConnectionHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConnectionHelper.h; sourceTree = "<group>"; };
 		DC1F5A06206436B20037755F /* ConnectionHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConnectionHelper.m; sourceTree = "<group>"; };
@@ -661,6 +663,7 @@
 			children = (
 				900AF5C456D0265E94AFEEE8 /* PS1.manicskin */,
 				A818274F68D669589E78A7C6 /* PS1_FLEX.manicskin */,
+				A818274F68D669589E78A7C7 /* ModernBlack.manicskin */,
 			);
 			path = Skins;
 			sourceTree = "<group>";
@@ -1174,6 +1177,7 @@
 				84351B5D2C29ADBE00A77989 /* ProfileTableViewCell.xib in Resources */,
 				A9960AD1363C62CF9EEC870D /* PS1.manicskin in Resources */,
 				44214B9259EE435BF866A6BC /* PS1_FLEX.manicskin in Resources */,
+				44214B9359EE435BF866A6BD /* ModernBlack.manicskin in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

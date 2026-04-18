@@ -45,6 +45,100 @@
 - (id)initWithRefreshRate:(float)arg1 videoDynamicRange:(int)arg2;
 @end
 
+#pragma mark - SkinRegionTouchHandler
+
+// Invisible view laid over a single skin video region. Converts UITouch events
+// into Moonlight mouse events so the emulator's bottom screen becomes a
+// tap-through touchscreen, and the top screen becomes a laptop-style trackpad.
+//
+// - Touchpad mode (touchpadMode=YES): relative mouse delta per touchesMoved.
+// - Touchscreen mode (touchpadMode=NO): absolute mouse position on touchesBegan
+//   and touchesMoved; LEFT button pressed on Began, released on Ended.
+//
+// Placed in the view hierarchy directly beneath the skin view so its buttons
+// still take priority for touches that land on them.
+@interface SkinRegionTouchHandler : UIView
+/// Source rect in stream-pixel coords that this region covers. Used to translate
+/// a local tap into an absolute stream position for LiSendMousePositionEvent.
+@property (nonatomic, assign) CGRect streamRect;
+/// Total stream dimensions (reference for LiSendMousePositionEvent).
+@property (nonatomic, assign) CGSize streamSize;
+/// YES = relative deltas (touchpad). NO = absolute position + press/release (touchscreen).
+@property (nonatomic, assign) BOOL touchpadMode;
+/// Multiplier applied to touchpad deltas.
+@property (nonatomic, assign) CGFloat touchpadSensitivity;
+@end
+
+@implementation SkinRegionTouchHandler {
+    CGPoint _lastPoint;
+    BOOL _tracking;
+}
+
+- (instancetype)initWithFrame:(CGRect)frame {
+    self = [super initWithFrame:frame];
+    if (self) {
+        self.backgroundColor = [UIColor clearColor];
+        self.multipleTouchEnabled = NO;
+        self.touchpadSensitivity = 1.5f;
+        self.userInteractionEnabled = YES;
+    }
+    return self;
+}
+
+- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    UITouch *touch = touches.anyObject;
+    if (!touch) return;
+    _lastPoint = [touch locationInView:self];
+    _tracking = YES;
+
+    if (!self.touchpadMode) {
+        [self sendAbsolutePositionForPoint:_lastPoint];
+        LiSendMouseButtonEvent(BUTTON_ACTION_PRESS, BUTTON_LEFT);
+    }
+}
+
+- (void)touchesMoved:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    if (!_tracking) return;
+    UITouch *touch = touches.anyObject;
+    if (!touch) return;
+    CGPoint pt = [touch locationInView:self];
+
+    if (self.touchpadMode) {
+        CGFloat dx = (pt.x - _lastPoint.x) * self.touchpadSensitivity;
+        CGFloat dy = (pt.y - _lastPoint.y) * self.touchpadSensitivity;
+        if (dx != 0 || dy != 0) {
+            LiSendMouseMoveEvent((short)dx, (short)dy);
+        }
+    } else {
+        [self sendAbsolutePositionForPoint:pt];
+    }
+    _lastPoint = pt;
+}
+
+- (void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    if (!self.touchpadMode && _tracking) {
+        LiSendMouseButtonEvent(BUTTON_ACTION_RELEASE, BUTTON_LEFT);
+    }
+    _tracking = NO;
+}
+
+- (void)touchesCancelled:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    [self touchesEnded:touches withEvent:event];
+}
+
+- (void)sendAbsolutePositionForPoint:(CGPoint)ptInView {
+    if (self.bounds.size.width <= 0 || self.bounds.size.height <= 0) return;
+    if (self.streamSize.width <= 0 || self.streamSize.height <= 0) return;
+    CGFloat nx = ptInView.x / self.bounds.size.width;
+    CGFloat ny = ptInView.y / self.bounds.size.height;
+    CGFloat streamX = self.streamRect.origin.x + nx * self.streamRect.size.width;
+    CGFloat streamY = self.streamRect.origin.y + ny * self.streamRect.size.height;
+    LiSendMousePositionEvent((short)streamX, (short)streamY,
+                              (short)self.streamSize.width, (short)self.streamSize.height);
+}
+
+@end
+
 @implementation StreamFrameViewController {
     ControllerSupport *_controllerSupport;
     TemporarySettings *_settings;
@@ -81,6 +175,13 @@
     VideoDecoderRenderer *_videoRenderer;
     BOOL _isRestoringFromPiP;
     SafeTimer* safeTimer;
+    // Aux video views created for multi-screen skins (e.g. 3DS bottom screen).
+    // Owned here; AVSampleBufferDisplayLayers are registered on the video renderer.
+    NSMutableArray<UIView *> *_skinAuxVideoViews;
+    // Per-region touch handlers that convert iPhone touches into mouse events
+    // (touchpad for top screen, touchscreen for bottom). Only populated when a
+    // multi-region skin is active.
+    NSMutableArray<SkinRegionTouchHandler *> *_skinRegionTouchHandlers;
 
 #if !TARGET_OS_TV
     CustomEdgeSlideGestureRecognizer *_slideToSettingsRecognizer;
@@ -1823,12 +1924,60 @@
 
 // MARK: - MoonPad Skin Controller
 
+// Canonical per-platform source layout, in base-resolution pixel coords.
+// This defines how MoonPad expects each physical screen to be arranged
+// inside the incoming stream — the PC side (Sunshine capture + any
+// virtual monitor setup) MUST produce a frame matching this layout.
+//
+// 3DS: two virtual monitors stacked vertically inside a 400x480 canvas.
+//      Top screen (400x240) at (0,0); bottom (320x240) at (40,240) — i.e.
+//      the bottom monitor is horizontally centered under the top with 40px
+//      of empty gutter on each side. Sunshine's capture rect must be that
+//      400x480 region, with the top VD filling rows 0..239 and the bottom
+//      VD filling cols 40..359 of rows 240..479.
+static NSArray<NSValue *> *PlatformSourceLayoutForPreset(int preset) {
+    switch (preset) {
+        case 1: // 3DS
+            return @[
+                [NSValue valueWithCGRect:CGRectMake(0,   0,   400, 240)],
+                [NSValue valueWithCGRect:CGRectMake(40,  240, 320, 240)],
+            ];
+        case 0: // PS1 — single screen fills the stream
+        default:
+            return nil;
+    }
+}
+
+- (NSString *)skinFilenameForCurrentPlatform {
+    // Load an emulator skin for both Platform mode (0) and Custom mode (3).
+    // Platform mode picks the resolution for you; Custom mode lets you dial in
+    // the exact dimensions (e.g. 1600×1920 to match a portrait VDD) while
+    // still using the same platform skin. Safe Area (1) and FullScr (2) are
+    // device-native display modes and don't get an emulator skin.
+    // Resolution table indices (see SettingsViewController.m): 0=Platform, 1=SafeArea,
+    // 2=FullScr/Window, 3=Custom.
+    NSInteger resSel = _settings.resolutionSelected.intValue;
+    if (resSel != 0 && resSel != 3) return nil;
+    switch (_settings.platformPreset.intValue) {
+        case 0: return @"PS1.manicskin";         // PS1
+        case 1: return @"ModernBlack.manicskin"; // 3DS
+        default: return nil;
+    }
+}
+
 - (void)setupSkinController {
     if (self.skinController != nil) return;
 
-    SkinControllerManager *skin = [[SkinControllerManager alloc] initWithSkinFilename:@"PS1.manicskin"];
+    NSString *skinName = [self skinFilenameForCurrentPlatform];
+    if (!skinName) {
+        NSLog(@"MoonPad: Skin disabled (resolutionSelected=%@, platformPreset=%@)",
+              _settings.resolutionSelected, _settings.platformPreset);
+        return;
+    }
+
+    SkinControllerManager *skin = [[SkinControllerManager alloc] initWithSkinFilename:skinName];
     if (!skin) {
-        NSLog(@"MoonPad: Failed to load skin PS1.manicskin");
+        NSLog(@"MoonPad: Failed to load skin %@", skinName);
         return;
     }
 
@@ -1846,59 +1995,204 @@
 - (void)repositionVideoForSkin {
     if (!self.skinController) return;
 
-    CGRect videoFrame = self.skinController.videoFrame;
-    if (CGRectIsEmpty(videoFrame)) {
-        NSLog(@"MoonPad: repositionVideoForSkin skipped — empty videoFrame");
+    NSArray<SkinVideoRegion *> *skinRegions = self.skinController.videoRegions;
+    if (skinRegions.count == 0 || CGRectIsEmpty(skinRegions.firstObject.outputFrame)) {
+        NSLog(@"MoonPad: repositionVideoForSkin skipped — no regions");
         return;
     }
 
-    // Convert from skin-view coordinates to self.view coordinates.
-    CGRect targetFrame = [self.view convertRect:videoFrame fromView:self.skinController.view];
+    // Override the skin's inputFrame values with MoonPad's canonical per-platform
+    // source layout. Applies in both Platform mode (index 0) and Custom mode
+    // (index 3) — Custom lets the user pick arbitrary stream dimensions but the
+    // skin's source-rect proportions still come from the platform.
+    // Skins authored for Delta-emulator often use source conventions that don't
+    // match a PC-side multi-monitor capture, so MoonPad pins the source layout
+    // itself and the PC must stream to match.
+    NSArray<NSValue *> *platformLayout = nil;
+    NSInteger resSel = _settings.resolutionSelected.intValue;
+    if (resSel == 0 || resSel == 3) {
+        platformLayout = PlatformSourceLayoutForPreset(_settings.platformPreset.intValue);
+    }
 
-    // Metal backend: resize the Metal view; setFrame: triggers drawable resize.
+    NSArray<SkinVideoRegion *> *regions;
+    if (platformLayout && platformLayout.count > 0) {
+        NSMutableArray<SkinVideoRegion *> *merged = [NSMutableArray arrayWithCapacity:skinRegions.count];
+        for (NSInteger i = 0; i < skinRegions.count; i++) {
+            CGRect inputRect = (i < platformLayout.count)
+                ? [platformLayout[i] CGRectValue]
+                : skinRegions[i].inputFrame;
+            [merged addObject:[[SkinVideoRegion alloc] initWithInputFrame:inputRect
+                                                             outputFrame:skinRegions[i].outputFrame]];
+        }
+        regions = merged;
+        NSLog(@"MoonPad: using canonical platform layout (preset=%@) — %lu regions",
+              _settings.platformPreset, (unsigned long)regions.count);
+    } else {
+        regions = skinRegions;
+    }
+
+    // Source-pixel bounding box across all regions' inputFrames. For skins that
+    // declare no inputFrame we fall back to the stream's own dimensions.
+    CGFloat srcW = 0, srcH = 0;
+    BOOL anyInputFrame = NO;
+    for (SkinVideoRegion *r in regions) {
+        if (!CGRectIsEmpty(r.inputFrame)) anyInputFrame = YES;
+        srcW = MAX(srcW, CGRectGetMaxX(r.inputFrame));
+        srcH = MAX(srcH, CGRectGetMaxY(r.inputFrame));
+    }
+    if (srcW <= 0 || srcH <= 0) {
+        srcW = self.streamConfig.width;
+        srcH = self.streamConfig.height;
+    }
+
+    // Multi-region mode (e.g. 3DS dual-screen): crop each region from the source.
+    // Single-region with inputFrame falls back to legacy aspect-fill for now so
+    // existing PS1/flat skins keep behaving the way they do today.
+    BOOL multiRegion = regions.count > 1 && anyInputFrame;
+
+    [self teardownSkinAuxViews];
+
+    SkinVideoRegion *primary = regions.firstObject;
+    CGRect primaryTarget = [self.view convertRect:primary.outputFrame fromView:self.skinController.view];
+
+    // Metal backend: single region only (Phase-2 multi-screen is AVSB for now).
     if (self.metalViewController && self.metalViewController.view.superview) {
         self.metalViewController.view.transform = CGAffineTransformIdentity;
-        self.metalViewController.view.frame = targetFrame;
+        self.metalViewController.view.frame = primaryTarget;
         [self.metalViewController.view setNeedsLayout];
         [self.metalViewController.view layoutIfNeeded];
     }
 
-    // AVSB backend: the AVSampleBufferDisplayLayer inside _streamVideoRenderView
-    // is positioned/sized against the render view's OLD bounds when the stream
-    // started. Changing the view's frame alone leaves the sublayer drawn at its
-    // old (now off-screen) position, which is why the video disappears.
-    //
-    // Convert the target rect into _streamView coordinates (the render view's
-    // superview) and resize it, then post the same "ScreenChanged" notification
-    // that handleViewResize uses — that triggers reinitializeDisplayLayer which
-    // re-centers and re-sizes the display layer against the new bounds. An IDR
-    // request makes the hidden layer visible again on the next keyframe.
+    // AVSB backend — region 0 reuses the existing stream render view.
     if (_streamVideoRenderView) {
         _streamVideoRenderView.transform = CGAffineTransformIdentity;
         UIView *renderSuperview = _streamVideoRenderView.superview ?: self.view;
-        CGRect renderTargetFrame = [renderSuperview convertRect:videoFrame fromView:self.skinController.view];
+        CGRect renderTargetFrame = [renderSuperview convertRect:primary.outputFrame fromView:self.skinController.view];
         _streamVideoRenderView.frame = renderTargetFrame;
         _streamVideoRenderView.bounds = CGRectMake(0, 0, renderTargetFrame.size.width, renderTargetFrame.size.height);
-        // Clip the display layer to the viewport so aspect-fill overflow is cropped.
         _streamVideoRenderView.clipsToBounds = YES;
 
-        NSLog(@"MoonPad: _streamVideoRenderView.frame=%@ bounds=%@ superview.bounds=%@",
-              NSStringFromCGRect(_streamVideoRenderView.frame),
-              NSStringFromCGRect(_streamVideoRenderView.bounds),
-              NSStringFromCGRect(renderSuperview.bounds));
+        NSLog(@"MoonPad: primary _streamVideoRenderView.frame=%@ multiRegion=%d srcSize=%.0fx%.0f",
+              NSStringFromCGRect(_streamVideoRenderView.frame), multiRegion, srcW, srcH);
 
         [[NSNotificationCenter defaultCenter] postNotificationName:@"ScreenChanged" object:self];
         LiRequestIdrFrame();
 
-        // reinitializeDisplayLayer aspect-FITS the video (letterbox). For the
-        // skin viewport we want aspect-FILL (crop) so the video covers the
-        // whole viewport. Override the display layer's bounds/position here.
-        [self applyAspectFillToDisplayLayerForBounds:_streamVideoRenderView.bounds];
+        if (multiRegion) {
+            [self applyCropToLayer:_streamMan.videoRenderer.displayLayer
+                        clipBounds:_streamVideoRenderView.bounds
+                        inputFrame:primary.inputFrame
+                              srcW:srcW
+                              srcH:srcH];
+        } else {
+            [self applyAspectFillToDisplayLayerForBounds:_streamVideoRenderView.bounds];
+        }
+    }
+
+    // Regions 1+ — create a clipping view + aux display layer per extra screen.
+    if (multiRegion && regions.count > 1) {
+        _skinAuxVideoViews = [NSMutableArray arrayWithCapacity:regions.count - 1];
+        NSMutableArray<AVSampleBufferDisplayLayer *> *auxLayers = [NSMutableArray arrayWithCapacity:regions.count - 1];
+
+        for (NSInteger i = 1; i < regions.count; i++) {
+            SkinVideoRegion *r = regions[i];
+            CGRect outputFrame = [self.view convertRect:r.outputFrame fromView:self.skinController.view];
+            if (CGRectIsEmpty(outputFrame) || CGRectIsEmpty(r.inputFrame)) continue;
+
+            UIView *clipView = [[UIView alloc] initWithFrame:outputFrame];
+            clipView.clipsToBounds = YES;
+            clipView.backgroundColor = [UIColor blackColor];
+            clipView.userInteractionEnabled = NO;
+            // Sit directly behind the skin (so the skin buttons stay on top).
+            [self.view insertSubview:clipView belowSubview:self.skinController.view];
+
+            AVSampleBufferDisplayLayer *layer = [[AVSampleBufferDisplayLayer alloc] init];
+            layer.videoGravity = AVLayerVideoGravityResize;
+            layer.backgroundColor = [UIColor blackColor].CGColor;
+            [clipView.layer addSublayer:layer];
+
+            [self applyCropToLayer:layer
+                        clipBounds:clipView.bounds
+                        inputFrame:r.inputFrame
+                              srcW:srcW
+                              srcH:srcH];
+
+            [_skinAuxVideoViews addObject:clipView];
+            [auxLayers addObject:layer];
+            NSLog(@"MoonPad: aux region[%ld] clip=%@ input=%@", (long)i,
+                  NSStringFromCGRect(outputFrame), NSStringFromCGRect(r.inputFrame));
+        }
+
+        _streamMan.videoRenderer.auxDisplayLayers = auxLayers;
+    } else {
+        _streamMan.videoRenderer.auxDisplayLayers = @[];
+    }
+
+    // Per-region touch handlers (multi-region skins only — i.e. 3DS dual-screen).
+    // Convention: first region = touchpad (relative mouse); subsequent regions =
+    // touchscreens (absolute mouse position + left-click).
+    if (multiRegion) {
+        _skinRegionTouchHandlers = [NSMutableArray arrayWithCapacity:regions.count];
+        // Translate base-pixel inputFrames into stream-pixel coords for absolute positioning.
+        CGFloat streamScaleX = (srcW > 0) ? (CGFloat)self.streamConfig.width / srcW : 1;
+        CGFloat streamScaleY = (srcH > 0) ? (CGFloat)self.streamConfig.height / srcH : 1;
+        for (NSInteger i = 0; i < regions.count; i++) {
+            SkinVideoRegion *r = regions[i];
+            CGRect outputFrame = [self.view convertRect:r.outputFrame fromView:self.skinController.view];
+            if (CGRectIsEmpty(outputFrame) || CGRectIsEmpty(r.inputFrame)) continue;
+
+            SkinRegionTouchHandler *handler = [[SkinRegionTouchHandler alloc] initWithFrame:outputFrame];
+            handler.streamRect = CGRectMake(r.inputFrame.origin.x * streamScaleX,
+                                             r.inputFrame.origin.y * streamScaleY,
+                                             r.inputFrame.size.width * streamScaleX,
+                                             r.inputFrame.size.height * streamScaleY);
+            handler.streamSize = CGSizeMake(self.streamConfig.width, self.streamConfig.height);
+            handler.touchpadMode = (i == 0); // top screen = touchpad, others = touchscreen
+            [self.view insertSubview:handler belowSubview:self.skinController.view];
+            [_skinRegionTouchHandlers addObject:handler];
+            NSLog(@"MoonPad: touch handler region[%ld] mode=%@ streamRect=%@",
+                  (long)i, handler.touchpadMode ? @"touchpad" : @"touchscreen",
+                  NSStringFromCGRect(handler.streamRect));
+        }
     }
 
     [_streamMan setNeedRequeuing:true];
+}
 
-    NSLog(@"MoonPad: video repositioned to %@", NSStringFromCGRect(targetFrame));
+// Position an AVSampleBufferDisplayLayer inside a clipping view so that the
+// source rect `inputFrame` (in source-pixel coords, with the skin's source size
+// being `srcW × srcH`) exactly fills the clip view. videoGravity must be
+// AVLayerVideoGravityResize (the layer stretches to its bounds).
+- (void)applyCropToLayer:(AVSampleBufferDisplayLayer *)layer
+              clipBounds:(CGRect)clipBounds
+              inputFrame:(CGRect)inputFrame
+                    srcW:(CGFloat)srcW
+                    srcH:(CGFloat)srcH {
+    if (!layer || inputFrame.size.width <= 0 || inputFrame.size.height <= 0 || srcW <= 0 || srcH <= 0) return;
+
+    CGFloat sx = clipBounds.size.width / inputFrame.size.width;
+    CGFloat sy = clipBounds.size.height / inputFrame.size.height;
+    CGFloat fullW = srcW * sx;
+    CGFloat fullH = srcH * sy;
+
+    [CATransaction begin];
+    [CATransaction setDisableActions:YES];
+    layer.bounds = CGRectMake(0, 0, fullW, fullH);
+    // Anchor defaults to (0.5, 0.5) — position is the layer's center in its parent.
+    // Placing the layer so that its `inputFrame` sub-rect lines up with the clip view's origin.
+    layer.position = CGPointMake(-inputFrame.origin.x * sx + fullW / 2.0,
+                                 -inputFrame.origin.y * sy + fullH / 2.0);
+    [CATransaction commit];
+}
+
+- (void)teardownSkinAuxViews {
+    for (UIView *v in _skinAuxVideoViews) [v removeFromSuperview];
+    _skinAuxVideoViews = nil;
+    for (SkinRegionTouchHandler *h in _skinRegionTouchHandlers) [h removeFromSuperview];
+    _skinRegionTouchHandlers = nil;
+    if (_streamMan.videoRenderer) {
+        _streamMan.videoRenderer.auxDisplayLayers = @[];
+    }
 }
 
 - (void)applyAspectFillToDisplayLayerForBounds:(CGRect)viewBounds {
@@ -1932,6 +2226,7 @@
 
 - (void)removeSkinController {
     if (!self.skinController) return;
+    [self teardownSkinAuxViews];
     [self.skinController.view removeFromSuperview];
     self.skinController = nil;
 

@@ -1827,7 +1827,19 @@ static NSMutableSet* hostList;
 //    });
 //}
 
--(void) fillResolutionTable:(CGSize*)resolutionTable externalDisplayMode:(NSInteger)externalDisplayMode{
+// Native base resolution per emulation platform. Order must match the
+// platformSelector segments in the storyboards and SettingsViewController.
+static const CGSize mainFramePlatformBaseSizeTable[] = {
+    {320, 240},   // PS1
+    {400, 480},   // 3DS (top + bottom screens stacked)
+};
+static const int MAIN_FRAME_PLATFORM_PRESET_COUNT =
+    sizeof(mainFramePlatformBaseSizeTable) / sizeof(CGSize);
+
+-(void) fillResolutionTable:(CGSize*)resolutionTable
+        externalDisplayMode:(NSInteger)externalDisplayMode
+             platformPreset:(NSInteger)platformPreset
+              platformScale:(NSInteger)platformScale {
     UIWindow *window = self.view.window;
     NSLog(@" window %@", window);
 
@@ -1842,35 +1854,36 @@ static NSMutableSet* hostList;
         appWindowWidth = bounds.size.width * screenScale;
         appWindowHeight = bounds.size.height * screenScale;
     }
-    
-    bool needSwapWidthAndHeight = appWindowWidth < appWindowHeight;
-    
-    resolutionTable[0] = CGSizeMake(1280, 720);
-    resolutionTable[1] = CGSizeMake(1920, 1080);
-    resolutionTable[2] = CGSizeMake(3840, 2160);
-    
-    for(uint8_t i=0;i<6;i++){
-        CGFloat longSideLen = resolutionTable[i].height > resolutionTable[i].width ? resolutionTable[i].height : resolutionTable[i].width;
-        CGFloat shortSideLen = resolutionTable[i].height < resolutionTable[i].width ? resolutionTable[i].height : resolutionTable[i].width;
-        if(needSwapWidthAndHeight) resolutionTable[i] = CGSizeMake(shortSideLen, longSideLen);
-        else resolutionTable[i] = CGSizeMake(longSideLen, shortSideLen);
-    }
 
-    // add app window resolution and not swap width and height
-    resolutionTable[3] = CGSizeMake(safeAreaWidth, appWindowHeight);
-    resolutionTable[4] = CGSizeMake(appWindowWidth, appWindowHeight);
+    // Table layout: [0]=Platform, [1]=SafeArea, [2]=FullScr/Window, [3]=Custom.
+    // Index 3 (Custom) is written by the caller.
+    if (platformPreset < 0 || platformPreset >= MAIN_FRAME_PLATFORM_PRESET_COUNT) platformPreset = 0;
+    if (platformScale < 1) platformScale = 1;
+    if (platformScale > 4) platformScale = 4;
+    CGSize base = mainFramePlatformBaseSizeTable[platformPreset];
+    resolutionTable[0] = CGSizeMake(base.width * platformScale, base.height * platformScale);
+
+    resolutionTable[1] = CGSizeMake(safeAreaWidth, appWindowHeight);
+    resolutionTable[2] = CGSizeMake(appWindowWidth, appWindowHeight);
 }
 
 -(void) updateResolutionAccordingly {
     DataManager* dataMan = [[DataManager alloc] init];
     Settings *currentSettings = [dataMan retrieveSettings];
 
-    CGSize tempResolutionTable[6] = {0};
-    tempResolutionTable[5] = CGSizeMake(currentSettings.width.intValue, currentSettings.height.intValue);
-    [self fillResolutionTable:tempResolutionTable externalDisplayMode:currentSettings.externalDisplayMode.intValue];
+    const int tableSize = 4; // must match RESOLUTION_TABLE_SIZE in SettingsViewController
+    CGSize tempResolutionTable[tableSize];
+    for (int i = 0; i < tableSize; i++) tempResolutionTable[i] = CGSizeZero;
+    tempResolutionTable[tableSize - 1] = CGSizeMake(currentSettings.width.intValue, currentSettings.height.intValue); // Custom: preserve existing
+    NSInteger platformScale = currentSettings.platformScale ? currentSettings.platformScale.intValue : 4;
+    NSInteger platformPreset = currentSettings.platformPreset ? currentSettings.platformPreset.intValue : 0;
+    [self fillResolutionTable:tempResolutionTable
+          externalDisplayMode:currentSettings.externalDisplayMode.intValue
+               platformPreset:platformPreset
+                platformScale:platformScale];
 
     int selectedIndex = currentSettings.resolutionSelected.intValue;
-    if (selectedIndex >= 0 && selectedIndex < 6) {
+    if (selectedIndex >= 0 && selectedIndex < tableSize) {
         CGSize selectedSize = tempResolutionTable[selectedIndex];
         currentSettings.width = @(selectedSize.width);
         currentSettings.height = @(selectedSize.height);
